@@ -73,9 +73,9 @@ Once you have those installed, install the requirements for this repository:
 pip install -r requirements.txt
 ```
 
-This will install django 1.7 on your local machine.
+This will install django on your local machine.
 
-Once you have django installed, you can continue the tutorial from here https://docs.djangoproject.com/en/1.7/intro/tutorial01/#database-setup, although the default database and application configuration should be sufficient.
+Once you have django installed, you can continue the tutorial from here https://docs.djangoproject.com/en/1.8/intro/tutorial01/#database-setup, although the default database and application configuration should be sufficient.
 
 ### Configuration details
 When a git push is done, the .openshift/action_hooks/deploy is executed.  This script does two things:
@@ -88,6 +88,10 @@ By default, debug mode is off when pushed to Openshift.  However, if you'd like 
 
 ``` rhc env set DEBUG=True```
 
+Once you are done debugging, set debug to a non-True value or remove it entirely.
+
+``` rhc env unset DEBUG```
+
 ### HTTPS redirection
 HTTPS redirection is accomplished by telling the local Apache gear to redirect all traffic to the HTTPS version of your site.  You'll need to add an .htaccess file into the WSGI folder
 
@@ -99,8 +103,8 @@ RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 ```
 This will redirect **ALL** HTTP traffic to the site to HTTPS.
 
-### Notes on compatibility
-This has not been tested thoroughly with Python 3.  I'd love to have someone try that out for this repo.
+### Notes on Python 3 compatibility
+This has not been tested thoroughly with Python 3, and currently there is a bug with Python 3.3 on Openshift.
 
 ### Please Star if you like this repository.
 I don't publish many repositories, but if you like this project, please star it, thanks.
