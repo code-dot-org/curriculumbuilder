@@ -1,6 +1,6 @@
 Changelog for django on Openshift
 =
-###Version 1.3.3 (5/23/15 - Change name or Repository)
+###Version 1.3.3 (5/23/15 - Change name of Repository)
 * Changed the name from openshift-django17 to openshift-django
 * updated requirements.txt to use django 1.8.*
 
