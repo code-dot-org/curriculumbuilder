@@ -1,0 +1,21 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+
+{% block main %}{{ block.super }}
+
+    <h2>Lesson Overview</h2>
+    {% editable page.lesson.overview %}
+        {{ page.lesson.overview|richtext_filters|safe }}
+    {% endeditable %}
+
+    {% for activity in page.lesson.activity_set.all %}
+        {% editable activity.name %}
+            <h2>{{ activity.name }}</h2>
+        {% endeditable %}
+        {% editable activity.content %}
+            {{ activity.content|richtext_filters|safe }}
+        {% endeditable %}
+    {% endfor %}
+
+{% endblock %}

@@ -3,3 +3,9 @@ db.sqlite3
 .project
 .pydevproject
 vpython27
+*.db
+.DS_Store
+.coverage
+local_settings.py
+staticfiles
+.idea

@@ -1,0 +1,113 @@
+body {
+    font-family: sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    color: dimgray;
+    margin: 0;
+    padding-top: 0!important;
+    -webkit-print-color-adjust:exact;
+}
+
+.content h1 {
+    color:rgb(120,101,161);
+    font-size: 80px;
+    line-height: 80px;
+    padding-bottom: 20px;
+    border-bottom: 4px solid rgb(120,101,161);
+    margin-right:20px;
+    margin-bottom:30px;
+}
+
+.content h2 {
+    color:rgb(120,101,161);
+    text-transform:uppercase;
+    margin-bottom:0px;
+    margin-top:40px;
+}
+
+.content h3 {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.content ul {
+    margin-top:0px;
+    padding-left: 20px;
+}
+
+.content p {
+    margin-top:0px;
+}
+
+.headercontent h1 {
+    font-size: 80px;
+    line-height: 80px;
+    margin: 0 20px 20px 20px;
+}
+
+.headercontent {
+    margin-left:40px;
+    padding-top:0px;
+    padding-bottom:10px;
+    margin-bottom: 50px;
+}
+
+.headercontent .disclaimer {
+    opacity: 0.8;
+    font-size:14px;
+    color: white!important;
+}
+
+.content {
+    padding-left:40px;
+}
+
+.header {
+    width: 100%;
+}
+
+.printbackground {
+    background-color: rgb(120, 101, 161)!important;
+    color: white!important;
+    -webkit-print-color-adjust: exact;
+}
+
+.printbackground h1 {
+    color: white!important;
+}
+
+#lessonnumber {
+    background-color:rgb(0,173,187)!important;
+    width: 200px;
+    float:left;
+    text-align:center;
+    font-size:72px;
+    line-height:72px;
+    height:90px;
+    color: white!important;
+}
+
+#logo {
+    float:right;
+    padding:5px;
+}
+
+#header h1 {
+    color: white;
+}
+
+/* Alignment classes */
+.center {
+    display: block;
+    clear: both;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.right { float: right; }
+
+.left { float: left; }
+
+.clear { clear: both; }
