@@ -358,17 +358,6 @@ PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smart
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = True
 
-###################
-# HEROKU SETTINGS #
-###################
-
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 ##################
 # DJANGO         #
 ##################
@@ -386,7 +375,7 @@ NEVERCACHE_KEY = "ANOTHER CUSTOM KEY"
 # AWS_PRELOAD_METADATA = True #helps collectstatic do updates
 
 # STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
