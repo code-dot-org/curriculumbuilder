@@ -34,3 +34,9 @@ Intermediary Model for lessons
 class UnitLesson(Orderable):
   unit = models.ForeignKey(Unit)
   lesson = models.ForeignKey(Lesson)
+
+  def __unicode__(self):
+    return self.lesson.title
+
+  def url(self):
+    return self.lesson.get_absolute_url()

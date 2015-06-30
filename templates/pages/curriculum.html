@@ -1,0 +1,41 @@
+{% extends "baselesson.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable page.title %}{{ page.title }}{% endeditable %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+{% endblock %}
+
+{% block main %}
+    {% for unit in page.curriculum.unit_set.all %}
+    <div class="together">
+        <h2>{{ unit.title }}</h2>
+        <ul>
+        {% for lesson in unit.unitlesson_set.all %}
+            <li><a href="{{ lesson.url }}">{{ lesson }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+
+{% endblock %}

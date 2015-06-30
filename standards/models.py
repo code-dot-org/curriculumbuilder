@@ -77,7 +77,7 @@ class Standard(models.Model):
     return self.framework.slug + ' ' + self.slug
 
   class Meta:
-    ordering = ["shortcode"]
+    ordering = ["category__shortcode", "shortcode"]
 
   def save(self, *args, **kwargs):
     self.framework = self.get_framework()

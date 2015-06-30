@@ -83,6 +83,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # If True, the django-modeltranslation will be added to the
 # INSTALLED_APPS setting.
+
+INLINE_EDITING_ENABLED = True
+
 USE_MODELTRANSLATION = False
 
 

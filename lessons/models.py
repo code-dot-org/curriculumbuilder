@@ -29,6 +29,12 @@ class Lesson(Page, RichText):
   anchor_standards = models.ManyToManyField(Standard, related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
 
+  def __unicode__(self):
+    return self.title
+
+  def number(self):
+    return self._order + 1
+
 """
 Activities that compose a lesson
 

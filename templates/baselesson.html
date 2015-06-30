@@ -54,7 +54,8 @@
         <div class="headercontent">
             <div id="top">
                 <div id="divforpdf">
-                    <div id="lessonnumber">{% if page.lesson.number %}{{ page.lesson.number }}{% else %}U{% endif %}</div>
+                    {% block lessonnumber %}
+                    {% endblock %}
                     <div id="logo">
                         <img src="{% static "images/logo.png" %}">
                     </div>

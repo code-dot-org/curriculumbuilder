@@ -30,6 +30,11 @@
     <script src="{% static "js/toc.min.js" %}"></script>
 {% endblock %}
 
+
+{% block lessonnumber %}
+    <div id="lessonnumber">{{ page.lesson.number }}</div>
+{% endblock %}
+
 {% block main %}
 
     <div class="together">
@@ -80,10 +85,12 @@
 
             <h1>Teaching Guide</h1>
 
-            <h2>Materials, Resources and Prep</h2>
-            {% editable page.lesson.resources %}
-                {{ page.lesson.resources|richtext_filters|safe }}
-            {% endeditable %}
+            {% if page.lesson.resources %}
+                <h2>Materials, Resources and Prep</h2>
+                {% editable page.lesson.resources %}
+                    {{ page.lesson.resources|richtext_filters|safe }}
+                {% endeditable %}
+            {% endif %}
 
         </div>
 
