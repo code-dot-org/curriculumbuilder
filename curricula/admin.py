@@ -11,11 +11,7 @@ class UnitInline(TabularDynamicInlineAdmin):
 
   fieldsets = (
     (None, {
-      'fields': ['title', ('duration', 'unplugged'), 'overview']
-    }),
-    ('Meta', {
-      'fields': ['resources', 'slug', 'keywords'],
-      'classes': ('collapse-closed',)
+      'fields': ['title',]
     }),
   )
 
