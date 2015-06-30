@@ -1,5 +1,15 @@
 {% load i18n future %}
 
+<script type="text/javascript">
+    if (window.__csrf_token) {
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", window.__csrf_token);
+            }
+        });
+    }
+</script>
+
 <div id="header">
     <div class="branding">&nbsp;</div>
     <!-- Title -->

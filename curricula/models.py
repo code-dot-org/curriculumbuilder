@@ -12,7 +12,7 @@ class Curriculum(Page, RichText):
   gradeband = models.ForeignKey(GradeBand)
 
   def __unicode__(self):
-    return self.name
+    return self.title
 
   class Meta:
       verbose_name_plural = "curricula"
@@ -25,7 +25,7 @@ class Unit(Page, RichText):
   curriculum = models.ForeignKey(Curriculum)
 
   def __unicode__(self):
-    return self.name
+    return self.title
 
 """
 Intermediary Model for lessons

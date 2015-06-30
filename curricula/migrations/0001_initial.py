@@ -8,6 +8,7 @@ import mezzanine.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('pages', '0003_auto_20150527_1555'),
         ('standards', '0001_initial'),
         ('lessons', '0003_auto_20150624_1139'),
     ]
@@ -16,24 +17,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Curriculum',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
+                ('content', mezzanine.core.fields.RichTextField(verbose_name='Content')),
                 ('gradeband', models.ForeignKey(to='standards.GradeBand')),
             ],
+            options={
+                'ordering': ('_order',),
+                'verbose_name_plural': 'curricula',
+            },
+            bases=('pages.page', models.Model),
         ),
         migrations.CreateModel(
             name='Unit',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('_order', mezzanine.core.fields.OrderField(null=True, verbose_name='Order')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
+                ('content', mezzanine.core.fields.RichTextField(verbose_name='Content')),
                 ('curriculum', models.ForeignKey(to='curricula.Curriculum')),
             ],
             options={
                 'ordering': ('_order',),
             },
+            bases=('pages.page', models.Model),
         ),
         migrations.CreateModel(
             name='UnitLesson',

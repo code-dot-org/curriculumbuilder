@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from curricula.models import Curriculum, Unit, UnitLesson
 
@@ -15,16 +17,16 @@ class UnitInline(TabularDynamicInlineAdmin):
     }),
   )
 
-class CurriculumAdmin(admin.ModelAdmin):
+class CurriculumAdmin(PageAdmin):
   model = Curriculum
   inlines = [UnitInline]
   verbose_name_plural = "Curricula"
 
-class UnitAdmin(admin.ModelAdmin):
+class UnitAdmin(PageAdmin):
   model = Unit
   inlines = [LessonInline]
-  list_display = ('curriculum',)
-  list_filter = ('curriculum',)
+  list_display = ('title', 'curriculum', 'status')
+  list_filter = ('title', 'curriculum',)
 
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Unit, UnitAdmin)
