@@ -1,70 +1,36 @@
 from django.db import models
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
-from standards.models import Standard
+from standards.models import Standard, GradeBand
+from lessons.models import Lesson
 
 """
-Vocabulary
+Curriculum
 
 """
-class Vocab(models.Model):
-  word = models.CharField(max_length=255)
-  simpleDef = models.TextField()
-  detailDef = models.TextField()
+class Curriculum(Page, RichText):
+  gradeband = models.ForeignKey(GradeBand)
 
   def __unicode__(self):
-    return self.word
-
-"""
-Complete Lesson Page
-
-"""
-class Lesson(Orderable):
-  overview = RichTextField('Lesson Overview')
-  duration = models.IntegerField('Class Periods')
-  unplugged = models.BooleanField(default=False)
-  resources = RichTextField(blank=True, null=True)
-  ancestor = models.ForeignKey('self', blank=True, null=True)
-  standards = models.ManyToManyField(Standard, related_name="standards", blank=True, null=True)
-  anchor_standards = models.ManyToManyField(Standard, related_name="anchor_standards", blank=True, null=True)
-  vocab = models.ManyToManyField(Vocab)
-
-"""
-Activities that compose a lesson
-
-"""
-class Activity(Orderable):
-  name = models.CharField(max_length=255)
-  content = RichTextField('Activity Content')
-  lesson = models.ForeignKey(Lesson)
-  ancestor = models.ForeignKey('self', blank=True, null=True)
+    return self.name
 
   class Meta:
-      verbose_name_plural = "activities"
+      verbose_name_plural = "curricula"
+
+"""
+Curricular Unit
+
+"""
+class Unit(Page, RichText):
+  curriculum = models.ForeignKey(Curriculum)
 
   def __unicode__(self):
     return self.name
 
 """
-Prerequisite Skills
+Intermediary Model for lessons
 
 """
-class Prereq(Orderable):
-  name = models.CharField(max_length=255)
-  description = models.TextField()
+class UnitLesson(Orderable):
+  unit = models.ForeignKey(Unit)
   lesson = models.ForeignKey(Lesson)
-
-  def __unicode__(self):
-    return self.name
-
-"""
-Learning Objectives
-
-"""
-class Objective(Orderable):
-  name = models.CharField(max_length=255)
-  description = models.TextField()
-  lesson = models.ForeignKey(Lesson)
-
-  def __unicode__(self):
-    return self.name

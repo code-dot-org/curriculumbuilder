@@ -282,7 +282,7 @@ INSTALLED_APPS = (
     # Custom apps for Code.org curriculum
     "standards",
     "lessons",
-    # "curricula",
+    "curricula",
 )
 
 # List of processors used by RequestContext to populate the context.

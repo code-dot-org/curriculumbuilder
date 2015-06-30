@@ -9,3 +9,4 @@ vpython27
 local_settings.py
 staticfiles
 .idea
+wsgi/static

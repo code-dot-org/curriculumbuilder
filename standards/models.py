@@ -93,6 +93,8 @@ class Standard(models.Model):
   def get_slug(self):
     if self.framework.slug == 'CSTA':
       return self.category.shortcode + '.' + self.gradeband.shortcode + ':' + self.shortcode
+    elif self.framework.slug == 'ISTE':
+      return self.framework.slug + self.category.shortcode + '.' + self.shortcode
     else:
       return self.framework.slug + '-' + self.shortcode
 

@@ -16,6 +16,8 @@ class CategoryInline(TabularDynamicInlineAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
   model = Category
+  list_display = ('name', 'framework', 'parent', 'shortcode')
+  list_filter = ('framework', 'parent')
   inlines = [StandardInline]
 
 class FrameworkAdmin(admin.ModelAdmin):
@@ -40,5 +42,4 @@ class StandardAdmin(ImportExportModelAdmin):
 admin.site.register(Standard, StandardAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Framework, FrameworkAdmin)
-admin.site.register(Grade)
 admin.site.register(GradeBand)
