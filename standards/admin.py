@@ -28,9 +28,25 @@ class StandardResource(resources.ModelResource):
 
   # category = fields.Field(column_name='category', attribute='shortcode',
   #                         widget = ForeignKeyWidget(Category,'shortcode'))
+  '''
+  def before_import(self, dataset, dry_run, **kwargs):
+    i = 0
+    while i <= dataset.height - 1:
+      try:
+        framework = Framework.objects.get(slug=dataset.get_col(2)[i])
+      except Framework.DoesNotExist:
+        raise Exception("Couldn't find the framework")
+      try:
+        category = Category.objects.get(framework=framework, name=dataset.get_col(3)[i])
+      except Category.DoesNotExist:
+        raise Exception("Couldn't find the category")
+
+      dataset.rpush(())
+  '''
 
   class Meta:
     model = Standard
+    #fields = ('shortcode', 'framework', 'name', 'description', 'category', 'gradeband',)
     fields = ('id', 'shortcode', 'name', 'description', 'category', 'gradeband',)
 
 class StandardAdmin(ImportExportModelAdmin):

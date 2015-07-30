@@ -77,6 +77,9 @@ urlpatterns += patterns('',
     # from it, and use them directly below instead of using
     # ``mezzanine.urls``.
 
+    # Curriculum URLs
+    url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
+
     ("^pagedown/", include(mezzanine_pagedown.urls)),
     ("^", include("mezzanine.urls")),
 
@@ -95,6 +98,7 @@ urlpatterns += patterns('',
     # need to use the ``SITE_PREFIX`` setting as well.
 
     # ("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
+
 
 )
 

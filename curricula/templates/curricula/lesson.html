@@ -7,7 +7,7 @@
 {% block meta_title %}{{ page.meta_title }}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
-    {% keywords_for page as keywords %}
+    {% keywords_for lesson as keywords %}
     {% for keyword in keywords %}
         {% if not forloop.first %}, {% endif %}
         {{ keyword }}
@@ -15,11 +15,11 @@
 {% endmetablock %}{% endblock %}
 
 {% block meta_description %}{% metablock %}
-    {{ page.description }}
+    {{ lesson.description }}
 {% endmetablock %}{% endblock %}
 
 {% block title %}
-    {% editable page.title %}{{ page.title }}{% endeditable %}
+    {% editable lesson.title %}{{ title }}{% endeditable %}
 {% endblock %}
 
 {% block extra_css %}
@@ -32,16 +32,16 @@
 
 
 {% block lessonnumber %}
-    <div id="lessonnumber">{{ page.lesson.number }}</div>
+    <div id="lessonnumber">{{ lesson.number }}</div>
 {% endblock %}
 
 {% block header_title %}
-    {% if page.lesson.unplugged %}UNPLUGGED{% endif %}
-    {% editable page.title %}
-    <h1>{{ page.title }}</h1>
+    {% if lesson.unplugged %}UNPLUGGED{% endif %}
+    {% editable lesson.title %}
+    <h1>{{ lesson.title }}</h1>
     {% endeditable %}
     <hr>
-    Class sessions: {{ page.lesson.duration }}
+    Class sessions: {{ lesson.duration }}
 <span class="disclaimer">
   Basic lesson time includes activity only. Introductory and Wrap-Up suggestions can be used to delve deeper when time allows.
 </span>
@@ -51,25 +51,25 @@
 
     <div class="together">
         <h2>Lesson Overview</h2>
-        {% editable page.lesson.overview %}
-            {{ page.lesson.overview|richtext_filters|safe }}
+        {% editable lesson.overview %}
+            {{ lesson.overview|richtext_filters|safe }}
         {% endeditable %}
     </div>
 
-    {% if page.lesson.objective_set.count > 0 %}
+    {% if lesson.objective_set.count > 0 %}
         <div class="together">
             <h2>Lesson Objectives</h2>
             <h3>Students will:</h3>
             <ul>
-                {% for objective in page.lesson.objective_set.all %}
+                {% for objective in lesson.objective_set.all %}
                     <li>{{ objective.description }}</li>
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
-    {% if page.lesson.anchor_standards.all.count > 0  %}
-        <h2>Anchor Standard{% if page.lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
-        {% with standards=page.lesson.anchor_standards.all %}
+    {% if lesson.anchor_standards.all.count > 0  %}
+        <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+        {% with lesson.anchor_standards.all as standards %}
         {% regroup standards by framework as standards_by_framework %}
         {% for framework in standards_by_framework %}
             <h3>{{ framework.grouper }}</h3>
@@ -85,7 +85,7 @@
     <div class="summary">
         <h2>Teaching Summary</h2>
         <div id="toc">
-            {% for activity in page.lesson.activity_set.all %}
+            {% for activity in lesson.activity_set.all %}
                 <h3>{{ activity.name }}</h3>
             {% endfor %}
         </div>
@@ -97,23 +97,25 @@
 
             <h1>Teaching Guide</h1>
 
-            {% if page.lesson.resources %}
+            {% if lesson.resources %}
                 <h2>Materials, Resources and Prep</h2>
-                {% editable page.lesson.resources %}
-                    {{ page.lesson.resources|richtext_filters|safe }}
+                {% editable lesson.resources %}
+                    {{ lesson.resources|richtext_filters|safe }}
                 {% endeditable %}
             {% endif %}
 
-            {% if page.lesson.vocab %}
+            {% if lesson.vocab.count > 0 %}
                 <h2>Vocabulary</h2>
-                {% editable page.lesson.vocab %}
-                    {{ page.lesson.vocab|richtext_filters|safe }}
-                {% endeditable %}
+                <ul>
+                {% for word in lesson.vocab.all %}
+                    <li><strong>{{ word.word }}</strong> - {{ word.simpleDef }}</li>
+                {% endfor %}
+                </ul>
             {% endif %}
 
         </div>
 
-        {% for activity in page.lesson.activity_set.all %}
+        {% for activity in lesson.activity_set.all %}
             <div class="together">
                 {% editable activity.name activity.content %}
                     <h2>{{ activity.name }}</h2>
@@ -125,7 +127,7 @@
 
     <div id="standards">
         <h2>Standards Alignment</h2>
-        {% with standards=page.lesson.standards.all %}
+        {% with lesson.standards.all as standards %}
         {% regroup standards by framework as standards_by_framework %}
         {% for framework in standards_by_framework %}
             <h3>{{ framework.grouper }}</h3>

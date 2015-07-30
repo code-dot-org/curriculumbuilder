@@ -62,6 +62,7 @@
                 </div>
             </div>
             <div class="printbackground" id="bottom" style="clear:both">
+            {% block header_title %}
                 {% if page.lesson.unplugged %}UNPLUGGED{% endif %}
                 {% editable page.title %}
                 <h1>{{ page.title }}</h1>
@@ -71,6 +72,7 @@
             <span class="disclaimer">
               Basic lesson time includes activity only. Introductory and Wrap-Up suggestions can be used to delve deeper when time allows.
             </span>
+            {% endblock %}
             </div>
         </div>
     </div>

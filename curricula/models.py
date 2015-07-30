@@ -27,6 +27,9 @@ class Unit(Page, RichText):
   def __unicode__(self):
     return self.title
 
+  def number(self):
+    return self._order + 1
+
 """
 Intermediary Model for lessons
 

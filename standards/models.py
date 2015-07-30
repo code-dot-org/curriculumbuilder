@@ -85,16 +85,25 @@ class Standard(models.Model):
     super(Standard, self).save(*args, **kwargs)
 
   def get_framework(self):
-    category = self.category
+    try:
+      category = self.category
+    except:
+      print "Couldn't find category"
+      return
+
     while not hasattr(category, 'framework'):
       category = category.category
     return category.framework
 
   def get_slug(self):
-    if self.framework.slug == 'CSTA':
-      return self.category.shortcode + '.' + self.gradeband.shortcode + ':' + self.shortcode
-    elif self.framework.slug == 'ISTE':
-      return self.framework.slug + self.category.shortcode + '.' + self.shortcode
-    else:
-      return self.framework.slug + '-' + self.shortcode
+    try:
+      framework = self.framework
+      if framework.slug == 'CSTA':
+        return self.category.shortcode + '.' + self.gradeband.shortcode + ':' + self.shortcode
+      elif framework.slug == 'ISTE':
+        return framework.slug + self.category.shortcode + '.' + self.shortcode
+      else:
+        return framework.slug + '-' + self.shortcode
+    except:
+      return self.shortcode
 

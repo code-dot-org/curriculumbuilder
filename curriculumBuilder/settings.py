@@ -282,6 +282,7 @@ INSTALLED_APPS = (
     "csvimport.app.CSVImportConf",
     "gunicorn",
     "import_export",
+    "data_importer",
     # Custom apps for Code.org curriculum
     "standards",
     "lessons",
