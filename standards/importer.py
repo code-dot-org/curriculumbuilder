@@ -8,4 +8,3 @@ class StandardImporter(CSVImporter):
     model = Standard
     ignore_first_line = True
     raise_errors = True
-    

@@ -7,6 +7,7 @@ Werkzeug==0.10.4
 beautifulsoup4==4.3.2
 bleach==1.4.1
 chardet==2.3.0
+data-importer
 diff-match-patch==20110725.1
 dj-database-url==0.3.0
 django-appconf==1.0.1
