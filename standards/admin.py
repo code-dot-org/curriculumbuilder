@@ -28,25 +28,43 @@ class StandardResource(resources.ModelResource):
 
   # category = fields.Field(column_name='category', attribute='shortcode',
   #                         widget = ForeignKeyWidget(Category,'shortcode'))
+
   '''
   def before_import(self, dataset, dry_run, **kwargs):
     i = 0
-    while i <= dataset.height - 1:
-      try:
-        framework = Framework.objects.get(slug=dataset.get_col(2)[i])
-      except Framework.DoesNotExist:
-        raise Exception("Couldn't find the framework")
-      try:
-        category = Category.objects.get(framework=framework, name=dataset.get_col(3)[i])
-      except Category.DoesNotExist:
-        raise Exception("Couldn't find the category")
+    last = dataset.height - 1
 
-      dataset.rpush(())
+    while i <= last:
+
+      try:
+        gradeband = GradeBand.objects.get(shortcode=dataset.get_col(3)[0])
+      except GradeBand.DoesNotExist:
+        gradeband = GradeBand.objects.all()[0]
+
+      try:
+        category = Category.objects.get(name=dataset.get_col(4)[0])
+      except Category.DoesNotExist:
+        category = Category.objects.all()[0]
+
+      dataset.rpush((
+        dataset.get_col(1)[0],
+        dataset.get_col(2)[0],
+        gradeband.pk,
+        category.pk,
+        dataset.get_col(5)[0],
+        dataset.get_col(6)[0],
+      ))
+      i = i + 1
   '''
+
+  category = fields.Field(column_name='category', attribute='category',
+                          widget = ForeignKeyWidget(Category,'name'))
+
+  gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
+                          widget = ForeignKeyWidget(GradeBand,'name'))
 
   class Meta:
     model = Standard
-    #fields = ('shortcode', 'framework', 'name', 'description', 'category', 'gradeband',)
     fields = ('id', 'shortcode', 'name', 'description', 'category', 'gradeband',)
 
 class StandardAdmin(ImportExportModelAdmin):

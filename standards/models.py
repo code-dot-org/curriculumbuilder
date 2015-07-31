@@ -74,7 +74,10 @@ class Standard(models.Model):
   slug = models.CharField(max_length=50, blank=True, null=True)
 
   def __unicode__(self):
-    return self.framework.slug + ' ' + self.slug
+    if self.framework and self.slug:
+      return self.framework.slug + ' ' + self.slug
+    else:
+      return self.shortcode
 
   class Meta:
     ordering = ["category__shortcode", "shortcode"]
