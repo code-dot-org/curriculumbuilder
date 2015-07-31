@@ -83,6 +83,7 @@ class Standard(models.Model):
     ordering = ["category__shortcode", "shortcode"]
 
   def save(self, *args, **kwargs):
+    self.name = self.name[:255]
     self.framework = self.get_framework()
     self.slug = self.get_slug()
     super(Standard, self).save(*args, **kwargs)
