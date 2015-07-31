@@ -31,7 +31,7 @@ class Category(models.Model):
   parent = models.ForeignKey('self', blank=True, null=True, related_name="children")
 
   def __unicode__(self):
-    return self.name
+    return self.shortcode
 
   class Meta:
       ordering = ["shortcode"]
