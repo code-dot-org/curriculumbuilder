@@ -13,7 +13,7 @@ class UnitInline(TabularDynamicInlineAdmin):
 
   fieldsets = (
     (None, {
-      'fields': ['title',]
+      'fields': ['title', 'content']
     }),
   )
 

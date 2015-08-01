@@ -22,5 +22,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
   lesson = get_object_or_404(Lesson, unitlesson__unit = unit, _order = int(lesson_num) - 1)
   page = Page.objects.get(pk = lesson.pk)
-
-  return render(request, 'curricula/lesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
+  if curriculum.slug == 'csp':
+    return render(request, 'curricula/csplesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
+  else:
+    return render(request, 'curricula/lesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})

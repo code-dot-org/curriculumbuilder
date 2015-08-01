@@ -9,6 +9,10 @@ body {
     -webkit-print-color-adjust:exact;
 }
 
+img {
+    max-width: 100%;
+}
+
 .content h1 {
     color:rgb(120,101,161);
     font-size: 80px;

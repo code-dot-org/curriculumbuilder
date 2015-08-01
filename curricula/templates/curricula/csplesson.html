@@ -1,0 +1,183 @@
+{% extends "baselesson.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for lesson as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ lesson.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable lesson.title %}{{ title }}{% endeditable %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/csplesson.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "js/toc.min.js" %}"></script>
+{% endblock %}
+
+
+{% block lessonnumber %}
+    <div id="unitnumber"><h2>Unit</h2><h1>{{ unit.number }}</h1></div>
+
+    <div class="lessons">
+    {% for stage in unit.unitlesson_set.all %}
+        {% if stage.lesson.number < lesson.number %}
+        <div class="lesson finished">
+        {% elif stage.lesson.number == lesson.number %}
+        <div class="lesson current">
+        {% else %}
+        <div class="lesson unfinished">
+        {% endif %}
+            <a href="{{ stage.lesson.number }}">
+                {{ stage.lesson.number }}
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block header_title %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="together">
+        {% editable lesson.title %}
+        <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+        {% endeditable %}
+    </div>
+
+    <div class="together overview-page row">
+
+        <div class="col-md-8 left-col">
+
+            <h2>Overview</h2>
+            {% editable lesson.overview %}
+                {{ lesson.overview|richtext_filters|safe }}
+            {% endeditable %}
+
+            <h2>Lesson Summary</h2>
+            <div id="toc">
+                {% for activity in lesson.activity_set.all %}
+                    <h3>{{ activity.name }}</h3>
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <div class="col-md-4 right-col">
+
+            {% if lesson.anchor_standards.all.count > 0  %}
+                <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+                {% with lesson.anchor_standards.all as standards %}
+                {% regroup standards by framework as standards_by_framework %}
+                {% for framework in standards_by_framework %}
+                    <h3>{{ framework.grouper }}</h3>
+                    <ul>
+                    {% for standard in framework.list %}
+                        <li><strong>{{ standard.slug }}</strong> - {{ standard.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endfor %}
+                {% endwith %}
+            {% endif %}
+
+            {% if lesson.objective_set.count > 0 %}
+                <h2>Objectives</h2>
+                <h3>Students will be able to:</h3>
+                <ul>
+                    {% for objective in lesson.objective_set.all %}
+                        <li>{{ objective.description }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div id="lesson_content">
+
+        <div class="together">
+
+            <h1>Teaching Guide</h1>
+
+            {% if lesson.resources %}
+                <h2>Materials, Resources and Prep</h2>
+                {% editable lesson.resources %}
+                    {{ lesson.resources|richtext_filters|safe }}
+                {% endeditable %}
+            {% endif %}
+
+            {% if lesson.vocab.count > 0 %}
+                <h2>Vocabulary</h2>
+                <ul>
+                {% for word in lesson.vocab.all %}
+                    <li><strong>{{ word.word }}</strong> - {{ word.simpleDef }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+
+        {% for activity in lesson.activity_set.all %}
+            <div class="together">
+                {% editable activity.name activity.content %}
+                    <h2>{{ activity.name }}</h2>
+                    {{ activity.content|richtext_filters|safe }}
+                {% endeditable %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="standards">
+        <h2>Standards Alignment</h2>
+        {% with lesson.standards.all as standards %}
+        {% regroup standards by framework as standards_by_framework %}
+        {% for framework in standards_by_framework %}
+            <h3>{{ framework.grouper }}</h3>
+            <ul>
+            {% for standard in framework.list %}
+                <li><strong>{{ standard.slug }}</strong> - {{ standard.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+        {% endwith %}
+    </div>
+    <script type="text/javascript">
+        $('#toc').toc({
+            'selectors': 'h2,h3', //elements to use as headings
+            'container': '#lesson_content', //element to find all selectors in
+            'smoothScrolling': true, //enable or disable smooth scrolling on click
+            'prefix': 'toc', //prefix for anchor tags and class names
+            'onHighlight': function(el) {}, //called when a new section is highlighted
+            'highlightOnScroll': true, //add class to heading that is currently in focus
+            'highlightOffset': 100, //offset to trigger the next headline
+            'anchorName': function(i, heading, prefix) { //custom function for anchor name
+                return prefix+i;
+            },
+            'headerText': function(i, heading, $heading) { //custom function building the header-item text
+                return $heading.text();
+            },
+            'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+                return $heading[0].tagName.toLowerCase();
+            }
+        });
+    </script>
+
+{% endblock %}
