@@ -55,9 +55,9 @@ html, body{
     /*display: table-cell;
     vertical-align: middle;
     box-sizing: border-box;
-    padding-right: 10px;*/
-    float: left;
-    padding: 10px;
+    padding-right: 10px;
+    float: left;*//
+    padding: 2px;
 }
 
 .lessons .lesson {
