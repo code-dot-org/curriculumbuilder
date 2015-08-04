@@ -21,8 +21,8 @@ class PrereqInline(StackedDynamicInlineAdmin):
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
-  classes = ('collapse open',)
-  inline_classes = ('collapse-open collapse open',)
+  classes = ('collapse-open',)
+  inline_classes = ('collapse-open',)
 
 class LessonAdmin(PageAdmin):
   inlines = [ActivityInline, ObjectiveInline, PrereqInline]
@@ -31,16 +31,19 @@ class LessonAdmin(PageAdmin):
 
   fieldsets = (
     (None, {
-      'fields': ['title', ('duration', 'unplugged'), 'overview']
+      'fields': ['title', ('duration', 'unplugged'), 'overview'],
     }),
     ('Standards', {
-      'fields': ['anchor_standards', 'standards']
+      'fields': ['anchor_standards', 'standards'],
+      'classes': ('collapse-closed',)
     }),
     ('Vocab', {
-      'fields': ['vocab']
+      'fields': ['vocab'],
+      'classes': ('collapse-closed',)
     }),
     ('Resources', {
-      'fields': ['resources']
+      'fields': ['resources'],
+      'classes': ('collapse-closed',)
     }),
     ('Meta', {
       'fields': ['cs_content', 'prep', 'slug', 'keywords'],
