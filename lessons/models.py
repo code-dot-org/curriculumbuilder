@@ -16,6 +16,19 @@ class Vocab(models.Model):
     return self.word
 
 """
+Linked Resources
+
+"""
+class Resource(models.Model):
+  name = models.CharField(max_length=255)
+  type = models.CharField(max_length=255, blank=True, null=True)
+  student = models.BooleanField(default=False)
+  url = models.URLField(blank=True, null=True)
+
+  def __unicode__(self):
+    return self.name
+
+"""
 Complete Lesson Page
 
 """
@@ -23,7 +36,9 @@ class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
   duration = models.IntegerField('Class Periods')
   unplugged = models.BooleanField(default=False)
-  resources = RichTextField(blank=True, null=True)
+  resources = models.ManyToManyField(Resource, blank=True)
+  prep = RichTextField('Materials and Prep', blank=True, null=True)
+  cs_content = RichTextField('CS Content', blank=True, null=True)
   ancestor = models.ForeignKey('self', blank=True, null=True)
   standards = models.ManyToManyField(Standard, blank=True)
   anchor_standards = models.ManyToManyField(Standard, related_name="anchors", blank=True)

@@ -5,7 +5,7 @@ from django import forms
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 
-from lessons.models import Lesson, Objective, Prereq, Activity, Vocab
+from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource
 
 class ObjectiveInline(StackedDynamicInlineAdmin):
   model = Objective
@@ -21,6 +21,8 @@ class PrereqInline(StackedDynamicInlineAdmin):
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
+  classes = ('collapse open',)
+  inline_classes = ('collapse-open collapse open',)
 
 class LessonAdmin(PageAdmin):
   inlines = [ActivityInline, ObjectiveInline, PrereqInline]
@@ -37,8 +39,11 @@ class LessonAdmin(PageAdmin):
     ('Vocab', {
       'fields': ['vocab']
     }),
+    ('Resources', {
+      'fields': ['resources']
+    }),
     ('Meta', {
-      'fields': ['resources', 'slug', 'keywords'],
+      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
       'classes': ('collapse-closed',)
     }),
   )
@@ -57,3 +62,4 @@ admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)
 admin.site.register(Vocab)
+admin.site.register(Resource)
