@@ -127,6 +127,10 @@ html, body{
     font-size: 10pt;
 }
 
+.overview-page {
+    page-break-after: always;
+}
+
 .overview-page .left-col {
     border-right: 1px solid #ccc;
 }

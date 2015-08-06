@@ -30,6 +30,11 @@
     <script src="{% static "js/toc.min.js" %}"></script>
 {% endblock %}
 
+{% block admin_link %}
+    {% if user.is_staff %}
+        <div id="admin_edit"><a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a></div>
+    {% endif %}
+{% endblock %}
 
 {% block lessonnumber %}
     <div id="lessonnumber">{{ lesson.number }}</div>
@@ -97,11 +102,20 @@
 
             <h1>Teaching Guide</h1>
 
-            {% if lesson.resources %}
-                <h2>Materials, Resources and Prep</h2>
-                {% editable lesson.resources %}
-                    {{ lesson.resources|richtext_filters|safe }}
+            {% if lesson.prep %}
+                <h2>Materials and Prep</h2>
+                {% editable lesson.prep %}
+                    {{ lesson.prep|richtext_filters|safe }}
                 {% endeditable %}
+            {% endif %}
+
+            {% if lesson.resources.count > 0 %}
+                <h2>Resources</h2>
+                <ul>
+                {% for resource in lesson.resources.all %}
+                    <li>{{ resource.name }}</li>
+                {% endfor %}
+                </ul>
             {% endif %}
 
             {% if lesson.vocab.count > 0 %}
@@ -133,7 +147,7 @@
             <h3>{{ framework.grouper }}</h3>
             <ul>
             {% for standard in framework.list %}
-                <li><strong>{{ standard.slug }}</strong> - {{ standard.name }}</li>
+                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
             {% endfor %}
             </ul>
         {% endfor %}

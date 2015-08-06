@@ -23,12 +23,6 @@
         {% if LANGUAGE_BIDI %}
             <link rel="stylesheet" href="{% static "css/rtl.css" %}">
         {% endif %}
-        {% ifinstalled cartridge.shop %}
-            <link rel="stylesheet" href="{% static "css/cartridge.css" %}">
-            {% if LANGUAGE_BIDI %}
-                <link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
-            {% endif %}
-        {% endifinstalled %}
         {% block extra_css %}{% endblock %}
     {% endcompress %}
 
@@ -48,6 +42,9 @@
 </head>
 
 <body id="{% block body_id %}body{% endblock %}">
+
+{% block admin_link %}
+{% endblock %}
 
 <div class="container_nonresponsive" style="width: 100%">
     <div class="header printbackground">
