@@ -30,6 +30,13 @@ class Unit(Page, RichText):
   def number(self):
     return self._order + 1
 
+  def save(self, *args, **kwargs):
+    try:
+      self.curriculum = self.parent.curriculum
+    except:
+      return
+    super(Unit, self).save(*args, **kwargs)
+
 """
 Intermediary Model for lessons
 

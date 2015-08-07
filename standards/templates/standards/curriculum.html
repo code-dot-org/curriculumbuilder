@@ -32,13 +32,13 @@
         <h2><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.title }}</a></h2>
         <ul>
         {% for lesson in unit.unitlesson_set.all %}
-            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter%}">
-            {{ lesson }}</a></li>
+            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter%}">
+            {{ lesson }}</a></h3>
             <ul>
                 {% with lesson.lesson.standards.all as standards %}
                 {% regroup standards by framework as standards_by_framework %}
                 {% for framework in standards_by_framework %}
-                    <h3><a href="{% url 'standards:by_framework' framework.grouper.slug %}">{{ framework.grouper }}</a></h3>
+                    <h4><a href="{% url 'standards:by_framework' framework.grouper.slug %}">{{ framework.grouper }}</a></h4>
                     <ul>
                     {% for standard in framework.list %}
                         <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.name }}</li>

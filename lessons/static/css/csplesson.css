@@ -28,7 +28,7 @@ html, body{
 }
 
 .together{
-    page-break-inside: avoid;
+    /*page-break-inside: avoid;*/
 }
 
 .pagebreak{
@@ -56,7 +56,7 @@ html, body{
     vertical-align: middle;
     box-sizing: border-box;
     padding-right: 10px;
-    float: left;*//
+    float: left;*/
     padding: 2px;
 }
 

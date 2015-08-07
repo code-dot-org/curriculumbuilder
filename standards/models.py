@@ -82,10 +82,12 @@ class Standard(models.Model):
   def save(self, *args, **kwargs):
     self.name = self.name[:255]
     self.framework = self.get_framework()
+    '''
     if self.framework.slug == 'CSTA':
       self.shortcode = self.category.shortcode + '.' + self.gradeband.shortcode + ':' + self.shortcode
     elif self.framework.slug == 'ISTE':
       self.shortcode = self.category.shortcode + '.' + self.shortcode
+    '''
 
     self.slug = self.get_slug()
     super(Standard, self).save(*args, **kwargs)

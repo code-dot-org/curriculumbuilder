@@ -12,6 +12,10 @@ class Vocab(models.Model):
   simpleDef = models.TextField()
   detailDef = models.TextField(blank=True, null=True)
 
+  class Meta:
+      ordering = ["word"]
+      verbose_name_plural = "vocab words"
+
   def __unicode__(self):
     return self.word
 

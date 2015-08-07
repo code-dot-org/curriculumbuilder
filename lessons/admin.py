@@ -41,19 +41,15 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
     ('Standards', {
       'fields': ['anchor_standards', 'standards'],
-      'classes': ('collapse',)
     }),
     ('Vocab', {
       'fields': ['vocab'],
-      'classes': ('collapse',)
     }),
     ('Resources', {
       'fields': ['resources'],
-      'classes': ('collapse',)
     }),
     ('Meta', {
       'fields': ['cs_content', 'prep', 'keywords'],
-      'classes': ('collapse',)
     }),
   )
 admin.site.register(Lesson, LessonAdmin)
