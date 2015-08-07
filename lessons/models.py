@@ -64,6 +64,8 @@ class Lesson(Page, RichText):
     except:
       return self.slug
 
+  def curriculum(self):
+    return self.unitlesson_set.first().unit.curriculum
 
   def number(self):
     return self._order + 1

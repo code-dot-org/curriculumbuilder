@@ -1,0 +1,41 @@
+{% extends "baselesson.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ standard.framework.name }} Standards Alignment{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ framework.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {{ std.framework.slug }} - {{ std.shortcode }}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ standard.framework.slug }} {{ standard.shortcode }}</h1>
+{% endblock %}
+
+{% block main %}
+
+    <h2>{{ standard.shortcode }}</h2>
+    <p>{{ standard.description }}</p>
+    {% with standard.lesson_set.all as lessons %}
+    {% regroup lessons by curriculum as lessons_by_curriculum %}
+    {% for curriculum in lessons_by_curriculum %}
+        <h3><a href="{% url 'standards:by_curriculum' curriculum.grouper.slug %}">{{ curriculum.grouper }}</a></h3>
+        <ul>
+        {% for lesson in curriculum.list %}
+            <li><a href="{{ lesson.slug }}">{{ lesson.title }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    {% endwith %}
+
+{% endblock %}

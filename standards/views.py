@@ -18,8 +18,14 @@ def by_framework(request, slug):
   return render(request, 'standards/framework.html', {'framework': framework, 'top_categories': top_categories})
 
 def by_curriculum(request, slug):
-  curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set__unitlesson_set__lesson__standards'), slug = slug)
-  return render(request, 'standards/curriculum.html', {'curriculum': curriculum})
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  #curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set__unitlesson_set__lesson__standards'), slug = slug)
+  units = Unit.objects.filter(curriculum = curriculum).prefetch_related('unitlesson_set__lesson__standards')
+  return render(request, 'standards/curriculum.html', {'curriculum': curriculum, 'units': units})
+
+def single_standard(request, slug, shortcode):
+  standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
+  return render(request, 'standards/standard.html', {'standard': standard})
 
 '''
 def unit_view(request, slug, unit_slug):
