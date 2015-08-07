@@ -4,7 +4,7 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 
-{% block meta_title %}{{ curriculum.title }}{% endblock %}
+{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
@@ -37,7 +37,20 @@
         <ul>
         {% for lesson in unit.unitlesson_set.all %}
             <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter%}">
-            {{ lesson }}</a></li>
+            {{ lesson }} - {{ lesson.standards.count }}</a></li>
+            <ul>
+                {% with lesson.standards.all as standards %}
+                {% regroup standards by framework as standards_by_framework %}
+                {% for framework in standards_by_framework %}
+                    <h3>{{ framework.grouper }}</h3>
+                    <ul>
+                    {% for standard in framework.list %}
+                        <li><strong>{{ standard.slug }}</strong> - {{ standard.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endfor %}
+                {% endwith %}
+            </ul>
         {% endfor %}
         </ul>
     </div>

@@ -4,7 +4,7 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 
-{% block meta_title %}{{ page.meta_title }}{% endblock %}
+{% block meta_title %}{{ lesson.meta_title }}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for lesson as keywords %}
@@ -133,7 +133,7 @@
                 {% for resource in lesson.resources.all %}
                     <li>
                         {% if resource.url %}
-                            <a href="{{ resource.url }}">
+                            <a href="{{ resource.url }}" target="_blank">
                             {{ resource.name }}
                             </a>
                         {% else %}

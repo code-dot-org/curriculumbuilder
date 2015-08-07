@@ -1,0 +1,82 @@
+{% extends "baselesson.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ framework.name }} Standards Alignment{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ framework.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {{ framework.name }}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ framework.name }}</h1>
+{% endblock %}
+
+{% block main %}
+    {% for top in top_categories.all %}
+    <div class="together">
+        <h2>{{ top.shortcode }} - {{ top.name }}</h2>
+        {% if top.children.count > 0 %}
+            {% for child in top.children.all %}
+                <h3>{{ child.shortcode }} - {{ child.name }}</h3>
+                {% if child.children.count > 0 %}
+                    {% for child2 in child.children.all %}
+                        <h4>{{ child2.shortcode }} - {{ child2.name }}</h4>
+                        <ul>
+                        {% for standard in child2.standard_set.all %}
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                            <ul>
+                            {% for lesson in standard.lesson_set.all  %}
+                                <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <ul>
+                    {% for standard in child.standard_set.all %}
+                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                        <ul>
+                        {% for lesson in standard.lesson_set.all  %}
+                            <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <ul>
+            {% for standard in top.standard_set.all %}
+                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                <ul>
+                {% for lesson in standard.lesson_set.all  %}
+                    <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+{% endblock %}

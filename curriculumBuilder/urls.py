@@ -81,6 +81,7 @@ urlpatterns += patterns('',
 
     # Curriculum URLs
     url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
+    url(r'^standards/', include('standards.urls', namespace="standards")),
 
     ("^pagedown/", include(mezzanine_pagedown.urls)),
     ("^", include("mezzanine.urls")),

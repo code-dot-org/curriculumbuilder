@@ -4,6 +4,8 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 
+{% block meta_title %}Standards Alignment{% endblock %}
+
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
     {% for keyword in keywords %}
@@ -25,14 +27,21 @@
 {% endblock %}
 
 {% block header_title %}
-    <h1>Code.org CS Curricula</h1>
+    <h1>Standards Alignment</h1>
 {% endblock %}
 
 {% block main %}
+    <h2>By Standards Framework</h2>
+    {% for framework in frameworks.all %}
+    <div class="together">
+        <h3><a href="{% url 'standards:by_framework' framework.slug %}">{{ framework.name }}</a></h3>
+    </div>
+    {% endfor %}
+
+    <h2>By Curriculum</h2>
     {% for curriculum in curricula.all %}
     <div class="together">
-        <h2><a href="{% url 'curriculum:curriculum_view' curriculum.slug %}">{{ curriculum.title }}</a></h2>
-        <p>{{ curriculum.description }}</p>
+        <h3><a href="{% url 'standards:by_curriculum' curriculum.slug %}">{{ curriculum.title }}</a></h3>
     </div>
     {% endfor %}
 
