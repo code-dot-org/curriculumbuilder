@@ -10,10 +10,15 @@ Vocabulary
 class Vocab(models.Model):
   word = models.CharField(max_length=255)
   simpleDef = models.TextField()
-  detailDef = models.TextField()
+  detailDef = models.TextField(blank=True, null=True)
 
   def __unicode__(self):
     return self.word
+
+  def save(self, *args, **kwargs):
+    if not self.detailDef:
+      self.detailDef = self.simpleDef
+    super(Vocab, self).save(*args, **kwargs)
 
 """
 Linked Resources
