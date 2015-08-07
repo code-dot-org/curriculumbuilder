@@ -47,6 +47,19 @@ class Lesson(Page, RichText):
   def __unicode__(self):
     return self.title
 
+  def save(self, *args, **kwargs):
+    self.slug = self.get_slug()
+    super(Lesson, self).save(*args, **kwargs)
+
+  def get_slug(self):
+    try:
+      unit = self.unitlesson_set.first().unit
+      curriculum = unit.curriculum
+      return '/curriculum/%s/%s/%s' % (curriculum.slug, unit.slug, self.number())
+    except:
+      return self.slug
+
+
   def number(self):
     return self._order + 1
 

@@ -283,6 +283,7 @@ INSTALLED_APPS = (
     "gunicorn",
     "import_export",
     "data_importer",
+    "ajax_select",
     # Custom apps for Code.org curriculum
     "standards",
     "lessons",
@@ -362,11 +363,27 @@ PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smart
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = True
 
+#######################
+# AJAXSELECT SETTINGS #
+#######################
+
+AJAX_LOOKUP_CHANNELS = {
+  'resources' : {'model': 'lessons.resource', 'search_field': 'name'},
+  'standards' : {'model': 'standards.standard', 'search_field': 'shortcode'},
+  'vocab' : {'model': 'lessons.vocab', 'search_field': 'word'},
+    #  simple: search Person.objects.filter(name__icontains=q)
+    # 'person'  : {'model': 'example.person', 'search_field': 'name'},
+    # define a custom lookup channel
+    # 'song'   : ('example.lookups', 'SongLookup')
+}
+
 ##################
 # DJANGO         #
 ##################
-SECRET_KEY = "YOUR CUSTOM KEY"
-NEVERCACHE_KEY = "ANOTHER CUSTOM KEY"
+
+ABSOLUTE_URL_OVERRIDES = {
+  'lessons.lesson': lambda u: "/curriculum/%s/%s"
+}
 
 ###################
 # S3 STATIC FILES #

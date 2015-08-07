@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from ajax_select import urls as ajax_select_urls
 
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
@@ -19,7 +20,8 @@ admin.autodiscover()
 urlpatterns = i18n_patterns("",
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
-    ("^admin/", include(admin.site.urls)),
+    (r'^admin/lookups/', include(ajax_select_urls)),
+    (r'^admin/', include(admin.site.urls)),
 )
 
 if settings.USE_MODELTRANSLATION:

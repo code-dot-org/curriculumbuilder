@@ -1,11 +1,14 @@
-from copy import deepcopy
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
+
+from ajax_select import make_ajax_form
+from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
 
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource
+from standards.models import Standard
 
 class ObjectiveInline(StackedDynamicInlineAdmin):
   model = Objective
@@ -24,10 +27,13 @@ class ActivityInline(StackedDynamicInlineAdmin):
   classes = ('collapse-open',)
   inline_classes = ('collapse-open',)
 
-class LessonAdmin(PageAdmin):
+class LessonAdmin(PageAdmin, AjaxSelectAdmin):
+
   inlines = [ActivityInline, ObjectiveInline, PrereqInline]
 
-  filter_horizontal = ('standards','anchor_standards','vocab')
+  form = make_ajax_form(Lesson, {'vocab': 'vocab', 'resources': 'resources'})
+
+  filter_horizontal = ('standards', 'anchor_standards')
 
   fieldsets = (
     (None, {
@@ -35,31 +41,21 @@ class LessonAdmin(PageAdmin):
     }),
     ('Standards', {
       'fields': ['anchor_standards', 'standards'],
-      'classes': ('collapse-closed',)
+      'classes': ('collapse',)
     }),
     ('Vocab', {
       'fields': ['vocab'],
-      'classes': ('collapse-closed',)
+      'classes': ('collapse',)
     }),
     ('Resources', {
       'fields': ['resources'],
-      'classes': ('collapse-closed',)
+      'classes': ('collapse',)
     }),
     ('Meta', {
-      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
-      'classes': ('collapse-closed',)
+      'fields': ['cs_content', 'prep', 'keywords'],
+      'classes': ('collapse',)
     }),
   )
-  """
-  fieldsets = (
-    ('Meta', {
-      'fields': ('title', 'duration', 'keywords')
-    }),
-    ('Body',{
-      'fields': ('content', 'overview', 'summary')
-    }),
-  )
-  """
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Prereq)
 admin.site.register(Objective)
