@@ -22,7 +22,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
   lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
                                                              'vocab', 'resources', 'activity_set'),
-                             unitlesson__unit = unit, _order = int(lesson_num) - 1)
+                             parent = unit, _order = int(lesson_num) - 1)
   page = Page.objects.get(pk = lesson.pk)
   if curriculum.slug == 'csp':
     return render(request, 'curricula/csplesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})

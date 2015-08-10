@@ -56,6 +56,9 @@ class Lesson(Page, RichText):
   def __unicode__(self):
     return self.title
 
+  class Meta:
+    ordering = ["_order"]
+
   def save(self, *args, **kwargs):
     self.slug = self.get_slug()
     super(Lesson, self).save(*args, **kwargs)

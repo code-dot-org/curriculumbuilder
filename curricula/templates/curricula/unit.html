@@ -30,8 +30,8 @@
     <div class="together">
     <h2>{{ unit.title }}</h2>
         <ul>
-        {% for lesson in unit.unitlesson_set.all %}
-            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter %}">{{ lesson }}</a></li>
+        {% for lesson in unit.lessons %}
+            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson }}</a></li>
         {% endfor %}
         </ul>
     </div>

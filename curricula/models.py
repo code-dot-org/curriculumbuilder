@@ -30,6 +30,9 @@ class Unit(Page, RichText):
   def number(self):
     return self._order + 1
 
+  def lessons(self):
+    return Lesson.objects.filter(parent=self)
+
   def save(self, *args, **kwargs):
     try:
       self.curriculum = self.parent.curriculum

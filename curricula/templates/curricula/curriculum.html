@@ -35,10 +35,15 @@
     <div class="together">
         <h2><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.title }}</a></h2>
         <ul>
-        {% for lesson in unit.unitlesson_set.all %}
+        <!--{% for lesson in unit.unitlesson_set.all %}
             <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter%}">
             {{ lesson }}</a></li>
+        {% endfor %}-->
+
+        {% for lesson in unit.lessons %}
+            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson }}</a></li>
         {% endfor %}
+
         </ul>
     </div>
     {% endfor %}
