@@ -49,7 +49,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['resources'],
     }),
     ('Meta', {
-      'fields': ['cs_content', 'prep', 'keywords'],
+      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
     }),
   )
 admin.site.register(Lesson, LessonAdmin)

@@ -43,7 +43,7 @@ Complete Lesson Page
 """
 class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
-  duration = models.IntegerField('Class Periods')
+  duration = models.IntegerField('Class Periods', blank=True, null=True)
   unplugged = models.BooleanField(default=False)
   resources = models.ManyToManyField(Resource, blank=True)
   prep = RichTextField('Materials and Prep', blank=True, null=True)
@@ -59,6 +59,11 @@ class Lesson(Page, RichText):
   def save(self, *args, **kwargs):
     self.slug = self.get_slug()
     super(Lesson, self).save(*args, **kwargs)
+
+    # Attempt to locate parent unit so we can assign the lesson properly
+    if hasattr(self.parent, 'unit'):
+      self.unitlesson_set.get_or_create(unit=self.parent.unit)
+      super(Lesson, self).save(*args, **kwargs)
 
   def get_slug(self):
     try:
