@@ -27,15 +27,15 @@
 {% endblock %}
 
 {% block main %}
-    {% for unit in units %}
+    {% for unit in curriculum.units %}
     <div class="together">
         <h2><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.title }}</a></h2>
         <ul>
-        {% for lesson in unit.unitlesson_set.all %}
+        {% for lesson in unit.lessons %}
             <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug forloop.counter%}">
             {{ lesson }}</a></h3>
             <ul>
-                {% with lesson.lesson.standards.all as standards %}
+                {% with lesson.standards.all as standards %}
                 {% regroup standards by framework as standards_by_framework %}
                 {% for framework in standards_by_framework %}
                     <h4><a href="{% url 'standards:by_framework' framework.grouper.slug %}">{{ framework.grouper }}</a></h4>

@@ -17,6 +17,9 @@ class Curriculum(Page, RichText):
   class Meta:
       verbose_name_plural = "curricula"
 
+  def units(self):
+    return Unit.objects.filter(parent=self)
+
 """
 Curricular Unit
 
