@@ -94,11 +94,16 @@ Prerequisite Skills
 """
 class Prereq(Orderable):
   name = models.CharField(max_length=255)
-  description = models.TextField()
+  description = models.TextField(blank=True, null=True)
   lesson = models.ForeignKey(Lesson)
 
   def __unicode__(self):
     return self.name
+
+  def save(self, *args, **kwargs):
+    if not self.description:
+      self.description = self.name
+    super(Prereq, self).save(*args, **kwargs)
 
 """
 Learning Objectives
@@ -106,8 +111,13 @@ Learning Objectives
 """
 class Objective(Orderable):
   name = models.CharField(max_length=255)
-  description = models.TextField()
+  description = models.TextField(blank=True, null=True)
   lesson = models.ForeignKey(Lesson)
 
   def __unicode__(self):
     return self.name
+
+  def save(self, *args, **kwargs):
+    if not self.description:
+      self.description = self.name
+    super(Objective, self).save(*args, **kwargs)
