@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
                 ('content', mezzanine.core.fields.RichTextField(verbose_name='Content')),
-                ('curriculum', models.ForeignKey(to='curricula.Curriculum')),
+                ('curriculum', models.ForeignKey(blank=True, to='curricula.Curriculum', null=True)),
             ],
             options={
                 'ordering': ('_order',),

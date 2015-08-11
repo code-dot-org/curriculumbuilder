@@ -22,7 +22,7 @@ Curricular Unit
 
 """
 class Unit(Page, RichText):
-  curriculum = models.ForeignKey(Curriculum)
+  curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
 
   def __unicode__(self):
     return self.title
@@ -42,8 +42,8 @@ class Unit(Page, RichText):
 
 """
 Intermediary Model for lessons
+Deprecated
 
-"""
 class UnitLesson(Orderable):
   unit = models.ForeignKey(Unit)
   lesson = models.ForeignKey(Lesson)
@@ -53,3 +53,4 @@ class UnitLesson(Orderable):
 
   def url(self):
     return self.lesson.get_absolute_url()
+"""

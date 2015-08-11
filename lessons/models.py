@@ -52,6 +52,7 @@ class Lesson(Page, RichText):
   standards = models.ManyToManyField(Standard, blank=True)
   anchor_standards = models.ManyToManyField(Standard, related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
+  _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   def __unicode__(self):
     return self.title
@@ -59,28 +60,17 @@ class Lesson(Page, RichText):
   class Meta:
     ordering = ["_order"]
 
-  def save(self, *args, **kwargs):
-    self.slug = self.get_slug()
-    super(Lesson, self).save(*args, **kwargs)
-
-    # Attempt to locate parent unit so we can assign the lesson properly
-    if hasattr(self.parent, 'unit'):
-      self.unitlesson_set.get_or_create(unit=self.parent.unit)
-      super(Lesson, self).save(*args, **kwargs)
-
-  def get_slug(self):
-    try:
-      unit = self.unitlesson_set.first().unit
-      curriculum = unit.curriculum
-      return '/curriculum/%s/%s/%s' % (curriculum.slug, unit.slug, self.number())
-    except:
-      return self.slug
+  def unit(self):
+    return self.parent.unit
 
   def curriculum(self):
-    return self.unitlesson_set.first().unit.curriculum
+    return self.parent.curriculum
 
   def number(self):
     return self._order + 1
+
+  def get_absolute_url(self):
+    return '/curriculum/' + self.curriculum().slug + '/' + self.unit().slug + '/' + str(self.number())
 
 """
 Activities that compose a lesson
