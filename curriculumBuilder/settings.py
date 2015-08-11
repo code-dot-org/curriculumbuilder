@@ -368,9 +368,9 @@ PAGEDOWN_SERVER_SIDE_PREVIEW = True
 #######################
 
 AJAX_LOOKUP_CHANNELS = {
-  'resources' : {'model': 'lessons.resource', 'search_field': 'name'},
-  'standards' : {'model': 'standards.standard', 'search_field': 'shortcode'},
+  'resources' : ('curriculumBuilder.lookups', 'ResourceLookup'),
   'vocab' : {'model': 'lessons.vocab', 'search_field': 'word'},
+  'standards' : {'model': 'standards.standard', 'search_field': 'shortcode'},
     #  simple: search Person.objects.filter(name__icontains=q)
     # 'person'  : {'model': 'example.person', 'search_field': 'name'},
     # define a custom lookup channel
