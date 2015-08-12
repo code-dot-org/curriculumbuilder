@@ -74,10 +74,11 @@ class Standard(models.Model):
   slug = models.CharField(max_length=50, blank=True, null=True)
 
   def __unicode__(self):
-    return self.slug
+    # return self.slug
+    return self.slug + ': ' + self.name
 
   class Meta:
-    ordering = ["category__shortcode", "shortcode"]
+    ordering = ["slug"]
 
   def save(self, *args, **kwargs):
     self.name = self.name[:255]

@@ -16,6 +16,11 @@ class ObjectiveInline(StackedDynamicInlineAdmin):
   verbose_name = "Objective"
   verbose_name_plural = "Objectives"
 
+
+  def get_queryset(self, request):
+    return super(ObjectiveInline, self).get_queryset(request)#.filter(lesson=request)
+
+
 class PrereqInline(StackedDynamicInlineAdmin):
   model = Prereq
   verbose_name = "Prerequisite"
@@ -24,16 +29,20 @@ class PrereqInline(StackedDynamicInlineAdmin):
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
-  classes = ('collapse-open',)
-  inline_classes = ('collapse-open',)
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
+
+  def queryset(self, request):
+    return super(LessonAdmin, self).get_queryset(request).prefetch_related('activity_set', 'objective_set',
+                                                                       'prereq_set', 'standards',
+                                                                       'anchor_standards', 'resources',
+                                                                       'vocab')
 
   inlines = [ActivityInline, ObjectiveInline, PrereqInline]
 
   form = make_ajax_form(Lesson, {'vocab': 'vocab', 'resources': 'resources'})
 
-  filter_horizontal = ('standards', 'anchor_standards')
+  filter_vertical = ('standards', 'anchor_standards')
 
   fieldsets = (
     (None, {
