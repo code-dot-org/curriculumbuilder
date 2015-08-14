@@ -24,7 +24,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
                                                              'vocab', 'resources', 'activity_set'),
                              parent = unit, _order = int(lesson_num) - 1)
   page = Page.objects.get(pk = lesson.pk)
-  if curriculum.slug == 'csp':
+  if curriculum.slug == ('csp' or 'algebra'):
     return render(request, 'curricula/csplesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
   else:
     return render(request, 'curricula/lesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
