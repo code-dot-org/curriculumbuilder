@@ -40,16 +40,16 @@
     <div id="unitnumber"><h2>Unit</h2><h1>{{ unit.number }}</h1></div>
 
     <div class="lessons">
-    {% for stage in unit.unitlesson_set.all %}
-        {% if stage.lesson.number < lesson.number %}
+    {% for stage in unit.lessons %}
+        {% if stage.number < lesson.number %}
         <div class="lesson finished">
-        {% elif stage.lesson.number == lesson.number %}
+        {% elif stage.number == lesson.number %}
         <div class="lesson current">
         {% else %}
         <div class="lesson unfinished">
         {% endif %}
-            <a href="{{ stage.lesson.number }}">
-                {{ stage.lesson.number }}
+            <a href="{{ stage.number }}">
+                {{ stage.number }}
             </a>
         </div>
     {% endfor %}
