@@ -11,13 +11,17 @@ class Vocab(models.Model):
   word = models.CharField(max_length=255)
   simpleDef = models.TextField()
   detailDef = models.TextField(blank=True, null=True)
+  mathy = models.BooleanField(default=False)
 
   class Meta:
       ordering = ["word"]
       verbose_name_plural = "vocab words"
 
   def __unicode__(self):
-    return self.word
+    if self.mathy:
+      return self.word + ' (math)' + ': ' + self.simpleDef
+    else:
+      return self.word + ': ' + self.simpleDef
 
   def save(self, *args, **kwargs):
     if not self.detailDef:
