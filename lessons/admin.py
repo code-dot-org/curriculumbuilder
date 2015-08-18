@@ -52,14 +52,14 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     ('Standards', {
       'fields': ['anchor_standards', 'standards'],
     }),
+    ('Meta', {
+      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
+    }),
     ('Vocab', {
       'fields': ['vocab'],
     }),
     ('Resources', {
       'fields': ['resources'],
-    }),
-    ('Meta', {
-      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
     }),
   )
 
