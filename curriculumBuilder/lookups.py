@@ -11,6 +11,6 @@ class ResourceLookup(LookupChannel):
   def format_item_display(self, obj):
     display_text = obj.name
     if obj.url:
-      display_text += u"  -  [%s](%s)" % (obj.name, obj.url)
+      display_text += u"  -  [r %s]" % (obj.name,)
     display_text += u"  -  <a href='%s' target='_blank'>edit</a>" % (urlresolvers.reverse('admin:lessons_resource_change', args=(obj.pk,)),)
     return display_text

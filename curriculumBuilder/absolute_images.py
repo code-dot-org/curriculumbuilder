@@ -1,11 +1,13 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 from urlparse import urljoin
+import urllib2
 
 from markdown import Extension
 from markdown.treeprocessors import Treeprocessor
 
 BASE_URL = "//code.org/curriculum/docs/"
+STAGING_URL = "//staging.code.org/curriculum/docs/"
 
 class AbsoluteImagesExtension(Extension):
     """ Absolute Images Extension """
@@ -27,7 +29,12 @@ class AbsoluteImagesTreeprocessor(Treeprocessor):
                 image.set("src", self.make_external(image.attrib["src"]))
 
     def make_external(self, path):
-        return urljoin(BASE_URL, path)
+        try:
+            new_path = urljoin(BASE_URL, path)
+            urllib2.urlopen(new_path)
+            return new_path
+        except:
+            return urljoin(STAGING_URL, path)
 
     def is_relative(self, link):
         if link.startswith('http'):
