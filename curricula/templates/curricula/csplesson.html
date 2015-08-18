@@ -103,7 +103,7 @@
                     <h3>{{ framework.grouper }}</h3>
                     <ul>
                     {% for standard in framework.list %}
-                        <li><strong>{{ standard.slug }}</strong> - {{ standard.name }}</li>
+                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
                     {% endfor %}
                     </ul>
                 {% endfor %}
@@ -178,7 +178,7 @@
             <h3>{{ framework.grouper }}</h3>
             <ul>
             {% for standard in framework.list %}
-                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
+                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
             {% endfor %}
             </ul>
         {% endfor %}

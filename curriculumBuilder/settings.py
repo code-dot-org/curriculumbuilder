@@ -361,7 +361,7 @@ RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smarty')
+PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smarty', 'markdown_newtab')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = True
 
@@ -377,14 +377,6 @@ AJAX_LOOKUP_CHANNELS = {
     # 'person'  : {'model': 'example.person', 'search_field': 'name'},
     # define a custom lookup channel
     # 'song'   : ('example.lookups', 'SongLookup')
-}
-
-##################
-# DJANGO         #
-##################
-
-ABSOLUTE_URL_OVERRIDES = {
-  'lessons.lesson': lambda u: "/curriculum/%s/%s"
 }
 
 ###################

@@ -41,7 +41,7 @@
                     <h4><a href="{% url 'standards:by_framework' framework.grouper.slug %}">{{ framework.grouper }}</a></h4>
                     <ul>
                     {% for standard in framework.list %}
-                        <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.name }}</li>
+                        <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
                     {% endfor %}
                     </ul>
                 {% endfor %}

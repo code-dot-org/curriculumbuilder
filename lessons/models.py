@@ -68,7 +68,7 @@ class Lesson(Page, RichText):
     return self.parent.unit
 
   def curriculum(self):
-    return self.parent.curriculum
+    return self.parent.unit.curriculum
 
   def number(self):
     return self._order + 1
