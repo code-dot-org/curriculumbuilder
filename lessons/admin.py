@@ -1,5 +1,6 @@
-from django import forms
 from django.contrib import admin
+from django.db import models
+from django.forms import TextInput
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
@@ -61,9 +62,19 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['cs_content', 'prep', 'slug', 'keywords'],
     }),
   )
+
+class ResourceAdmin(admin.ModelAdmin):
+  model = Resource
+
+  formfield_overrides = {
+    models.CharField: {'widget': TextInput(attrs={'size':'10'})},
+  }
+  list_display = ('name', 'type', 'student', 'url')
+  list_editable = ('type', 'student', 'url')
+
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)
 admin.site.register(Vocab)
-admin.site.register(Resource)
+admin.site.register(Resource, ResourceAdmin)
