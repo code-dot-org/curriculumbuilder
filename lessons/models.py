@@ -33,7 +33,7 @@ Linked Resources
 
 """
 class Resource(models.Model):
-  name = models.CharField(max_length=255)
+  name = models.CharField(max_length=255, unique=True)
   type = models.CharField(max_length=255, blank=True, null=True)
   student = models.BooleanField(default=False)
   url = models.URLField(blank=True, null=True)
