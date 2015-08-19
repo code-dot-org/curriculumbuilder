@@ -44,8 +44,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
                                                                        'anchor_standards', 'resources',
                                                                        'vocab')
 
-  #inlines = [ActivityInline, ObjectiveInline, PrereqInline]
-  inlines = [ActivityInline]
+  inlines = [ActivityInline, ObjectiveInline, PrereqInline]
 
   form = make_ajax_form(Lesson, {'vocab': 'vocab', 'resources': 'resources'})
 
@@ -55,7 +54,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     (None, {
       'fields': ['title', ('duration', 'unplugged'), 'overview'],
     }),
-    ('Meta', {
+    ('CS Content, Materials & Prep', {
       'fields': ['cs_content', 'prep', 'slug', 'keywords'],
       'classes': ['collapse-closed',],
     }),
