@@ -28,6 +28,7 @@
 
 {% block extra_js %}
     <script src="{% static "js/toc.min.js" %}"></script>
+    <script src="{% static "js/jquery.details.min.js" %}"></script>
 {% endblock %}
 
 {% block admin_link %}
@@ -175,12 +176,17 @@
         {% with lesson.standards.all as standards %}
         {% regroup standards by framework as standards_by_framework %}
         {% for framework in standards_by_framework %}
-            <h3>{{ framework.grouper }}</h3>
-            <ul>
+            <details class="framework">
+            <summary>{{ framework.grouper }}</summary>
+            <!--<ul>-->
             {% for standard in framework.list %}
-                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                <details class="standard">
+                <summary>{{ standard.shortcode }}</summary>
+                    <p>{{ standard.description }}</p>
+                </details>
             {% endfor %}
-            </ul>
+            <!--</ul>-->
+            </details>
         {% endfor %}
         {% endwith %}
     </div>
@@ -202,6 +208,23 @@
             'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
+        });
+    </script>
+    <script>
+        $(function() {
+            // Add conditional classname based on support
+            $('html').addClass($.fn.details.support ? 'details' : 'no-details');
+            // Emulate <details> where necessary and enable open/close event handlers
+            $('details').details();
+            // Bind some example event handlers
+            $('details').on({
+                'open.details': function() {
+                    console.log('opened');
+                },
+                'close.details': function() {
+                    console.log('closed');
+                }
+            });
         });
     </script>
 

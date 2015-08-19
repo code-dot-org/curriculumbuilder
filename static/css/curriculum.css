@@ -107,6 +107,15 @@ img {
     color: white;
 }
 
+#standards .framework > summary {
+    font-weight: bold;
+}
+
+#standards .framework .standard {
+    margin-left: 30px;
+}
+
+
 /* Alignment classes */
 .center {
     display: block;

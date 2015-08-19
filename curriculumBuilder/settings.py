@@ -364,7 +364,7 @@ RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin
 PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smarty', 'markdown_newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks')
 RICHTEXT_FILTER_LEVEL = 3
-PAGEDOWN_SERVER_SIDE_PREVIEW = True
+PAGEDOWN_SERVER_SIDE_PREVIEW = False
 
 #######################
 # AJAXSELECT SETTINGS #

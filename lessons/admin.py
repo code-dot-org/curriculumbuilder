@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput
+from django.forms import TextInput, Textarea
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
 
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
+from mezzanine.core.fields import RichTextField
+from mezzanine_pagedown.widgets import PlainWidget
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource
 from standards.models import Standard
@@ -16,7 +18,6 @@ class ObjectiveInline(StackedDynamicInlineAdmin):
   list_display = ['name', 'description']
   verbose_name = "Objective"
   verbose_name_plural = "Objectives"
-
 
   def get_queryset(self, request):
     return super(ObjectiveInline, self).get_queryset(request)#.filter(lesson=request)
@@ -31,6 +32,10 @@ class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
 
+  formfield_overrides = {
+    RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
+  }
+
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
   def queryset(self, request):
@@ -39,7 +44,8 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
                                                                        'anchor_standards', 'resources',
                                                                        'vocab')
 
-  inlines = [ActivityInline, ObjectiveInline, PrereqInline]
+  #inlines = [ActivityInline, ObjectiveInline, PrereqInline]
+  inlines = [ActivityInline]
 
   form = make_ajax_form(Lesson, {'vocab': 'vocab', 'resources': 'resources'})
 
@@ -49,17 +55,17 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     (None, {
       'fields': ['title', ('duration', 'unplugged'), 'overview'],
     }),
-    ('Standards', {
-      'fields': ['anchor_standards', 'standards'],
-    }),
     ('Meta', {
       'fields': ['cs_content', 'prep', 'slug', 'keywords'],
+      'classes': ['collapse-closed',],
     }),
-    ('Vocab', {
-      'fields': ['vocab'],
+    ('Standards', {
+      'fields': ['anchor_standards', 'standards'],
+      'classes': ['collapse-closed',],
     }),
-    ('Resources', {
-      'fields': ['resources'],
+    ('Vocab and Resources', {
+      'fields': ['vocab', 'resources'],
+      'classes': ['collapse-closed',],
     }),
   )
 

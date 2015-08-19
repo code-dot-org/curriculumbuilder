@@ -21,7 +21,7 @@ django-remplacer==0.1.1
 filebrowser-safe==0.4.0
 future==0.15.0
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@b6498cf1fd0a156991bbb4fe715582f5fb16d970#egg=grappelli_nested_inlines
-grappelli-safe==0.4.0
+grappelli-safe==0.4.1
 gunicorn==19.3.0
 html5lib==0.999999
 Markdown==2.6.2
