@@ -130,19 +130,19 @@
 
             {% if lesson.resources.count > 0 %}
                 <h2>Resources</h2>
-                <ul>
-                {% for resource in lesson.resources.all %}
-                    <li>
-                        {% if resource.url %}
-                            <a href="{{ resource.url }}" target="_blank">
-                            {{ resource.name }}
-                            </a>
-                        {% else %}
-                            {{ resource.name }}
-                        {% endif %}
-                    </li>
+                {% with lesson.resources.all as resources %}
+                {% regroup resources by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <ul>
+                    {% for resource in audience.list %}
+                        <li>
+                            {{ resource|safe }}
+                        </li>
+                    {% endfor %}
+                    </ul>
                 {% endfor %}
-                </ul>
+                {% endwith %}
             {% endif %}
 
             {% if lesson.vocab.count > 0 %}

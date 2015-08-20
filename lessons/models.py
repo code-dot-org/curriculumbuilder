@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
@@ -35,11 +36,32 @@ Linked Resources
 class Resource(models.Model):
   name = models.CharField(max_length=255, unique=True)
   type = models.CharField(max_length=255, blank=True, null=True)
-  student = models.BooleanField(default=False)
+  student = models.BooleanField('Student Facing', default=False)
+  gd = models.BooleanField('Google Doc', default=False)
   url = models.URLField(blank=True, null=True)
+  dl_url = models.URLField('Download URL', help_text='Alternate download url', blank=True, null=True)
+
+  class Meta:
+    ordering = ['student', 'type']
 
   def __unicode__(self):
-    return self.name
+    if self.url:
+      formatted = "<a href='%s' target='_blank'>%s</a> - %s" % (self.url, self.name, self.type)
+    else:
+      formatted = "%s - %s" % (self.name, self.type)
+    if self.dl_url:
+      formatted = "%s (<a href='%s'>download</a>)" % (formatted, self.dl_url)
+    elif self.gd:
+      formatted = "%s (<a href='%s'>download</a>)" % (formatted, self.gd_pdf())
+    return formatted
+
+  def gd_pdf(self):
+    try:
+      pdf = re.search(r'^(.*[/])', self.url).group()
+      pdf = pdf + 'export?format=pdf'
+      return pdf
+    except:
+      return self.url
 
 """
 Complete Lesson Page

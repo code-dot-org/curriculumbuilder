@@ -360,7 +360,7 @@ RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
-                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin')
+                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style')
 PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smarty', 'markdown_newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks')
 RICHTEXT_FILTER_LEVEL = 3
