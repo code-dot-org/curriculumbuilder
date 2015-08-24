@@ -74,8 +74,8 @@ class ResourceAdmin(admin.ModelAdmin):
   formfield_overrides = {
     models.CharField: {'widget': TextInput(attrs={'size':'10'})},
   }
-  list_display = ('name', 'type', 'student', 'url')
-  list_editable = ('type', 'student', 'url')
+  list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
+  list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
 
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Prereq)
