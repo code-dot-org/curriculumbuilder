@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import, unicode_literals
 import os
 import socket
@@ -111,7 +110,7 @@ LANGUAGE_CODE = "en"
 
 # Supported languages
 LANGUAGES = (
-    ('en', _('English')),
+  ('en', _('English')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -122,25 +121,25 @@ LANGUAGES = (
 ON_PAAS = 'OPENSHIFT_REPO_DIR' in os.environ
 
 if ON_PAAS:
-    SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
+  SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
 else:
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
+  # SECURITY WARNING: keep the secret key used in production secret!
+  SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
 DEBUG = not ON_PAAS
-DEBUG = DEBUG or os.getenv("debug","false").lower() == "true"
+DEBUG = DEBUG or os.getenv("debug", "false").lower() == "true"
 
 if ON_PAAS and DEBUG:
-    print("*** Warning - Debug mode is on ***")
+  print("*** Warning - Debug mode is on ***")
 
 TEMPLATE_DEBUG = True
 
 if ON_PAAS:
-    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
+  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
 else:
-    ALLOWED_HOSTS = ['*']
+  ALLOWED_HOSTS = ['*']
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -164,42 +163,42 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 #############
 
 if ON_PAAS:
-    # determine if we are on MySQL or POSTGRESQL
-    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
+  # determine if we are on MySQL or POSTGRESQL
+  if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
 
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
-                'USER':     os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
-                'HOST':     os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
-                'PORT':     os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
-            }
-        }
+    DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ['OPENSHIFT_APP_NAME'],
+        'USER': os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
+        'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
+        'HOST': os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
+        'PORT': os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
+      }
+    }
 
-    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
+  elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
 
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
-                'USER':     os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
-                'HOST':     os.environ['OPENSHIFT_MYSQL_DB_HOST'],
-                'PORT':     os.environ['OPENSHIFT_MYSQL_DB_PORT'],
-            }
-        }
+    DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ['OPENSHIFT_APP_NAME'],
+        'USER': os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
+        'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
+        'HOST': os.environ['OPENSHIFT_MYSQL_DB_HOST'],
+        'PORT': os.environ['OPENSHIFT_MYSQL_DB_PORT'],
+      }
+    }
 
 
 else:
-    # stock django, local development.
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+  # stock django, local development.
+  DATABASES = {
+    'default': {
+      'ENGINE': 'django.db.backends.sqlite3',
+      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+  }
 
 #########
 # PATHS #
@@ -223,15 +222,15 @@ STATIC_URL = "/static/"
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi','static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi', 'static')
 
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+  'django.contrib.staticfiles.finders.FileSystemFinder',
+  'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+  os.path.join(BASE_DIR, 'static'),
 )
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -258,80 +257,82 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 ################
 
 INSTALLED_APPS = (
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.redirects",
-    "django.contrib.sessions",
-    "django.contrib.sites",
-    "django.contrib.sitemaps",
-    "django.contrib.staticfiles",
-    "mezzanine.boot",
-    "mezzanine.conf",
-    "mezzanine.core",
-    "mezzanine.generic",
-    "mezzanine.pages",
-    #"mezzanine.blog",
-    #"mezzanine.forms",
-    #"mezzanine.galleries",
-    #"mezzanine.twitter",
-    # "mezzanine.accounts",
-    # "mezzanine.mobile",
-    # Third party apps
-    "mezzanine_pagedown",
-    "csvimport.app.CSVImportConf",
-    "gunicorn",
-    "import_export",
-    "data_importer",
-    "ajax_select",
-    # Custom apps for Code.org curriculum
-    "standards",
-    "lessons",
-    "curricula",
+  "django.contrib.admin",
+  "django.contrib.auth",
+  "django.contrib.contenttypes",
+  "django.contrib.redirects",
+  "django.contrib.sessions",
+  "django.contrib.sites",
+  "django.contrib.sitemaps",
+  "django.contrib.staticfiles",
+  "mezzanine.boot",
+  "mezzanine.conf",
+  "mezzanine.core",
+  "mezzanine.generic",
+  "mezzanine.pages",
+  # "mezzanine.blog",
+  # "mezzanine.forms",
+  # "mezzanine.galleries",
+  # "mezzanine.twitter",
+  # "mezzanine.accounts",
+  # "mezzanine.mobile",
+  # Third party apps
+  "mezzanine_pagedown",
+  #"csvimport.app.CSVImportConf",
+  "gunicorn",
+  "import_export",
+  "data_importer",
+  "ajax_select",
+  "wkhtmltopdf",
+  "django_medusa",
+  # Custom apps for Code.org curriculum
+  "standards",
+  "lessons",
+  "curricula",
 )
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.static",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.tz",
-    "mezzanine.conf.context_processors.settings",
-    "mezzanine.pages.context_processors.page",
+  "django.contrib.auth.context_processors.auth",
+  "django.contrib.messages.context_processors.messages",
+  "django.core.context_processors.debug",
+  "django.core.context_processors.i18n",
+  "django.core.context_processors.static",
+  "django.core.context_processors.media",
+  "django.core.context_processors.request",
+  "django.core.context_processors.tz",
+  "mezzanine.conf.context_processors.settings",
+  "mezzanine.pages.context_processors.page",
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
-    "mezzanine.core.middleware.UpdateCacheMiddleware",
+  "mezzanine.core.middleware.UpdateCacheMiddleware",
 
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    # Uncomment if using internationalisation or localisation
-    # 'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+  'django.contrib.sessions.middleware.SessionMiddleware',
+  # Uncomment if using internationalisation or localisation
+  # 'django.middleware.locale.LocaleMiddleware',
+  'django.middleware.common.CommonMiddleware',
+  'django.middleware.csrf.CsrfViewMiddleware',
+  'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+  'django.contrib.messages.middleware.MessageMiddleware',
+  'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "mezzanine.core.request.CurrentRequestMiddleware",
-    "mezzanine.core.middleware.RedirectFallbackMiddleware",
-    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
-    "mezzanine.core.middleware.TemplateForHostMiddleware",
-    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
-    "mezzanine.core.middleware.SitePermissionMiddleware",
-    # Uncomment the following if using any of the SSL settings:
-    # "mezzanine.core.middleware.SSLRedirectMiddleware",
-    "mezzanine.pages.middleware.PageMiddleware",
-    "mezzanine.core.middleware.FetchFromCacheMiddleware",
+  "mezzanine.core.request.CurrentRequestMiddleware",
+  "mezzanine.core.middleware.RedirectFallbackMiddleware",
+  "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+  "mezzanine.core.middleware.TemplateForHostMiddleware",
+  "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+  "mezzanine.core.middleware.SitePermissionMiddleware",
+  # Uncomment the following if using any of the SSL settings:
+  # "mezzanine.core.middleware.SSLRedirectMiddleware",
+  "mezzanine.pages.middleware.PageMiddleware",
+  "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
 
 # Store these package names here as they may change in the future since
@@ -345,11 +346,11 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    "debug_toolbar",
-    "django_extensions",
-    "compressor",
-    PACKAGE_NAME_FILEBROWSER,
-    PACKAGE_NAME_GRAPPELLI,
+  "debug_toolbar",
+  "django_extensions",
+  "compressor",
+  PACKAGE_NAME_FILEBROWSER,
+  PACKAGE_NAME_GRAPPELLI,
 )
 
 #####################
@@ -361,7 +362,7 @@ RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra','codehilite','toc', 'admonition', 'smarty', 'markdown_newtab',
+PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'admonition', 'smarty', 'markdown_newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
@@ -371,14 +372,33 @@ PAGEDOWN_SERVER_SIDE_PREVIEW = False
 #######################
 
 AJAX_LOOKUP_CHANNELS = {
-  'resources' : ('curriculumBuilder.lookups', 'ResourceLookup'),
-  'vocab' : {'model': 'lessons.vocab', 'search_field': 'word'},
-  'standards' : {'model': 'standards.standard', 'search_field': 'shortcode'},
-    #  simple: search Person.objects.filter(name__icontains=q)
-    # 'person'  : {'model': 'example.person', 'search_field': 'name'},
-    # define a custom lookup channel
-    # 'song'   : ('example.lookups', 'SongLookup')
+  'resources': ('curriculumBuilder.lookups', 'ResourceLookup'),
+  'vocab': {'model': 'lessons.vocab', 'search_field': 'word'},
+  'standards': {'model': 'standards.standard', 'search_field': 'shortcode'},
+  #  simple: search Person.objects.filter(name__icontains=q)
+  # 'person'  : {'model': 'example.person', 'search_field': 'name'},
+  # define a custom lookup channel
+  # 'song'   : ('example.lookups', 'SongLookup')
 }
+
+########################
+# WKHTMLTOPDF SETTINGS #
+########################
+
+WKHTMLTOPDF_CMD_OPTIONS = {
+  'quiet': False,
+  'page-size': 'Letter',
+}
+
+###################
+# MEDUSA SETTINGS #
+###################
+
+MEDUSA_RENDERER_CLASS = "django_medusa.renderers.DiskStaticSiteRenderer"
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDUSA_DEPLOY_DIR = os.path.join(
+  PROJECT_DIR, '..', "_output"
+)
 
 ###################
 # S3 STATIC FILES #
@@ -397,15 +417,15 @@ AJAX_LOOKUP_CHANNELS = {
 # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
 # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
 
-#MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+# MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
 
 ###########
 # LOGGING #
 ###########
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
+  'version': 1,
+  'disable_existing_loggers': True,
 }
 
 ##################
@@ -416,10 +436,10 @@ LOGGING = {
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-    from .local_settings import *
+  from .local_settings import *
 except ImportError as e:
-    if "local_settings" not in str(e):
-        raise e
+  if "local_settings" not in str(e):
+    raise e
 
 ####################
 # DYNAMIC SETTINGS #
@@ -432,8 +452,8 @@ except ImportError as e:
 # fabfile, where setting the dynamic settings below isn't strictly
 # required.
 try:
-    from mezzanine.utils.conf import set_dynamic_settings
+  from mezzanine.utils.conf import set_dynamic_settings
 except ImportError:
-    pass
+  pass
 else:
-    set_dynamic_settings(globals())
+  set_dynamic_settings(globals())
