@@ -11,11 +11,14 @@ Curriculum
 class Curriculum(Page, RichText):
   gradeband = models.ForeignKey(GradeBand)
 
+  class Meta:
+      verbose_name_plural = "curricula"
+
   def __unicode__(self):
     return self.title
 
-  class Meta:
-      verbose_name_plural = "curricula"
+  def get_absolute_url(self):
+    return '/curriculum/' + self.slug + '/'
 
   def units(self):
     return Unit.objects.filter(parent=self)
@@ -29,6 +32,9 @@ class Unit(Page, RichText):
 
   def __unicode__(self):
     return self.title
+
+  def get_absolute_url(self):
+    return self.curriculum.get_absolute_url() + self.slug + '/'
 
   def number(self):
     return self._order + 1

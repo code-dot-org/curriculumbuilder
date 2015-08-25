@@ -80,11 +80,14 @@ class Lesson(Page, RichText):
   vocab = models.ManyToManyField(Vocab, blank=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
+  class Meta:
+    ordering = ["_order"]
+
   def __unicode__(self):
     return self.title
 
-  class Meta:
-    ordering = ["_order"]
+  def get_absolute_url(self):
+    return self.unit().get_absolute_url() + str(self.number()) + '/'
 
   def unit(self):
     return self.parent.unit
@@ -94,9 +97,6 @@ class Lesson(Page, RichText):
 
   def number(self):
     return self._order + 1
-
-  def get_absolute_url(self):
-    return '/curriculum/' + self.curriculum().slug + '/' + self.unit().slug + '/' + str(self.number())
 
 """
 Activities that compose a lesson
