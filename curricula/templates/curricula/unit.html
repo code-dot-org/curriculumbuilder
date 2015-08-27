@@ -29,6 +29,9 @@
 {% block main %}
     <div class="together">
     <h2>{{ unit.title }}</h2>
+    {% editable unit.content %}
+    {{ unit.content }}
+    {% endeditable %}
         <ul>
         {% for lesson in unit.lessons %}
             <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson }}</a></li>
