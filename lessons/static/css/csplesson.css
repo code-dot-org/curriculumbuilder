@@ -1,5 +1,5 @@
 html, body{
-    margin: 0;
+    margin: 0 !important;
     font-size: 16px;
     line-height: 1.35em;
     height:100%;
@@ -25,10 +25,6 @@ html, body{
 
 #unitnumber h1 {
     margin: 0;
-}
-
-.together{
-    /*page-break-inside: avoid;*/
 }
 
 .pagebreak{
@@ -209,6 +205,11 @@ html, body{
     box-shadow: inset -5px 0px 10px -5px #000;
 }*/
 
+#toc .h2, #toc .h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .admonition {
     /* margin: 40px 0	40px 0;
     padding: 10px 20px 10px 0px;
@@ -296,8 +297,12 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .container_nonresponsive {
-    max-width: 1024px;
-    margin: 0 auto;
+    max-width: 1024px !important;
+    margin: 0 auto !important;
+}
+
+.container_nonresponsive .content {
+    margin: 0 10px;
 }
 
 @page

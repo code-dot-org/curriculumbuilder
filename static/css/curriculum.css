@@ -14,9 +14,11 @@ img {
 }
 
 #admin_edit {
-    float: right;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(255,255,255,.8);
     padding: 10px;
-    border: 1px solid red;
 }
 
 .content h1 {
@@ -73,6 +75,10 @@ img {
     padding-left:40px;
 }
 
+.together {
+    clear: both;
+}
+
 .header {
     width: 100%;
 }
@@ -105,6 +111,10 @@ img {
 
 #header h1 {
     color: white;
+}
+
+#standards {
+    clear: both;
 }
 
 #standards .framework > summary {
