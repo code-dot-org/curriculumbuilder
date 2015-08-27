@@ -30,7 +30,7 @@
     <div class="together">
     <h2>{{ unit.title }}</h2>
     {% editable unit.content %}
-    {{ unit.content }}
+    {{ unit.content|richtext_filters|safe }}
     {% endeditable %}
         <ul>
         {% for lesson in unit.lessons %}
