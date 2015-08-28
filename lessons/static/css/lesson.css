@@ -47,10 +47,11 @@ body{
     text-transform:uppercase;
     margin-top:1em;
     margin-bottom:.5em;
+    font-size: 20px
 }
 
 .content h3 {
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1em;
     margin-top:1em;
     margin-bottom:.5em;
