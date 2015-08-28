@@ -124,7 +124,7 @@
         </div>
 
         {% for activity in lesson.activity_set.all %}
-            <div class="together">
+            <div class="activity">
                 {% editable activity.name activity.content %}
                     <h2>{{ activity.name }}</h2>
                     {{ activity.content|richtext_filters|safe }}
