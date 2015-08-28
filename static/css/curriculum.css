@@ -45,7 +45,10 @@ img {
 
 .content ul {
     margin-top:0px;
-    padding-left: 20px;
+}
+
+#toc ul li:before {
+    content: none;
 }
 
 .content p {
@@ -89,7 +92,7 @@ img {
     -webkit-print-color-adjust: exact;
 }
 
-.printbackground h1 {
+.printbackground h1, .printbackground h2 {
     color: white!important;
 }
 
@@ -146,8 +149,21 @@ img {
     line-height: normal !important;
 }
 
-/* Make Bootstrap columns more print friendly */
+/* Make Bootstrap columns more print friendly and disable most printed urls */
 @media print {
+
+    .printbackground .lesson a {
+        color: white!important;
+    }
+
+    a[href]:after {
+        content:none!important;
+    }
+
+    .print_link[href]:after {
+        content: " (" attr(href) ")"!important;
+    }
+
   .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
     float: left;
   }

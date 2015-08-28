@@ -49,7 +49,7 @@
         {% else %}
         <div class="lesson unfinished">
         {% endif %}
-            <a href="{{ stage.number }}">
+            <a href="{{ stage.get_absolute_url }}">
                 {{ stage.number }}
             </a>
         </div>

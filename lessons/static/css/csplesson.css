@@ -207,7 +207,6 @@ html, body{
 
 #toc .h2, #toc .h3 {
     margin-top: 0;
-    margin-bottom: 0;
 }
 
 .admonition {
@@ -218,12 +217,21 @@ html, body{
     border-radius: 10px;
     page-break-inside: avoid;
     position: relative;*/
-    float: right;
-    margin: 15px 0 15px 15px;
+    margin-top: 40px;
+    margin-bottom: 15px;
     padding: 10px;
     border: 2px solid #ffa400;
-    page-break-inside: avoid;
+}
+
+.admonition.tip {
+    margin-left: 15px;
+    float: right;
     width: 50%;
+    page-break-inside: avoid;
+}
+
+.admonition.center {
+    text-align: inherit;
 }
 
 .admonition p {

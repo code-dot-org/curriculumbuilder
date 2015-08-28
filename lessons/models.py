@@ -46,13 +46,13 @@ class Resource(models.Model):
 
   def __unicode__(self):
     if self.url:
-      formatted = "<a href='%s' target='_blank'>%s</a> - %s" % (self.url, self.name, self.type)
+      formatted = "<a href='%s' target='_blank' class='print_link'>%s</a> - %s" % (self.url, self.name, self.type)
     else:
       formatted = "%s - %s" % (self.name, self.type)
     if self.dl_url:
-      formatted = "%s (<a href='%s'>download</a>)" % (formatted, self.dl_url)
+      formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
     elif self.gd:
-      formatted = "%s (<a href='%s'>download</a>)" % (formatted, self.gd_pdf())
+      formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
     return formatted
 
   def gd_pdf(self):
