@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static "js/toc.min.js" %}"></script>
+    <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
 {% endblock %}
 
@@ -79,7 +79,7 @@
             {% endeditable %}
 
             <h2>Lesson Summary</h2>
-            <div id="toc">
+            <div id="toc{{ lesson|slugify }}">
                 {% for activity in lesson.activity_set.all %}
                     <h3>{{ activity.name }}</h3>
                 {% endfor %}
@@ -191,11 +191,11 @@
         {% endwith %}
     </div>
     <script type="text/javascript">
-        $('#toc').toc({
+        $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
             'container': '#lesson_content', //element to find all selectors in
-            'smoothScrolling': true, //enable or disable smooth scrolling on click
-            'prefix': 'toc', //prefix for anchor tags and class names
+            'smoothScrolling': false, //enable or disable smooth scrolling on click
+            'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
             'onHighlight': function(el) {}, //called when a new section is highlighted
             'highlightOnScroll': true, //add class to heading that is currently in focus
             'highlightOffset': 100, //offset to trigger the next headline
