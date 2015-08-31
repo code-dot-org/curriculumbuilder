@@ -205,7 +205,7 @@ html, body{
     box-shadow: inset -5px 0px 10px -5px #000;
 }*/
 
-#toc .h2, #toc .h3 {
+.toc .h2, .toc .h3 {
     margin-top: 0;
 }
 

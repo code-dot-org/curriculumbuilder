@@ -16,11 +16,11 @@
     {% endifinstalled %}
 
     {% compress css %}
-        <link rel="stylesheet" href="{% static "css/curriculum.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
-        <!--<link rel="stylesheet" href="https://code.org/style.css">-->
+        <link rel="stylesheet" href="https://code.org/style.css">
+        <link rel="stylesheet" href="{% static "css/curriculum.css" %}">
         {% block extra_css %}{% endblock %}
     {% endcompress %}
 
@@ -44,7 +44,7 @@
 {% block admin_link %}
 {% endblock %}
 
-<div class="container_nonresponsive" style="width: 100%">
+<div class="container_nonresponsive">
     <div class="header printbackground">
         <div class="headercontent">
             <div id="top">

@@ -47,7 +47,7 @@ img {
     margin-top:0px;
 }
 
-#toc ul li:before {
+.toc ul li:before {
     content: none;
 }
 
@@ -86,13 +86,15 @@ img {
     width: 100%;
 }
 
+.header {
+    min-height: 100px;
+}
 .printbackground {
     background-color: #7665a0!important;
     color: white!important;
     -webkit-print-color-adjust: exact;
     clear:left;
     margin-right: 90px;
-    min-height: 90px
 }
 
 .printbackground h1, .printbackground h2 {

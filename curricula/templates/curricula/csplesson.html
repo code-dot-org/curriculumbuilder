@@ -79,7 +79,7 @@
             {% endeditable %}
 
             <h2>Lesson Summary</h2>
-            <div id="toc{{ lesson|slugify }}">
+            <div class="toc" id="toc{{ lesson|slugify }}">
                 {% for activity in lesson.activity_set.all %}
                     <h3>{{ activity.name }}</h3>
                 {% endfor %}
