@@ -242,14 +242,14 @@ html, body{
 }
 
 .admonition p.admonition-title {
-    color: white;
+    color: white!important;
     font-size: 12pt;
     height: 30px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     display: inline-block;
     float: left;
-    background-color: #ffa400;
+    background-color: #ffa400!important;
     padding: 5px 10px;
     margin-top: -40px;
     border: 0px solid #ffa400;

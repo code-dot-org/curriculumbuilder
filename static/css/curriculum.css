@@ -169,12 +169,19 @@ img {
     body{
         margin: 0 0 0 0 !important;
         width: 100% !important;
-        zoom: 125% !important;
+        zoom: 75% !important;
     }
 
     .container_nonresponsive {
         width: 100% !important;
     }
+
+    blockquote {
+        padding: 10px 20px !important;
+        border: 1px solid #999 !important;
+        page-break-inside: avoid;
+    }
+
     img{ max-width: 100%; }
     .standards, .video, #admin_edit, #editable-toolbar, .editable-link { display: none !important; }
 
