@@ -195,18 +195,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin: 0 auto;
 }
 
-@page
-{
+@page {
     size: auto;
     margin: .25in .25in .25in .25in;
-}
-
-@media print {
-    body{
-        margin: 0 0 0 0;
-        width: 100%;
-        zoom: 75%;
-    }
-    img{ max-width: 100%; }
-    .standards, .video, #admin_edit, #editable-toolbar, .editable-link { display: none !important; }
 }

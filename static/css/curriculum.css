@@ -157,6 +157,14 @@ img {
 /* Make Bootstrap columns more print friendly and disable most printed urls */
 @media print {
 
+    body{
+        margin: 0 0 0 0!important;
+        width: 100%!important;
+        zoom: 75%!important;
+    }
+    img{ max-width: 100%; }
+    .standards, .video, #admin_edit, #editable-toolbar, .editable-link { display: none !important; }
+
     .printbackground .lesson a {
         color: white!important;
     }

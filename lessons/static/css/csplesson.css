@@ -125,6 +125,7 @@ html, body{
 
 .overview-page {
     page-break-after: always;
+    word-wrap: break-word;
 }
 
 .overview-page .left-col {
@@ -317,14 +318,4 @@ th a:link, th a:visited, th a:hover, th a:active {
 {
     size: auto;
     margin: .25in .25in .25in .25in;
-}
-
-@media print {
-    body{
-        margin: 0 0 0 0;
-        width: 100%;
-        zoom: 75%;
-    }
-    img{ max-width: 100%; }
-    .standards, .video, #admin_edit, #editable-toolbar, .editable-link { display: none !important; }
 }
