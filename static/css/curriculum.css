@@ -13,6 +13,10 @@ img {
     max-width: 100%;
 }
 
+.container_nonresponsive {
+    width: auto !important;
+}
+
 #admin_edit {
     position: fixed;
     top: 0;
