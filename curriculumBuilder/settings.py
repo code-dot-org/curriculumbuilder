@@ -400,16 +400,24 @@ if True:
   AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
   AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
   AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
+  AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
   AWS_PRELOAD_METADATA = True # helps collectstatic do updates
-  AWS_HEADERS = {'Cache-Control': 'max-age=86400',}
+  AWS_HEADERS = {
+    'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
+    'Cache-Control': 'max-age=86400',
+  }
 
-  DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+  STATICFILES_LOCATION = 'static'
   STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+  STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
-  STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
+  MEDIAFILES_LOCATION = 'media'
+  DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+  MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+
+  #STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
   #ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
-
-  MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
+  #MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
 
 ###################
 # MEDUSA SETTINGS #
@@ -420,7 +428,7 @@ MEDUSA_MULTITHREAD = True
 AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
 MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-#MEDUSA_DEPLOY_DIR = os.path.join(
+# MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
 #)
 
