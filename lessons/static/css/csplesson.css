@@ -305,11 +305,6 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin: 0 !important;
 }
 
-.container_nonresponsive {
-    max-width: 1024px !important;
-    margin: 0 auto !important;
-}
-
 .container_nonresponsive .content {
     margin: 0 10px;
 }

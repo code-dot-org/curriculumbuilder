@@ -285,6 +285,7 @@ INSTALLED_APPS = (
   "ajax_select",
   "wkhtmltopdf",
   "django_medusa",
+  "storages",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",
@@ -346,7 +347,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-  "debug_toolbar",
+  # "debug_toolbar",
   "django_extensions",
   "compressor",
   PACKAGE_NAME_FILEBROWSER,
@@ -404,20 +405,21 @@ MEDUSA_DEPLOY_DIR = os.path.join(
 # S3 STATIC FILES #
 ###################
 
-# AWS_QUERYSTRING_AUTH = False
-# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = 'bucketname'
-# AWS_PRELOAD_METADATA = True #helps collectstatic do updates
+if True:
+  AWS_QUERYSTRING_AUTH = False
+  AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+  AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+  AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
+  AWS_PRELOAD_METADATA = True # helps collectstatic do updates
+  AWS_HEADERS = {'Cache-Control': 'max-age=86400',}
 
-# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+  DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+  STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
 
-# STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
-# ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
+  #STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+  #ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
 
-# MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+  #MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
 
 ###########
 # LOGGING #
