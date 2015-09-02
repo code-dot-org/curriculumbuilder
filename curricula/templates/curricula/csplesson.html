@@ -49,7 +49,7 @@
         {% else %}
         <div class="lesson unfinished">
         {% endif %}
-            <a href="#lesson{{ stage.number }}">
+            <a href="{{ lesson.get_absolute_url }}" data-pdf-link="#lesson{{ stage.number }}">
                 {{ stage.number }}
             </a>
         </div>
@@ -210,7 +210,7 @@
             }
         });
     </script>
-    <script>
+    <script type="text/javascript">
         $(function() {
             // Add conditional classname based on support
             $('html').addClass($.fn.details.support ? 'details' : 'no-details');

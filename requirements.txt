@@ -8,6 +8,7 @@ beautifulsoup4==4.4.0
 bleach==1.4.1
 boto
 chardet==2.3.0
+collectfast
 data-importer
 django-ajax-selects
 django-appconf==1.0.1
@@ -19,6 +20,7 @@ django-extensions
 django-import-export
 django-medusa
 django-postgrespool==0.3.0
+django_redis
 django-remplacer==0.1.1
 django-storages
 django-wkhtmltopdf==2.0.3

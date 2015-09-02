@@ -164,7 +164,6 @@ th a:link, th a:visited, th a:hover, th a:active {
     color: white;
 }
 
-
 .lesson-table tr td:nth-child(2){
     width:1%;
     white-space:nowrap;
@@ -188,11 +187,6 @@ th a:link, th a:visited, th a:hover, th a:active {
     width: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-}
-
-.container_nonresponsive {
-    max-width: 1024px;
-    margin: 0 auto;
 }
 
 @page {

@@ -233,6 +233,17 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
 
+if True:
+  CACHES = {
+    "default": {
+      "BACKEND": "django_redis.cache.RedisCache",
+      "LOCATION": "redis://:" + os.environ.get('REDIS_KEY') + "@pub-redis-16896.us-east-1-3.2.ec2.garantiadata.com:16896/rediscloud",
+      "OPTIONS": {
+        "CLIENT_CLASS": "django_redis.client.DefaultClient",
+      }
+    }
+  }
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
@@ -264,6 +275,7 @@ INSTALLED_APPS = (
   "django.contrib.sessions",
   "django.contrib.sites",
   "django.contrib.sitemaps",
+  "collectfast", # Needs to come before staticfiles
   "django.contrib.staticfiles",
   "mezzanine.boot",
   "mezzanine.conf",

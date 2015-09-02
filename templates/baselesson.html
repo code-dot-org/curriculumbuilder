@@ -77,6 +77,18 @@
         </div>
     </div>
 </footer>
+<div id="print_trigger"></div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        if ($("#print_trigger").css("display") == "none" ){
+            $('a[data-pdf-link]').each(function() {
+                this.href = $(this).attr('data-pdf-link');
+            });
+        }
+    });
+</script>
 
 {% include "includes/footer_scripts.html" %}
 
