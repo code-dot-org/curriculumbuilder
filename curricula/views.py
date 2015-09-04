@@ -2,10 +2,11 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.conf import settings
-from wkhtmltopdf import WKHtmlToPdf
+#from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
-import dryscrape
+import pycurl
+#import dryscrape
 
 from curricula.models import *
 
@@ -41,8 +42,10 @@ def lesson_view(request, slug, unit_slug, lesson_num):
   return render(request, template, {'curriculum': curriculum, 'unit': unit, 'lesson': lesson, 'pdf': pdf})
 
 def curriculum_pdf(request, slug):
-  compiled = ''
-  session = dryscrape.Session()
+  buffer = StringIO()
+  c = pycurl.Curl()
+  c.setopt(c.WRITEDATA, buffer)
+  #session = dryscrape.Session()
 
 
   curriculum = get_object_or_404(Curriculum, slug = slug)
@@ -50,10 +53,14 @@ def curriculum_pdf(request, slug):
     for lesson in unit.lessons():
 
       print lesson.title
-      session.visit(settings.AWS_BASE_URL + lesson.get_absolute_url())
-      compiled += session.body()
+      c.setopt(c.URL, settings.AWS_BASE_URL + lesson.get_absolute_url() + '?pdf=true')
+      c.perform()
+      #session.visit(settings.AWS_BASE_URL + lesson.get_absolute_url())
+      #compiled += session.body()
 
-  pdf = pdfkit.from_string(compiled, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+  c.close()
+  compiled = buffer.getvalue()
+  pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
   response = HttpResponse(pdf, content_type='application/pdf')
   response['Content-Disposition'] = 'inline;filename=curriculum.pdf'

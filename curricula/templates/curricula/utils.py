@@ -4,7 +4,7 @@ from django.conf import settings
 #from boto.s3.key import Key
 
 import pdfkit
-import dryscrape
+#import dryscrape
 
 '''
 New plan!

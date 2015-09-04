@@ -63,11 +63,11 @@ html, body{
 }
 
 .lessons .current {
-    background-color: #fefefe;
+    background-color: #fefefe!important;
 }
 
 .lessons .finished {
-    background-color: rgba(254,254,254,.5);
+    background-color: rgba(254,254,254,.5)!important;
 }
 
 .lessons .lesson {
@@ -78,7 +78,7 @@ html, body{
 }
 
 .lessons .lesson a {
-    color: #7665a0;
+    color: #7665a0!important;
     line-height: 40px;
     text-align: center;
     font-size: 14pt;
@@ -86,7 +86,7 @@ html, body{
 }
 
 .lessons .unfinished a {
-    color: #fefefe;
+    color: #fefefe!important;
 }
 
 .content {

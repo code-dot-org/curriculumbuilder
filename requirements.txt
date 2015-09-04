@@ -29,6 +29,7 @@ future==0.15.0
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
 -e git://github.com/qoda/python-wkhtmltopdf.git@master#egg=python-wkhtmltopdf
+-e git://github.com/niklasb/webkit-server.git@master#egg=webkit-server
 grappelli-safe==0.4.1
 gunicorn==19.3.0
 html5lib==0.999999
@@ -37,7 +38,9 @@ markdown-newtab
 messytables==0.14.5
 mezzanine-pagedown==0.8
 oauthlib==0.7.2
+pdfkit
 psycopg2==2.6.1
+pycurl
 pyPdf==1.13
 pytz==2015.4
 requests==2.7.0
