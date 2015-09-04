@@ -53,7 +53,8 @@ def curriculum_pdf(request, slug):
     for lesson in unit.lessons():
 
       print lesson.title
-      c.setopt(c.URL, settings.AWS_BASE_URL + lesson.get_absolute_url() + '?pdf=true')
+      #c.setopt(c.URL, settings.AWS_BASE_URL + lesson.get_absolute_url() + '?pdf=true')
+      c.setopt(c.URL, lesson.get_absolute_url_with_host() + '?pdf=true')
       c.perform()
       #session.visit(settings.AWS_BASE_URL + lesson.get_absolute_url())
       #compiled += session.body()

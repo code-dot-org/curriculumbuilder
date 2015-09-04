@@ -49,7 +49,7 @@
         {% else %}
         <div class="lesson unfinished">
         {% endif %}
-            <a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                 {{ stage.number }}
             </a>
         </div>
