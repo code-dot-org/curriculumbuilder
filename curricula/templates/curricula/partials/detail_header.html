@@ -1,0 +1,40 @@
+
+{% load mezzanine_tags %}
+{% load staticfiles %}
+
+    <div class="header printbackground">
+        <div class="headercontent">
+            <div id="top">
+                <div id="divforpdf">
+                    <div id="logo">
+                        <img src="{% static "images/logo.png" %}">
+                    </div>
+                    <div id="unitnumber"><h2>Unit</h2><h1>{{ unit.number }}</h1></div>
+
+                    <div class="lessons">
+                    {% for stage in unit.lessons %}
+                        {% if stage.number < lesson.number %}
+                        <div class="lesson finished">
+                        {% elif stage.number == lesson.number %}
+                        <div class="lesson current">
+                        {% else %}
+                        <div class="lesson unfinished">
+                        {% endif %}
+                            <a href="{{ lesson.get_absolute_url }}" data-pdf-link="#lesson{{ stage.number }}">
+                                {{ stage.number }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="printbackground" id="bottom">
+            {% block header_title %}
+                {% editable page.title %}
+                <h1>{{ page.title }}</h1>
+                {% endeditable %}
+                <hr>
+            {% endblock %}
+            </div>
+        </div>
+    </div>

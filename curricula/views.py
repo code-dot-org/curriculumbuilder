@@ -1,5 +1,11 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.conf import settings
 from django.shortcuts import get_object_or_404, render, render_to_response
+from django.conf import settings
+from wkhtmltopdf import WKHtmlToPdf
+from cStringIO import StringIO
+import pdfkit
+import dryscrape
 
 from curricula.models import *
 
@@ -18,6 +24,7 @@ def unit_view(request, slug, unit_slug):
   return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit})
 
 def lesson_view(request, slug, unit_slug, lesson_num):
+  pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
   lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
@@ -30,4 +37,38 @@ def lesson_view(request, slug, unit_slug, lesson_num):
     template = 'curricula/hoclesson.html'
   else:
     template = 'curricula/lesson.html'
-  return render(request, template, {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
+
+  return render(request, template, {'curriculum': curriculum, 'unit': unit, 'lesson': lesson, 'pdf': pdf})
+
+def curriculum_pdf(request, slug):
+  compiled = ''
+  session = dryscrape.Session()
+
+
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  for unit in curriculum.units():
+    for lesson in unit.lessons():
+
+      print lesson.title
+      session.visit(settings.AWS_BASE_URL + lesson.get_absolute_url())
+      compiled += session.body()
+
+  pdf = pdfkit.from_string(compiled, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+
+  response = HttpResponse(pdf, content_type='application/pdf')
+  response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
+  #response = HttpResponse("testing a thing")
+  return response
+
+
+'''
+def lesson_pdf(request, slug, unit_slug, lesson_num):
+  response = HttpResponse(content_type='application/pdf')
+  response['Content-Disposition' = 'attachment; filename="lesson.pdf"']
+  wkhtmltopdf = WKHtmlToPdf(
+    url='http://localhost:8000/curriculum/csp/unit1/1/?pdf=true',
+    output_file='csp.pdf',
+    s="Letter",
+    print_media_type=True)
+  return wkhtmltopdf.render()
+'''

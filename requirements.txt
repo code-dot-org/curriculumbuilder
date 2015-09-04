@@ -14,7 +14,6 @@ django-ajax-selects
 django-appconf==1.0.1
 django-compressor==1.5
 django-contrib-comments==1.6.1
--e git://github.com/mrjoshida/django-csvimport.git@464ab20371aa9f5df75aef50a9194a69d1b46a48#egg=django_csvimport
 django-debug-toolbar
 django-extensions
 django-import-export
@@ -23,10 +22,13 @@ django-postgrespool==0.3.0
 django_redis
 django-remplacer==0.1.1
 django-storages
-django-wkhtmltopdf==2.0.3
+dryscrape
 filebrowser-safe==0.4.0
 future==0.15.0
--e git://github.com/mrjoshida/grappelli-nested-inlines.git@b6498cf1fd0a156991bbb4fe715582f5fb16d970#egg=grappelli_nested_inlines
+-e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
+-e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
+-e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
+-e git://github.com/qoda/python-wkhtmltopdf.git@master#egg=python-wkhtmltopdf
 grappelli-safe==0.4.1
 gunicorn==19.3.0
 html5lib==0.999999
@@ -36,6 +38,7 @@ messytables==0.14.5
 mezzanine-pagedown==0.8
 oauthlib==0.7.2
 psycopg2==2.6.1
+pyPdf==1.13
 pytz==2015.4
 requests==2.7.0
 requests-oauthlib==0.5.0

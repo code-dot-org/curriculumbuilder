@@ -78,17 +78,20 @@
     </div>
 </footer>
 <div id="print_trigger"></div>
-
+{% if pdf %}
 <script type="text/javascript">
 
-    $(document).ready(function() {
-        if ($("#print_trigger").css("display") == "none" ){
-            $('a[data-pdf-link]').each(function() {
-                this.href = $(this).attr('data-pdf-link');
-            });
-        }
+    jQuery(function() {
+        console.log('working');
+        console.log($("print_trigger"));
+        console.log('should do it');
+        $('a[data-pdf-link]').each(function() {
+            console.log(this.href);
+            this.href = $(this).attr('data-pdf-link');
+        });
     });
 </script>
+{% endif %}
 
 {% include "includes/footer_scripts.html" %}
 

@@ -1,69 +1,7 @@
-{% extends "baselesson.html" %}
 
-{% load staticfiles %}
+
 {% load mezzanine_tags %}
-{% load keyword_tags %}
-
-{% block meta_title %}{{ lesson.meta_title }}{% endblock %}
-
-{% block meta_keywords %}{% metablock %}
-    {% keywords_for lesson as keywords %}
-    {% for keyword in keywords %}
-        {% if not forloop.first %}, {% endif %}
-        {{ keyword }}
-    {% endfor %}
-{% endmetablock %}{% endblock %}
-
-{% block meta_description %}{% metablock %}
-    {{ lesson.description }}
-{% endmetablock %}{% endblock %}
-
-{% block title %}
-    {% editable lesson.title %}{{ title }}{% endeditable %}
-{% endblock %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/csplesson.css" %}">
-{% endblock %}
-
-{% block extra_js %}
-    <script src="{% static "js/toc.js" %}"></script>
-    <script src="{% static "js/jquery.details.min.js" %}"></script>
-{% endblock %}
-
-{% block admin_link %}
-    {% if user.is_staff %}
-        <div id="admin_edit"><a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a></div>
-    {% endif %}
-{% endblock %}
-
-{% block lessonnumber %}
-    <div id="unitnumber"><h2>Unit</h2><h1>{{ unit.number }}</h1></div>
-
-    <div class="lessons">
-    {% for stage in unit.lessons %}
-        {% if stage.number < lesson.number %}
-        <div class="lesson finished">
-        {% elif stage.number == lesson.number %}
-        <div class="lesson current">
-        {% else %}
-        <div class="lesson unfinished">
-        {% endif %}
-            <a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                {{ stage.number }}
-            </a>
-        </div>
-    {% endfor %}
-    </div>
-
-{% endblock %}
-
-{% block header_title %}
-{% endblock %}
-
-{% block main %}
-
-    <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+    <div class="together" id="lesson{{ lesson.number }}">
         {% editable lesson.title %}
         <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
         {% endeditable %}
@@ -157,7 +95,7 @@
         </div>
     </div>
 
-    <div id="{{ lesson.title|slugify }}content">
+    <div id="lesson_content">
 
         <h1>Teaching Guide</h1>
 
@@ -193,7 +131,7 @@
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
-            'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
+            'container': '#lesson_content', //element to find all selectors in
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
             'onHighlight': function(el) {}, //called when a new section is highlighted
@@ -210,22 +148,3 @@
             }
         });
     </script>
-    <!--<script type="text/javascript">
-        $(function() {
-            // Add conditional classname based on support
-            $('html').addClass($.fn.details.support ? 'details' : 'no-details');
-            // Emulate <details> where necessary and enable open/close event handlers
-            $('details').details();
-            // Bind some example event handlers
-            $('details').on({
-                'open.details': function() {
-                    console.log('opened');
-                },
-                'close.details': function() {
-                    console.log('closed');
-                }
-            });
-        });
-    </script>-->
-
-{% endblock %}

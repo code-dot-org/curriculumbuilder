@@ -12,5 +12,11 @@ class CurriculumRenderer(StaticSiteRenderer):
           paths.add(lesson.get_absolute_url())
     return list(paths)
 
+class PDFRenderer(StaticSiteRenderer):
+  def get_paths(self):
+    paths = set([])
+    for curriculum in Curriculum.objects.all():
+      paths.add(curriculum.get_absolute_url() + 'pdf')
+    return list(paths)
 
-renderers = [CurriculumRenderer, ]
+renderers = [CurriculumRenderer, PDFRenderer]

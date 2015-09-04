@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <div id="lesson_content">
+    <div id="{{ lesson.title|slugify }}content">
 
         <div class="together">
 
@@ -155,7 +155,7 @@
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
-            'container': '#lesson_content', //element to find all selectors in
+            'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
             'onHighlight': function(el) {}, //called when a new section is highlighted
@@ -170,23 +170,6 @@
             'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
-        });
-    </script>
-    <script>
-        $(function() {
-            // Add conditional classname based on support
-            $('html').addClass($.fn.details.support ? 'details' : 'no-details');
-            // Emulate <details> where necessary and enable open/close event handlers
-            $('details').details();
-            // Bind some example event handlers
-            $('details').on({
-                'open.details': function() {
-                    console.log('opened');
-                },
-                'close.details': function() {
-                    console.log('closed');
-                }
-            });
         });
     </script>
 

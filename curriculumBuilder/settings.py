@@ -295,7 +295,7 @@ INSTALLED_APPS = (
   "import_export",
   "data_importer",
   "ajax_select",
-  "wkhtmltopdf",
+  #"wkhtmltopdf",
   "django_medusa",
   "storages",
   # Custom apps for Code.org curriculum
@@ -374,7 +374,7 @@ RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
-                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style')
+                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style', 'data-pdf-link')
 PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'admonition', 'smarty', 'markdown_newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks')
 RICHTEXT_FILTER_LEVEL = 3
@@ -399,8 +399,11 @@ AJAX_LOOKUP_CHANNELS = {
 ########################
 
 WKHTMLTOPDF_CMD_OPTIONS = {
-  'quiet': False,
   'page-size': 'Letter',
+  'print-media-type': '',
+  'javascript-delay': 3000,
+  'debug-javascript': '',
+  'no-stop-slow-scripts': '',
 }
 
 ###################
@@ -418,6 +421,8 @@ if True:
     'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
     'Cache-Control': 'max-age=86400',
   }
+
+  AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
   STATICFILES_LOCATION = 'static'
   STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
