@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.conf import settings
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.conf import settings
+from django.contrib.sites.models import get_current_site
 #from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
@@ -54,7 +54,7 @@ def curriculum_pdf(request, slug):
 
       print lesson.title
       #c.setopt(c.URL, settings.AWS_BASE_URL + lesson.get_absolute_url() + '?pdf=true')
-      c.setopt(c.URL, lesson.get_absolute_url_with_host() + '?pdf=true')
+      c.setopt(c.URL, 'http://' + get_current_site(request).domain + lesson.get_absolute_url() + '?pdf=true')
       c.perform()
       #session.visit(settings.AWS_BASE_URL + lesson.get_absolute_url())
       #compiled += session.body()
