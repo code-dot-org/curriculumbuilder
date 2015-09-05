@@ -441,7 +441,7 @@ if True:
 ###################
 
 MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
-MEDUSA_MULTITHREAD = False
+MEDUSA_MULTITHREAD = True
 AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
 MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
