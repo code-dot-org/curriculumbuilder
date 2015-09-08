@@ -28,8 +28,6 @@ future==0.15.0
 -e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
--e git://github.com/qoda/python-wkhtmltopdf.git@master#egg=python-wkhtmltopdf
--e git://github.com/niklasb/webkit-server.git@master#egg=webkit-server
 grappelli-safe==0.4.1
 gunicorn==19.3.0
 html5lib==0.999999

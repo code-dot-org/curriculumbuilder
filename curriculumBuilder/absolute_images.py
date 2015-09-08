@@ -6,8 +6,8 @@ import urllib2
 from markdown import Extension
 from markdown.treeprocessors import Treeprocessor
 
-BASE_URL = "//code.org/curriculum/docs/"
-STAGING_URL = "//staging.code.org/curriculum/docs/"
+BASE_URL = "https://code.org/curriculum/docs/"
+STAGING_URL = "https://staging.code.org/curriculum/docs/"
 
 class AbsoluteImagesExtension(Extension):
     """ Absolute Images Extension """

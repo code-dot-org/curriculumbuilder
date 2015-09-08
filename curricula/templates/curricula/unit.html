@@ -34,7 +34,7 @@
     {% endeditable %}
         <ul>
         {% for lesson in unit.lessons %}
-            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson }}</a></li>
+            <li><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ lesson.number }}">{{ lesson }}</a></li>
         {% endfor %}
         </ul>
     </div>
