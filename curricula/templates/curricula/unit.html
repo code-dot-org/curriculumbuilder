@@ -23,12 +23,12 @@
 {% endblock %}
 
 {% block header_title %}
-    <h1>{{ unit.curriculum }}</h1>
+    <span class="h1">{{ unit.curriculum }}</span>
 {% endblock %}
 
 {% block main %}
-    <div class="together">
-    <h2>{{ unit.title }}</h2>
+    <div class="together" id="unit{{ unit.number }}">
+    <h1>{{ unit.title }}</h1>
     {% editable unit.content %}
     {{ unit.content|richtext_filters|safe }}
     {% endeditable %}

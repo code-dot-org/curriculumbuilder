@@ -12,7 +12,7 @@ body{
     page-break-after: always;
 }
 
-.headercontent h1 {
+.headercontent .h1 {
     font-size: 60px;
     line-height: 1em;
     margin-top:.125em;

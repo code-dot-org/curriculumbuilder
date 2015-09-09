@@ -17,13 +17,13 @@ html, body{
     color: white!important;
 }
 
-#unitnumber h2 {
+#unitnumber .h2 {
 	font-size: 14pt;
     text-transform: uppercase;
     margin: 10px 0 0 0;
 }
 
-#unitnumber h1 {
+#unitnumber .h1 {
     margin: 0;
 }
 

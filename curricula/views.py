@@ -77,7 +77,7 @@ def unit_pdf(request, slug, unit_slug):
   pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
   response = HttpResponse(pdf, content_type='application/pdf')
-  response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
+  response['Content-Disposition'] = 'inline;filename=unit.pdf'
   return response
 
 
@@ -87,7 +87,13 @@ def curriculum_pdf(request, slug):
   c.setopt(c.WRITEDATA, buffer)
 
   curriculum = get_object_or_404(Curriculum, slug = slug)
+
+  c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url()))
+  c.perform()
+
   for unit in curriculum.units():
+    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
+    c.perform()
     for lesson in unit.lessons():
       c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
       c.perform()
