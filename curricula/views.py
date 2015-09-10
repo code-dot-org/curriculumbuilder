@@ -115,8 +115,11 @@ def curriculum_pdf(request, slug):
   compiled = buffer.getvalue()
   pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
-  response = HttpResponse(pdf, content_type='application/pdf')
-  response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
+  if request.GET.get('html'): # Allows testing the html output
+    response = HttpResponse(compiled)
+  else:
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
   return response
 
 

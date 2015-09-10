@@ -12,6 +12,10 @@ body{
     page-break-after: always;
 }
 
+.headercontent {
+    margin-left:40px;
+}
+
 .headercontent .h1 {
     font-size: 60px;
     line-height: 1em;
