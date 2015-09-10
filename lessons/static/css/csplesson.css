@@ -21,10 +21,12 @@ html, body{
 	font-size: 14pt;
     text-transform: uppercase;
     margin: 10px 0 0 0;
+    display: block;
 }
 
 #unitnumber .h1 {
     margin: 0;
+    display: block;
 }
 
 .pagebreak{
@@ -40,7 +42,7 @@ html, body{
     margin-left: 0;
 }
 
-.headercontent h1 {
+.headercontent .h1 {
     font-size: 60px;
     line-height: 1em;
     margin-top:.125em;
@@ -79,7 +81,7 @@ html, body{
 
 .lessons .lesson a {
     color: #7665a0!important;
-    line-height: 40px;
+    line-height: 36px;
     text-align: center;
     font-size: 14pt;
     font-weight: 600;

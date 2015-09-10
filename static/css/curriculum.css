@@ -67,7 +67,7 @@ img {
     margin-top:0px;
 }
 
-.headercontent h1 {
+.headercontent .h1 {
     font-size: 80px;
     line-height: 80px;
     margin: 0 20px 20px 20px;
@@ -109,7 +109,7 @@ img {
     margin-right: 90px;
 }
 
-.printbackground h1, .printbackground h2 {
+.printbackground .h1, .printbackground .h2 {
     color: white!important;
 }
 
@@ -129,7 +129,7 @@ img {
     padding:5px;
 }
 
-#header h1 {
+#header .h1 {
     color: white;
 }
 
@@ -147,6 +147,7 @@ img {
 
 footer {
     page-break-after: always;
+    padding: 0;
 }
 
 /* Alignment classes */
@@ -180,8 +181,9 @@ footer {
         zoom: 75% !important;
     }
 
-    .container_nonresponsive {
-        width: 100% !important;
+    footer {
+        position: static;
+        bottom: auto;
     }
 
     blockquote {
