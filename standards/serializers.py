@@ -16,7 +16,7 @@ class StandardSerializer(serializers.ModelSerializer):
   def get_lessons(self, obj):
     curriculum = self.context['curriculum']
     #lessons = list( Lesson.objects.filter(parent__parent=curriculum).values('title',) )
-    filtered_lessons = Lesson.objects.filter(parent__parent=curriculum)
+    filtered_lessons = Lesson.objects.filter(parent__parent=curriculum, standards=obj)
     #filtered_lessons = Lesson.objects.all()
     serializer = LessonSerializer(filtered_lessons, many=True)
     return serializer.data
