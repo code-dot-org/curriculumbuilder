@@ -233,7 +233,7 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
 
-if True:
+if os.environ.get('REDIS_KEY'):
   CACHES = {
     "default": {
       "BACKEND": "django_redis.cache.RedisCache",
@@ -298,6 +298,7 @@ INSTALLED_APPS = (
   #"wkhtmltopdf",
   "django_medusa",
   "storages",
+  "rest_framework",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",

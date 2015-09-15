@@ -20,6 +20,7 @@ class Curriculum(Page, RichText):
   def get_absolute_url(self):
     return '/curriculum/' + self.slug + '/'
 
+  @property
   def units(self):
     return Unit.objects.filter(parent=self)
 
@@ -36,9 +37,11 @@ class Unit(Page, RichText):
   def get_absolute_url(self):
     return self.curriculum.get_absolute_url() + self.slug + '/'
 
+  @property
   def number(self):
     return self._order + 1
 
+  @property
   def lessons(self):
     return Lesson.objects.filter(parent=self)
 

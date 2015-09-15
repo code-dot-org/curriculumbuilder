@@ -1,6 +1,12 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+from standards.serializers import *
+
 from standards.models import *
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson
@@ -27,22 +33,22 @@ def single_standard(request, slug, shortcode):
   standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
   return render(request, 'standards/standard.html', {'standard': standard})
 
-'''
-def unit_view(request, slug, unit_slug):
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+@api_view(['GET',])
+def standard_element(request, slug, shortcode, format=None):
+  standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
 
-  return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit})
+  serializer = StandardSerializer(standard)
+  return Response(serializer.data)
 
-def lesson_view(request, slug, unit_slug, lesson_num):
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
-  lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
-                                                             'vocab', 'resources', 'activity_set'),
-                             unitlesson__unit = unit, _order = int(lesson_num) - 1)
-  page = Page.objects.get(pk = lesson.pk)
-  if curriculum.slug == 'csp':
-    return render(request, 'curricula/csplesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
+@api_view(['GET',])
+def standard_list(request, curriculum_slug, framework_slug=None):
+
+  curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
+
+  if framework_slug:
+    standards = Standard.objects.filter(framework__slug=framework_slug)
   else:
-    return render(request, 'curricula/lesson.html', {'curriculum': curriculum, 'unit': unit, 'lesson': lesson})
-    '''
+    standards = Standard.objects.all()
+
+  serializer = StandardSerializer(standards, context={'curriculum': curriculum}, many=True)
+  return Response(serializer.data)

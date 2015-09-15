@@ -89,12 +89,15 @@ class Lesson(Page, RichText):
   def get_absolute_url(self):
     return self.unit().get_absolute_url() + str(self.number()) + '/'
 
+  @property
   def unit(self):
     return self.parent.unit
 
+  @property
   def curriculum(self):
     return self.parent.unit.curriculum
 
+  @property
   def number(self):
     return self._order + 1
 

@@ -5,10 +5,14 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from ajax_select import urls as ajax_select_urls
 
+from rest_framework import serializers, viewsets, routers
+
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 import mezzanine_pagedown.urls
 
+from curricula.views import api_root, curriculum_element, curriculum_list, unit_element, unit_list, lesson_element
+from standards.views import standard_element, standard_list
 
 
 admin.autodiscover()
@@ -80,6 +84,14 @@ urlpatterns += patterns('',
     # ``mezzanine.urls``.
 
     # Curriculum URLs
+    url(r'^api/v1/$', api_root),
+    url(r'^api/v1/curriculum/$', curriculum_list, name="curriculum_list"),
+    url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/$', standard_list, name="standard_list"),
+    url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', standard_list, name="standard_list"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/$', curriculum_element, name="curriculum_element"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/units/$', unit_list, name="unit_list"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$', unit_element, name="unit_element"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/$', lesson_element, name="lesson_element"),
     url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 
