@@ -4,11 +4,19 @@ from lessons.models import Lesson
 
 class LessonSerializer(serializers.ModelSerializer):
 
+  unit = serializers.SerializerMethodField()
+  unit_number = serializers.SerializerMethodField()
+
   class Meta:
     model = Lesson
     #depth = 1
-    fields = ('number', 'title', 'description')
+    fields = ('title', 'number', 'unit', 'unit_number', 'description')
 
+  def get_unit(self, obj):
+    return obj.unit.title
+
+  def get_unit_number(self, obj):
+    return obj.unit.number
 
 class UnitSerializer(serializers.ModelSerializer):
 
