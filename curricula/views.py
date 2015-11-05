@@ -60,7 +60,7 @@ def unit_pdf(request, slug, unit_slug):
   c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
   c.perform()
 
-  for lesson in unit.lessons():
+  for lesson in unit.lessons:
 
     c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
     c.perform()
@@ -97,10 +97,10 @@ def curriculum_pdf(request, slug):
   c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url()))
   c.perform()
 
-  for unit in curriculum.units():
+  for unit in curriculum.units:
     c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
     c.perform()
-    for lesson in unit.lessons():
+    for lesson in unit.lessons:
       c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
       c.perform()
 
