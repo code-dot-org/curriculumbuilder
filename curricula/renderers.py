@@ -6,9 +6,9 @@ class CurriculumRenderer(StaticSiteRenderer):
     paths = set(["/curriculum/",])
     for curriculum in Curriculum.objects.all():
       paths.add(curriculum.get_absolute_url())
-      for unit in curriculum.units():
+      for unit in curriculum.units:
         paths.add(unit.get_absolute_url())
-        for lesson in unit.lessons():
+        for lesson in unit.lessons:
           paths.add(lesson.get_absolute_url())
     return list(paths)
 
