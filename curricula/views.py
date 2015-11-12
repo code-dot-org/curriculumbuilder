@@ -49,6 +49,28 @@ def lesson_view(request, slug, unit_slug, lesson_num):
 
   return render(request, template, {'curriculum': curriculum, 'unit': unit, 'lesson': lesson, 'pdf': pdf})
 
+def lesson_pdf(request, slug, unit_slug, lesson_num):
+  buffer = StringIO()
+  c = pycurl.Curl()
+  c.setopt(c.WRITEDATA, buffer)
+
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+  lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
+                                                             'vocab', 'resources', 'activity_set'),
+                             parent = unit, _order = int(lesson_num) - 1)
+
+  c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+  c.perform()
+  c.close()
+
+  compiled = buffer.getvalue()
+  pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+
+  response = HttpResponse(pdf, content_type='application/pdf')
+  response['Content-Disposition'] = 'inline;filename=lesson.pdf'
+  return response
+
 def unit_pdf(request, slug, unit_slug):
   buffer = StringIO()
   c = pycurl.Curl()
