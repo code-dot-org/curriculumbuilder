@@ -54,3 +54,18 @@ def standard_list(request, curriculum_slug, framework_slug=None):
 
   serializer = StandardSerializer(standards, context={'curriculum': curriculum}, many=True)
   return Response(serializer.data)
+
+@api_view(['GET',])
+def nested_standard_list(request, curriculum_slug, framework_slug=None):
+
+  curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
+
+  if framework_slug:
+    categories = Category.objects.filter(parent__isnull=True, framework__slug=framework_slug)
+    # categories = Category.objects.filter(framework__slug=framework_slug)
+  else:
+    categories = Category.objects.filter(parent__isnull=True)
+
+  serializer = NestedCategorySerializer(categories, context={'curriculum': curriculum}, many=True)
+  return Response(serializer.data)
+
