@@ -297,6 +297,7 @@ INSTALLED_APPS = (
   "ajax_select",
   #"wkhtmltopdf",
   "django_medusa",
+  "freeze",
   "storages",
   "rest_framework",
   # Custom apps for Code.org curriculum
@@ -449,6 +450,12 @@ MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
 #)
+
+###################
+# FREEZE SETTINGS #
+###################
+
+FREEZE_INCLUDE_STATIC = False
 
 ###########
 # LOGGING #

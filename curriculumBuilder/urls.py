@@ -10,6 +10,7 @@ from rest_framework import serializers, viewsets, routers
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 import mezzanine_pagedown.urls
+import freeze.urls
 
 from curricula.views import api_root, curriculum_element, curriculum_list, unit_element, unit_list, lesson_element
 from standards.views import standard_element, standard_list, nested_standard_list
@@ -96,6 +97,7 @@ urlpatterns += patterns('',
     url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 
+    url(r'^freeze/', include(freeze.urls)),
     ("^pagedown/", include(mezzanine_pagedown.urls)),
     ("^", include("mezzanine.urls")),
 
