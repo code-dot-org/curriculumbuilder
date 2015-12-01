@@ -22,7 +22,7 @@ django-postgrespool==0.3.0
 django_redis
 django-remplacer==0.1.1
 django-storages
-djangorestframework==3.3.1
+djangorestframework
 djangorestframework-recursive
 dryscrape
 filebrowser-safe==0.4.0
