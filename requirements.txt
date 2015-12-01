@@ -22,7 +22,8 @@ django-postgrespool==0.3.0
 django_redis
 django-remplacer==0.1.1
 django-storages
-djangorestframework==3.2.3
+djangorestframework==3.3.1
+drf-toolbox
 dryscrape
 filebrowser-safe==0.4.0
 future==0.15.0
