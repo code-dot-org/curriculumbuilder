@@ -21,10 +21,15 @@ class JSONRenderer(StaticSiteRenderer):
       paths.add(baseurl + "curriculum/" + curriculum.slug + "/")
       paths.add(baseurl + "curriculum/" + curriculum.slug + "/standards/")
 
+
       # This feels hacky, but seems to work...
+      '''
       for framework in Framework.objects.filter(category__standard__lesson__parent__parent=curriculum).values_list('slug', flat=True).distinct():
         print baseurl + "curriculum/" + curriculum.slug + "/standards/" + framework + "/"
         paths.add(paths.add(baseurl + "curriculum/" + curriculum.slug + "/standards/" + framework + "/"))
+      '''
+
+    paths.add(baseurl + "curriculum/" + curriculum.slug + "/standards/CSP/")
     return list(paths)
 
 class PDFRenderer(StaticSiteRenderer):
@@ -34,5 +39,5 @@ class PDFRenderer(StaticSiteRenderer):
       paths.add(curriculum.get_absolute_url() + 'pdf')
     return list(paths)
 
-renderers = [CurriculumRenderer, JSONRenderer, PDFRenderer]
-renderers = [JSONRenderer, ]
+renderers = [CurriculumRenderer, PDFRenderer, JSONRenderer]
+#renderers = [JSONRenderer, ]

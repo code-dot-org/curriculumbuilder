@@ -76,7 +76,8 @@ class NestedCategorySerializer(serializers.ModelSerializer):
     curriculum = self.context['curriculum']
     # To avoid counting the same lesson multiple times because it belongs to multiple child categories
     # We flatten the list to pks only and then filter for distinct pks before counting
-    count = Lesson.objects.filter(Q(standards__category=obj) | Q(standards__category__parent=obj),parent__parent=curriculum).values_list('pk',flat=True).distinct().count()
+    count = Lesson.objects.filter(Q(standards__category=obj) | Q(standards__category__parent=obj),
+                                  parent__parent=curriculum).values_list('pk',flat=True).distinct().count()
     return count
 
 class NestedFrameworkSerializer(serializers.ModelSerializer):

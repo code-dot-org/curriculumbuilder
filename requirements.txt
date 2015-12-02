@@ -15,6 +15,7 @@ django-ajax-selects
 django-appconf==1.0.1
 django-compressor==1.5
 django-contrib-comments==1.6.1
+django-cors-headers
 django-debug-toolbar
 django-extensions
 django-freeze

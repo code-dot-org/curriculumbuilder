@@ -300,6 +300,7 @@ INSTALLED_APPS = (
   "freeze",
   "storages",
   "rest_framework",
+  "corsheaders",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",
@@ -331,6 +332,7 @@ MIDDLEWARE_CLASSES = (
   'django.contrib.sessions.middleware.SessionMiddleware',
   # Uncomment if using internationalisation or localisation
   # 'django.middleware.locale.LocaleMiddleware',
+  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -443,7 +445,7 @@ if True:
 ###################
 
 MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
-MEDUSA_MULTITHREAD = True
+MEDUSA_MULTITHREAD = False
 AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
 MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -456,6 +458,13 @@ MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 ###################
 
 FREEZE_INCLUDE_STATIC = False
+
+#################
+# CORS SETTINGS #
+#################
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = ('GET', )
 
 ###########
 # LOGGING #
