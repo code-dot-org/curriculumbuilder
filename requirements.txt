@@ -17,6 +17,7 @@ django-compressor==1.5
 django-contrib-comments==1.6.1
 django-debug-toolbar
 django-extensions
+django-freeze
 django-import-export
 django-medusa
 django-postgrespool==0.3.0
