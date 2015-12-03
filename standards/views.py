@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from sortedcontainers import SortedDict
+
 from standards.serializers import *
 
 from standards.models import *
@@ -59,13 +61,21 @@ def standard_list(request, curriculum_slug, framework_slug=None):
 def nested_standard_list(request, curriculum_slug, framework_slug=None):
 
   curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
+  serialized = {}
+  #serialized = []
 
   if framework_slug:
-    categories = Category.objects.filter(parent__isnull=True, framework__slug=framework_slug)
-    # categories = Category.objects.filter(framework__slug=framework_slug)
+    categories = Category.objects.filter(parent__isnull=True, framework__slug=framework_slug).order_by('shortcode')
   else:
-    categories = Category.objects.filter(parent__isnull=True)
+    categories = Category.objects.filter(parent__isnull=True).order_by('shortcode')
 
   serializer = NestedCategorySerializer(categories, context={'curriculum': curriculum}, many=True)
-  return Response(serializer.data)
+
+  for category in categories:
+    print category.shortcode
+    serializer = NestedCategorySerializer(category, context={'curriculum': curriculum})
+    serialized[category.shortcode] = serializer.data
+
+  #return Response(serializer.data)
+  return Response(SortedDict(serialized))
 
