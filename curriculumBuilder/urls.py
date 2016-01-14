@@ -13,7 +13,7 @@ import mezzanine_pagedown.urls
 import freeze.urls
 
 from curricula.views import api_root, curriculum_element, curriculum_list, unit_element, unit_list, lesson_element
-from standards.views import standard_element, standard_list, nested_standard_list
+from standards.views import standard_element, standard_list, nested_category_list, nested_standard_list
 
 
 admin.autodiscover()
@@ -89,7 +89,8 @@ urlpatterns += patterns('',
     url(r'^api/v1/curriculum/$', curriculum_list, name="curriculum_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/$', standard_list, name="standard_list"),
     # url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', standard_list, name="standard_list"),
-    url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', nested_standard_list, name="nested_standard_list"),
+    url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', nested_category_list, name="nested_category_list"),
+    url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/standards/$', nested_standard_list, name="nested_standard_list"),
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/$', curriculum_element, name="curriculum_element"),
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/units/$', unit_list, name="unit_list"),
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$', unit_element, name="unit_element"),

@@ -50,12 +50,14 @@ If this works out well, I may want to trash the previous serializers
 
 '''
 
+
 class StandardListSerializer(serializers.ListSerializer):
 
   def to_representation(self, instance):
     standards = super(StandardListSerializer, self).to_representation(instance)
 
     return SortedDict({std['shortcode']: dict(std) for std in standards})
+
 
 class NestedStandardSerializer(serializers.ModelSerializer):
 
@@ -79,6 +81,7 @@ class NestedStandardSerializer(serializers.ModelSerializer):
     count = Lesson.objects.filter(parent__parent=curriculum, standards=obj).count()
     return count
 
+
 class NestedSubCategorySerializer(serializers.ModelSerializer):
 
   standard_set = NestedStandardSerializer(many=True, read_only=True)
@@ -97,6 +100,7 @@ class NestedSubCategorySerializer(serializers.ModelSerializer):
     count = Lesson.objects.filter(Q(standards__category=obj) | Q(standards__category__parent=obj),
                                   parent__parent=curriculum).distinct().count()
     return count
+
 
 class NestedCategorySerializer(serializers.ModelSerializer):
 
@@ -126,6 +130,12 @@ class NestedFrameworkSerializer(serializers.ModelSerializer):
     model = Framework
     #fields =
 
+
+class FrameworkHeatmap(serializers.ModelSerializer):
+
+  class Meta:
+    model = Framework
+    fields = ('slug', 'name',)
 
 '''
 json_response = []

@@ -1,5 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
+from django.db.models import Q
+import operator
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -61,15 +63,43 @@ def standard_list(request, curriculum_slug, framework_slug=None):
 def nested_standard_list(request, curriculum_slug, framework_slug=None):
 
   curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
+  query = []
   serialized = {}
-  #serialized = []
 
   if framework_slug:
-    categories = Category.objects.filter(parent__isnull=True, framework__slug=framework_slug).order_by('shortcode')
-  else:
-    categories = Category.objects.filter(parent__isnull=True).order_by('shortcode')
+    query.append(("framework__slug", framework_slug))
 
-  serializer = NestedCategorySerializer(categories, context={'curriculum': curriculum}, many=True)
+  query_list = [Q(x) for x in query]
+  standards = Standard.objects.filter(reduce(operator.and_, query_list)).order_by('shortcode')
+
+  for standard in standards:
+    print standard.shortcode
+    serializer = NestedStandardSerializer(standard, context={'curriculum': curriculum})
+    serialized[standard.shortcode] = serializer.data
+
+  #return Response(serializer.data)
+  return Response(SortedDict(serialized))
+
+@api_view(['GET',])
+def nested_category_list(request, curriculum_slug, framework_slug=None):
+
+  curriculum = get_object_or_404(Curriculum, slug=curriculum_slug)
+  query = []
+  serialized = {}
+
+  if request.GET.get('category'): # Filter by standard / cat type
+    query.append(("type", request.GET.get('category')))
+  else:
+    query.append(('parent__isnull', True))
+
+  if framework_slug:
+    query.append(("framework__slug", framework_slug))
+    #categories = Category.objects.filter(parent__isnull=True, framework__slug=framework_slug).order_by('shortcode')
+  #else:
+    #categories = Category.objects.filter(parent__isnull=True).order_by('shortcode')
+
+  query_list = [Q(x) for x in query]
+  categories = Category.objects.filter(reduce(operator.and_, query_list)).order_by('shortcode')
 
   for category in categories:
     print category.shortcode
