@@ -41,7 +41,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
                              parent = unit, _order = int(lesson_num) - 1)
   page = Page.objects.get(pk = lesson.pk)
   if curriculum.slug == 'csp' or curriculum.slug == 'algebra' or request.GET.get('csp'):
-    template = 'curricula/csplesson.html'
+    template = 'curricula/commonlesson.html'
   elif curriculum.slug == 'hoc':
     template = 'curricula/hoclesson.html'
   else:

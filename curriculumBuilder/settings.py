@@ -414,7 +414,7 @@ WKHTMLTOPDF_CMD_OPTIONS = {
 # S3 STATIC FILES #
 ###################
 
-if True:
+if ON_PAAS:
   AWS_QUERYSTRING_AUTH = False
   AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
   AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -443,11 +443,11 @@ if True:
 ###################
 # MEDUSA SETTINGS #
 ###################
-
-MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
-MEDUSA_MULTITHREAD = False
-AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
-MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
+if ON_PAAS:
+  MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
+  MEDUSA_MULTITHREAD = False
+  AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
+  MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
