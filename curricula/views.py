@@ -143,7 +143,7 @@ def get_url_for_pdf(request, abs_url):
   if settings.ON_PAAS:
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
   else:
-    return settings.AWS_BASE_URL + abs_url + '?pdf=true'
+    return "http://localhost:8000/" + abs_url + '?pdf=true'
 
 '''
 API views

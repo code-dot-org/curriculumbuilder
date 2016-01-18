@@ -28,6 +28,7 @@ img {
     padding: 10px;
 }
 
+/*
 .content h1 {
     color: #7665a0;
     font-size: 80px;
@@ -49,6 +50,7 @@ img {
     margin-top: 5px;
     margin-bottom: 0px;
 }
+*/
 
 .content ul {
     margin-top:0px;
@@ -66,13 +68,13 @@ img {
 .content p {
     margin-top:0px;
 }
-
+/*
 .headercontent .h1 {
     font-size: 80px;
     line-height: 80px;
     margin: 0 20px 20px 20px;
 }
-
+*/
 .headercontent {
     /*margin-left:40px;*/
     padding-top:0px;
