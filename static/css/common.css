@@ -5,8 +5,8 @@ body {
     font-weight: 400;
     color: dimgray;
     margin: 0;
-    padding-top: 0!important;
-    -webkit-print-color-adjust:exact;
+    padding-top: 0 !important;
+    -webkit-print-color-adjust: exact;
     page-break-after: always;
 }
 
@@ -24,7 +24,7 @@ img {
     position: fixed;
     top: 0;
     right: 0;
-    background-color: rgba(255,255,255,.8);
+    background-color: rgba(255, 255, 255, .8);
     padding: 10px;
 }
 
@@ -53,7 +53,7 @@ img {
 */
 
 .content ul {
-    margin-top:0px;
+    margin-top: 0px;
 }
 
 .toc ul li:before {
@@ -66,8 +66,9 @@ img {
 }
 
 .content p {
-    margin-top:0px;
+    margin-top: 0px;
 }
+
 /*
 .headercontent .h1 {
     font-size: 80px;
@@ -77,19 +78,19 @@ img {
 */
 .headercontent {
     /*margin-left:40px;*/
-    padding-top:0px;
-    padding-bottom:10px;
+    padding-top: 0px;
+    padding-bottom: 10px;
     margin-bottom: 50px;
 }
 
 .headercontent .disclaimer {
     opacity: 0.8;
-    font-size:14px;
-    color: white!important;
+    font-size: 14px;
+    color: white !important;
 }
 
 .content {
-    padding-left:40px;
+    padding-left: 40px;
 }
 
 .together {
@@ -103,32 +104,33 @@ img {
 .header {
     min-height: 100px;
 }
+
 .printbackground {
-    background-color: #7665a0!important;
-    color: white!important;
+    background-color: #7665a0 !important;
+    color: white !important;
     -webkit-print-color-adjust: exact;
-    clear:left;
+    clear: left;
     margin-right: 90px;
 }
 
 .printbackground .h1, .printbackground .h2, .printbackground h1, .printbackground h2 {
-    color: white!important;
+    color: white !important;
 }
 
 #lessonnumber {
-    background-color:rgb(0,173,187)!important;
+    background-color: rgb(0, 173, 187) !important;
     width: 200px;
-    float:left;
-    text-align:center;
-    font-size:72px;
-    line-height:72px;
-    height:90px;
-    color: white!important;
+    float: left;
+    text-align: center;
+    font-size: 72px;
+    line-height: 72px;
+    height: 90px;
+    color: white !important;
 }
 
 .logo {
-    float:right;
-    padding:5px;
+    float: right;
+    padding: 5px;
 }
 
 .header .h1 {
@@ -161,23 +163,30 @@ footer {
     margin-right: auto;
 }
 
-.right { float: right; }
+.right {
+    float: right;
+}
 
-.left { float: left; }
+.left {
+    float: left;
+}
 
-.clear { clear: both; }
+.clear {
+    clear: both;
+}
 
 /* prevent inline editor from squishing paragraphs */
 .editable-form .wmd-preview p {
     line-height: normal !important;
 }
+
 @media print {
 
-    #print_trigger{
+    #print_trigger {
         display: none; /* Trigger used by jQuery to change links when printing */
     }
 
-    body{
+    body {
         margin: 0 0 0 0 !important;
         width: 100% !important;
         zoom: 75% !important;
@@ -194,8 +203,13 @@ footer {
         page-break-inside: avoid;
     }
 
-    img{ max-width: 100%; }
-    .standards, .video, #admin_edit, #editable-toolbar, .editable-link { display: none !important; }
+    img {
+        max-width: 100%;
+    }
+
+    .standards, .video, #admin_edit, #editable-toolbar, .editable-link {
+        display: none !important;
+    }
 
     .printbackground .lesson a {
         color: white !important;
@@ -206,203 +220,269 @@ footer {
     }
 
     a[href]:after {
-        content:none !important;
+        content: none !important;
     }
 
     .print_link[href]:after {
         content: " (" attr(href) ")" !important;
     }
 
-  /* Make Bootstrap columns more print friendly */
-  .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
-    float: left;
-  }
-  .col-sm-12 {
-    width: 100%;
-  }
-  .col-sm-11 {
-    width: 91.66666667%;
-  }
-  .col-sm-10 {
-    width: 83.33333333%;
-  }
-  .col-sm-9 {
-    width: 75%;
-  }
-  .col-sm-8 {
-    width: 66.66666667%;
-  }
-  .col-sm-7 {
-    width: 58.33333333%;
-  }
-  .col-sm-6 {
-    width: 50%;
-  }
-  .col-sm-5 {
-    width: 41.66666667%;
-  }
-  .col-sm-4 {
-    width: 33.33333333%;
-  }
-  .col-sm-3 {
-    width: 25%;
-  }
-  .col-sm-2 {
-    width: 16.66666667%;
-  }
-  .col-sm-1 {
-    width: 8.33333333%;
-  }
-  .col-sm-pull-12 {
-    right: 100%;
-  }
-  .col-sm-pull-11 {
-    right: 91.66666667%;
-  }
-  .col-sm-pull-10 {
-    right: 83.33333333%;
-  }
-  .col-sm-pull-9 {
-    right: 75%;
-  }
-  .col-sm-pull-8 {
-    right: 66.66666667%;
-  }
-  .col-sm-pull-7 {
-    right: 58.33333333%;
-  }
-  .col-sm-pull-6 {
-    right: 50%;
-  }
-  .col-sm-pull-5 {
-    right: 41.66666667%;
-  }
-  .col-sm-pull-4 {
-    right: 33.33333333%;
-  }
-  .col-sm-pull-3 {
-    right: 25%;
-  }
-  .col-sm-pull-2 {
-    right: 16.66666667%;
-  }
-  .col-sm-pull-1 {
-    right: 8.33333333%;
-  }
-  .col-sm-pull-0 {
-    right: auto;
-  }
-  .col-sm-push-12 {
-    left: 100%;
-  }
-  .col-sm-push-11 {
-    left: 91.66666667%;
-  }
-  .col-sm-push-10 {
-    left: 83.33333333%;
-  }
-  .col-sm-push-9 {
-    left: 75%;
-  }
-  .col-sm-push-8 {
-    left: 66.66666667%;
-  }
-  .col-sm-push-7 {
-    left: 58.33333333%;
-  }
-  .col-sm-push-6 {
-    left: 50%;
-  }
-  .col-sm-push-5 {
-    left: 41.66666667%;
-  }
-  .col-sm-push-4 {
-    left: 33.33333333%;
-  }
-  .col-sm-push-3 {
-    left: 25%;
-  }
-  .col-sm-push-2 {
-    left: 16.66666667%;
-  }
-  .col-sm-push-1 {
-    left: 8.33333333%;
-  }
-  .col-sm-push-0 {
-    left: auto;
-  }
-  .col-sm-offset-12 {
-    margin-left: 100%;
-  }
-  .col-sm-offset-11 {
-    margin-left: 91.66666667%;
-  }
-  .col-sm-offset-10 {
-    margin-left: 83.33333333%;
-  }
-  .col-sm-offset-9 {
-    margin-left: 75%;
-  }
-  .col-sm-offset-8 {
-    margin-left: 66.66666667%;
-  }
-  .col-sm-offset-7 {
-    margin-left: 58.33333333%;
-  }
-  .col-sm-offset-6 {
-    margin-left: 50%;
-  }
-  .col-sm-offset-5 {
-    margin-left: 41.66666667%;
-  }
-  .col-sm-offset-4 {
-    margin-left: 33.33333333%;
-  }
-  .col-sm-offset-3 {
-    margin-left: 25%;
-  }
-  .col-sm-offset-2 {
-    margin-left: 16.66666667%;
-  }
-  .col-sm-offset-1 {
-    margin-left: 8.33333333%;
-  }
-  .col-sm-offset-0 {
-    margin-left: 0%;
-  }
-  .visible-xs {
-    display: none !important;
-  }
-  .hidden-xs {
-    display: block !important;
-  }
-  table.hidden-xs {
-    display: table;
-  }
-  tr.hidden-xs {
-    display: table-row !important;
-  }
-  th.hidden-xs,
-  td.hidden-xs {
-    display: table-cell !important;
-  }
-  .hidden-xs.hidden-print {
-    display: none !important;
-  }
-  .hidden-sm {
-    display: none !important;
-  }
-  .visible-sm {
-    display: block !important;
-  }
-  table.visible-sm {
-    display: table;
-  }
-  tr.visible-sm {
-    display: table-row !important;
-  }
-  th.visible-sm,
-  td.visible-sm {
-    display: table-cell !important;
-  }
+    .lessons .lesson a {
+        color: #7665a0 !important;
+    }
+
+    /* Make Bootstrap columns more print friendly */
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+        float: left;
+    }
+
+    .col-sm-12 {
+        width: 100%;
+    }
+
+    .col-sm-11 {
+        width: 91.66666667%;
+    }
+
+    .col-sm-10 {
+        width: 83.33333333%;
+    }
+
+    .col-sm-9 {
+        width: 75%;
+    }
+
+    .col-sm-8 {
+        width: 66.66666667%;
+    }
+
+    .col-sm-7 {
+        width: 58.33333333%;
+    }
+
+    .col-sm-6 {
+        width: 50%;
+    }
+
+    .col-sm-5 {
+        width: 41.66666667%;
+    }
+
+    .col-sm-4 {
+        width: 33.33333333%;
+    }
+
+    .col-sm-3 {
+        width: 25%;
+    }
+
+    .col-sm-2 {
+        width: 16.66666667%;
+    }
+
+    .col-sm-1 {
+        width: 8.33333333%;
+    }
+
+    .col-sm-pull-12 {
+        right: 100%;
+    }
+
+    .col-sm-pull-11 {
+        right: 91.66666667%;
+    }
+
+    .col-sm-pull-10 {
+        right: 83.33333333%;
+    }
+
+    .col-sm-pull-9 {
+        right: 75%;
+    }
+
+    .col-sm-pull-8 {
+        right: 66.66666667%;
+    }
+
+    .col-sm-pull-7 {
+        right: 58.33333333%;
+    }
+
+    .col-sm-pull-6 {
+        right: 50%;
+    }
+
+    .col-sm-pull-5 {
+        right: 41.66666667%;
+    }
+
+    .col-sm-pull-4 {
+        right: 33.33333333%;
+    }
+
+    .col-sm-pull-3 {
+        right: 25%;
+    }
+
+    .col-sm-pull-2 {
+        right: 16.66666667%;
+    }
+
+    .col-sm-pull-1 {
+        right: 8.33333333%;
+    }
+
+    .col-sm-pull-0 {
+        right: auto;
+    }
+
+    .col-sm-push-12 {
+        left: 100%;
+    }
+
+    .col-sm-push-11 {
+        left: 91.66666667%;
+    }
+
+    .col-sm-push-10 {
+        left: 83.33333333%;
+    }
+
+    .col-sm-push-9 {
+        left: 75%;
+    }
+
+    .col-sm-push-8 {
+        left: 66.66666667%;
+    }
+
+    .col-sm-push-7 {
+        left: 58.33333333%;
+    }
+
+    .col-sm-push-6 {
+        left: 50%;
+    }
+
+    .col-sm-push-5 {
+        left: 41.66666667%;
+    }
+
+    .col-sm-push-4 {
+        left: 33.33333333%;
+    }
+
+    .col-sm-push-3 {
+        left: 25%;
+    }
+
+    .col-sm-push-2 {
+        left: 16.66666667%;
+    }
+
+    .col-sm-push-1 {
+        left: 8.33333333%;
+    }
+
+    .col-sm-push-0 {
+        left: auto;
+    }
+
+    .col-sm-offset-12 {
+        margin-left: 100%;
+    }
+
+    .col-sm-offset-11 {
+        margin-left: 91.66666667%;
+    }
+
+    .col-sm-offset-10 {
+        margin-left: 83.33333333%;
+    }
+
+    .col-sm-offset-9 {
+        margin-left: 75%;
+    }
+
+    .col-sm-offset-8 {
+        margin-left: 66.66666667%;
+    }
+
+    .col-sm-offset-7 {
+        margin-left: 58.33333333%;
+    }
+
+    .col-sm-offset-6 {
+        margin-left: 50%;
+    }
+
+    .col-sm-offset-5 {
+        margin-left: 41.66666667%;
+    }
+
+    .col-sm-offset-4 {
+        margin-left: 33.33333333%;
+    }
+
+    .col-sm-offset-3 {
+        margin-left: 25%;
+    }
+
+    .col-sm-offset-2 {
+        margin-left: 16.66666667%;
+    }
+
+    .col-sm-offset-1 {
+        margin-left: 8.33333333%;
+    }
+
+    .col-sm-offset-0 {
+        margin-left: 0%;
+    }
+
+    .visible-xs {
+        display: none !important;
+    }
+
+    .hidden-xs {
+        display: block !important;
+    }
+
+    table.hidden-xs {
+        display: table;
+    }
+
+    tr.hidden-xs {
+        display: table-row !important;
+    }
+
+    th.hidden-xs,
+    td.hidden-xs {
+        display: table-cell !important;
+    }
+
+    .hidden-xs.hidden-print {
+        display: none !important;
+    }
+
+    .hidden-sm {
+        display: none !important;
+    }
+
+    .visible-sm {
+        display: block !important;
+    }
+
+    table.visible-sm {
+        display: table;
+    }
+
+    tr.visible-sm {
+        display: table-row !important;
+    }
+
+    th.visible-sm,
+    td.visible-sm {
+        display: table-cell !important;
+    }
 }

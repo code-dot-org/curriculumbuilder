@@ -80,11 +80,14 @@ html, body{
 }
 
 .lessons .lesson a {
-    color: #7665a0!important;
     line-height: 36px;
     text-align: center;
     font-size: 14pt;
     font-weight: 600;
+}
+
+.lessons .current a {
+    color: #7665a0!important;
 }
 
 .lessons .unfinished a {
