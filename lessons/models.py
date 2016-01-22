@@ -45,6 +45,7 @@ class Resource(models.Model):
     ordering = ['student', 'type']
 
   def __unicode__(self):
+    '''
     if self.url:
       formatted = "<a href='%s' target='_blank' class='print_link'>%s</a> - %s" % (self.url, self.name, self.type)
     else:
@@ -53,6 +54,8 @@ class Resource(models.Model):
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
     elif self.gd:
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
+    '''
+    formatted = "%s - %s" % (self.name, self.type)
     return formatted
 
   def gd_pdf(self):

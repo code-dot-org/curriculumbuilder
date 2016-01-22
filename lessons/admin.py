@@ -36,6 +36,31 @@ class ActivityInline(StackedDynamicInlineAdmin):
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
   }
 
+class ResourceInline(TabularDynamicInlineAdmin):
+  model = Lesson.resources.through
+
+  readonly_fields = ('type', 'student', 'gd', 'url', 'dl_url')
+  verbose_name_plural = "Resources"
+
+  def type(self, instance):
+    return instance.resource.type
+
+  def student(self, instance):
+    return instance.resource.student
+
+  def gd(self, instance):
+    return instance.resource.gd
+
+  def url(self, instance):
+    return instance.resource.url
+
+  def dl_url(self, instance):
+    return instance.resource.dl_url
+
+class VocabInline(TabularDynamicInlineAdmin):
+  model = Lesson.vocab.through
+  form = make_ajax_form(Lesson.vocab.through, {'vocab': 'vocab'})
+
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
   def queryset(self, request):
@@ -44,9 +69,9 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
                                                                        'anchor_standards', 'resources',
                                                                        'vocab')
 
-  inlines = [ActivityInline, ObjectiveInline, PrereqInline]
+  inlines = [ResourceInline, ActivityInline, ObjectiveInline, PrereqInline]
 
-  form = make_ajax_form(Lesson, {'vocab': 'vocab', 'resources': 'resources'})
+  form = make_ajax_form(Lesson, {'vocab': 'vocab',})
 
   filter_vertical = ('standards', 'anchor_standards')
 
@@ -55,20 +80,16 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['title', ('duration', 'unplugged'), 'overview'],
     }),
     ('CS Content, Materials & Prep', {
-      'fields': ['cs_content', 'prep', 'slug', 'keywords'],
+      'fields': ['cs_content', 'prep', 'slug', 'keywords', 'vocab'],
       'classes': ['collapse-closed',],
     }),
     ('Standards', {
       'fields': ['anchor_standards', 'standards'],
       'classes': ['collapse-closed',],
     }),
-    ('Vocab and Resources', {
-      'fields': ['vocab', 'resources'],
-      'classes': ['collapse-closed',],
-    }),
   )
 
-class ResourceAdmin(admin.ModelAdmin):
+class ResourceAdmin(AjaxSelectAdmin):
   model = Resource
 
   formfield_overrides = {
@@ -77,9 +98,12 @@ class ResourceAdmin(admin.ModelAdmin):
   list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
   list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
 
+class VocabAdmin(AjaxSelectAdmin):
+  pass
+
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)
-admin.site.register(Vocab)
+admin.site.register(Vocab, VocabAdmin)
 admin.site.register(Resource, ResourceAdmin)
