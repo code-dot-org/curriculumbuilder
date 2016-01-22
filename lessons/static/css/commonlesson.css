@@ -80,6 +80,7 @@ html, body{
 }
 
 .lessons .lesson a {
+    color: #7665a0;
     line-height: 36px;
     text-align: center;
     font-size: 14pt;

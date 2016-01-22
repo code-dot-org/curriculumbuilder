@@ -180,6 +180,11 @@ footer {
     line-height: normal !important;
 }
 
+/* kill li dots on edit icons */
+.wmd-button:before {
+    content: none;
+}
+
 @media print {
 
     #print_trigger {
