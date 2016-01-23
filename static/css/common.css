@@ -216,14 +216,6 @@ footer {
         display: none !important;
     }
 
-    .printbackground .lesson a {
-        color: white !important;
-    }
-
-    .printbackground .lessons .lesson a {
-        color: #7665a0 !important;
-    }
-
     a[href]:after {
         content: none !important;
     }
