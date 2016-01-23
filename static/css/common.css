@@ -232,8 +232,12 @@ footer {
         content: " (" attr(href) ")" !important;
     }
 
-    .lessons .lesson a {
+    .lessons .finished a, .lessons .current a {
         color: #7665a0 !important;
+    }
+
+    .lessons .unfinished a {
+        color: #ffffff !important;
     }
 
     /* Make Bootstrap columns more print friendly */
