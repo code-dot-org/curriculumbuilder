@@ -293,7 +293,7 @@ INSTALLED_APPS = (
   #"csvimport.app.CSVImportConf",
   "gunicorn",
   "import_export",
-  "data_importer",
+  #"data_importer",
   "ajax_select",
   #"wkhtmltopdf",
   "django_medusa",
