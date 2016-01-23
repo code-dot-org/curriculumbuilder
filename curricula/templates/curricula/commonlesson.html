@@ -185,7 +185,7 @@
                                 <summary><strong>{{ parent.grouper.shortcode }}</strong> - {{ parent.grouper.name }}</summary>
                                 {% regroup parent.list by category as standards_by_category %}
                                 {% for category in standards_by_category %}
-                                    <details class="standards">
+                                    <details class="standard">
                                         <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
                                         <ul>
                                             {% for standard in category.list %}
@@ -199,7 +199,7 @@
                     {% else %}
                         {% regroup framework.list by category as standards_by_category %}
                         {% for category in standards_by_category %}
-                            <details class="standards">
+                            <details class="standard">
                                 <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
                                 <ul>
                                     {% for standard in category.list %}
