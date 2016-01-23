@@ -34,7 +34,7 @@ class Category(models.Model):
     return self.shortcode
 
   class Meta:
-      ordering = ["shortcode"]
+      ordering = ['framework', 'shortcode']
       verbose_name_plural = "categories"
 
 """
@@ -78,7 +78,7 @@ class Standard(models.Model):
     return self.slug + ': ' + self.name
 
   class Meta:
-    ordering = ["slug"]
+    ordering = ['framework', 'category', 'slug']
 
   def save(self, *args, **kwargs):
     self.name = self.name[:255]

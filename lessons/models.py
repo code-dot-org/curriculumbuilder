@@ -42,7 +42,7 @@ class Resource(models.Model):
   dl_url = models.URLField('Download URL', help_text='Alternate download url', blank=True, null=True)
 
   class Meta:
-    ordering = ['student', 'type']
+    ordering = ['name',]
 
   def __unicode__(self):
     '''

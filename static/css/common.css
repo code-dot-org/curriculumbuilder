@@ -141,13 +141,11 @@ img {
     clear: both;
 }
 
-.standards .framework > summary {
-    font-weight: bold;
-}
-
-.standards .framework .standard {
+.standards .framework details {
     margin-left: 30px;
 }
+
+
 
 footer {
     page-break-after: always;

@@ -43,18 +43,18 @@
     <div class="lessons">
     {% for stage in unit.lessons %}
         {% if stage.number < lesson.number %}
-        <div class="lesson finished">
+            <div class="lesson finished">
         {% elif stage.number == lesson.number %}
-        <div class="lesson current">
+            <div class="lesson current">
         {% else %}
-        <div class="lesson unfinished">
+            <div class="lesson unfinished">
         {% endif %}
-            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                {{ stage.number }}
-            </a>
-        </div>
-    {% endfor %}
+    <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+        {{ stage.number }}
+    </a>
     </div>
+    {% endfor %}
+</div>
 
 {% endblock %}
 
@@ -65,7 +65,7 @@
 
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
-        <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
         {% endeditable %}
     </div>
 
@@ -99,15 +99,15 @@
             {% if lesson.anchor_standards.all.count > 0  %}
                 <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
                 {% with lesson.anchor_standards.all as standards %}
-                {% regroup standards by framework as standards_by_framework %}
-                {% for framework in standards_by_framework %}
-                    <h3>{{ framework.grouper }}</h3>
-                    <ul>
-                    {% for standard in framework.list %}
-                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                    {% regroup standards by framework as standards_by_framework %}
+                    {% for framework in standards_by_framework %}
+                        <h3>{{ framework.grouper }}</h3>
+                        <ul>
+                            {% for standard in framework.list %}
+                                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
-                    </ul>
-                {% endfor %}
                 {% endwith %}
             {% endif %}
 
@@ -131,26 +131,26 @@
             {% if lesson.resources.count > 0 %}
                 <h2>Resources</h2>
                 {% with lesson.resources.all as resources %}
-                {% regroup resources by student as resources_by_audience %}
-                {% for audience in resources_by_audience %}
-                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
-                    <ul>
-                    {% for resource in audience.list %}
-                        <li>
-                            {{ resource|safe }}
-                        </li>
+                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                    {% for audience in resources_by_audience %}
+                        <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                        <ul>
+                            {% for resource in audience.list %}
+                                <li>
+                                    {{ resource|safe }}
+                                </li>
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
-                    </ul>
-                {% endfor %}
                 {% endwith %}
             {% endif %}
 
             {% if lesson.vocab.count > 0 %}
                 <h2>Vocabulary</h2>
                 <ul>
-                {% for word in lesson.vocab.all %}
-                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
-                {% endfor %}
+                    {% for word in lesson.vocab.all %}
+                        <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 
@@ -174,22 +174,47 @@
     <div class="standards">
         <h2>Standards Alignment</h2>
         {% with lesson.standards.all as standards %}
-        {% regroup standards by framework as standards_by_framework %}
-        {% for framework in standards_by_framework %}
-            <details class="framework">
-            <summary>{{ framework.grouper }}</summary>
-            <!--<ul>-->
-            {% for standard in framework.list %}
-                <details class="standard">
-                <summary>{{ standard.shortcode }}</summary>
-                    <p>{{ standard.description }}</p>
-                </details>
+            {% regroup standards by framework as standards_by_framework %}
+            {% for framework in standards_by_framework %}
+                <div class="framework">
+                    <h3>{{ framework.grouper }}</h3>
+                    {% if framework.list.0.category.parent %}
+                        {% regroup framework.list by category.parent as standards_by_parent_cat  %}
+                        {% for parent in standards_by_parent_cat %}
+                            <details class="standard">
+                                <summary><strong>{{ parent.grouper.shortcode }}</strong> - {{ parent.grouper.name }}</summary>
+                                {% regroup parent.list by category as standards_by_category %}
+                                {% for category in standards_by_category %}
+                                    <details class="standards">
+                                        <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
+                                        <ul>
+                                            {% for standard in category.list %}
+                                                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </details>
+                                {% endfor %}
+                            </details>
+                        {% endfor %}
+                    {% else %}
+                        {% regroup framework.list by category as standards_by_category %}
+                        {% for category in standards_by_category %}
+                            <details class="standards">
+                                <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
+                                <ul>
+                                    {% for standard in category.list %}
+                                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             {% endfor %}
-            <!--</ul>-->
-            </details>
-        {% endfor %}
         {% endwith %}
     </div>
+
+
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings

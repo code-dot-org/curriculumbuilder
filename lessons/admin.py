@@ -39,6 +39,9 @@ class ActivityInline(StackedDynamicInlineAdmin):
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
 
+  class Meta:
+    ordering = ['name']
+
   readonly_fields = ('type', 'student', 'gd', 'url', 'dl_url')
   verbose_name_plural = "Resources"
 
