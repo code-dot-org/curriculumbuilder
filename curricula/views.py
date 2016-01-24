@@ -80,12 +80,12 @@ def unit_pdf(request, slug, unit_slug):
 
   unit = get_object_or_404(Unit, curriculum__slug = slug, slug = unit_slug)
 
-  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
+  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
   c.perform()
 
   for lesson in unit.lessons:
 
-    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
     c.perform()
 
     '''
@@ -116,16 +116,14 @@ def curriculum_pdf(request, slug):
   c.setopt(c.WRITEDATA, buffer)
 
   curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set', 'unit_set__children'), slug = slug)
-  print "got the curric"
+
   c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url(), True))
   c.perform()
 
   for unit in curriculum.unit_set.all():
-    print "getting a unit"
     c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
     c.perform()
     for lesson in unit.children.all():
-      print "getting a lesson"
       c.setopt(c.URL, get_url_for_pdf(request, lesson.lesson.get_absolute_url(), True))
       c.perform()
 
