@@ -144,13 +144,13 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
   # On production we should pull the pages locally to ensure the most recent copy,
   # This causes a crash on local dev, so in that case pull pages from S3
-  if not aws:
+  if aws:
+    return settings.AWS_BASE_URL + abs_url + '?pdf=true'
+  else:
     print get_current_site(request).domain
     print abs_url
     print 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
-  else:
-    return settings.AWS_BASE_URL + abs_url + '?pdf=true'
 
 '''
 API views

@@ -39,5 +39,5 @@ class PDFRenderer(StaticSiteRenderer):
       paths.add(curriculum.get_absolute_url() + 'pdf')
     return list(paths)
 
-renderers = [CurriculumRenderer, PDFRenderer, JSONRenderer]
+renderers = [CurriculumRenderer, JSONRenderer, PDFRenderer]
 #renderers = [JSONRenderer, ]
