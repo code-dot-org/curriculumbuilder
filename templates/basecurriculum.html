@@ -76,20 +76,30 @@
     </div>
 </footer>
 <div id="print_trigger"></div>
-{% if pdf %}
 <script type="text/javascript">
+    var vars = [], hash;
+        var q = document.URL.split('?')[1];
+        if(q != undefined){
+            q = q.split('&');
+            for(var i = 0; i < q.length; i++){
+                hash = q[i].split('=');
+                vars.push(hash[1]);
+                vars[hash[0]] = hash[1];
+            }
+    }
 
-    jQuery(function() {
-        console.log('working');
-        console.log($("print_trigger"));
-        console.log('should do it');
-        $('a[data-pdf-link]').each(function() {
-            console.log(this.href);
-            this.href = $(this).attr('data-pdf-link');
+    if (vars['pdf']) {
+        jQuery(function () {
+            console.log('working');
+            console.log($("print_trigger"));
+            console.log('should do it');
+            $('a[data-pdf-link]').each(function () {
+                console.log(this.href);
+                this.href = $(this).attr('data-pdf-link');
+            });
         });
-    });
+    }
 </script>
-{% endif %}
 
 {% include "includes/footer_scripts.html" %}
 

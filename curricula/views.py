@@ -33,6 +33,7 @@ def unit_view(request, slug, unit_slug):
   return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 
 def lesson_view(request, slug, unit_slug, lesson_num):
+  # Why an I doing this here? Can I let the template handle this? Maybe not...
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
@@ -61,8 +62,11 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
                              parent = unit, _order = int(lesson_num) - 1)
 
   c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+  print "ready to perform"
   c.perform()
+  print 'done'
   c.close()
+  print 'closed'
 
   compiled = buffer.getvalue()
   pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
@@ -79,12 +83,12 @@ def unit_pdf(request, slug, unit_slug):
   curriculum = get_object_or_404(Curriculum, slug = slug)
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
 
-  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
+  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
   c.perform()
 
   for lesson in unit.lessons:
 
-    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
     c.perform()
 
     '''
@@ -116,14 +120,14 @@ def curriculum_pdf(request, slug):
 
   curriculum = get_object_or_404(Curriculum, slug = slug)
 
-  c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url()))
+  c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url(), True))
   c.perform()
 
   for unit in curriculum.units:
-    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
+    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
     c.perform()
     for lesson in unit.lessons:
-      c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+      c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
       c.perform()
 
   c.close()
@@ -137,13 +141,16 @@ def curriculum_pdf(request, slug):
     response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
   return response
 
-def get_url_for_pdf(request, abs_url):
+def get_url_for_pdf(request, abs_url, aws=False):
   # On production we should pull the pages locally to ensure the most recent copy,
   # This causes a crash on local dev, so in that case pull pages from S3
-  if settings.ON_PAAS:
+  if not aws:
+    print get_current_site(request).domain
+    print abs_url
+    print 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
   else:
-    return "http://localhost:8000/" + abs_url + '?pdf=true'
+    return settings.AWS_BASE_URL + abs_url + '?pdf=true'
 
 '''
 API views
