@@ -80,12 +80,12 @@ def unit_pdf(request, slug, unit_slug):
 
   unit = get_object_or_404(Unit, curriculum__slug = slug, slug = unit_slug)
 
-  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
+  c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url()))
   c.perform()
 
   for lesson in unit.lessons:
 
-    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
+    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
     c.perform()
 
     '''
@@ -115,16 +115,18 @@ def curriculum_pdf(request, slug):
   c = pycurl.Curl()
   c.setopt(c.WRITEDATA, buffer)
 
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-
+  curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set', 'unit_set__children'), slug = slug)
+  print "got the curric"
   c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url(), True))
   c.perform()
 
-  for unit in curriculum.units:
+  for unit in curriculum.unit_set.all():
+    print "getting a unit"
     c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
     c.perform()
-    for lesson in unit.lessons:
-      c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
+    for lesson in unit.children.all():
+      print "getting a lesson"
+      c.setopt(c.URL, get_url_for_pdf(request, lesson.lesson.get_absolute_url(), True))
       c.perform()
 
   c.close()
@@ -141,7 +143,8 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
   # On production we should pull the pages locally to ensure the most recent copy,
   # This causes a crash on local dev, so in that case pull pages from S3
-  if aws:
+  if aws or not settings.ON_PAAS:
+    print abs_url
     return settings.AWS_BASE_URL + abs_url + '?pdf=true'
   else:
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
