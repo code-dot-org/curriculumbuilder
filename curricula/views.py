@@ -35,31 +35,29 @@ def unit_view(request, slug, unit_slug):
 def lesson_view(request, slug, unit_slug, lesson_num):
   # Why an I doing this here? Can I let the template handle this? Maybe not...
   pdf = request.GET.get('pdf', False)
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
-  lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
+  lesson = get_object_or_404(Lesson.objects.prefetch_related('standards', 'standards__framework', 'standards__category',
+                                                             'standards__category__parent',
+                                                             'anchor_standards__framework', 'page_ptr', 'parent',
+                                                             'parent__unit', 'parent__unit__curriculum', 'parent__children',
                                                              'vocab', 'resources', 'activity_set'),
-                             parent = unit, _order = int(lesson_num) - 1)
-  page = Page.objects.get(pk = lesson.pk)
-  if curriculum.slug == 'csp' or curriculum.slug == 'algebra' or request.GET.get('csp'):
+                             parent__unit__slug = unit_slug, parent__unit__curriculum__slug = slug,
+                             _order = int(lesson_num) - 1)
+  if lesson.curriculum.slug == 'csp' or lesson.curriculum.slug == 'algebra' or request.GET.get('csp'):
     template = 'curricula/commonlesson.html'
-  elif curriculum.slug == 'hoc':
+  elif lesson.curriculum.slug == 'hoc':
     template = 'curricula/hoclesson.html'
   else:
     template = 'curricula/lesson.html'
 
-  return render(request, template, {'curriculum': curriculum, 'unit': unit, 'lesson': lesson, 'pdf': pdf})
+  return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'lesson': lesson, 'pdf': pdf})
 
 def lesson_pdf(request, slug, unit_slug, lesson_num):
   buffer = StringIO()
   c = pycurl.Curl()
   c.setopt(c.WRITEDATA, buffer)
 
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
-  lesson = get_object_or_404(Lesson.objects.prefetch_related('standards__framework', 'anchor_standards__framework',
-                                                             'vocab', 'resources', 'activity_set'),
-                             parent = unit, _order = int(lesson_num) - 1)
+  lesson = get_object_or_404(Lesson, parent__unit__slug = unit_slug, parent__unit__curriculum__slug = slug,
+                             _order = int(lesson_num) - 1)
 
   c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
   print "ready to perform"
@@ -80,8 +78,7 @@ def unit_pdf(request, slug, unit_slug):
   c = pycurl.Curl()
   c.setopt(c.WRITEDATA, buffer)
 
-  curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+  unit = get_object_or_404(Unit, curriculum__slug = slug, slug = unit_slug)
 
   c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
   c.perform()
@@ -147,9 +144,6 @@ def get_url_for_pdf(request, abs_url, aws=False):
   if aws:
     return settings.AWS_BASE_URL + abs_url + '?pdf=true'
   else:
-    print get_current_site(request).domain
-    print abs_url
-    print 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
 
 '''

@@ -363,7 +363,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-  # "debug_toolbar",
+  "debug_toolbar",
   "django_extensions",
   "compressor",
   PACKAGE_NAME_FILEBROWSER,
