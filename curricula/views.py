@@ -117,14 +117,14 @@ def curriculum_pdf(request, slug):
 
   curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set', 'unit_set__children'), slug = slug)
 
-  c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url(), True))
+  c.setopt(c.URL, get_url_for_pdf(request, curriculum.get_absolute_url(), False))
   c.perform()
 
   for unit in curriculum.unit_set.all():
-    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
+    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), False))
     c.perform()
     for lesson in unit.children.all():
-      c.setopt(c.URL, get_url_for_pdf(request, lesson.lesson.get_absolute_url(), True))
+      c.setopt(c.URL, get_url_for_pdf(request, lesson.lesson.get_absolute_url(), False))
       c.perform()
 
   c.close()
