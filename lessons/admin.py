@@ -13,15 +13,15 @@ from mezzanine_pagedown.widgets import PlainWidget
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource
 from standards.models import Standard
 
-class ObjectiveInline(StackedDynamicInlineAdmin):
+class ObjectiveInline(TabularDynamicInlineAdmin):
   model = Objective
-  list_display = ['name', 'description']
+  fields = ["name",]
   verbose_name = "Objective"
   verbose_name_plural = "Objectives"
 
-  def get_queryset(self, request):
-    return super(ObjectiveInline, self).get_queryset(request)#.filter(lesson=request)
-
+  formfield_overrides = {
+      models.CharField: {'widget': TextInput(attrs={'size':100, 'style':'width: 700px'})},
+  }
 
 class PrereqInline(StackedDynamicInlineAdmin):
   model = Prereq
@@ -31,6 +31,9 @@ class PrereqInline(StackedDynamicInlineAdmin):
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
+  fields = ['name', 'content']
+  class Meta:
+    fields = ['name', 'content']
 
   formfield_overrides = {
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
@@ -69,25 +72,25 @@ class LessonForm(ModelForm):
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
+  raw_id_fields = ('vocab', 'resources')
+
   form = LessonForm
-  def queryset(self, request):
-    return super(LessonAdmin, self).get_queryset(request).select_related('resource_set').prefetch_related('activity_set', 'objective_set',
-                                                                       'prereq_set', 'standards',
-                                                                       'anchor_standards', 'resources',
-                                                                       'vocab')
 
-  inlines = [ResourceInline, ActivityInline, ObjectiveInline, PrereqInline]
+  def get_queryset(self, request):
+    qs = super(LessonAdmin, self).get_queryset(request)
+    return qs.prefetch_related('activity_set', 'objective_set','prereq_set', 'standards',
+                               'anchor_standards', 'resources', 'vocab')
 
-  #form = make_ajax_form(Lesson, {'vocab': 'vocab',})
+  inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
   filter_horizontal = ('standards', 'vocab')
 
   fieldsets = (
     (None, {
-      'fields': ['title', ('status', 'duration', 'unplugged'), 'overview'],
+      'fields': ['title', ('status', 'duration', 'unplugged'), 'overview',],
     }),
     ('CS Content, Materials & Prep', {
-      'fields': ['cs_content', 'prep', 'vocab'],
+      'fields': ['cs_content', 'prep', 'vocab',],
       'classes': ['collapse-closed',],
     }),
     ('Standards', {
