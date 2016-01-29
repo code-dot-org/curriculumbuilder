@@ -63,35 +63,29 @@ class ResourceInline(TabularDynamicInlineAdmin):
   def dl_url(self, instance):
     return instance.resource.dl_url
 
-class LessonForm(ModelForm):
-
-  class Meta:
-    model = Lesson
-    fields = ('status',)
-    help_texts = {"status": "Draft documents will not be scooped during deployment."}
-
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
-
-  raw_id_fields = ('vocab', 'resources')
-
-  form = LessonForm
+  form = make_ajax_form(Lesson, {'resources': 'resources'})
 
   def get_queryset(self, request):
     qs = super(LessonAdmin, self).get_queryset(request)
     return qs.prefetch_related('activity_set', 'objective_set','prereq_set', 'standards',
                                'anchor_standards', 'resources', 'vocab')
 
-  inlines = [ObjectiveInline, ResourceInline, ActivityInline]
+  inlines = [ObjectiveInline, ActivityInline]
 
   filter_horizontal = ('standards', 'vocab')
 
   fieldsets = (
     (None, {
-      'fields': ['title', ('status', 'duration', 'unplugged'), 'overview',],
+      'fields': ['title', ('status', 'duration', 'unplugged'), 'overview'],
     }),
     ('CS Content, Materials & Prep', {
       'fields': ['cs_content', 'prep', 'vocab',],
       'classes': ['collapse-closed',],
+    }),
+    ('Resources & Vocab', {
+      'fields': ['vocab', 'resources'],
+      'classes': ['collapse-closed'],
     }),
     ('Standards', {
       'fields': ['standards'],
@@ -99,7 +93,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
   )
 
-class ResourceAdmin(AjaxSelectAdmin):
+class ResourceAdmin(admin.ModelAdmin):
   model = Resource
 
   formfield_overrides = {
