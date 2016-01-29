@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput, Textarea
+from django.forms import TextInput, Textarea, ModelForm, BooleanField
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
@@ -60,34 +60,38 @@ class ResourceInline(TabularDynamicInlineAdmin):
   def dl_url(self, instance):
     return instance.resource.dl_url
 
-class VocabInline(TabularDynamicInlineAdmin):
-  model = Lesson.vocab.through
-  form = make_ajax_form(Lesson.vocab.through, {'vocab': 'vocab'})
+class LessonForm(ModelForm):
+
+  class Meta:
+    model = Lesson
+    fields = ('status',)
+    help_texts = {"status": "Draft documents will not be scooped during deployment."}
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
+  form = LessonForm
   def queryset(self, request):
-    return super(LessonAdmin, self).get_queryset(request).prefetch_related('activity_set', 'objective_set',
+    return super(LessonAdmin, self).get_queryset(request).select_related('resource_set').prefetch_related('activity_set', 'objective_set',
                                                                        'prereq_set', 'standards',
                                                                        'anchor_standards', 'resources',
                                                                        'vocab')
 
   inlines = [ResourceInline, ActivityInline, ObjectiveInline, PrereqInline]
 
-  form = make_ajax_form(Lesson, {'vocab': 'vocab',})
+  #form = make_ajax_form(Lesson, {'vocab': 'vocab',})
 
-  filter_vertical = ('standards', 'anchor_standards')
+  filter_horizontal = ('standards', 'vocab')
 
   fieldsets = (
     (None, {
-      'fields': ['title', ('duration', 'unplugged'), 'overview'],
+      'fields': ['title', ('status', 'duration', 'unplugged'), 'overview'],
     }),
     ('CS Content, Materials & Prep', {
-      'fields': ['cs_content', 'prep', 'slug', 'keywords', 'vocab'],
+      'fields': ['cs_content', 'prep', 'vocab'],
       'classes': ['collapse-closed',],
     }),
     ('Standards', {
-      'fields': ['anchor_standards', 'standards'],
+      'fields': ['standards'],
       'classes': ['collapse-closed',],
     }),
   )
