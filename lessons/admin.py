@@ -66,11 +66,6 @@ class ResourceInline(TabularDynamicInlineAdmin):
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
   form = make_ajax_form(Lesson, {'resources': 'resources'})
 
-  def get_queryset(self, request):
-    qs = super(LessonAdmin, self).get_queryset(request)
-    return qs.prefetch_related('activity_set', 'objective_set','prereq_set', 'standards',
-                               'anchor_standards', 'resources', 'vocab')
-
   inlines = [ObjectiveInline, ActivityInline]
 
   filter_horizontal = ('standards', 'vocab')
@@ -80,7 +75,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['title', ('status', 'duration', 'unplugged'), 'overview'],
     }),
     ('CS Content, Materials & Prep', {
-      'fields': ['cs_content', 'prep', 'vocab',],
+      'fields': ['cs_content', 'prep'],
       'classes': ['collapse-closed',],
     }),
     ('Resources & Vocab', {
@@ -93,7 +88,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
   )
 
-class ResourceAdmin(admin.ModelAdmin):
+class ResourceAdmin(AjaxSelectAdmin):
   model = Resource
 
   formfield_overrides = {
