@@ -64,11 +64,11 @@ class ResourceInline(TabularDynamicInlineAdmin):
     return instance.resource.dl_url
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
-  form = make_ajax_form(Lesson, {'resources': 'resources'})
+  #form = make_ajax_form(Lesson, {'vocab': 'vocab'})
 
   inlines = [ObjectiveInline, ActivityInline]
 
-  filter_horizontal = ('standards', 'vocab')
+  filter_horizontal = ('standards', 'vocab', 'resources')
 
   fieldsets = (
     (None, {
