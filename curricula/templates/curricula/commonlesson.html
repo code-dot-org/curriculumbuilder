@@ -54,7 +54,6 @@
 {% endblock %}
 
 {% block main %}
-
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
             <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
@@ -64,7 +63,6 @@
     <div class="together overview-page row">
 
         <div class="col-sm-8 left-col">
-
             <h2>Overview</h2>
             {% editable lesson.overview %}
                 {{ lesson.overview|richtext_filters|safe }}
@@ -129,7 +127,10 @@
                         <ul>
                             {% for resource in audience.list %}
                                 <li>
-                                    {{ resource|safe }}
+                                    <a href="{{ resource.url }}" target="_blank">{{ resource|safe }}</a>
+                                    {% if resource.dl_url %}
+                                        &nbsp(<a href="{{ resource.dl_url }}">download</a>)
+                                    {% endif %}
                                 </li>
                             {% endfor %}
                         </ul>

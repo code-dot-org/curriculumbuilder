@@ -42,12 +42,15 @@ def lesson_view(request, slug, unit_slug, lesson_num):
                                                              'vocab', 'resources', 'activity_set'),
                              parent__unit__slug = unit_slug, parent__unit__curriculum__slug = slug,
                              _order = int(lesson_num) - 1)
+  '''
   if lesson.curriculum.slug == 'csp' or lesson.curriculum.slug == 'algebra' or request.GET.get('csp'):
     template = 'curricula/commonlesson.html'
   elif lesson.curriculum.slug == 'hoc':
     template = 'curricula/hoclesson.html'
   else:
     template = 'curricula/lesson.html'
+  '''
+  template = 'curricula/commonlesson.html'
 
   return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'lesson': lesson, 'pdf': pdf})
 
