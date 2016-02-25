@@ -1,5 +1,7 @@
 import re
+import itertools
 from django.db import models
+from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from standards.models import Standard
@@ -34,12 +36,13 @@ Linked Resources
 
 """
 class Resource(models.Model):
-  name = models.CharField(max_length=255, unique=True)
+  name = models.CharField(max_length=255)
   type = models.CharField(max_length=255, blank=True, null=True)
   student = models.BooleanField('Student Facing', default=False)
   gd = models.BooleanField('Google Doc', default=False)
   url = models.URLField(blank=True, null=True)
   dl_url = models.URLField('Download URL', help_text='Alternate download url', blank=True, null=True)
+  slug = models.CharField(max_length=255, unique=True, blank=True, null=True)
 
   class Meta:
     ordering = ['name',]
@@ -65,6 +68,19 @@ class Resource(models.Model):
       return pdf
     except:
       return self.url
+
+  def save(self, *args, **kwargs):
+
+    if not self.slug:
+      self.slug = slugify(self.name)[:255]
+
+    # Check for slug uniqueness, if not unique append number
+    for x in itertools.count(1):
+      if not Resource.objects.filter(slug=self.slug):
+        break
+      self.slug = '%s-%d' % (self.slug[:250], x)
+
+    super(Resource, self).save(*args, **kwargs)
 
 """
 Complete Lesson Page
