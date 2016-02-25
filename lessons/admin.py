@@ -91,9 +91,6 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 class ResourceAdmin(AjaxSelectAdmin):
   model = Resource
 
-  formfield_overrides = {
-    models.CharField: {'widget': TextInput(attrs={'size':'10'})},
-  }
   list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
   list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
 

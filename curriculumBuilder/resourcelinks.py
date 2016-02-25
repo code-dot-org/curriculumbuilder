@@ -20,12 +20,24 @@ class AttrTagPattern(Pattern):
   def handleMatch(self, m):
     el = etree.Element(self.tag)
     el.text = m.group(3)
+
     try:
-      resource = Resource.objects.get(name=el.text)
+      resource = Resource.objects.get(slug=el.text)
       print resource
       el.set('href', resource.url)
+      el.text = resource.name
+
     except Resource.DoesNotExist:
-      print "resource not found!"
+      print "slug not found, trying name"
+
+      try:
+        resource = Resource.objects.get(name=el.text)
+        print resource
+        el.set('href', resource.url)
+
+      except Resource.DoesNotExist:
+        print "couldn't find by name either!"
+
     for (key,val) in self.attrs.items():
       el.set(key,val)
     return el

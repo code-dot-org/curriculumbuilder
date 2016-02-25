@@ -1,4 +1,4 @@
-{% load i18n future %}
+{% load i18n future staticfiles %}
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script type="text/javascript">
     if (window.__csrf_token) {
@@ -9,6 +9,8 @@
         });
     }
 </script>
+
+<link rel="stylesheet" href="{% static "css/admin.css" %}">
 
 <div id="header">
     <div class="branding">&nbsp;</div>
