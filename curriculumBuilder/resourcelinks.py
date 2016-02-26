@@ -23,7 +23,6 @@ class AttrTagPattern(Pattern):
 
     try:
       resource = Resource.objects.get(slug=el.text)
-      print resource
       el.set('href', resource.url)
       el.text = resource.name
 
@@ -32,7 +31,6 @@ class AttrTagPattern(Pattern):
 
       try:
         resource = Resource.objects.get(name=el.text)
-        print resource
         el.set('href', resource.url)
 
       except Resource.DoesNotExist:

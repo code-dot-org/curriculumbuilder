@@ -24,9 +24,14 @@
 {% endblock %}
 
 {% block admin_link %}
+    <div id="admin_edit">
     {% if user.is_staff %}
-        <div id="admin_edit"><a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a></div>
+        <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
     {% endif %}
+    <a class="togglesay">Don't tell me what to say!</a>
+    <a class="togglesay" style="display:none;">Help, what should I say?</a>
+    </div>
+
 {% endblock %}
 
 {% block lessonnumber %}
@@ -54,6 +59,7 @@
 {% endblock %}
 
 {% block main %}
+
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
             <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
@@ -227,7 +233,14 @@
                 return $heading[0].tagName.toLowerCase();
             }
         });
+        $(function(){
+            $('.togglesay').live('click', function() {
+                $('.say').slideToggle();
+                $('.togglesay').toggle();
+            });
+        });
     </script>
+
     <!--<script type="text/javascript">
         $(function() {
             // Add conditional classname based on support
