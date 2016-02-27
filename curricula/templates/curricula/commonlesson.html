@@ -28,8 +28,8 @@
     {% if user.is_staff %}
         <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
     {% endif %}
-    <a class="togglesay">Don't tell me what to say!</a>
-    <a class="togglesay" style="display:none;">Help, what should I say?</a>
+    <button type="button" class="togglesay btn btn-success">Don't tell me what to say!</button>
+    <button type="button" class="togglesay btn btn-danger" style="display:none;">Help, what should I say?</button>
     </div>
 
 {% endblock %}
