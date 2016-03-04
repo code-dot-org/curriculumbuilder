@@ -466,6 +466,16 @@ FREEZE_INCLUDE_STATIC = False
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = ('GET', )
 
+###################
+# DISQUS SETTINGS #
+###################
+
+COMMENTS_DISQUS_API_PUBLIC_KEY = 'wfS3VtMuylVdTyih6dAvcbztv0KzWYl8VplU8la3EgK4BCpyVSK09ieW6rMFKJ2t'
+
+COMMENTS_DISQUS_API_SECRET_KEY = os.environ.get('DISQUS_API_SECRET_KEY')
+
+COMMENTS_DISQUS_SHORTNAME = 'CurriculumBuilder'
+
 ###########
 # LOGGING #
 ###########

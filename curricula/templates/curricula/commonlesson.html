@@ -1,8 +1,6 @@
 {% extends "basecurriculum.html" %}
 
-{% load staticfiles %}
-{% load mezzanine_tags %}
-{% load keyword_tags %}
+{% load staticfiles mezzanine_tags keyword_tags comment_tags disqus_tags i18n %}
 
 {% block meta_title %}{{ lesson.meta_title }}{% endblock %}
 
@@ -21,6 +19,9 @@
 {% block extra_js %}
     <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
+    <script type="text/javascript">
+    var disqus_developer = 1;
+    </script>
 {% endblock %}
 
 {% block admin_link %}
@@ -213,6 +214,23 @@
         {% endwith %}
     </div>
 
+    <div id="disqus">
+    {% if settings.COMMENTS_DISQUS_SHORTNAME %}
+        <h1>Here be comments</h1>
+    <a href="{{ lesson.get_absolute_url }}#disqus_thread"
+        data-disqus-identifier="{% disqus_id_for lesson %}">
+        {% trans "Comments" %}
+    </a>
+    {% else %}
+    <a href="{{ lesson.get_absolute_url }}#comments">
+        {% blocktrans count comments_count=lesson.comments_count %}{{ comments_count }} comment{% plural %}{{ comments_count }} comments{% endblocktrans %}
+    </a>
+    {% endif %}
+    </div>
+
+{% if settings.COMMENTS_DISQUS_SHORTNAME %}
+{% include "generic/includes/disqus_counts.html" %}
+{% endif %}
 
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
