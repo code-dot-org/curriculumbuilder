@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
+from mezzanine.generic.fields import CommentsField
 from standards.models import Standard
 
 """
@@ -97,6 +98,7 @@ class Lesson(Page, RichText):
   standards = models.ManyToManyField(Standard, blank=True)
   anchor_standards = models.ManyToManyField(Standard, related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
+  comments = CommentsField();
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:
