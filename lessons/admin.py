@@ -28,7 +28,7 @@ class PrereqInline(StackedDynamicInlineAdmin):
   verbose_name = "Prerequisite"
   verbose_name_plural = "Prerequisites"
 
-class ActivityInline(StackedDynamicInlineAdmin):
+class ActivityInline(admin.StackedInline):
   model = Activity
   verbose_name_plural = "Activities"
   fields = ['name', 'content']
