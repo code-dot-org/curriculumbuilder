@@ -19,6 +19,11 @@ def index(request):
   curricula = Curriculum.objects.all()
   return render(request, 'curricula/index.html', {'curricula': curricula})
 
+'''
+Core curricula and lesson views
+
+'''
+
 def curriculum_view(request, slug):
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
@@ -53,6 +58,19 @@ def lesson_view(request, slug, unit_slug, lesson_num):
   template = 'curricula/commonlesson.html'
 
   return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'lesson': lesson, 'pdf': pdf})
+
+'''
+Resource list views
+'''
+
+def curriculum_resources(request, slug):
+  curriculum = Curriculum.objects.get(slug = slug)
+  return render(request, 'curricula/resources_curriculum.html', {'curriculum': curriculum})
+
+'''
+PDF rendering views
+
+'''
 
 def lesson_pdf(request, slug, unit_slug, lesson_num):
   buffer = StringIO()

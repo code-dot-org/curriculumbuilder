@@ -133,10 +133,7 @@
                         <ul>
                             {% for resource in audience.list %}
                                 <li>
-                                    <a href="{{ resource.url }}" target="_blank">{{ resource|safe }}</a>
-                                    {% if resource.dl_url %}
-                                        &nbsp(<a href="{{ resource.dl_url }}">download</a>)
-                                    {% endif %}
+                                    {{ resource.formatted|safe }}
                                 </li>
                             {% endfor %}
                         </ul>

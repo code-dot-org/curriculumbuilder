@@ -1,0 +1,58 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ curriculum.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {{ curriculum.title }}: Resources
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block header_title %}
+    <span class="h1">{{ curriculum.title }}</span>
+    <h2>Resources</h2>
+{% endblock %}
+
+{% block main %}
+    {% for unit in curriculum.units %}
+    <div class="together">
+        <h2>{{ unit.title }}</h2>
+            {% for lesson in unit.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></h3>
+                <div style="margin-left: 20px;">
+                {% with lesson.resources.all as resources %}
+                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                    {% for audience in resources_by_audience %}
+                        <h4>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h4>
+                        <ul>
+                            {% for resource in audience.list %}
+                                <li>
+                                    {{ resource.formatted|safe }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% endwith %}
+                </div>
+            {% endfor %}
+    </div>
+    {% endfor %}
+
+{% endblock %}

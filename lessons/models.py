@@ -59,8 +59,24 @@ class Resource(models.Model):
     elif self.gd:
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
     '''
-    formatted = "%s - %s" % (self.name, self.type)
+    if (self.type):
+      return "%s - %s" % (self.name, self.type)
+    else:
+      return self.name
+
+  def formatted(self):
+    if self.url:
+      formatted = "<a href='%s' target='_blank' class='print_link'>%s</a>" % (self.url, self.name)
+    else:
+      formatted = self.name
+    if self.type:
+      formatted = "%s - %s" % (formatted, self.type)
+    if self.dl_url:
+      formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+    elif self.gd:
+      formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
     return formatted
+
 
   def gd_pdf(self):
     try:
