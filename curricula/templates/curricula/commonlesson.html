@@ -41,15 +41,20 @@
                             prefix: '/api/v1/comments',
                             annotationData: {
                                 'lesson': {{ lesson.pk }},
-                                'owner': 1
+                                'uri': '{{ request.path|urlencode }}'
                             },
                             loadFromSearch: {
                                 'lesson': {{ lesson.pk }}
                             }
-                        });
+                        })
+                        .annotator('addPlugin', 'Permissions', {
+                            user: '{{ user.username }}',
+                            showViewPermissionsCheckbox: true,
+                            showEditPermissionsCheckbox: false
+                        })
                         //.annotator('addPlugin', 'AnnotatorViewer');
                 //Annotation scroll
-                $('#anotacions-uoc-panel').slimscroll({height: '100%'});
+                //$('#anotacions-uoc-panel').slimscroll({height: '100%'});
             });
         </script>
     {% endif %}

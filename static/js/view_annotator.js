@@ -266,7 +266,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var class_label = "label";
       var delete_icon = "<img src=\""+IMAGE_DELETE+"\" class=\"annotator-viewer-delete\" title=\""+ i18n_dict.Delete +"\" style=\" float:right;margin-top:3px;;margin-left:3px\"/><img src=\"../src/img/edit-icon.png\"   class=\"annotator-viewer-edit\" title=\"Edit\" style=\"float:right;margin-top:3px\"/>";
       
-      if (annotation.estat==1 || annotation.permissions.read.length===0 ) {
+      //if (annotation.estat==1 || annotation.permissions.read.length===0 ) {
+      if (annotation.estat==1) {
         shared_annotation = "<img src=\""+SHARED_ICON+"\" title=\""+ i18n_dict.share +"\" style=\"margin-left:5px\"/>"
       }
 
@@ -317,7 +318,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         anotation_reference = "annotation-"+annotation.id;
       }
 
-      if (annotation.estat==1 || annotation.permissions.read.length===0 ) {
+      //if (annotation.estat==1 || annotation.permissions.read.length===0 ) {
+      if (annotation.estat==1) {
         data_type = "shared";
        
       }

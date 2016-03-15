@@ -248,12 +248,12 @@ class AnnotationSearchView(generics.ListCreateAPIView):
     serializer_class = AnnotationSerializer
 
     def list(self, request):
-        uri = self.request.query_params.get('uri', None)
+        lesson = self.request.query_params.get('lesson', None)
 
-        if uri is None:
-            return Response({"Require URI to filter results"})
+        if lesson is None:
+            return Response({"Require lesson to filter results"})
         else:
-            queryset = Annotation.objects.filter(uri=uri)
+            queryset = Annotation.objects.filter(lesson=lesson)
             serializer = AnnotationSerializer(queryset, many=True)
             return Response({'rows': serializer.data, 'total': len(serializer.data)})
 
