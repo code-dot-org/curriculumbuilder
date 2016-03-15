@@ -27,10 +27,9 @@
         <script src="http://assets.annotateit.org/annotator/v1.2.10/annotator-full.min.js"></script>
         <link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.2.10/annotator.min.css">
         <script src="{% static "js/jquery.slimscroll.js" %}"></script>
-        <script src="{% static "js/tinymce/tinymce.min.js" %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.8/tinymce.min.js"></script>
         <script src="{% static "js/richText-annotator.js" %}"></script>
         <link rel="stylesheet" href="{% static "css/richText-annotator.css" %}">
-        <!--<link rel="stylesheet" href="{% static "css/annotations.css" %}">-->
 
         <script>
             jQuery(function ($) {
@@ -60,7 +59,6 @@
                                 toolbar: "bold italic | bullist numlist outdent indent ",
                             }
                         })
-                        //.annotator('addPlugin', 'RichEditor')
                         //.annotator('addPlugin', 'Reply')
                         //.annotator('addPlugin', 'AnnotatorViewer');
                 //Annotation scroll
