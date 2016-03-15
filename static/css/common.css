@@ -14,6 +14,10 @@ img {
     max-width: 100%;
 }
 
+ul li {
+    text-indent: 0!important; /* needed to override code.org style.css */
+}
+
 .container {
     max-width: 1024px; /* was !important */
     width: auto; /* was !important */
@@ -182,6 +186,12 @@ footer {
 
 /* kill li dots on edit icons */
 .wmd-button:before {
+    content: none;
+}
+
+/* Annotation Styling */
+
+.annotator-item:before {
     content: none;
 }
 

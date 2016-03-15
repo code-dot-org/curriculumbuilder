@@ -169,6 +169,7 @@ footer {
 .editable-form .wmd-preview p {
     line-height: normal !important;
 }
+
 @media print {
 
     #print_trigger{
