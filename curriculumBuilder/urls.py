@@ -12,9 +12,8 @@ from mezzanine.conf import settings
 import mezzanine_pagedown.urls
 import freeze.urls
 
-from curricula.views import api_root, curriculum_element, curriculum_list, unit_element, unit_list, lesson_element
+from curricula.views import *
 from standards.views import standard_element, standard_list, nested_category_list, nested_standard_list
-
 
 admin.autodiscover()
 
@@ -95,6 +94,9 @@ urlpatterns += patterns('',
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/units/$', unit_list, name="unit_list"),
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$', unit_element, name="unit_element"),
     url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/$', lesson_element, name="lesson_element"),
+    #url(r'^api/v1/annotations$', AnnotationList.as_view()),
+    #url(r'^api/v1/annotations/(?P<pk>[0-9]+)$', AnnotationMember.as_view()),
+    url(r'^api/v1/comments/', include('curricula.api', namespace="api")),
     url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 

@@ -350,6 +350,7 @@ MIDDLEWARE_CLASSES = (
   # "mezzanine.core.middleware.SSLRedirectMiddleware",
   "mezzanine.pages.middleware.PageMiddleware",
   "mezzanine.core.middleware.FetchFromCacheMiddleware",
+  "curriculumBuilder.disable_csrf.DisableCSRF"
 )
 
 # Store these package names here as they may change in the future since
@@ -464,7 +465,12 @@ FREEZE_INCLUDE_STATIC = False
 #################
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_METHODS = ('GET', )
+CORS_ALLOW_METHODS = ('GET',
+                      'POST',
+                      'PUT',
+                      'DELETE',
+                      'OPTIONS'
+                      )
 
 ###################
 # DISQUS SETTINGS #

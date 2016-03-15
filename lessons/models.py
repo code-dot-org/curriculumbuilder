@@ -1,7 +1,9 @@
 import re
 import itertools
+import datetime
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
@@ -187,3 +189,40 @@ class Objective(Orderable):
     if not self.description:
       self.description = self.name
     super(Objective, self).save(*args, **kwargs)
+
+"""
+Annotations
+
+"""
+class Annotation(models.Model):
+    lesson = models.ForeignKey('Lesson', related_name='%(class)s_parent_lesson_relation')
+    owner = models.ForeignKey(User, related_name='%(class)s_creator_relation')
+
+    # Key fields from the Annotator JSON Format: http://docs.annotatorjs.org/en/latest/annotation-format.html
+    annotator_schema_version = models.CharField(max_length=8, blank=True)
+    text = models.TextField(blank=True)
+    quote = models.TextField()
+    uri = models.URLField(blank=True, null=True)
+    range_start = models.CharField(max_length=50)
+    range_end = models.CharField(max_length=50)
+    range_startOffset = models.BigIntegerField()
+    range_endOffset = models.BigIntegerField()
+
+    # Created/Modified
+    # See this for background:
+    # http://stackoverflow.com/questions/1737017/django-auto-now-and-auto-now-add/1737078#1737078
+    created = models.DateTimeField(editable=False)
+    modified = models.DateTimeField(editable=False)
+
+    def save(self, *args, **kwargs):
+        """ On save, update timestamps """
+        if not self.id:
+            self.created = datetime.datetime.today()
+        self.modified = datetime.datetime.today()
+        return super(Annotation, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.lesson.name + ":'" + self.quote + "'"
+
+    def ranges(self):
+        return [self.range_start, self.range_end, self.range_startOffset, self.range_endOffset]

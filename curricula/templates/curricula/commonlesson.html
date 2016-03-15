@@ -17,10 +17,43 @@
 {% endblock %}
 
 {% block extra_js %}
+
     <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
     <script type="text/javascript">
     </script>
+
+    {% if user.is_staff %}
+        <script src="http://assets.annotateit.org/annotator/v1.1.0/annotator-full.min.js"></script>
+        <link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.1.0/annotator.min.css">
+        <script src="{% static "js/jquery.i18n.min.js" %}"></script>
+        <script src="{% static "locale/en/annotator.js" %}"></script>
+        <script src="{% static "js/jquery.slimscroll.js" %}"></script>
+        <script src="{% static "js/view_annotator.js" %}"></script>
+        <link rel="stylesheet" href="{% static "css/annotations.css" %}">
+
+        <script>
+            jQuery(function ($) {
+                $.i18n.load(i18n_dict);
+
+                var annotator = $('body').annotator()
+                        .annotator('addPlugin', 'Store', {
+                            prefix: '/api/v1/comments',
+                            annotationData: {
+                                'lesson': {{ lesson.pk }},
+                                'owner': 1
+                            },
+                            loadFromSearch: {
+                                'lesson': {{ lesson.pk }}
+                            }
+                        });
+                        //.annotator('addPlugin', 'AnnotatorViewer');
+                //Annotation scroll
+                $('#anotacions-uoc-panel').slimscroll({height: '100%'});
+            });
+        </script>
+    {% endif %}
+
 {% endblock %}
 
 {% block admin_link %}
@@ -243,6 +276,12 @@
             });
         });
     </script>
+
+    <!--<script type="text/javascript">
+        jQuery(function ($) {
+            $('body').annotator();
+        });
+    </script>-->
 
     <!--<script type="text/javascript">
         $(function() {

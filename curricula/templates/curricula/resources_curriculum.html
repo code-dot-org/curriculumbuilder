@@ -34,6 +34,7 @@
     {% for unit in curriculum.units %}
     <div class="together">
         <h2>{{ unit.title }}</h2>
+            <div style="margin-left: 20px">
             {% for lesson in unit.lessons %}
                 <h3><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></h3>
                 <div style="margin-left: 20px;">
@@ -52,6 +53,7 @@
                 {% endwith %}
                 </div>
             {% endfor %}
+            </div>
     </div>
     {% endfor %}
 

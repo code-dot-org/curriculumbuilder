@@ -11,6 +11,9 @@ import pycurl
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
+from rest_framework import generics
+from rest_framework import viewsets
 
 from curricula.models import *
 from curricula.serializers import *
@@ -220,3 +223,40 @@ def lesson_element(request, slug, unit_slug, lesson_num):
 
   serializer = LessonSerializer(lesson)
   return Response(serializer.data)
+
+'''
+class AnnotationList(generics.ListCreateAPIView):
+  queryset = Annotation.objects.all()
+  serializer_class = AnnotationSerializer
+
+class AnnotationMember(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Annotation.objects.all()
+  serializer_class = AnnotationSerializer
+'''
+
+class AnnotationViewSet(viewsets.ModelViewSet):
+  queryset = Annotation.objects.all()
+  serializer_class = AnnotationSerializer
+
+class AnnotationListCreateView(generics.ListCreateAPIView):
+    queryset = Annotation.objects.all()
+    filter_fields = ('uri', 'owner', 'lesson')
+    serializer_class = AnnotationSerializer
+
+class AnnotationSearchView(generics.ListCreateAPIView):
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
+
+    def list(self, request):
+        uri = self.request.query_params.get('uri', None)
+
+        if uri is None:
+            return Response({"Require URI to filter results"})
+        else:
+            queryset = Annotation.objects.filter(uri=uri)
+            serializer = AnnotationSerializer(queryset, many=True)
+            return Response({'rows': serializer.data, 'total': len(serializer.data)})
+
+class AnnotationReadUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer

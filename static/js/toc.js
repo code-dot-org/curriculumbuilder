@@ -123,7 +123,6 @@ $.fn.toc = function(options) {
       }
 
       //build TOC item
-        console.log(anchorName);
       var a = $('<a/>')
         .text(opts.headerText(i, heading, $h))
         .attr('href', '#' + anchorName)
@@ -134,7 +133,6 @@ $.fn.toc = function(options) {
           });
           el.trigger('selected', $(this).attr('href'));
         });
-        console.log(a);
 
       var li = $('<li/>')
         .addClass(opts.itemClass(i, heading, $h, opts.prefix))

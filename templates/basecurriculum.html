@@ -90,18 +90,13 @@
 
     if (vars['pdf']) {
         jQuery(function () {
-            console.log('working');
-            console.log($("print_trigger"));
-            console.log('should do it');
             $('a[data-pdf-link]').each(function () {
-                console.log(this.href);
                 this.href = $(this).attr('data-pdf-link');
             });
         });
     }
 </script>
-
 {% include "includes/footer_scripts.html" %}
-
+<!--<script async defer src="https://factlink.com/lib/dist/factlink_loader.min.js"></script>-->
 </body>
 </html>
