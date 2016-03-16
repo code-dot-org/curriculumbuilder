@@ -79,6 +79,11 @@ class Resource(models.Model):
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
     return formatted
 
+  def md_tag(self):
+    if self.slug:
+      return '[r ' + self.slug + ']'
+    else:
+      return '[r ' + self.name + ']'
 
   def gd_pdf(self):
     try:
@@ -222,7 +227,7 @@ class Annotation(models.Model):
         return super(Annotation, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return self.lesson.name + ":'" + self.quote + "'"
+        return self.lesson.title + ":'" + self.quote + "'"
 
     def ranges(self):
         return [self.range_start, self.range_end, self.range_startOffset, self.range_endOffset]

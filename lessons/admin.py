@@ -4,13 +4,14 @@ from django.forms import TextInput, Textarea, ModelForm, BooleanField
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
+from ajax_select.fields import autoselect_fields_check_can_add
 
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.core.fields import RichTextField
 from mezzanine_pagedown.widgets import PlainWidget
 
-from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource
+from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
 
 class ObjectiveInline(TabularDynamicInlineAdmin):
@@ -42,33 +43,31 @@ class ActivityInline(admin.StackedInline):
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
 
+  #raw_id_fields = ('resource',)
+
   class Meta:
     ordering = ['name']
 
-  readonly_fields = ('type', 'student', 'gd', 'url', 'dl_url')
+  readonly_fields = ('type', 'md_tag')
   verbose_name_plural = "Resources"
+
+  def get_form(self, request, obj=None, **kwargs):
+    form = super(ResourceInline, self).get_form(request, obj, **kwargs)
+    autoselect_fields_check_can_add(form, self.model, request.user)
+    return form
 
   def type(self, instance):
     return instance.resource.type
 
-  def student(self, instance):
-    return instance.resource.student
-
-  def gd(self, instance):
-    return instance.resource.gd
-
-  def url(self, instance):
-    return instance.resource.url
-
-  def dl_url(self, instance):
-    return instance.resource.dl_url
+  def md_tag(self, instance):
+    return instance.resource.md_tag()
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
   #form = make_ajax_form(Lesson, {'vocab': 'vocab'})
 
-  inlines = [ObjectiveInline, ActivityInline]
+  inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
-  filter_horizontal = ('standards', 'vocab', 'resources')
+  filter_horizontal = ('standards', 'vocab')
 
   fieldsets = (
     (None, {
@@ -78,8 +77,8 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['cs_content', 'prep'],
       'classes': ['collapse-closed',],
     }),
-    ('Resources & Vocab', {
-      'fields': ['vocab', 'resources'],
+    ('Vocab', {
+      'fields': ['vocab',],
       'classes': ['collapse-closed'],
     }),
     ('Standards', {
@@ -103,3 +102,4 @@ admin.site.register(Objective)
 admin.site.register(Activity)
 admin.site.register(Vocab, VocabAdmin)
 admin.site.register(Resource, ResourceAdmin)
+admin.site.register(Annotation)
