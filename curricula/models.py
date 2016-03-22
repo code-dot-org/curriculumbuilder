@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from standards.models import Standard, GradeBand
@@ -46,6 +47,9 @@ class Unit(Page, RichText):
     return Lesson.objects.filter(parent=self)
 
   def save(self, *args, **kwargs):
+
+    if not self.slug:
+      self.slug = slugify(self.title)[:255]
     try:
       self.curriculum = self.parent.curriculum
     except:
