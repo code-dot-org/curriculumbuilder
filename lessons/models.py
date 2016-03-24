@@ -112,16 +112,16 @@ Complete Lesson Page
 """
 class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
-  duration = models.IntegerField('Class Periods', blank=True, null=True)
+  duration = models.IntegerField('Week', help_text='Week number within the unit', blank=True, null=True)
   unplugged = models.BooleanField(default=False)
   resources = models.ManyToManyField(Resource, blank=True)
-  prep = RichTextField('Materials and Prep', blank=True, null=True)
-  cs_content = RichTextField('CS Content', blank=True, null=True)
+  prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
+  cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in connection to greater CS concepts and its role in the progression', blank=True, null=True)
   ancestor = models.ForeignKey('self', blank=True, null=True)
   standards = models.ManyToManyField(Standard, blank=True)
-  anchor_standards = models.ManyToManyField(Standard, related_name="anchors", blank=True)
+  anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on', related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
-  comments = CommentsField();
+  comments = CommentsField()
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:
@@ -152,6 +152,7 @@ Activities that compose a lesson
 class Activity(Orderable):
   name = models.CharField(max_length=255)
   content = RichTextField('Activity Content')
+  time = models.CharField(max_length=255, blank=True, null=True)
   lesson = models.ForeignKey(Lesson)
   ancestor = models.ForeignKey('self', blank=True, null=True)
 
@@ -159,6 +160,8 @@ class Activity(Orderable):
       verbose_name_plural = "activities"
 
   def __unicode__(self):
+    if self.time:
+      return "%s (%s)" % (self.name, self.time)
     return self.name
 
 """

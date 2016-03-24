@@ -14,10 +14,6 @@ img {
     max-width: 100%;
 }
 
-ul li {
-    text-indent: 0!important; /* needed to override code.org style.css */
-}
-
 .container {
     max-width: 1024px; /* was !important */
     width: auto; /* was !important */
@@ -60,8 +56,8 @@ ul li {
     margin-top: 0px;
 }
 
-.toc ul li:before {
-    content: none;
+.toc ul {
+    list-style: none;
 }
 
 .toc .h3 {

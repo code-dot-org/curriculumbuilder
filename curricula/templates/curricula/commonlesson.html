@@ -120,19 +120,19 @@
                 {{ lesson.overview|richtext_filters|safe }}
             {% endeditable %}
 
-            <h2>Lesson Summary</h2>
-            <div class="toc" id="toc{{ lesson|slugify }}">
-                {% for activity in lesson.activity_set.all %}
-                    <h3>{{ activity.name }}</h3>
-                {% endfor %}
-            </div>
-
             {% if lesson.cs_content %}
-                <h2>CS Content</h2>
+                <h2>Purpose</h2>
                 {% editable lesson.cs_content %}
                     {{ lesson.cs_content|richtext_filters|safe }}
                 {% endeditable %}
             {% endif %}
+
+            <h2>Lesson Summary</h2>
+            <div class="toc" id="toc{{ lesson|slugify }}">
+                {% for activity in lesson.activity_set.all %}
+                    <h3>{{ activity }}</h3>
+                {% endfor %}
+            </div>
 
         </div>
 
@@ -164,14 +164,14 @@
             {% endif %}
 
             {% if lesson.prep %}
-                <h2>Materials and Prep</h2>
+                <h2>Preparation</h2>
                 {% editable lesson.prep %}
                     {{ lesson.prep|richtext_filters|safe }}
                 {% endeditable %}
             {% endif %}
 
             {% if lesson.resources.count > 0 %}
-                <h2>Resources</h2>
+                <h2>Links</h2>
                 {% with lesson.resources.all as resources %}
                     {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                     {% for audience in resources_by_audience %}
@@ -205,8 +205,8 @@
 
         {% for activity in lesson.activity_set.all %}
             <div class="activity">
-                {% editable activity.name activity.content %}
-                    <h2>{{ activity.name }}</h2>
+                {% editable activity.name activity.time activity.content %}
+                    <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
                     {{ activity.content|richtext_filters|safe }}
                 {% endeditable %}
             </div>

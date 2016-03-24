@@ -29,12 +29,12 @@ class PrereqInline(StackedDynamicInlineAdmin):
   verbose_name = "Prerequisite"
   verbose_name_plural = "Prerequisites"
 
-class ActivityInline(admin.StackedInline):
+class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
-  fields = ['name', 'content']
+  fields = ['name', 'time', 'content']
   class Meta:
-    fields = ['name', 'content']
+    fields = ['name', 'time', 'content']
 
   formfield_overrides = {
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
