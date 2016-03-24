@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block extra_js %}
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
     <script type="text/javascript">
@@ -165,9 +165,11 @@
 
             {% if lesson.prep %}
                 <h2>Preparation</h2>
+                <div class="prep">
                 {% editable lesson.prep %}
                     {{ lesson.prep|richtext_filters|safe }}
                 {% endeditable %}
+                </div>
             {% endif %}
 
             {% if lesson.resources.count > 0 %}
@@ -286,6 +288,27 @@
             $('.togglesay').live('click', function() {
                 $('.say').slideToggle();
                 $('.togglesay').toggle();
+            });
+        });
+        $(document).ready(function () {
+            // add checkboxes to lists in the prep section
+            var count = 1;
+            //$('<input type="checkbox" class="todo" name="' + (count++) + '"/>').prependTo(".prep ul li");
+            $(".prep ul li:visible").each(function(li) {
+                $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
+            });
+            // read the current/previous setting
+            $("input.todo").each(function() {
+                var mycookie = $.cookie($(this).attr('name'));
+                if (mycookie && mycookie == "true") {
+                    $(this).prop('checked', mycookie);
+                }
+            });
+            $("input.todo").change(function() {
+                $.cookie($(this).attr("name"), $(this).prop('checked'), {
+                    path: '/',
+                    expires: 365
+                });
             });
         });
     </script>

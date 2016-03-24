@@ -318,6 +318,14 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin: 0 10px;
 }
 
+.prep ul {
+    list-style: none;
+}
+
+.prep ul li input {
+    margin-right: 10px;
+}
+
 @page
 {
     size: auto;

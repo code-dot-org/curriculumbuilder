@@ -73,7 +73,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     (None, {
       'fields': ['title', ('status', 'duration', 'unplugged'), 'overview'],
     }),
-    ('CS Content, Materials & Prep', {
+    ('Purpose & Prep', {
       'fields': ['cs_content', 'prep'],
       'classes': ['collapse-closed',],
     }),
