@@ -320,10 +320,15 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .prep ul {
     list-style: none;
+    padding-left: 0;
 }
 
 .prep ul li input {
     margin-right: 10px;
+}
+
+.vocab {
+    text-decoration: underline;
 }
 
 @page

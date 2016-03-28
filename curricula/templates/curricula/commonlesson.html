@@ -114,7 +114,7 @@
 
     <div class="together overview-page row">
 
-        <div class="col-sm-8 left-col">
+        <div class="col-sm-7 left-col">
             <h2>Overview</h2>
             {% editable lesson.overview %}
                 {{ lesson.overview|richtext_filters|safe }}
@@ -136,7 +136,7 @@
 
         </div>
 
-        <div class="col-sm-4 right-col">
+        <div class="col-sm-5 right-col">
 
             {% if lesson.anchor_standards.all.count > 0  %}
                 <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
@@ -309,6 +309,14 @@
                     path: '/',
                     expires: 365
                 });
+            });
+            // Add tooltip toggles to vocab
+            $('.vocab').each(function() {
+                $(this).attr('data-toggle', 'tooltip');
+                $(this).attr('data-placement', 'bottom');
+            });
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
             });
         });
     </script>
