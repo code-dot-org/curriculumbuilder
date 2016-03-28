@@ -22,11 +22,9 @@ class AttrTagPattern(Pattern):
     el.text = m.group(3)
 
     try:
-      vocab = Vocab.objects.get(word=el.text)
-      el.set('title', vocab.detailDef)
-      el.set('data-toggle', 'tooltip')
-      el.set('data-placement', 'top')
-      el.text = vocab.word
+      vocab = Vocab.objects.get(word__icontains=el.text)
+      el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
+      #el.text = vocab.word
 
     except Vocab.DoesNotExist:
       print "couldn't find that vocab word"
@@ -39,7 +37,7 @@ class AttrTagPattern(Pattern):
 
 class VocabLinksExtensions(Extension):
   def extendMarkdown(self, md, md_globals):
-    vocab_tag = AttrTagPattern(VOCAB_RE, 'span',{'class':'vocab','data-toggle':'tooltip', 'id':'fuckit'})
+    vocab_tag = AttrTagPattern(VOCAB_RE, 'span',{'class':'vocab'})
     md.inlinePatterns.add('vocab', vocab_tag, '_begin')
 
 def makeExtension(configs=[]):

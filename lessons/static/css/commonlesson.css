@@ -212,9 +212,11 @@ html, body{
     box-shadow: inset -5px 0px 10px -5px #000;
 }*/
 
-.toc .h2, .toc .h3 {
-    margin-top: 0;
-}
+.toc .h2 { margin-top: 0.5em; }
+.toc .h3 { margin-top: 0; }
+
+.toc a { color: #428bca; }
+.toc a:visited { color: #428bca; }
 
 .admonition.tip, .admonition.tip-center {
     margin: 40px 15px 15px 15px;
