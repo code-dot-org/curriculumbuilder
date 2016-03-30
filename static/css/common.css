@@ -70,14 +70,14 @@ img {
 }
 
 .headercontent h1 {
-    font-size: 60px;
+    font-size: 50px;
     line-height: 1em;
     margin-top: .125em;
     margin-bottom: .25em;
 }
 
 .headercontent {
-    /*margin-left:40px;*/
+    margin-left:40px;
     padding-top: 0px;
     padding-bottom: 10px;
     margin-bottom: 50px;
@@ -148,6 +148,14 @@ img {
 
 .standards summary {
     font-size: 10pt;
+}
+
+.standards div div {
+    margin-left: 15px;
+}
+
+.resource_list div {
+    margin-left: 15px;
 }
 
 footer {

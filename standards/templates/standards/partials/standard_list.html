@@ -1,7 +1,7 @@
 {% regroup standards by framework as standards_by_framework %}
 {% for framework in standards_by_framework %}
     <div class="framework">
-        <h3>{{ framework.grouper }}</h3>
+        <h4>{{ framework.grouper }}</h4>
         {% if framework.list.0.category.parent %}
             {% regroup framework.list by category.parent as standards_by_parent_cat  %}
             {% for parent in standards_by_parent_cat %}

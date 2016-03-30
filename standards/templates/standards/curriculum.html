@@ -28,28 +28,30 @@
 {% endblock %}
 
 {% block main %}
+    <div class="standards">
     {% if unit %}{# If unit is passed, just grab that unit #}
         <div class="together">
-            <h1><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h1>
+            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
 
             {% for lesson in unit.lessons %}
-                <h2><a href="{{ lesson.get_absolute_url }}">
-                Lesson {{ lesson.number }}: {{ lesson }}</a></h2>
+                <h3><a href="{{ lesson.get_absolute_url }}">
+                Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
                 {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
             {% endfor %}
         </div>
     {% else %}
         {% for unit in curriculum.units %}
         <div class="together">
-            <h1><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h1>
+            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
 
             {% for lesson in unit.lessons %}
-                <h2><a href="{{ lesson.get_absolute_url }}">
-                Lesson {{ lesson.number }}: {{ lesson }}</a></h2>
+                <h3><a href="{{ lesson.get_absolute_url }}">
+                Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
                 {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
             {% endfor %}
         </div>
         {% endfor %}
     {% endif %}
+    </div>
 
 {% endblock %}

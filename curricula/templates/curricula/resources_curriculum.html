@@ -32,12 +32,12 @@
 
 {% block main %}
     {% for unit in curriculum.units %}
-    <div class="together">
-        <h2>{{ unit.title }}</h2>
-            <div style="margin-left: 20px">
+    <div class="together resource_list">
+        <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+            <div>
             {% for lesson in unit.lessons %}
-                <h3><a href="{{ lesson.get_absolute_url }}">{{ lesson.title }}</a></h3>
-                <div style="margin-left: 20px;">
+                <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                <div>
                 {% with lesson.resources.all as resources %}
                     {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                     {% for audience in resources_by_audience %}
