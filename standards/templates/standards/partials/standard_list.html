@@ -1,0 +1,37 @@
+{% regroup standards by framework as standards_by_framework %}
+{% for framework in standards_by_framework %}
+    <div class="framework">
+        <h3>{{ framework.grouper }}</h3>
+        {% if framework.list.0.category.parent %}
+            {% regroup framework.list by category.parent as standards_by_parent_cat  %}
+            {% for parent in standards_by_parent_cat %}
+                <details class="standard">
+                    <summary><strong>{{ parent.grouper.shortcode }}</strong> - {{ parent.grouper.name }}</summary>
+                    {% regroup parent.list by category as standards_by_category %}
+                    {% for category in standards_by_category %}
+                        <details class="standard">
+                            <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
+                            <ul>
+                                {% for standard in category.list %}
+                                    <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+                    {% endfor %}
+                </details>
+            {% endfor %}
+        {% else %}
+            {% regroup framework.list by category as standards_by_category %}
+            {% for category in standards_by_category %}
+                <details class="standard">
+                    <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
+                    <ul>
+                        {% for standard in category.list %}
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endfor %}

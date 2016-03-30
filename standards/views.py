@@ -33,6 +33,11 @@ def by_curriculum(request, slug):
   #units = Unit.objects.filter(curriculum = curriculum).prefetch_related('unitlesson_set__lesson__standards')
   return render(request, 'standards/curriculum.html', {'curriculum': curriculum})
 
+def by_unit(request, slug, unit_slug):
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+  return render(request, 'standards/curriculum.html', {'curriculum': curriculum, 'unit': unit})
+
 def single_standard(request, slug, shortcode):
   #standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
   standard = get_object_or_404(Standard, framework__slug=slug, shortcode=shortcode)

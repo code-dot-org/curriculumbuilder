@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput, Textarea, ModelForm, BooleanField
+from django.forms import TextInput, Textarea, ModelForm, BooleanField, ModelForm
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
@@ -29,12 +29,13 @@ class PrereqInline(StackedDynamicInlineAdmin):
   verbose_name = "Prerequisite"
   verbose_name_plural = "Prerequisites"
 
-class ActivityInline(StackedDynamicInlineAdmin):
+class ActivityInline(admin.StackedInline):
   model = Activity
   verbose_name_plural = "Activities"
-  fields = ['name', 'time', 'content']
+  fields = ['_order', 'name', 'time', 'content']
+
   class Meta:
-    fields = ['name', 'time', 'content']
+    fields = ['_order', 'name', 'time', 'content']
 
   formfield_overrides = {
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
@@ -86,6 +87,9 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'classes': ['collapse-closed',],
     }),
   )
+
+  class Media:
+    js = ('https://cdo-curriculum.s3.amazonaws.com/static/mezzanine/js/admin/jquery.mjs.nestedSortable.js')
 
 class ResourceAdmin(AjaxSelectAdmin):
   model = Resource

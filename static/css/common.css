@@ -69,13 +69,13 @@ img {
     margin-top: 0px;
 }
 
-/*
-.headercontent .h1 {
-    font-size: 80px;
-    line-height: 80px;
-    margin: 0 20px 20px 20px;
+.headercontent h1 {
+    font-size: 60px;
+    line-height: 1em;
+    margin-top: .125em;
+    margin-bottom: .25em;
 }
-*/
+
 .headercontent {
     /*margin-left:40px;*/
     padding-top: 0px;
@@ -103,6 +103,7 @@ img {
 
 .header {
     min-height: 100px;
+    margin-top: 20px;
 }
 
 .printbackground {
