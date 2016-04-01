@@ -333,6 +333,11 @@ th a:link, th a:visited, th a:hover, th a:active {
     text-decoration: underline;
 }
 
+.drawer-controls i {
+    font-size: 2em;
+    color: #ccc;
+}
+
 @page
 {
     size: auto;

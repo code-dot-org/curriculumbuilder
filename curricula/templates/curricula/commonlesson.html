@@ -13,10 +13,12 @@
 {% endblock %}
 
 {% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
     <link rel="stylesheet" href="{% static "css/commonlesson.css" %}">
 {% endblock %}
 
 {% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
@@ -70,12 +72,35 @@
 {% endblock %}
 
 {% block admin_link %}
+    {% comment "moving to drawer" %}
     <div id="admin_edit">
     {% if user.is_staff %}
         <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
     {% endif %}
     <button type="button" class="togglesay btn btn-success">Don't tell me what to say!</button>
     <button type="button" class="togglesay btn btn-danger" style="display:none;">Help, what should I say?</button>
+    </div>
+    {% endcomment %}
+
+
+    <div id="admin_edit" class="drawer drawer-right dw-xs-10 dw-sm-6 dw-md-4 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-heading">
+                <h2 class="drawer-title">Settings</h2>
+            </div>
+            <div class="drawer-body">
+                {% if user.is_staff %}
+                    <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
+                {% endif %}
+                <button type="button" class="togglesay btn btn-success">Don't tell me what to say!</button>
+                <button type="button" class="togglesay btn btn-danger" style="display:none;">Help, what should I say?</button>
+            </div>
+            <ul class="drawer-nav">
+            </ul>
+        </div>
     </div>
 
 {% endblock %}

@@ -20,6 +20,7 @@ img {
     margin: 0 auto; /* was !important */
 }
 
+/*
 #admin_edit {
     position: fixed;
     top: 0;
@@ -27,6 +28,7 @@ img {
     background-color: rgba(255, 255, 255, .8);
     padding: 10px;
 }
+*/
 
 /*
 .content h1 {
