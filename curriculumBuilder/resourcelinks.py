@@ -1,5 +1,3 @@
-from urlparse import urlparse, urljoin
-import urllib2
 from markdown.util import etree
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
@@ -25,7 +23,7 @@ class AttrTagPattern(Pattern):
 
     try:
       resource = Resource.objects.get(slug=el.text)
-      el.set('href', resource.url)
+      el.set('href', resource.fallback_url())
       el.text = resource.name
 
     except Resource.DoesNotExist:
@@ -33,19 +31,11 @@ class AttrTagPattern(Pattern):
 
       try:
         resource = Resource.objects.get(name=el.text)
-        el.set('href', resource.url)
+        el.set('href', resource.fallback_url())
+        el.text = resource.name
 
       except Resource.DoesNotExist:
         print "couldn't find by name either!"
-
-    parsed = urlparse(resource.url)
-
-    # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
-    if parsed.netloc == 'code.org':
-      try:
-        urllib2.urlopen(parsed.geturl())
-      except:
-        el.set('href', '%s://staging.%s%s' % (parsed.scheme, parsed.netloc, parsed.path ))
 
     for (key,val) in self.attrs.items():
       el.set(key,val)

@@ -1,6 +1,9 @@
 import re
 import itertools
 import datetime
+import urllib2
+from urlparse import urlparse
+from copy import copy, deepcopy
 from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -68,7 +71,7 @@ class Resource(models.Model):
 
   def formatted(self):
     if self.url:
-      formatted = "<a href='%s' target='_blank' class='print_link'>%s</a>" % (self.url, self.name)
+      formatted = "<a href='%s' target='_blank' class='print_link'>%s</a>" % (self.fallback_url(), self.name)
     else:
       formatted = self.name
     if self.type:
@@ -78,6 +81,18 @@ class Resource(models.Model):
     elif self.gd:
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
     return formatted
+
+  # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
+  def fallback_url(self):
+    parsed = urlparse(self.url)
+    if parsed.netloc == 'code.org':
+      try:
+        urllib2.urlopen(parsed.geturl())
+        return self.url
+      except:
+        return '%s://staging.%s%s' % (parsed.scheme, parsed.netloc, parsed.path )
+    else:
+      return self.url
 
   def md_tag(self):
     if self.slug:
@@ -129,6 +144,13 @@ class Lesson(Page, RichText):
 
   def __unicode__(self):
     return self.title
+
+  def __deepcopy(self):
+    lesson_copy = self
+    lesson_copy.pk = None
+    # deepcopy page, activities, prereqs, and objectives
+    lesson_copy.save()
+    return lesson_copy
 
   def get_absolute_url(self):
     return self.unit.get_absolute_url() + str(self.number) + '/'
