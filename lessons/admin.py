@@ -29,13 +29,9 @@ class PrereqInline(StackedDynamicInlineAdmin):
   verbose_name = "Prerequisite"
   verbose_name_plural = "Prerequisites"
 
-class ActivityInline(admin.StackedInline):
+class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
-  fields = ['_order', 'name', 'time', 'content']
-
-  class Meta:
-    fields = ['_order', 'name', 'time', 'content']
 
   formfield_overrides = {
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
@@ -87,9 +83,6 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'classes': ['collapse-closed',],
     }),
   )
-
-  class Media:
-    js = ('https://cdo-curriculum.s3.amazonaws.com/static/mezzanine/js/admin/jquery.mjs.nestedSortable.js')
 
 class ResourceAdmin(AjaxSelectAdmin):
   model = Resource

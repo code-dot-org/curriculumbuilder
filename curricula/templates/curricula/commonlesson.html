@@ -286,13 +286,13 @@
             });
             // read the current/previous setting
             $("input.todo").each(function() {
-                var mycookie = $.cookie($(this).attr('name'));
+                var mycookie = $.cookie($(this).attr('name') + window.location.pathname);
                 if (mycookie && mycookie == "true") {
                     $(this).prop('checked', mycookie);
                 }
             });
             $("input.todo").change(function() {
-                $.cookie($(this).attr("name"), $(this).prop('checked'), {
+                $.cookie($(this).attr("name") + window.location.pathname, $(this).prop('checked'), {
                     path: '/',
                     expires: 365
                 });
