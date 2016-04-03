@@ -33,9 +33,11 @@ class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
 
+  '''
   formfield_overrides = {
     RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
   }
+  '''
 
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
@@ -72,15 +74,15 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
     ('Purpose & Prep', {
       'fields': ['cs_content', 'prep'],
-      'classes': ['collapse-closed',],
+      #'classes': ['collapse-closed',],
     }),
     ('Vocab', {
       'fields': ['vocab',],
-      'classes': ['collapse-closed'],
+      #'classes': ['collapse-closed'],
     }),
     ('Standards', {
       'fields': ['standards'],
-      'classes': ['collapse-closed',],
+      #'classes': ['collapse-closed',],
     }),
   )
 
