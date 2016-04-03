@@ -60,7 +60,7 @@
                                 extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
                                 toolbar: "bold italic | bullist numlist outdent indent ",
                             }
-                        })
+                        });
                         //.annotator('addPlugin', 'Reply')
                         //.annotator('addPlugin', 'AnnotatorViewer');
                 //Annotation scroll
@@ -72,18 +72,7 @@
 {% endblock %}
 
 {% block admin_link %}
-    {% comment "moving to drawer" %}
-    <div id="admin_edit">
-    {% if user.is_staff %}
-        <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
-    {% endif %}
-    <button type="button" class="togglesay btn btn-success">Don't tell me what to say!</button>
-    <button type="button" class="togglesay btn btn-danger" style="display:none;">Help, what should I say?</button>
-    </div>
-    {% endcomment %}
-
-
-    <div id="admin_edit" class="drawer drawer-right dw-xs-10 dw-sm-6 dw-md-4 fold" aria-labelledby="admin_edit">
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
         <div class="drawer-controls">
             <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
         </div>
@@ -92,11 +81,18 @@
                 <h2 class="drawer-title">Settings</h2>
             </div>
             <div class="drawer-body">
-                {% if user.is_staff %}
-                    <a href="{% url 'admin:lessons_lesson_change' lesson.pk %}">Edit lesson in admin</a><br/>
-                {% endif %}
-                <button type="button" class="togglesay btn btn-success">Don't tell me what to say!</button>
-                <button type="button" class="togglesay btn btn-danger" style="display:none;">Help, what should I say?</button>
+                <div class="checkbox settings">
+                  <label>
+                    <input type="checkbox" name="say">
+                    Show "Say" Prompts
+                  </label>
+                </div>
+                <div class="checkbox settings">
+                  <label>
+                    <input type="checkbox" name="tip">
+                    Show Teaching Tips
+                  </label>
+                </div>
             </div>
             <ul class="drawer-nav">
             </ul>
@@ -271,12 +267,7 @@
                 return $heading[0].tagName.toLowerCase();
             }
         });
-        $(function(){
-            $('.togglesay').live('click', function() {
-                $('.say').slideToggle();
-                $('.togglesay').toggle();
-            });
-        });
+
         $(document).ready(function () {
             // add checkboxes to lists in the prep section
             var count = 1;
@@ -297,6 +288,33 @@
                     expires: 365
                 });
             });
+
+            // Settings toggles
+
+            // read the current/previous setting
+            $("#admin_edit .settings input").each(function() {
+                var mycookie = $.cookie($(this).attr('name'));
+                console.log('.' + $(this).attr('name'));
+                console.log('cookie: ' + mycookie);
+                if (mycookie == undefined) {
+                    console.log('cookie not set');
+                    $(this).prop('checked', true);
+                } else if (mycookie == "true"){
+                    console.log('setting cookie: ' + mycookie);
+                    $(this).prop('checked', mycookie);
+                } else {
+                    $('.' + $(this).attr('name')).toggle();
+                }
+            });
+            $("#admin_edit .settings input").change(function() {
+                console.log('clicked: ' + $(this).prop('checked'));
+                $('.' + $(this).attr('name')).toggle();
+                $.cookie($(this).attr("name"), $(this).prop('checked'), {
+                    path: '/',
+                    expires: 365
+                });
+            });
+
             // Add tooltip toggles to vocab
             $('.vocab').each(function() {
                 $(this).attr('data-toggle', 'tooltip');
