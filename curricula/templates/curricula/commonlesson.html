@@ -93,6 +93,18 @@
                     Show Teaching Tips
                   </label>
                 </div>
+                <div class="checkbox settings">
+                  <label>
+                    <input type="checkbox" name="discussion">
+                    Show Discussion Goals
+                  </label>
+                </div>
+                <div class="checkbox settings">
+                  <label>
+                    <input type="checkbox" name="content">
+                    Show Content Corners
+                  </label>
+                </div>
             </div>
             <ul class="drawer-nav">
             </ul>
@@ -271,18 +283,18 @@
         $(document).ready(function () {
             // add checkboxes to lists in the prep section
             var count = 1;
-            //$('<input type="checkbox" class="todo" name="' + (count++) + '"/>').prependTo(".prep ul li");
             $(".prep ul li:visible").each(function(li) {
                 $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
             });
             // read the current/previous setting
-            $("input.todo").each(function() {
+            var $todos = $(".todo");
+            $todos.each(function() {
                 var mycookie = $.cookie($(this).attr('name') + window.location.pathname);
                 if (mycookie && mycookie == "true") {
                     $(this).prop('checked', mycookie);
                 }
             });
-            $("input.todo").change(function() {
+            $todos.change(function() {
                 $.cookie($(this).attr("name") + window.location.pathname, $(this).prop('checked'), {
                     path: '/',
                     expires: 365
@@ -292,27 +304,28 @@
             // Settings toggles
 
             // read the current/previous setting
-            $("#admin_edit .settings input").each(function() {
+            $settings = $('.settings input');
+            $settings.each(function() {
                 var mycookie = $.cookie($(this).attr('name'));
-                console.log('.' + $(this).attr('name'));
-                console.log('cookie: ' + mycookie);
                 if (mycookie == undefined) {
-                    console.log('cookie not set');
                     $(this).prop('checked', true);
                 } else if (mycookie == "true"){
-                    console.log('setting cookie: ' + mycookie);
                     $(this).prop('checked', mycookie);
                 } else {
-                    $('.' + $(this).attr('name')).toggle();
+                    $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
                 }
             });
-            $("#admin_edit .settings input").change(function() {
-                console.log('clicked: ' + $(this).prop('checked'));
-                $('.' + $(this).attr('name')).toggle();
+            $settings.change(function() {
+                $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
                 $.cookie($(this).attr("name"), $(this).prop('checked'), {
                     path: '/',
                     expires: 365
                 });
+            });
+
+            $('.tiplink i').click(function(){
+                var $the_tip = $($(this).parent().attr('href'));
+                $the_tip.parent().toggle(true);
             });
 
             // Add tooltip toggles to vocab
@@ -325,29 +338,5 @@
             });
         });
     </script>
-
-    <!--<script type="text/javascript">
-        jQuery(function ($) {
-            $('body').annotator();
-        });
-    </script>-->
-
-    <!--<script type="text/javascript">
-        $(function() {
-            // Add conditional classname based on support
-            $('html').addClass($.fn.details.support ? 'details' : 'no-details');
-            // Emulate <details> where necessary and enable open/close event handlers
-            $('details').details();
-            // Bind some example event handlers
-            $('details').on({
-                'open.details': function() {
-                    console.log('opened');
-                },
-                'close.details': function() {
-                    console.log('closed');
-                }
-            });
-        });
-    </script>-->
 
 {% endblock %}
