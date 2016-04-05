@@ -392,10 +392,12 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 @media only screen and (max-width : 480px) {
-    .admonition.tip {
+    .admonition.tip, .admonition.discussion, .admonition.content {
         text-align: inherit;
         width: 100%;
         margin: 40px 0 15px 0;
         float: none;
     }
+
+    .tiplink { display: none;}
 }
