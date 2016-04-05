@@ -290,15 +290,15 @@ html, body{
     display: block;
 }
 
-.tiplink-tip:link, .tiplink-tip:visited {
+.tiplink-tip a:link, .tiplink-tip a:visited {
     color: #ffa400;
 }
 
-.tiplink-discussion:link, .tiplink-discussion:visited {
+.tiplink-discussion a:link, .tiplink-discussion a:visited {
     color: #7665a0;
 }
 
-.tiplink-content:link, .tiplink-content:visited {
+.tiplink-content a:link, .tiplink-content a:visited {
     color: #00adbc;
 }
 
