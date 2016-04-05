@@ -27,7 +27,7 @@ django-smuggler
 django-storages
 djangorestframework
 djangorestframework-recursive
-dryscrape
+#dryscrape
 filebrowser-safe==0.4.1
 future==0.15.2
 -e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
