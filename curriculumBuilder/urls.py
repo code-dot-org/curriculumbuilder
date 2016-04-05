@@ -25,6 +25,7 @@ urlpatterns = i18n_patterns("",
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
     (r'^admin/lookups/', include(ajax_select_urls)),
+    (r'^admin/', include('smuggler.urls')),
     (r'^admin/', include(admin.site.urls)),
 )
 

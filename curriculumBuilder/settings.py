@@ -301,6 +301,7 @@ INSTALLED_APPS = (
   "storages",
   "rest_framework",
   "corsheaders",
+  "smuggler",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",
@@ -380,9 +381,9 @@ RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style', 'data-pdf-link')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'admonition', 'smarty', 'markdown_newtab',
+PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'markdown_newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks',
-                                'curriculumBuilder.vocablinks',)
+                                'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 

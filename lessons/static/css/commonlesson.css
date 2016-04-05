@@ -218,10 +218,9 @@ html, body{
 .toc a { color: #428bca; }
 .toc a:visited { color: #428bca; }
 
-.admonition.tip, .admonition.tip-center {
+.admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content {
     margin: 40px 15px 15px 15px;
     padding: 10px;
-    border: 2px solid #ffa400;
     float: right;
     width: 50%;
     page-break-inside: avoid;
@@ -240,7 +239,12 @@ html, body{
     font-style: normal;
 }
 
-.admonition.tip p.admonition-title, .admonition.tip-center p.admonition-title {
+.admonition i {
+    margin-right: 7px;
+}
+
+.admonition.tip p.admonition-title, .admonition.tip-center p.admonition-title,
+.admonition.discussion p.admonition-title, .admonition.content p.admonition-title {
     color: white!important;
     font-size: 12pt;
     height: 30px;
@@ -248,11 +252,53 @@ html, body{
     border-top-right-radius: 10px;
     display: inline-block;
     float: left;
-    background-color: #ffa400!important;
     padding: 5px 10px;
     margin-top: -40px;
-    border: 0px solid #ffa400;
     -webkit-print-color-adjust: exact;
+}
+
+.admonition.tip {
+    border: 2px solid #ffa400;
+}
+
+.admonition.tip p.admonition-title {
+    background-color: #ffa400!important;
+}
+
+.admonition.discussion {
+    border: 2px solid #7665a0;
+}
+
+.admonition.discussion p.admonition-title {
+    background-color: #7665a0!important;
+}
+
+.admonition.content {
+    border: 2px solid #00adbc;
+}
+
+.admonition.content p.admonition-title {
+    background-color: #00adbc!important;
+}
+
+.tiplink {
+    float: left;
+    width: 20px;
+    font-size: 15px;
+    margin-left: -20px;
+    clear: left;
+}
+
+.tiplink-top:link, .tiplink-tip:visited {
+    color: #ffa400;
+}
+
+.tiplink-discussion:link, .tiplink-discussion:visited {
+    color: #7665a0;
+}
+
+.tiplink-content:link, .tiplink-content:visited {
+    color: #00adbc;
 }
 
 .admonition.say {
