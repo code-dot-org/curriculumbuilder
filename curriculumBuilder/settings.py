@@ -87,6 +87,8 @@ INLINE_EDITING_ENABLED = True
 
 USE_MODELTRANSLATION = False
 
+JQUERY_FILENAME = "jquery-1.12.3.min.js"
+
 
 ########################
 # MAIN DJANGO SETTINGS #
