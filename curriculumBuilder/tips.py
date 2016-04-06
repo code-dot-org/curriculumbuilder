@@ -91,9 +91,12 @@ class TipsProcessor(BlockProcessor):
     elif klass == 'content':
       new_title = 'Content Corner'
       icon = '<i class="glyphicon glyphicon-education"></i>'
+    elif klass =='say':
+      new_title = 'Teacher Remark'
+      icon = '<i class="fa fa-microphone"></i>'
     else:
       new_title = klass.capitalize()
-      icon = None
+      icon = ''
     if title is None:
       title = new_title
     elif title == '':

@@ -306,6 +306,7 @@ html, body{
     background: #EEE;
     border: 1px solid #333;
     padding: 10px;
+    overflow: hidden;
 }
 
 .admonition.say p.admonition-title {
