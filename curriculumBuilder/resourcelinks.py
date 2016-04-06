@@ -28,7 +28,6 @@ class AttrTagPattern(Pattern):
 
     except Resource.DoesNotExist:
       print "slug not found, trying name"
-
       try:
         resource = Resource.objects.get(name=el.text)
         el.set('href', resource.fallback_url())
@@ -36,6 +35,7 @@ class AttrTagPattern(Pattern):
 
       except Resource.DoesNotExist:
         print "couldn't find by name either!"
+        el.text = "Resource not found"
 
     for (key,val) in self.attrs.items():
       el.set(key,val)
