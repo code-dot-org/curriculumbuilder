@@ -383,7 +383,7 @@ RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style', 'data-pdf-link')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'markdown_newtab',
+PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab',
                                 'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks',
                                 'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks')
 RICHTEXT_FILTER_LEVEL = 3
