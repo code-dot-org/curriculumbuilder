@@ -113,11 +113,11 @@ class Resource(models.Model):
     if not self.slug:
       self.slug = slugify(self.name)[:255]
 
-    # Check for slug uniqueness, if not unique append number
-    for x in itertools.count(1):
-      if not Resource.objects.filter(slug=self.slug):
-        break
-      self.slug = '%s-%d' % (self.slug[:250], x)
+      # Check for slug uniqueness, if not unique append number
+      for x in itertools.count(1):
+        if not Resource.objects.filter(slug=self.slug):
+          break
+        self.slug = '%s-%d' % (self.slug[:250], x)
 
     super(Resource, self).save(*args, **kwargs)
 
