@@ -138,7 +138,12 @@
 {% endblock %}
 
 {% block main %}
-
+    <div class="keywords">
+        {% for keyword in lesson.keywords.all %}
+            {% if forloop.first %}Lesson Tags: {% else %}, {% endif %}
+            {{ keyword }}
+        {% endfor %}
+    </div>
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
             <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
