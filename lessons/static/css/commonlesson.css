@@ -302,10 +302,6 @@ html, body{
     color: #00adbc;
 }
 
-.admonition.say, .admonition.guide {
-    overflow: hidden;
-}
-
 .admonition.say .admonition-title, .admonition.guide .admonition-title {
     font-weight: bold;
     font-size: 1.2em;
@@ -314,12 +310,23 @@ html, body{
 
 .admonition.say div {
     border-left: 5px solid #CCC;
-    padding: 10px;
+    padding-left: 10px;
+    overflow: auto;
 }
 
 .admonition.guide div {
     border-left: 5px solid #00adbc;
-    padding: 10px;
+    padding-left: 10px;
+    overflow: auto;
+}
+
+.guide {
+    padding-left: 10px;
+    border-left: 5px solid #00adbc;
+}
+
+.admonition.say:last-child {
+    background: black;
 }
 
 table { border-spacing: 0; }
