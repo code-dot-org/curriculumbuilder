@@ -70,8 +70,10 @@ class TipsProcessor(BlockProcessor):
         p.set('id', '%s_%s' % (klass, anchor))
     else:
       div = sibling
+      
+    content = etree.SubElement(div, 'div')
 
-    self.parser.parseChunk(div, block)
+    self.parser.parseChunk(content, block)
 
     if theRest:
       # This block contained unindented line(s) after the first indented
@@ -92,8 +94,11 @@ class TipsProcessor(BlockProcessor):
       new_title = 'Content Corner'
       icon = '<i class="glyphicon glyphicon-education"></i>'
     elif klass =='say':
-      new_title = 'Teacher Remark'
+      new_title = 'Remarks'
       icon = '<i class="fa fa-microphone"></i>'
+    elif klass =='guide':
+      new_title = None
+      icon = '<i class="fa fa-pencil-square-o"></i>'
     else:
       new_title = klass.capitalize()
       icon = ''

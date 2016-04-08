@@ -243,8 +243,8 @@ html, body{
     margin-right: 7px;
 }
 
-.admonition.tip p.admonition-title, .admonition.tip-center p.admonition-title,
-.admonition.discussion p.admonition-title, .admonition.content p.admonition-title {
+.admonition.tip .admonition-title, .admonition.tip-center .admonition-title,
+.admonition.discussion .admonition-title, .admonition.content .admonition-title {
     color: white!important;
     font-size: 12pt;
     height: 30px;
@@ -302,17 +302,24 @@ html, body{
     color: #00adbc;
 }
 
-.admonition.say {
-    background: #EEE;
-    border: 1px solid #333;
-    padding: 10px;
+.admonition.say, .admonition.guide {
     overflow: hidden;
 }
 
-.admonition.say p.admonition-title {
+.admonition.say .admonition-title, .admonition.guide .admonition-title {
     font-weight: bold;
     font-size: 1.2em;
     font-style: italic;
+}
+
+.admonition.say div {
+    border-left: 5px solid #CCC;
+    padding: 10px;
+}
+
+.admonition.guide div {
+    border-left: 5px solid #00adbc;
+    padding: 10px;
 }
 
 table { border-spacing: 0; }

@@ -16,7 +16,7 @@ django-appconf==1.0.1
 django-compressor==1.5
 django-contrib-comments==1.6.2
 django-cors-headers
-django-extensions
+django-extensions==1.6.1
 django-freeze
 django-import-export
 django-medusa
