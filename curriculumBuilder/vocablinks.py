@@ -22,12 +22,13 @@ class AttrTagPattern(Pattern):
     el.text = m.group(3)
 
     try:
-      vocab = Vocab.objects.get(word__icontains=el.text)
+      vocab = Vocab.objects.get(word = el.text)
       el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
-      #el.text = vocab.word
 
     except Vocab.DoesNotExist:
       print "couldn't find that vocab word"
+      vocab = Vocab.objects.filter(word__icontains=el.text).first()
+      if vocab: el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
 
     for (key,val) in self.attrs.items():
       print 'key ' + key
