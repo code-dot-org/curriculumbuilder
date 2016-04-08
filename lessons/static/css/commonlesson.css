@@ -302,31 +302,31 @@ html, body{
     color: #00adbc;
 }
 
-.admonition.say .admonition-title, .admonition.guide .admonition-title {
+.say .admonition-title, .guide .admonition-title {
     font-weight: bold;
     font-size: 1.2em;
     font-style: italic;
+    margin-left: -20px;
+    padding-bottom: 5px;
+    background: white;
 }
 
-.admonition.say div {
+.say {
     border-left: 5px solid #CCC;
     padding-left: 10px;
-    overflow: auto;
-}
-
-.admonition.guide div {
-    border-left: 5px solid #00adbc;
-    padding-left: 10px;
-    overflow: auto;
 }
 
 .guide {
-    padding-left: 10px;
     border-left: 5px solid #00adbc;
+    padding-left: 10px;
 }
 
-.admonition.say:last-child {
-    background: black;
+.say .tiplink, .guide .tiplink {
+    margin-left: -40px;
+}
+
+.say ul .tiplink, .guide ul .tiplink {
+    margin-left: -60px;
 }
 
 table { border-spacing: 0; }
