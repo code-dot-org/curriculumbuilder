@@ -229,7 +229,7 @@ footer {
         max-width: 100%;
     }
 
-    .standards, .video, #admin_edit, #editable-toolbar, .editable-link {
+    .standards, .video, #admin_edit, #editable-toolbar, .editable-link, #comments {
         display: none !important;
     }
 

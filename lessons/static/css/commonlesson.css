@@ -306,7 +306,7 @@ html, body{
     font-weight: bold;
     font-size: 1.2em;
     font-style: italic;
-    margin-left: -20px;
+    margin-left: -18px;
     padding-bottom: 5px;
     background: white;
 }
@@ -322,11 +322,11 @@ html, body{
 }
 
 .say .tiplink, .guide .tiplink {
-    margin-left: -40px;
+    margin-left: -35px;
 }
 
 .say ul .tiplink, .guide ul .tiplink {
-    margin-left: -60px;
+    margin-left: -55px;
 }
 
 table { border-spacing: 0; }

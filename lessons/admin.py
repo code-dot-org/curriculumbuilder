@@ -16,7 +16,7 @@ from standards.models import Standard
 
 class ObjectiveInline(TabularDynamicInlineAdmin):
   model = Objective
-  fields = ["name",]
+  fields = ["name", "_order"]
   verbose_name = "Objective"
   verbose_name_plural = "Objectives"
 
