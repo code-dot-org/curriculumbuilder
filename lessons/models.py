@@ -11,6 +11,7 @@ from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
 from standards.models import Standard
+import curricula.models
 
 """
 Vocabulary
@@ -137,10 +138,13 @@ class Lesson(Page, RichText):
   anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on', related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
   comments = CommentsField()
+  unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
+  curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
+  number = models.IntegerField('Number', blank=True, null=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:
-    ordering = ["_order"]
+    ordering = ["number"]
 
   def __unicode__(self):
     return self.title
@@ -155,17 +159,35 @@ class Lesson(Page, RichText):
   def get_absolute_url(self):
     return self.unit.get_absolute_url() + str(self.number) + '/'
 
-  @property
-  def unit(self):
-    return self.parent.unit
+  def get_unit(self):
+    try:
+      return self.parent.unit
+    except:
+      return self.parent.parent.unit # If under a chapter
 
-  @property
-  def curriculum(self):
-    return self.parent.unit.curriculum
+  def save(self, *args, **kwargs):
+    self.unit = self.get_unit()
+    self.curriculum = self.get_curriculum()
+    self.number = self.get_number()
+    super(Lesson, self).save(*args, **kwargs)
 
-  @property
-  def number(self):
-    return self._order + 1
+  def get_number(self):
+    order = 1
+    if hasattr(self.parent, 'unit'):
+      return order + self._order
+    else:
+      chapter = self.parent
+      chapter_count = chapter._order
+
+      while chapter_count > 0:
+        order += chapter.children.count()
+        chapter = chapter.get_previous_by_order()
+        chapter_count = chapter._order
+
+      return order + self._order
+
+  def get_curriculum(self):
+    return self.unit.curriculum
 
 """
 Activities that compose a lesson

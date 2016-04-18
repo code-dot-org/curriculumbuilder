@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from standards.models import Standard, GradeBand
-from lessons.models import Lesson
+import lessons.models
 
 """
 Curriculum
@@ -31,6 +31,8 @@ Curricular Unit
 """
 class Unit(Page, RichText):
   curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
+  number =  models.IntegerField('Number', blank=True, null=True)
+
 
   def __unicode__(self):
     return self.title
@@ -38,13 +40,12 @@ class Unit(Page, RichText):
   def get_absolute_url(self):
     return self.curriculum.get_absolute_url() + self.slug + '/'
 
-  @property
-  def number(self):
+  def get_number(self):
     return self._order + 1
 
   @property
   def lessons(self):
-    return Lesson.objects.filter(parent=self)
+    return self.lesson_set.all()
 
   def save(self, *args, **kwargs):
 
@@ -54,6 +55,7 @@ class Unit(Page, RichText):
       self.curriculum = self.parent.curriculum
     except:
       return
+    self.number = self.get_number()
     super(Unit, self).save(*args, **kwargs)
 
 """

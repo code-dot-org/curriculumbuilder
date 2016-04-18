@@ -48,8 +48,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
                                                              'anchor_standards__framework', 'page_ptr', 'parent',
                                                              'parent__unit', 'parent__unit__curriculum', 'parent__children',
                                                              'vocab', 'resources', 'activity_set'),
-                             parent__unit__slug = unit_slug, parent__unit__curriculum__slug = slug,
-                             _order = int(lesson_num) - 1)
+                             unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num)
   '''
   if lesson.curriculum.slug == 'csp' or lesson.curriculum.slug == 'algebra' or request.GET.get('csp'):
     template = 'curricula/commonlesson.html'
