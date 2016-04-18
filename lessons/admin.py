@@ -9,6 +9,7 @@ from ajax_select.fields import autoselect_fields_check_can_add
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.core.fields import RichTextField
+from mezzanine.generic.fields import KeywordsField
 from mezzanine_pagedown.widgets import PlainWidget
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
@@ -86,6 +87,24 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
   )
 
+'''
+class MultiLessonForm(ModelForm):
+  class Meta:
+    model = Lesson
+
+  keywords = KeywordsField()
+
+class MultiLesson(Lesson):
+  class Meta:
+    proxy = True
+
+class MultiLessonAdmin(admin.ModelAdmin):
+  list_display = ('curriculum', 'parent', 'title', 'unplugged', 'keywords_string')
+  list_editable = ('title', 'unplugged')
+
+  def get_changelist_form(self, request, **kwargs):
+    return MultiLessonForm
+'''
 class ResourceAdmin(AjaxSelectAdmin):
   model = Resource
 
@@ -96,6 +115,7 @@ class VocabAdmin(AjaxSelectAdmin):
   pass
 
 admin.site.register(Lesson, LessonAdmin)
+#admin.site.register(MultiLesson, MultiLessonAdmin)
 admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)

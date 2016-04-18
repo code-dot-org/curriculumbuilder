@@ -1,4 +1,5 @@
 {% load i18n future staticfiles %}
+{% comment 'removing togetherjs while I work on saving sort order' %}
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script type="text/javascript">
     if (window.__csrf_token) {
@@ -9,6 +10,7 @@
         });
     }
 </script>
+{% endcomment %}
 
 <link rel="stylesheet" href="{% static "css/admin.css" %}">
 
@@ -19,7 +21,7 @@
     {% if user.is_authenticated and user.is_staff %}
     <!-- Bookmarks (temporary) -->
     <ul id="user-tools">
-        <button onclick="TogetherJS(this); return false;">Start TogetherJS</button>
+        {% comment %}<button onclick="TogetherJS(this); return false;">Start TogetherJS</button>{% endcomment %}
         <!-- Username -->
         <li><strong>{% firstof user.first_name user.username %}</strong></li>
         <!-- Userlinks -->

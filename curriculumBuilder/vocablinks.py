@@ -26,7 +26,6 @@ class AttrTagPattern(Pattern):
       el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
 
     except Vocab.DoesNotExist:
-      print "couldn't find that vocab word"
       vocab = Vocab.objects.filter(word__icontains=el.text).first()
       if vocab:
         el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
@@ -34,8 +33,6 @@ class AttrTagPattern(Pattern):
         return el
 
     for (key,val) in self.attrs.items():
-      print 'key ' + key
-      print 'value ' + val
       el.set(key,val)
     return el
 

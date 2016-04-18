@@ -54,6 +54,10 @@ img {
 }
 */
 
+#admin_edit {
+    z-index: 10000;
+}
+
 .content ul {
     margin-top: 0px;
 }
