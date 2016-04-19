@@ -41,11 +41,15 @@ class Unit(Page, RichText):
     return self.curriculum.get_absolute_url() + self.slug + '/'
 
   def get_number(self):
-    return self._order + 1
+    return int(self._order) + 1
 
   @property
   def lessons(self):
     return self.lesson_set.all()
+
+  @property
+  def chapters(self):
+    return Chapter.objects.filter(parent__unit=self)
 
   def save(self, *args, **kwargs):
 
@@ -55,8 +59,39 @@ class Unit(Page, RichText):
       self.curriculum = self.parent.curriculum
     except:
       return
-    self.number = self.get_number()
+    try:
+      self.number = self.get_number()
+    except:
+      self.number = self.curriculum.units.count() + 1
     super(Unit, self).save(*args, **kwargs)
+
+"""
+Unit Chapter
+
+"""
+class Chapter(Page, RichText):
+  number =  models.IntegerField('Number', blank=True, null=True)
+
+  def get_number(self):
+    return int(self._order) + 1
+
+  @property
+  def unit(self):
+    return self.parent.unit
+
+  @property
+  def lessons(self):
+    return lessons.models.Lesson.objects.filter(parent__chapter = self)
+
+  def save(self, *args, **kwargs):
+
+    if not self.slug:
+      self.slug = slugify(self.title)[:255]
+    try:
+      self.number = self.get_number()
+    except:
+      self.number = self.unit.chapters.count() + 1
+    super(Chapter, self).save(*args, **kwargs)
 
 """
 Intermediary Model for lessons

@@ -40,6 +40,14 @@ def unit_view(request, slug, unit_slug):
 
   return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 
+def chapter_view(request, slug, unit_slug, chapter_num):
+  pdf = request.GET.get('pdf', False)
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+  chapter = get_object_or_404(Chapter, parent__unit = unit, number = chapter_num)
+
+  return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
+
 def lesson_view(request, slug, unit_slug, lesson_num):
   # Why an I doing this here? Can I let the template handle this? Maybe not...
   pdf = request.GET.get('pdf', False)
@@ -49,6 +57,10 @@ def lesson_view(request, slug, unit_slug, lesson_num):
                                                              'parent__unit', 'parent__unit__curriculum', 'parent__children',
                                                              'vocab', 'resources', 'activity_set'),
                              unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num)
+  if hasattr(lesson.parent, 'chapter'):
+    chapter = lesson.parent.chapter
+  else:
+    chapter = None
   '''
   if lesson.curriculum.slug == 'csp' or lesson.curriculum.slug == 'algebra' or request.GET.get('csp'):
     template = 'curricula/commonlesson.html'
@@ -59,7 +71,7 @@ def lesson_view(request, slug, unit_slug, lesson_num):
   '''
   template = 'curricula/commonlesson.html'
 
-  return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'lesson': lesson, 'pdf': pdf})
+  return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson, 'pdf': pdf})
 
 '''
 Resource list views

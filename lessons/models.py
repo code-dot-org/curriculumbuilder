@@ -168,23 +168,27 @@ class Lesson(Page, RichText):
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
     self.curriculum = self.get_curriculum()
-    self.number = self.get_number()
+    try:
+      self.number = self.get_number()
+    except:
+      self.number = self.unit.lessons.count() + 1
     super(Lesson, self).save(*args, **kwargs)
 
   def get_number(self):
     order = 1
     if hasattr(self.parent, 'unit'):
-      return order + self._order
+      return order + int(self._order)
     else:
       chapter = self.parent
       chapter_count = chapter._order
 
       while chapter_count > 0:
+        order+= 1
         order += chapter.children.count()
         chapter = chapter.get_previous_by_order()
         chapter_count = chapter._order
 
-      return order + self._order
+      return order + int(self._order)
 
   def get_curriculum(self):
     return self.unit.curriculum
