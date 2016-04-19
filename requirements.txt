@@ -16,7 +16,7 @@ django-appconf==1.0.1
 django-compressor==1.5
 django-contrib-comments==1.6.2
 django-cors-headers
-django-extensions==1.6.1
+#django-extensions==1.6.1
 django-freeze
 django-import-export
 django-medusa
@@ -33,6 +33,7 @@ future==0.15.2
 -e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
+-e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
 grappelli-safe==0.4.2
 gunicorn==19.3.0
 html5lib==0.999999

@@ -259,8 +259,8 @@ class Annotation(models.Model):
     text = models.TextField(blank=True)
     quote = models.TextField()
     uri = models.URLField(blank=True, null=True)
-    range_start = models.CharField(max_length=50)
-    range_end = models.CharField(max_length=50)
+    range_start = models.TextField()
+    range_end = models.TextField()
     range_startOffset = models.BigIntegerField()
     range_endOffset = models.BigIntegerField()
 

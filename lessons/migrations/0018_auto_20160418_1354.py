@@ -43,5 +43,5 @@ class Migration(migrations.Migration):
             name='prep',
             field=mezzanine.core.fields.RichTextField(help_text=b'ToDos for the teacher to prep this lesson', null=True, verbose_name=b'Preparation', blank=True),
         ),
-        migrations.RunPython(update_units)
+        #migrations.RunPython(update_units)
     ]
