@@ -1,1 +1,1 @@
-import curriculumBuilder.receivers
+#import curriculumBuilder.receivers
