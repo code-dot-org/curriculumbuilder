@@ -17,6 +17,10 @@ html, body{
     color: white!important;
 }
 
+.unitnumber a:hover {
+    text-decoration: none;
+}
+
 .unitnumber .h2 {
 	font-size: 14pt;
     text-transform: uppercase;

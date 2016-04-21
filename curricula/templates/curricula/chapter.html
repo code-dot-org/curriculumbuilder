@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block lessonnumber %}
-    <div class="unitnumber"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
 
     <div class="lessons">
     {% if chapter %}

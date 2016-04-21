@@ -383,9 +383,20 @@ RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
-                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style', 'data-pdf-link')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab',
-                                'curriculumBuilder.absolute_images', 'curriculumBuilder.resourcelinks',
+                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
+                           'data-pdf-link', 'data-lightbox', 'data-title')
+RICHTEXT_ALLOWED_ATTRIBUTES = ('abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
+                               'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
+                               'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
+                               'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
+                               'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
+                               'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
+                               'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
+                               'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
+                               'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title')
+PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
+                                #'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
+                                'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
                                 'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False

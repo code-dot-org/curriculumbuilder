@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="{% static "css/codeorg.css" %}">
         <link rel="stylesheet" href="{% static "css/common.css" %}">
         <link rel="stylesheet" href="{% static "css/commonlesson.css" %}">
+        <link rel="stylesheet" href="{% static "css/lightbox.css" %}">
         {% block extra_css %}{% endblock %}
     {% endcompress %}
 
@@ -99,7 +100,8 @@
         });
     }
 </script>
-{% include "includes/footer_scripts.html" %}
 <!--<script async defer src="https://factlink.com/lib/dist/factlink_loader.min.js"></script>-->
+{% block footer_js %}{% endblock %}
+<script src="{% static "js/lightbox-plus-jquery.min.js" %}"></script>
 </body>
 </html>

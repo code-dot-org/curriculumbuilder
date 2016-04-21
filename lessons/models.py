@@ -183,9 +183,8 @@ class Lesson(Page, RichText):
       chapter_count = chapter._order
 
       while chapter_count > 0:
-        order+= 1
-        order += chapter.children.count()
         chapter = chapter.get_previous_by_order()
+        order += chapter.children.count()
         chapter_count = chapter._order
 
       return order + int(self._order)
