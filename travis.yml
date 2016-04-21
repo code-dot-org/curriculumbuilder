@@ -1,0 +1,11 @@
+language: python
+services:
+– postgresql
+python:
+– 2.7
+install:
+– pip install -r dev-requirements.txt
+before_script:
+– python manage.py syncdb –migrate –noinput
+script:
+– python manage.py test
