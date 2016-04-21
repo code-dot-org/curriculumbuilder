@@ -287,7 +287,6 @@
 {% endblock %}
 {% block footer_js %}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
@@ -314,19 +313,17 @@
             $(".prep ul li:visible").each(function(li) {
                 $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
             });
+
             // read the current/previous setting
             var $todos = $(".todo");
             $todos.each(function() {
-                var mycookie = $.cookie($(this).attr('name') + window.location.pathname);
-                if (mycookie && mycookie == "true") {
-                    $(this).prop('checked', mycookie);
+                var todo = localStorage.getItem($(this).attr('name') + window.location.pathname);
+                if (todo && todo == "true") {
+                    $(this).prop('checked', todo);
                 }
             });
             $todos.change(function() {
-                $.cookie($(this).attr("name") + window.location.pathname, $(this).prop('checked'), {
-                    path: '/',
-                    expires: 365
-                });
+                localStorage.setItem($(this).attr("name") + window.location.pathname, $(this).prop('checked'));
             });
 
             // Settings toggles
@@ -334,21 +331,18 @@
             // read the current/previous setting
             $settings = $('.settings input');
             $settings.each(function() {
-                var mycookie = $.cookie($(this).attr('name'));
-                if (mycookie == undefined) {
+                var setting = localStorage.getItem($(this).attr('name'));
+                if (setting == undefined) {
                     $(this).prop('checked', true);
-                } else if (mycookie == "true"){
-                    $(this).prop('checked', mycookie);
+                } else if (setting == "true"){
+                    $(this).prop('checked', setting);
                 } else {
                     $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
                 }
             });
             $settings.change(function() {
                 $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
-                $.cookie($(this).attr("name"), $(this).prop('checked'), {
-                    path: '/',
-                    expires: 365
-                });
+                localStorage.setItem($(this).attr("name"), $(this).prop('checked'));
             });
 
             $('.tiplink i').click(function(){
