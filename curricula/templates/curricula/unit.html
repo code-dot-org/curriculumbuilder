@@ -20,9 +20,39 @@
 
 {% block extra_css %}
 {% endblock %}
+{% block lessonnumber %}
+    <div class="unitnumber"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></div>
+
+    <div class="lessons">
+    {% if unit.chapters %}
+        {% for chap in unit.chapters %}
+            <div class="lesson chapter">
+                <a href="{{ unit.get_absolute_url }}ch{{ chap.number }}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
+                Ch. {{ chap.number }}
+            </a>
+            </div>
+            {% for stage in chap.lessons %}
+                <div class="lesson unfinished">
+                <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                {{ stage.number }}
+            </a>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        {% for stage in unit.lessons %}
+            <div class="lesson unfinished">
+            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            {{ stage.number }}
+        </a>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}
 
 {% block header_title %}
-    <h1>{{ unit.curriculum }}</h1>
 {% endblock %}
 
 {% block main %}
@@ -32,14 +62,12 @@
     {{ unit.content|richtext_filters|safe }}
     {% endeditable %}
 
-
-
         {% regroup unit.lessons by parent as lessons_by_chapter %}
         {% for chapter in lessons_by_chapter %}
             <h3><a href="ch{{ chapter.grouper.chapter.number }}/">{{ chapter.grouper.title }}</a></h3>
             <ul>
             {% for lesson in chapter.list %}
-                <li><a href="{{ lesson.slug }}">{{ lesson.title }}</a></li>
+                <li><a href="{{ lesson.number }}">{{ lesson.title }}</a></li>
             {% endfor %}
             </ul>
         {% endfor %}

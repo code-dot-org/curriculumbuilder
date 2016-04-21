@@ -21,8 +21,49 @@
 {% block extra_css %}
 {% endblock %}
 
+{% block lessonnumber %}
+    <div class="unitnumber"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></div>
+
+    <div class="lessons">
+    {% if chapter %}
+        {% for chap in unit.chapters %}
+            <div class="lesson chapter">
+                <a href="{{ unit.get_absolute_url }}ch{{ chap.number }}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
+                Ch. {{ chap.number }}
+            </a>
+            </div>
+            {% for stage in chap.lessons %}
+                {% if chap.number < chapter.number %}
+                    <div class="lesson finished">
+                {% else %}
+                    <div class="lesson unfinished">
+                {% endif %}
+            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                {{ stage.number }}
+            </a>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        {% for stage in unit.lessons %}
+            {% if stage.number < lesson.number %}
+                <div class="lesson finished">
+            {% elif stage.number == lesson.number %}
+                <div class="lesson current">
+            {% else %}
+                <div class="lesson unfinished">
+            {% endif %}
+        <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            {{ stage.number }}
+        </a>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}
+
 {% block header_title %}
-    <h1>{{ curriculum.title }}</h1>
 {% endblock %}
 
 {% block main %}
