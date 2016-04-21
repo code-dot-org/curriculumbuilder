@@ -1,0 +1,42 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }} | {{ unit.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for chapter as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ chapter.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ curriculum.title }}</h1>
+{% endblock %}
+
+{% block main %}
+    <div class="together" id="unit{{ unit.number }}chapter{{ chapter.number }}">
+    <h1>{{ unit.title }}: {{ chapter.title }}</h1>
+    {% editable chapter.content %}
+    {{ chapter.content|richtext_filters|safe }}
+    {% endeditable %}
+        <ul>
+        {% for lesson in chapter.lessons %}
+            <li><a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ lesson.number }}">{{ lesson }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+
+
+{% endblock %}

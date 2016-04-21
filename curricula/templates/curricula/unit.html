@@ -31,11 +31,18 @@
     {% editable unit.content %}
     {{ unit.content|richtext_filters|safe }}
     {% endeditable %}
-        <ul>
-        {% for lesson in unit.lessons %}
-            <li><a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ lesson.number }}">{{ lesson }}</a></li>
+
+
+
+        {% regroup unit.lessons by parent as lessons_by_chapter %}
+        {% for chapter in lessons_by_chapter %}
+            <h3><a href="ch{{ chapter.grouper.chapter.number }}/">{{ chapter.grouper.title }}</a></h3>
+            <ul>
+            {% for lesson in chapter.list %}
+                <li><a href="{{ lesson.slug }}">{{ lesson.title }}</a></li>
+            {% endfor %}
+            </ul>
         {% endfor %}
-        </ul>
     </div>
 
 

@@ -46,7 +46,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
   unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
   chapter = get_object_or_404(Chapter, parent__unit = unit, number = chapter_num)
 
-  return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
+  return render(request, 'curricula/chapter.html', {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 def lesson_view(request, slug, unit_slug, lesson_num):
   # Why an I doing this here? Can I let the template handle this? Maybe not...
