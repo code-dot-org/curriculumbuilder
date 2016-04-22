@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from fm.views import AjaxCreateView, AjaxUpdateView
+from forms import ResourceForm
 
-# Create your views here.
+class ResourceCreateView(AjaxCreateView):
+  form_class = ResourceForm

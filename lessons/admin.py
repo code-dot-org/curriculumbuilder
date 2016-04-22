@@ -6,6 +6,9 @@ from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
 from ajax_select.fields import autoselect_fields_check_can_add
 
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.core.fields import RichTextField
@@ -111,8 +114,15 @@ class ResourceAdmin(AjaxSelectAdmin):
   list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
   list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
 
-class VocabAdmin(AjaxSelectAdmin):
-  pass
+class VocabAdmin(ImportExportModelAdmin):
+  model = Vocab
+
+  list_display = ('word', 'simpleDef')
+  list_editable = ('word', 'simpleDef')
+
+class VocabResource(resources.ModelResource):
+  class Meta:
+    model = Vocab
 
 admin.site.register(Lesson, LessonAdmin)
 #admin.site.register(MultiLesson, MultiLessonAdmin)
