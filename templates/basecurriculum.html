@@ -100,8 +100,10 @@
         });
     }
 </script>
-<!--<script async defer src="https://factlink.com/lib/dist/factlink_loader.min.js"></script>-->
 {% block footer_js %}{% endblock %}
-<script src="{% static "js/lightbox-plus-jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/lightbox-plus-jquery.min.js" %}"></script>
+
+{% include "includes/footer_scripts.html" %}
+
 </body>
 </html>
