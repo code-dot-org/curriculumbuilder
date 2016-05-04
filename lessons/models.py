@@ -141,6 +141,7 @@ class Lesson(Page, RichText):
   unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
   curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
   number = models.IntegerField('Number', blank=True, null=True)
+  image = models.ImageField('Image', blank=True, null=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:

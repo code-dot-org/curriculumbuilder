@@ -15,6 +15,8 @@
         {# Those assumptions are untrue in the inline editor, so we load manually #}
         {% if field|field_type == 'CodeMirrorTextarea' %}
             <script type="text/javascript">
+                var thisScript = $('script').last();
+                var uuid = $(thisScript).closest('form').attr('id');
                 var editor = CodeMirror.fromTextArea(document.getElementById("{{ field.name }}-{{ editable_form.uuid }}"),
                         {
                             theme: "default",

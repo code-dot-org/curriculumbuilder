@@ -384,7 +384,17 @@ CODEMIRROR_CONFIG = {
   'lineNumbers': False,
   'lineWrapping': True,
   'autoRefresh': True,
+  'autoCloseBrackets': True,
+  'matchBrackets': True,
+  'extraKeys': {'Enter': 'newlineAndIndentContinueMarkdownList'}
 }
+CODEMIRROR_ADDON_JS = (
+  "display/autorefresh",
+  "edit/closebrackets",
+  "edit/matchbrackets",
+  "edit/closetag",
+  "edit/continuelist"
+)
 #CODEMIRROR_JS_VAR_FORMAT = "%s_editor"
 
 #RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
