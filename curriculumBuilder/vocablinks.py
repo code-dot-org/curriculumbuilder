@@ -22,11 +22,11 @@ class AttrTagPattern(Pattern):
     el.text = m.group(3)
 
     try:
-      vocab = Vocab.objects.get(word = el.text)
+      vocab = Vocab.objects.get(word = el.text, mathy = False)
       el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
 
     except Vocab.DoesNotExist:
-      vocab = Vocab.objects.filter(word__icontains=el.text).first()
+      vocab = Vocab.objects.filter(word__icontains=el.text, mathy = False).first()
       if vocab:
         el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
       else:

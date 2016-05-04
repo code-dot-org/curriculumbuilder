@@ -61,15 +61,15 @@
     {% editable unit.content %}
     {{ unit.content|richtext_filters|safe }}
     {% endeditable %}
-
+    <h1>Lessons</h1>
         {% regroup unit.lessons by parent as lessons_by_chapter %}
         {% for chapter in lessons_by_chapter %}
-            <h3><a href="ch{{ chapter.grouper.chapter.number }}/">{{ chapter.grouper.title }}</a></h3>
-            <ul>
+            <h2><a href="ch{{ chapter.grouper.chapter.number }}/">Chapter {{ chapter.grouper.chapter.number }}: {{ chapter.grouper.title }}</a></h2>
+            <ol start="{{ chapter.list.0.number }}">
             {% for lesson in chapter.list %}
                 <li><a href="{{ lesson.number }}">{{ lesson.title }}</a></li>
             {% endfor %}
-            </ul>
+            </ol>
         {% endfor %}
     </div>
 

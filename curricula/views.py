@@ -73,6 +73,11 @@ def lesson_view(request, slug, unit_slug, lesson_num):
 
   return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson, 'pdf': pdf})
 
+def lesson_markdown(request, slug, unit_slug, lesson_num):
+
+  lesson = get_object_or_404(Lesson, unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num)
+
+  return render(request, 'curricula/lesson-overview.md', {'lesson': lesson}, content_type='text/markdown')
 '''
 Resource list views
 '''
