@@ -305,6 +305,7 @@ INSTALLED_APPS = (
   "rest_framework",
   "corsheaders",
   "smuggler",
+  "codemirror",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",
@@ -379,7 +380,16 @@ OPTIONAL_APPS = (
 # PAGEDOWN SETTINGS #
 #####################
 
-RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
+CODEMIRROR_MODE = 'markdown'
+CODEMIRROR_CONFIG = {
+  'lineNumbers': False,
+  'lineWrapping': True,
+  'autoRefresh': True,
+}
+#CODEMIRROR_JS_VAR_FORMAT = "%s_editor"
+
+#RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
+RICHTEXT_WIDGET_CLASS = 'codemirror.CodeMirrorTextarea'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',

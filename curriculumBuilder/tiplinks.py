@@ -26,7 +26,7 @@ class TipTagPattern(Pattern):
     el = etree.Element(self.tag)
     el.set('class', 'tiplink tiplink-%s' % (tip_type))
     if tip_type == 'tip':
-      el.text = '<a href="#%s_%s"><i class="glyphicon glyphicon-alert"></i></a>' % (tip_type, tip_link)
+      el.text = '<a href="#%s_%s"><i class="fa fa-lightbulb-o"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'discussion':
       el.text = '<a href="#%s_%s"><i class="glyphicon glyphicon-comment"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'content':

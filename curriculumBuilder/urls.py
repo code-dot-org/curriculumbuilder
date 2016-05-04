@@ -102,7 +102,7 @@ urlpatterns += patterns('',
     url(r'^standards/', include('standards.urls', namespace="standards")),
 
     url(r'^freeze/', include(freeze.urls)),
-    ("^pagedown/", include(mezzanine_pagedown.urls)),
+    url(r'^pagedown/', include(mezzanine_pagedown.urls)),
     ("^", include("mezzanine.urls")),
 
     # MOUNTING MEZZANINE UNDER A PREFIX

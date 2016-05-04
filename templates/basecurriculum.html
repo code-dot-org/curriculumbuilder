@@ -10,11 +10,6 @@
     <title>{% block meta_title %}Code.org CurriculumBuilder{% endblock %}</title>
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
-    {% ifinstalled mezzanine.blog %}
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
-        <link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
-    {% endifinstalled %}
-
     {% compress css %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -28,12 +23,23 @@
         {% block extra_css %}{% endblock %}
     {% endcompress %}
 
-    {% compress js %}
         <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+    {% if user.is_staff %}
+        <link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
+        <script src="{% static "codemirror/lib/codemirror.js" %}"></script>
+        <script src="{% static "codemirror/mode/markdown/markdown.js" %}"></script>
+        <script src="{% static "codemirror/addon/display/autorefresh.js" %}"></script>
+        <script src="{% static "codemirror/addon/edit/closebrackets.js" %}"></script>
+        <script src="{% static "codemirror/addon/edit/matchbrackets.js" %}"></script>
+        <script src="{% static "codemirror/addon/edit/closetag.js" %}"></script>
+        <script src="{% static "codemirror/addon/edit/continuelist.js" %}"></script>
+    {% endif %}
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="{% static "js/bootstrap-extras.js" %}"></script>
         {% block extra_js %}{% endblock %}
-    {% endcompress %}
+
+
+
 
     <!--[if lt IE 9]>
 <script src="{% static "js/html5shiv.js" %}"></script>

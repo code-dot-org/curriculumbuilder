@@ -78,15 +78,15 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     }),
     ('Purpose & Prep', {
       'fields': ['cs_content', 'prep'],
-      #'classes': ['collapse-closed',],
+      'classes': ['collapse-closed',],
     }),
     ('Vocab', {
       'fields': ['vocab',],
-      #'classes': ['collapse-closed'],
+      'classes': ['collapse-closed'],
     }),
     ('Standards', {
       'fields': ['standards', 'anchor_standards'],
-      #'classes': ['collapse-closed',],
+      'classes': ['collapse-closed',],
     }),
   )
 
