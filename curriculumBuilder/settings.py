@@ -305,7 +305,6 @@ INSTALLED_APPS = (
   "rest_framework",
   "corsheaders",
   "smuggler",
-  "codemirror",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",
