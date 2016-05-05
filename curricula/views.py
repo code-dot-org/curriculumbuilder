@@ -88,7 +88,7 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
 def lesson_markdown(request, slug, unit_slug, lesson_num):
 
-  lesson = get_object_or_404(Lesson, unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num)
+  lesson = get_object_or_404(Lesson, unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num, parent__lesson__isnull=True)
 
   return render(request, 'curricula/lesson-overview.md', {'lesson': lesson}, content_type='text/markdown')
 '''

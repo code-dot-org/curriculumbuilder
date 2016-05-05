@@ -452,7 +452,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-top: 10px;
 }
 
-.optional h3 {
+.optional h3 a {
     color: #ffa400;
 }
 
