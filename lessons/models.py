@@ -161,10 +161,10 @@ class Lesson(Page, RichText):
     return self.unit.get_absolute_url() + str(self.number) + '/'
 
   def get_unit(self):
-    try:
-      return self.parent.unit
-    except:
-      return self.parent.parent.unit # If under a chapter
+    parent = self.parent
+    while not hasattr(parent, 'unit'):
+      parent = parent.parent
+    return parent.unit
 
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
@@ -192,6 +192,10 @@ class Lesson(Page, RichText):
 
   def get_curriculum(self):
     return self.unit.curriculum
+
+  @property
+  def optional_lessons(self):
+    return Lesson.objects.filter(parent__lesson = self)
 
 """
 Activities that compose a lesson

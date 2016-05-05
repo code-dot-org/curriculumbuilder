@@ -423,6 +423,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     font-weight: 100;
     font-family: 'Gotham 5r', sans-serif;
     color: rgb(0, 178, 192);
+    margin-top: .5em;
 }
 
 .chapter_overviews .big_questions {
@@ -443,6 +444,16 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .chapter_overviews h2 {
     clear:both;
+}
+
+.optional {
+    border: 1px solid #ffa400;
+    padding: 0 10px 10px 10px;
+    margin-top: 10px;
+}
+
+.optional h3 {
+    color: #ffa400;
 }
 
 @page

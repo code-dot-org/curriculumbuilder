@@ -96,15 +96,32 @@
                 {% for week in lessons_by_week %}
                     {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
                     {% for lesson in week.list %}
-                        <h3><a href="{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
-                        <h4>
-                        {% keywords_for lesson as keywords %}
-                        {% for keyword in keywords %}
-                            {% if not forloop.first %}, {% endif %}
-                            {{ keyword }}
-                        {% endfor %}
-                        </h4>
-                        <span class="lesson_desc">{{ lesson.description }}</span>
+                        <div class="lesson_overview">
+                            <h3><a href="{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h4>
+                            {% keywords_for lesson as keywords %}
+                            {% for keyword in keywords %}
+                                {% if not forloop.first %}, {% endif %}
+                                {{ keyword }}
+                            {% endfor %}
+                            </h4>
+                            <span class="lesson_desc">{{ lesson.description }}</span>
+                        </div>
+                        {% if lesson.optional_lessons.count > 0 %}
+                            {% for optional in lesson.optional_lessons %}
+                                <div class="lesson_overview optional">
+                                    <h3><a href="{{ lesson.number }}/optional/{{ optional.number }}">Optional Lesson: {{ optional.title }}</a></h3>
+                                    <h4>
+                                    {% keywords_for optional as keywords %}
+                                    {% for keyword in keywords %}
+                                        {% if not forloop.first %}, {% endif %}
+                                        {{ keyword }}
+                                    {% endfor %}
+                                    </h4>
+                                    <span class="lesson_desc">{{ optional.description }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
                     {% endfor %}
                 {% endfor %}
