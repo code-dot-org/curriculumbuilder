@@ -73,6 +73,7 @@ class Chapter(Page, RichText):
   number = models.IntegerField('Number', blank=True, null=True)
   questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
   understandings = models.ManyToManyField(Category, blank=True)
+  _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   def get_number(self):
     return int(self._order) + 1
