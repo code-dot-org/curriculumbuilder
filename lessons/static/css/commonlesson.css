@@ -406,6 +406,45 @@ th a:link, th a:visited, th a:hover, th a:active {
     color: #ccc;
 }
 
+/* Chapter overview styling */
+
+.chapter_overviews h1 {
+    margin-top: 25px;
+}
+
+.chapter_overviews h2 {
+    font-size: 20px;
+    font-weight: 100;
+    margin-top: 10px;
+}
+
+.chapter_overviews h3, .chapter_overviews h3 a {
+    font-size: 18px;
+    font-weight: 100;
+    font-family: 'Gotham 5r', sans-serif;
+    color: rgb(0, 178, 192);
+}
+
+.chapter_overviews .big_questions {
+    float: left;
+    width: 49%
+}
+
+.chapter_overviews .enduring_understandings {
+    float: right;
+    width: 49%
+}
+
+.chapter_overviews .enduring_understandings ul, .chapter_overviews .big_questions ul {
+    border: 1px solid rgb(0, 178, 192);
+    padding: 10px 10px 10px 30px;
+    width: 100%;
+}
+
+.chapter_overviews h2 {
+    clear:both;
+}
+
 @page
 {
     size: auto;
