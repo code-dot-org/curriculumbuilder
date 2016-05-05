@@ -57,20 +57,65 @@
 
 {% block main %}
     <div class="together" id="unit{{ unit.number }}">
-    <h1>{{ unit.title }}</h1>
-    {% editable unit.content %}
-    {{ unit.content|richtext_filters|safe }}
-    {% endeditable %}
-    <h1>Lessons</h1>
-        {% regroup unit.lessons by parent as lessons_by_chapter %}
-        {% for chapter in lessons_by_chapter %}
-            <h2><a href="ch{{ chapter.grouper.chapter.number }}/">Chapter {{ chapter.grouper.chapter.number }}: {{ chapter.grouper.title }}</a></h2>
-            <ol start="{{ chapter.list.0.number }}">
-            {% for lesson in chapter.list %}
-                <li><a href="{{ lesson.number }}">{{ lesson.title }}</a></li>
+        <h1>{{ unit.title }}</h1>
+        {% editable unit.content %}
+        {{ unit.content|richtext_filters|safe }}
+        {% endeditable %}
+
+        <div class="chapter_overviews">
+            {% regroup unit.lessons by parent as lessons_by_chapter %}
+            {% for chap in lessons_by_chapter %}
+
+                <div class="chapter">
+                {% with chap.grouper.chapter as chapter %}
+                <h1><a href="ch{{ chapter.number }}/">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
+
+                {% if chapter.questions %}
+                    <div class="big_questions">
+                    <h3>Big Questions</h3>
+                    {{ chapter.questions|richtext_filters|safe }}
+                </div>
+                {% endif %}
+
+                {% if chapter.understandings.count > 0 %}
+                    <div class="enduring_understandings">
+                    <h3>Enduring Understandings</h3>
+                        <ul>
+                            {% for understanding in chapter.understandings.all %}
+                                <li>{{ understanding.shortcode }} {{ understanding.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% regroup chap.list by duration as lessons_by_week %}
+
+                {% for week in lessons_by_week %}
+                    <h2>Week {{ week.grouper }}</h2>
+                    {% for lesson in week.list %}
+                        <h3><a href="{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                        <h4>
+                        {% keywords_for lesson as keywords %}
+                        {% for keyword in keywords %}
+                            {% if not forloop.first %}, {% endif %}
+                            {{ keyword }}
+                        {% endfor %}
+                        </h4>
+                        <span class="lesson_desc">{{ lesson.description }}</span>
+
+                    {% endfor %}
+                {% endfor %}
+
+                <h1>Commentary</h1>
+
+                <h2><a href="ch{{ chapter.number }}/">Unit {{ unit.number }} Chapter {{ chapter.number }} - {{ chapter.title }}</a></h2>
+                {{ chapter.content|richtext_filters|safe }}
+
+                {% endwith %}
+                </div>
             {% endfor %}
-            </ol>
-        {% endfor %}
+        </div>
+
     </div>
 
 

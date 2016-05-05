@@ -31,7 +31,7 @@ class Category(models.Model):
   parent = models.ForeignKey('self', blank=True, null=True, related_name="children")
 
   def __unicode__(self):
-    return self.shortcode
+    return "%s %s: %s" %(self.framework.slug, self.shortcode, self.name)
 
   class Meta:
       ordering = ['framework', 'shortcode']
@@ -75,7 +75,7 @@ class Standard(models.Model):
 
   def __unicode__(self):
     # return self.slug
-    return self.slug + ': ' + self.name
+    return "%s: %s" %(self.slug, self.name)
 
   class Meta:
     ordering = ['framework', 'category', 'slug']

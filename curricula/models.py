@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
-from standards.models import Standard, GradeBand
+from standards.models import Standard, GradeBand, Category
 import lessons.models
 
 """
@@ -70,7 +70,9 @@ Unit Chapter
 
 """
 class Chapter(Page, RichText):
-  number =  models.IntegerField('Number', blank=True, null=True)
+  number = models.IntegerField('Number', blank=True, null=True)
+  questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
+  understandings = models.ManyToManyField(Category, blank=True)
 
   def get_number(self):
     return int(self._order) + 1

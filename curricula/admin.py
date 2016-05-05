@@ -13,6 +13,13 @@ class UnitAdmin(PageAdmin):
 
 class ChapterAdmin(PageAdmin):
   model = Chapter
+  filter_horizontal = ('understandings',)
+
+  fieldsets = (
+    (None, {
+      'fields': ['title', 'status', 'content', 'questions', 'understandings'],
+    }),
+  )
 
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Unit, UnitAdmin)

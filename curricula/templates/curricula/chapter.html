@@ -68,17 +68,26 @@
 
 {% block main %}
     <div class="together" id="unit{{ unit.number }}chapter{{ chapter.number }}">
-    <h1>{{ unit.title }}</h1>
-    <h2>Chapter {{ chapter.number }}: {{ chapter.title }}</h2>
-    {% editable chapter.content %}
-    {{ chapter.content|richtext_filters|safe }}
-    {% endeditable %}
-    <h1>Lessons</h1>
-        <ol start="{{ chapter.lessons.0.number }}">
-        {% for lesson in chapter.lessons %}
-            <li><a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ lesson.number }}">{{ lesson }}</a></li>
-        {% endfor %}
-        </ol>
+        <h1>{{ unit.title }}</h1>
+        <h2>Chapter {{ chapter.number }}: {{ chapter.title }}</h2>
+        {% editable chapter.content %}
+        {{ chapter.content|richtext_filters|safe }}
+        {% endeditable %}
+        <div class="lessons_overview">
+        <h1>Lessons</h1>
+            {% for lesson in chapter.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}" data-pdf-link="#unit{{ unit.number }}lesson{{ lesson.number }}">{{ lesson }}</a></h3>
+                 <h4>
+                    {% keywords_for lesson as keywords %}
+                    {% for keyword in keywords %}
+                        {% if not forloop.first %}, {% endif %}
+                        {{ keyword }}
+                    {% endfor %}
+                    </h4>
+                <span class="lesson_desc">{{ lesson.description }}</span>
+
+            {% endfor %}
+        </div>
     </div>
 
 
