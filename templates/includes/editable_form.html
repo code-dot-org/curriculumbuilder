@@ -26,7 +26,126 @@
                             autoRefresh: true,
                             autoCloseBrackets: true,
                             matchBrackets: true,
-                            extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
+                            extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+                            buttons: [
+                                {
+                                    hotkey: 'Cmd-B',
+                                    class: 'bold',
+                                    label: '<strong>B</strong>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection('**' + selection + '**');
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 2);
+                                        }
+                                    }
+                                },
+                                {
+                                    hotkey: 'Cmd-I',
+                                    class: 'italic',
+                                    label: '<i>I</i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection('*' + selection + '*');
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                {
+                                    class: 'tip',
+                                    label: '<i class="fa fa-lightbulb-o"></i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        if (!selection) selection = 'Teaching tip content here';
+                                        cm.replaceSelection('\ntip!!!tip-id<!-- place where you\'d like the icon -->' +
+                                                '\n\n!!!tip <tip-id>\n    ' + selection + '\n');
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                {
+                                    class: 'discussion',
+                                    label: '<i class="glyphicon glyphicon-comment"></i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        if (!selection) selection = 'Discussion goal content here';
+                                        cm.replaceSelection('\ndiscussion!!!discussion-id<!-- place where you\'d like the icon -->' +
+                                                '\n\n!!!discussion <discussion-id>\n    ' + selection + '\n');
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                {
+                                    class: 'content',
+                                    label: '<i class="glyphicon glyphicon-education"></i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        if (!selection) selection = 'Content corner content here';
+                                        cm.replaceSelection('\ncontent!!!content-id<!-- place where you\'d like the icon -->' +
+                                                '\n\n!!!content <content-id>\n    ' + selection + '\n');
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                /*{
+                                    class: 'inline-code',
+                                    label: 'code',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection("`" + selection + "`");
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                {
+                                    class: 'block-code',
+                                    label: '&lt;-&gt;',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection("```\n" + selection + "\n```\n");
+                                        if (!selection) {
+                                            var cursorPos = cm.getCursor();
+                                            cm.setCursor(cursorPos.line - 2, 0);
+                                        }
+                                    }
+                                },*/
+                                {
+                                    class: 'a',
+                                    label: 'a',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        var text = '';
+                                        var link = '';
+
+                                        if (selection.match(/^https?:\/\//)) {
+                                            link = selection;
+                                        } else {
+                                            text = selection;
+                                        }
+                                        cm.replaceSelection('[' + text + '](' + link + ')');
+
+                                        var cursorPos = cm.getCursor();
+                                        if (!selection) {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 3);
+                                        } else if (link) {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - (3 + link.length));
+                                        } else {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                }
+                            ],
 
                         });
                 setTimeout(editor.refresh(),0); // Otherwise filed is blank until clicked

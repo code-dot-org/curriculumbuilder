@@ -96,7 +96,7 @@
                             <h4>
                             {% keywords_for lesson as keywords %}
                             {% for keyword in keywords %}
-                                {% if not forloop.first %}, {% endif %}
+                                {% if not forloop.first %}| {% endif %}
                                 {{ keyword }}
                             {% endfor %}
                             </h4>
@@ -109,7 +109,7 @@
                                     <h4>
                                     {% keywords_for optional as keywords %}
                                     {% for keyword in keywords %}
-                                        {% if not forloop.first %}, {% endif %}
+                                        {% if not forloop.first %}| {% endif %}
                                         {{ keyword }}
                                     {% endfor %}
                                     </h4>
@@ -120,14 +120,8 @@
 
                     {% endfor %}
                 {% endfor %}
-
-                <h1>Commentary</h1>
-
-                <h2><a href="ch{{ chapter.number }}/">Unit {{ unit.number }} Chapter {{ chapter.number }} - {{ chapter.title }}</a></h2>
-                {{ chapter.content|richtext_filters|safe }}
-
                 </div>
-                <hr/>
+                {% if not forloop.last %}<hr/>{% endif %}
             {% endfor %}
         </div>
 

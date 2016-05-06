@@ -26,9 +26,12 @@
         <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
     {% if user.is_staff %}
         <link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "codemirror/addon/display/buttons.css" %}">
         <script src="{% static "codemirror/lib/codemirror.js" %}"></script>
         <script src="{% static "codemirror/mode/markdown/markdown.js" %}"></script>
         <script src="{% static "codemirror/addon/display/autorefresh.js" %}"></script>
+        <script src="{% static "codemirror/addon/display/panel.js" %}"></script>
+        <script src="{% static "codemirror/addon/display/buttons.js" %}"></script>
         <script src="{% static "codemirror/addon/edit/closebrackets.js" %}"></script>
         <script src="{% static "codemirror/addon/edit/matchbrackets.js" %}"></script>
         <script src="{% static "codemirror/addon/edit/closetag.js" %}"></script>

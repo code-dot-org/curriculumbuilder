@@ -49,20 +49,25 @@ def chapter_view(request, slug, unit_slug, chapter_num):
   return render(request, 'curricula/chapter.html', {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
-  # Why an I doing this here? Can I let the template handle this? Maybe not...
+
   pdf = request.GET.get('pdf', False)
+  parent = None
+  optional = False
 
   if optional_num:
+    optional = True
     lesson = get_object_or_404(Lesson.objects.prefetch_related('standards', 'standards__framework', 'standards__category',
                                                                'standards__category__parent',
                                                                'anchor_standards__framework', 'page_ptr', 'parent',
                                                                'parent__unit', 'parent__unit__curriculum', 'parent__children',
                                                                'vocab', 'resources', 'activity_set'),
                                unit__slug = unit_slug, unit__curriculum__slug = slug, parent__lesson__number = lesson_num, number = optional_num)
+    parent = lesson.parent.lesson
     if hasattr(lesson.parent.parent, 'chapter'):
       chapter = lesson.parent.parent.chapter
     else:
       chapter = None
+
   else:
     lesson = get_object_or_404(Lesson.objects.prefetch_related('standards', 'standards__framework', 'standards__category',
                                                                'standards__category__parent',
@@ -84,7 +89,8 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
   '''
   template = 'curricula/commonlesson.html'
 
-  return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson, 'pdf': pdf})
+  return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,
+                                    'pdf': pdf, 'parent': parent, 'optional':optional})
 
 def lesson_markdown(request, slug, unit_slug, lesson_num):
 

@@ -114,6 +114,7 @@
 {% block lessonnumber %}
     <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
 
+    {% with lesson=parent|default_if_none:lesson %}
     <div class="lessons">
     {% if chapter %}
         {% for chap in unit.chapters %}
@@ -126,7 +127,11 @@
                 {% if stage.number < lesson.number %}
                     <div class="lesson finished">
                 {% elif stage.number == lesson.number %}
-                    <div class="lesson current">
+                    {% if optional %}
+                        <div class="lesson finished">
+                    {% else %}
+                        <div class="lesson current">
+                    {% endif %}
                 {% else %}
                     <div class="lesson unfinished">
                 {% endif %}
@@ -141,7 +146,11 @@
             {% if stage.number < lesson.number %}
                 <div class="lesson finished">
             {% elif stage.number == lesson.number %}
-                <div class="lesson current">
+                {% if optional %}
+                    <div class="lesson finished">
+                {% else %}
+                    <div class="lesson current">
+                {% endif %}
             {% else %}
                 <div class="lesson unfinished">
             {% endif %}
@@ -152,6 +161,7 @@
         {% endfor %}
     {% endif %}
 </div>
+    {% endwith %}
 
 {% endblock %}
 
@@ -159,16 +169,22 @@
 {% endblock %}
 
 {% block main %}
-    <div class="keywords">
-        {% for keyword in lesson.keywords.all %}
-            {% if forloop.first %}Lesson Tags: {% else %}, {% endif %}
-            {{ keyword }}
-        {% endfor %}
-    </div>
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
-            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+            {% if optional %}
+                <h1>Optional Lesson: {{ lesson.title }}</h1>
+            {% else %}
+                <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+            {% endif %}
         {% endeditable %}
+
+        <div class="keywords">
+        <h4>
+            {% for keyword in lesson.keywords.all %}
+                {% if not forloop.first %}| {% endif %}
+                {{ keyword }}
+            {% endfor %}
+        </div>
     </div>
 
     <div class="together overview-page row">
