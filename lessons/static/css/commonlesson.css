@@ -406,6 +406,12 @@ th a:link, th a:visited, th a:hover, th a:active {
     color: #ccc;
 }
 
+/* Inline Editing */
+.editable-form {
+    width: 90%;
+    max-width: 1000px;
+}
+
 /* Chapter overview styling */
 
 .chapter_overviews h1 {

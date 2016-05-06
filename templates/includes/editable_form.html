@@ -26,34 +26,42 @@
                             autoRefresh: true,
                             autoCloseBrackets: true,
                             matchBrackets: true,
-                            extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+                            extraKeys: {
+                                "Enter": "newlineAndIndentContinueMarkdownList",
+                                "Cmd-B": function(cm) {
+                                    var selection = cm.getSelection();
+                                    cm.replaceSelection('**' + selection + '**');
+                                    if (!selection) {
+                                        var cursorPos = cm.getCursor();
+                                        cm.setCursor(cursorPos.line, cursorPos.ch - 2);
+                                    }
+                                },
+                                "Ctrl-B": function(cm) {
+                                    var selection = cm.getSelection();
+                                    cm.replaceSelection('**' + selection + '**');
+                                    if (!selection) {
+                                        var cursorPos = cm.getCursor();
+                                        cm.setCursor(cursorPos.line, cursorPos.ch - 2);
+                                    }
+                                },
+                                "Cmd-I": function(cm) {
+                                    var selection = cm.getSelection();
+                                    cm.replaceSelection('_' + selection + '_');
+                                    if (!selection) {
+                                        var cursorPos = cm.getCursor();
+                                        cm.setCursor(cursorPos.line, cursorPos.ch - 2);
+                                    }
+                                },
+                                "Ctrl-I": function(cm) {
+                                    var selection = cm.getSelection();
+                                    cm.replaceSelection('_' + selection + '_');
+                                    if (!selection) {
+                                        var cursorPos = cm.getCursor();
+                                        cm.setCursor(cursorPos.line, cursorPos.ch - 2);
+                                    }
+                                },
+                            },
                             buttons: [
-                                {
-                                    hotkey: 'Cmd-B',
-                                    class: 'bold',
-                                    label: '<strong>B</strong>',
-                                    callback: function (cm) {
-                                        var selection = cm.getSelection();
-                                        cm.replaceSelection('**' + selection + '**');
-                                        if (!selection) {
-                                            var cursorPos = cm.getCursor();
-                                            cm.setCursor(cursorPos.line, cursorPos.ch - 2);
-                                        }
-                                    }
-                                },
-                                {
-                                    hotkey: 'Cmd-I',
-                                    class: 'italic',
-                                    label: '<i>I</i>',
-                                    callback: function (cm) {
-                                        var selection = cm.getSelection();
-                                        cm.replaceSelection('*' + selection + '*');
-                                        if (!selection) {
-                                            var cursorPos = cm.getCursor();
-                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
-                                        }
-                                    }
-                                },
                                 {
                                     class: 'tip',
                                     label: '<i class="fa fa-lightbulb-o"></i>',
@@ -96,6 +104,22 @@
                                         }
                                     }
                                 },
+                                {
+                                    class: 'studio',
+                                    label: '<i class="fa fa-desktop" aria-hidden="true"></i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection('&fa-desktop;' + selection);
+                                    }
+                                },
+                                {
+                                    class: 'css',
+                                    label: '<i class="fa fa-css3" aria-hidden="true"></i>',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        cm.replaceSelection(selection + '{: style="float:right"}');
+                                    }
+                                },
                                 /*{
                                     class: 'inline-code',
                                     label: 'code',
@@ -134,6 +158,31 @@
                                             text = selection;
                                         }
                                         cm.replaceSelection('[' + text + '](' + link + ')');
+
+                                        var cursorPos = cm.getCursor();
+                                        if (!selection) {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 3);
+                                        } else if (link) {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - (3 + link.length));
+                                        } else {
+                                            cm.setCursor(cursorPos.line, cursorPos.ch - 1);
+                                        }
+                                    }
+                                },
+                                {
+                                    class: 'img',
+                                    label: 'img',
+                                    callback: function (cm) {
+                                        var selection = cm.getSelection();
+                                        var text = '';
+                                        var link = '';
+
+                                        if (selection.match(/^https?:\/\//)) {
+                                            link = selection;
+                                        } else {
+                                            text = selection;
+                                        }
+                                        cm.replaceSelection('![' + text + '](' + link + '){: style=""}');
 
                                         var cursorPos = cm.getCursor();
                                         if (!selection) {

@@ -416,7 +416,8 @@ RICHTEXT_ALLOWED_ATTRIBUTES = ('abbr', 'accept', 'accept-charset', 'accesskey', 
 PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
                                 #'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
                                 'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
-                                'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks')
+                                'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
+                                'curriculumBuilder.iconfonts')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 
