@@ -35,7 +35,7 @@ future==0.15.2
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
 -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
--e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
+#-e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
 grappelli-safe==0.4.2
 gunicorn==19.3.0
 html5lib==0.999999

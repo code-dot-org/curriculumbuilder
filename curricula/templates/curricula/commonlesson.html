@@ -104,6 +104,22 @@
                   </label>
                 </div>
             </div>
+            {% if user.is_staff %}
+                <div class="drawer-body">
+                <h2>Resources</h2>
+                <ul>
+                {% for resource in lesson.resources.all %}
+                    <li>{{ resource }}</li>
+                    <tt draggable="true" ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</tt>
+                {% endfor %}
+                </ul>
+                <h2>Vocab</h2>
+                {% for vocab in lesson.vocab.all %}
+                    <li>{{ vocab.word }}</li>
+                    <tt draggable="true" ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</tt>
+                {% endfor %}
+                </div>
+            {% endif %}
             <ul class="drawer-nav">
             </ul>
         </div>
