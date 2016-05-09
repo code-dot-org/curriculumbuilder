@@ -28,11 +28,11 @@ class TipTagPattern(Pattern):
     if tip_type == 'tip':
       el.text = '<a href="#%s_%s"><i class="fa fa-lightbulb-o"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'discussion':
-      el.text = '<a href="#%s_%s"><i class="glyphicon glyphicon-comment"></i></a>' % (tip_type, tip_link)
+      el.text = '<a href="#%s_%s"><i class="fa fa-comments"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'content':
-      el.text = '<a href="#%s_%s"><i class="glyphicon glyphicon-education"></i></a>' % (tip_type, tip_link)
+      el.text = '<a href="#%s_%s"><i class="fa fa-mortar-board"></i></a>' % (tip_type, tip_link)
     else:
-      el.text = '<a href="#%s_%s"><i class="glyphicon glyphicon-alert"></i></a>' % (tip_type, tip_link)
+      el.text = '<a href="#%s_%s"><i class="fa fa-warning"></i></a>' % (tip_type, tip_link)
 
     for (key,val) in self.attrs.items():
       el.set(key,val)

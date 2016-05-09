@@ -89,10 +89,10 @@ class TipsProcessor(BlockProcessor):
       icon = '<i class="fa fa-lightbulb-o"></i>'
     elif klass == 'discussion':
       new_title = 'Discussion Goal'
-      icon = '<i class="glyphicon glyphicon-comment"></i>'
+      icon = '<i class="fa fa-comments"></i>'
     elif klass == 'content':
       new_title = 'Content Corner'
-      icon = '<i class="glyphicon glyphicon-education"></i>'
+      icon = '<i class="fa fa-mortar-board"></i>'
     elif klass =='say':
       new_title = 'Remarks'
       icon = '<i class="fa fa-microphone"></i>'
