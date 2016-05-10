@@ -452,6 +452,17 @@ th a:link, th a:visited, th a:hover, th a:active {
     clear:both;
 }
 
+.lesson_overview {
+    clear:both;
+}
+
+.lesson_overview img {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    max-width: 100px;
+    float: right
+}
+
 .optional {
     border: 1px solid #ffa400;
     padding: 0 10px 10px 10px;

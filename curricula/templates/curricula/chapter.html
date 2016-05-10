@@ -105,6 +105,7 @@
                                 {{ keyword }}
                             {% endfor %}
                             </h4>
+                            <img src="{{ lesson.image|default:"/static/img/thumb_lesson.png" }}">
                             <span class="lesson_desc">{{ lesson.description }}</span>
                         </div>
                         {% if lesson.optional_lessons.count > 0 %}

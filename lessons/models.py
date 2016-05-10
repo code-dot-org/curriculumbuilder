@@ -42,7 +42,7 @@ class Vocab(models.Model):
 Linked Resources
 
 """
-class Resource(models.Model):
+class Resource(Orderable):
   name = models.CharField(max_length=255)
   type = models.CharField(max_length=255, blank=True, null=True)
   student = models.BooleanField('Student Facing', default=False)
