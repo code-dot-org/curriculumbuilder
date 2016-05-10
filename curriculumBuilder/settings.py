@@ -500,7 +500,6 @@ if ON_PAAS:
 ###################
 if ON_PAAS:
   FREEZE_INCLUDE_STATIC = False
-  FREEZE_ROOT = MEDIAFILES_LOCATION + "freeze"
 
 #################
 # CORS SETTINGS #
