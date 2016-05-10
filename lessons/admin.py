@@ -49,7 +49,7 @@ class ResourceInline(TabularDynamicInlineAdmin):
   #raw_id_fields = ('resource',)
 
   class Meta:
-    ordering = ['name']
+    ordering = ['_order']
 
   readonly_fields = ('type', 'md_tag')
   verbose_name_plural = "Resources"

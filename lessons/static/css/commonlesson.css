@@ -463,14 +463,20 @@ th a:link, th a:visited, th a:hover, th a:active {
     float: right
 }
 
-.optional {
+.lesson_overview.optional {
     border: 1px solid #ffa400;
     padding: 0 10px 10px 10px;
     margin-top: 10px;
 }
 
-.optional h3 a {
+.lesson_overview.optional h3 a {
     color: #ffa400;
+}
+
+.lesson_overview.practice-pt {
+    border: 1px solid rgb(0, 178, 192);;
+    padding: 0 10px 10px 10px;
+    margin-top: 10px;
 }
 
 @page
