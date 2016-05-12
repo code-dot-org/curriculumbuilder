@@ -158,7 +158,10 @@ class Lesson(Page, RichText):
     return lesson_copy
 
   def get_absolute_url(self):
-    return self.unit.get_absolute_url() + str(self.number) + '/'
+    # Check if this is the child of a lesson, and therefore optional
+    if hasattr(self.parent, 'lesson'):
+      return "%soptional/%s/" %(self.parent.lesson.get_absolute_url(), str(self.number))
+    return "%s%s/" %(self.unit.get_absolute_url(), str(self.number))
 
   def get_unit(self):
     parent = self.parent

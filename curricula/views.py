@@ -115,10 +115,9 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
   c = pycurl.Curl()
   c.setopt(c.WRITEDATA, buffer)
 
-  lesson = get_object_or_404(Lesson, parent__unit__slug = unit_slug, parent__unit__curriculum__slug = slug,
-                             _order = int(lesson_num) - 1)
+  lesson = get_object_or_404(Lesson, unit__slug = unit_slug, unit__curriculum__slug = slug, number = lesson_num, parent__lesson__isnull=True)
 
-  c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()))
+  c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()) + "?pdf=true")
   print "ready to perform"
   c.perform()
   print 'done'
@@ -143,8 +142,9 @@ def unit_pdf(request, slug, unit_slug):
   c.perform()
 
   for lesson in unit.lessons:
-
+    print lesson
     c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
+    print c
     c.perform()
 
     '''

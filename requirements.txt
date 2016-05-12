@@ -20,6 +20,7 @@ django-cors-headers
 #django-extensions==1.6.1
 django-freeze
 django-import-export
+django-jackfrost
 django-medusa
 django-postgrespool==0.3.0
 django_redis

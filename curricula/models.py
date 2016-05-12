@@ -19,7 +19,7 @@ class Curriculum(Page, RichText):
     return self.title
 
   def get_absolute_url(self):
-    return '/curriculum/' + self.slug + '/'
+    return '/%s/' %(self.slug)
 
   @property
   def units(self):
@@ -74,6 +74,12 @@ class Chapter(Page, RichText):
   questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
   understandings = models.ManyToManyField(Category, blank=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
+
+  def __unicode__(self):
+    return self.title
+
+  def get_absolute_url(self):
+    return "%sch%s/" %(self.unit.get_absolute_url(), str(self.number))
 
   def get_number(self):
     return int(self._order) + 1

@@ -495,3 +495,9 @@ th a:link, th a:visited, th a:hover, th a:active {
 
     .tiplink { display: none;}
 }
+
+@media print {
+    .say .admonition-title, .guide .admonition-title {
+        background: white !important;
+    }
+}

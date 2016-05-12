@@ -12,8 +12,8 @@ from mezzanine.conf import settings
 import mezzanine_pagedown.urls
 import freeze.urls
 
-from curricula.views import *
-from standards.views import standard_element, standard_list, nested_category_list, nested_standard_list
+from curricula import views
+from standards.views import *
 
 admin.autodiscover()
 
@@ -45,7 +45,7 @@ urlpatterns += patterns('',
     # one homepage pattern, so if you use a different one, comment this
     # one out.
 
-    # url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+    # url("^$", direct_to_template, {"template": "curricula/index.html"}, name="home"),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
@@ -60,7 +60,8 @@ urlpatterns += patterns('',
     # "/.html" - so for this case, the template "pages/index.html"
     # should be used if you want to customize the homepage's template.
 
-    url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+    # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+    url(r'^$', views.index, name='home'),
 
     # HOMEPAGE FOR A BLOG-ONLY SITE
     # -----------------------------
@@ -71,6 +72,7 @@ urlpatterns += patterns('',
     # page tree in the admin if it was installed.
 
     # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
+    url(r'^', include('curricula.urls', namespace="curriculum")),
 
     # MEZZANINE'S URLS
     # ----------------
@@ -85,26 +87,24 @@ urlpatterns += patterns('',
     # ``mezzanine.urls``.
 
     # Curriculum URLs
-    url(r'^api/v1/$', api_root),
-    url(r'^api/v1/curriculum/$', curriculum_list, name="curriculum_list"),
+    url(r'^api/v1/$', views.api_root),
+    url(r'^api/v1/curriculum/$', views.curriculum_list, name="curriculum_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/$', standard_list, name="standard_list"),
     # url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', standard_list, name="standard_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', nested_category_list, name="nested_category_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/standards/$', nested_standard_list, name="nested_standard_list"),
-    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/$', curriculum_element, name="curriculum_element"),
-    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/units/$', unit_list, name="unit_list"),
-    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$', unit_element, name="unit_element"),
-    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/$', lesson_element, name="lesson_element"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/$', views.curriculum_element, name="curriculum_element"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/units/$', views.unit_list, name="unit_list"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$', views.unit_element, name="unit_element"),
+    url(r'^api/v1/curriculum/(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/$', views.lesson_element, name="lesson_element"),
     #url(r'^api/v1/annotations$', AnnotationList.as_view()),
     #url(r'^api/v1/annotations/(?P<pk>[0-9]+)$', AnnotationMember.as_view()),
     url(r'^api/v1/comments/', include('curricula.api', namespace="api")),
-    url(r'^curriculum/', include('curricula.urls', namespace="curriculum")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 
     url(r'^freeze/', include(freeze.urls)),
     url(r'^pagedown/', include(mezzanine_pagedown.urls)),
     ("^", include("mezzanine.urls")),
-
     # MOUNTING MEZZANINE UNDER A PREFIX
     # ---------------------------------
     # You can also mount all of Mezzanine's urlpatterns under a
@@ -119,10 +119,21 @@ urlpatterns += patterns('',
     # Note that for any of the various homepage patterns above, you'll
     # need to use the ``SITE_PREFIX`` setting as well.
 
-    # ("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
+    #("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
 
 
 )
+
+
+if settings.DEBUG and "debug_toolbar" in settings.INSTALLED_APPS:
+    try:
+        import debug_toolbar
+    except ImportError:
+        pass
+    else:
+        urlpatterns += [
+            url(r'^__debug__/', include(debug_toolbar.urls)),
+        ]
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
 # pages can use JS, CSS and images.

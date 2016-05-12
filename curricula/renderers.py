@@ -4,16 +4,22 @@ from standards.models import Framework
 
 class CurriculumRenderer(StaticSiteRenderer):
   def get_paths(self):
-    paths = set(["/curriculum/",])
+    paths = set(["/",])
     for curriculum in Curriculum.objects.filter(status=2): # status 2 means published
+      print curriculum, curriculum.pk
       paths.add(curriculum.get_absolute_url())
       paths.add(curriculum.get_absolute_url() + "standards/")
       for unit in curriculum.units:
+        print unit, unit.pk
         if unit.status == 2:
           paths.add(unit.get_absolute_url())
           paths.add(unit.get_absolute_url() + "standards/")
+        for chapter in unit.chapters:
+          print chapter, chapter.pk
+          if chapter.status == 2: paths.add(chapter.get_absolute_url())
         for lesson in unit.lessons:
-          if unit.status == 2: paths.add(lesson.get_absolute_url())
+          print lesson, lesson.pk
+          if lesson.status == 2: paths.add(lesson.get_absolute_url())
     return list(paths)
 
 class JSONRenderer(StaticSiteRenderer):

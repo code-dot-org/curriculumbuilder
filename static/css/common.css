@@ -164,6 +164,10 @@ img {
     margin-left: 15px;
 }
 
+span.license {
+    font-size: .8em;
+}
+
 footer {
     page-break-after: always;
     padding: 0;
@@ -231,6 +235,10 @@ footer {
 
     img {
         max-width: 100%;
+    }
+
+    .container {
+        margin: 0 30px !important;
     }
 
     .standards, .video, #admin_edit, #editable-toolbar, .editable-link, #comments {
