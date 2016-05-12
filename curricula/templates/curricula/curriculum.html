@@ -33,7 +33,7 @@
     {% editable curriculum.content %}
     {{ curriculum.content|richtext_filters|safe }}
     {% endeditable %}
-    {% for unit in curriculum.units %}
+    {% for unit in units %}
     <div class="together">
         <h2><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}">{{ unit.title }}</a></h2>
         {% editable unit.content %}

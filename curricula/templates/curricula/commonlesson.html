@@ -135,7 +135,7 @@
     {% if chapter %}
         {% for chap in unit.chapters %}
             <div class="lesson chapter">
-                <a href="{{ unit.get_absolute_url }}ch{{ chap.number }}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
+                <a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
                 Ch. {{ chap.number }}
             </a>
             </div>
@@ -151,7 +151,7 @@
                 {% else %}
                     <div class="lesson unfinished">
                 {% endif %}
-            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                 {{ stage.number }}
             </a>
             </div>
@@ -170,7 +170,7 @@
             {% else %}
                 <div class="lesson unfinished">
             {% endif %}
-        <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+        <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
             {{ stage.number }}
         </a>
         </div>

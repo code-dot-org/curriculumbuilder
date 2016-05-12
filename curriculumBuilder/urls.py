@@ -9,6 +9,7 @@ from rest_framework import serializers, viewsets, routers
 
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
+from mezzanine.core import views as core_views
 import mezzanine_pagedown.urls
 import freeze.urls
 
@@ -72,6 +73,9 @@ urlpatterns += patterns('',
     # page tree in the admin if it was installed.
 
     # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
+
+    url("^edit/$", core_views.edit, name="edit"),
+    url("^search/$", core_views.search, name="search"),
     url(r'^', include('curricula.urls', namespace="curriculum")),
 
     # MEZZANINE'S URLS

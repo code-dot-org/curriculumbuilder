@@ -490,7 +490,7 @@ if ON_PAAS:
   MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
   MEDUSA_MULTITHREAD = False
   AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
-  MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME + '/curriculum'
+  MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
@@ -505,9 +505,14 @@ if ON_PAAS:
 ######################
 # JACKFROST SETTINGS #
 ######################
-JACKFROST_STORAGE = 'curriculumBuilder.s3utils.CurriculumRootS3BotoStorage'
+JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 JACKFROST_RENDERERS = (
-  'curricula.renderers.CurriculumRenderer',
+  #'curricula.renderers.CurriculumRenderer',
+  'curricula.jackfrost_renderers.homeRenderer',
+  'curricula.jackfrost_renderers.CurriculumRenderer',
+  'curricula.jackfrost_renderers.UnitRenderer',
+  'curricula.jackfrost_renderers.ChapterRenderer',
+  'curricula.jackfrost_renderers.LessonRenderer'
 )
 #################
 # CORS SETTINGS #
@@ -536,8 +541,23 @@ COMMENTS_DISQUS_SHORTNAME = 'CurriculumBuilder'
 ###########
 
 LOGGING = {
-  'version': 1,
-  'disable_existing_loggers': True,
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'jackfrost.models': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
 }
 
 ##################

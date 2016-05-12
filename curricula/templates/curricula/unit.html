@@ -28,13 +28,13 @@
     {% if unit.chapters %}
         {% for chap in unit.chapters %}
             <div class="lesson chapter">
-                <a href="{{ unit.get_absolute_url }}ch{{ chap.number }}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
+                <a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
                 Ch. {{ chap.number }}
             </a>
             </div>
             {% for stage in chap.lessons %}
                 <div class="lesson unfinished">
-                <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                 {{ stage.number }}
             </a>
             </div>
@@ -43,7 +43,7 @@
     {% else %}
         {% for stage in unit.lessons %}
             <div class="lesson unfinished">
-            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
             {{ stage.number }}
         </a>
         </div>
@@ -67,7 +67,7 @@
             {% for chapter in unit.chapters %}
 
                 <div class="chapter">
-                <h1><a href="ch{{ chapter.number }}/">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
+                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
 
                 {% if chapter.questions %}
                     <div class="big_questions">
@@ -93,7 +93,7 @@
                     {% for lesson in week.list %}
                         {% keywords_for lesson as keywords %}
                         <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
-                            <h3><a href="{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
                             <h4>
                             {% for keyword in keywords %}
                                 {% if not forloop.first %}| {% endif %}
@@ -106,7 +106,7 @@
                         {% if lesson.optional_lessons.count > 0 %}
                             {% for optional in lesson.optional_lessons %}
                                 <div class="lesson_overview optional">
-                                    <h3><a href="{{ lesson.number }}/optional/{{ optional.number }}">Optional Lesson: {{ optional.title }}</a></h3>
+                                    <h3><a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional Lesson: {{ optional.title }}</a></h3>
                                     <h4>
                                     {% keywords_for optional as keywords %}
                                     {% for keyword in keywords %}

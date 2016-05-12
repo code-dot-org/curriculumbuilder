@@ -19,7 +19,7 @@ from curricula.models import *
 from curricula.serializers import *
 
 def index(request):
-  curricula = Curriculum.objects.all()
+  curricula = Curriculum.objects.filter(login_required=False)
   return render(request, 'curricula/index.html', {'curricula': curricula})
 
 '''
@@ -29,14 +29,15 @@ Core curricula and lesson views
 
 def curriculum_view(request, slug):
   pdf = request.GET.get('pdf', False)
-  curriculum = get_object_or_404(Curriculum, slug = slug)
+  curriculum = get_object_or_404(Curriculum, slug = slug, login_required=False)
+  units = Unit.objects.filter(curriculum = curriculum, login_required=False)
 
-  return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf})
+  return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units})
 
 def unit_view(request, slug, unit_slug):
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug, login_required=False)
 
   return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 
