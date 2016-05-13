@@ -126,10 +126,13 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
   print 'closed'
 
   compiled = buffer.getvalue()
-  pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
-  response = HttpResponse(pdf, content_type='application/pdf')
-  response['Content-Disposition'] = 'inline;filename=lesson.pdf'
+  if request.GET.get('html'): # Allows testing the html output
+    response = HttpResponse(compiled)
+  else:
+    pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline;filename=lesson.pdf'
   return response
 
 def unit_pdf(request, slug, unit_slug):
@@ -163,10 +166,13 @@ def unit_pdf(request, slug, unit_slug):
 
   c.close()
   compiled = buffer.getvalue()
-  pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
-  response = HttpResponse(pdf, content_type='application/pdf')
-  response['Content-Disposition'] = 'inline;filename=unit.pdf'
+  if request.GET.get('html'): # Allows testing the html output
+    response = HttpResponse(compiled)
+  else:
+    pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline;filename=unit.pdf'
   return response
 
 
@@ -189,11 +195,11 @@ def curriculum_pdf(request, slug):
 
   c.close()
   compiled = buffer.getvalue()
-  pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
 
   if request.GET.get('html'): # Allows testing the html output
     response = HttpResponse(compiled)
   else:
+    pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
   return response
