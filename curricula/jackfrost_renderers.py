@@ -3,8 +3,8 @@ from jackfrost.models import ModelRenderer
 from curricula.models import *
 from lessons.models import *
 
-#def homeRenderer():
-#    return [reverse('curriculum:home')]
+def homeRenderer():
+    return [reverse('curriculum:home')]
 
 class CurriculumRenderer(ModelRenderer):
   def get_model(self):

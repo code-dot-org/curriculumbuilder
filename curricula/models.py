@@ -120,8 +120,22 @@ class UnitLesson(Orderable):
     return self.lesson.get_absolute_url()
 """
 
-@receiver(post_save)
-def handler(sender, instance, **kwargs):
+@receiver(post_save, sender=Curriculum)
+def curriculum_handler(sender, instance, **kwargs):
+  if instance.status == 2 and not instance.login_required:
+    build_page_for_obj(sender, instance, **kwargs)
+  else:
+    return
+
+@receiver(post_save, sender=Unit)
+def unit_handler(sender, instance, **kwargs):
+  if instance.status == 2 and not instance.login_required:
+    build_page_for_obj(sender, instance, **kwargs)
+  else:
+    return
+
+@receiver(post_save, sender=Chapter)
+def chapter_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
     build_page_for_obj(sender, instance, **kwargs)
   else:

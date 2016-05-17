@@ -508,12 +508,14 @@ if ON_PAAS:
 JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 JACKFROST_RENDERERS = (
   #'curricula.renderers.CurriculumRenderer',
-  'curricula.jackfrost_renderers.homeRenderer',
+  #'curricula.jackfrost_renderers.homeRenderer',
   'curricula.jackfrost_renderers.CurriculumRenderer',
   'curricula.jackfrost_renderers.UnitRenderer',
   'curricula.jackfrost_renderers.ChapterRenderer',
   'curricula.jackfrost_renderers.LessonRenderer'
 )
+AUTO_PUBLISH = True
+
 #################
 # CORS SETTINGS #
 #################
