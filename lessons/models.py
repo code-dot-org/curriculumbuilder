@@ -5,11 +5,14 @@ import urllib2
 from urlparse import urlparse
 from copy import copy, deepcopy
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
+from jackfrost.utils import build_page_for_obj
 from standards.models import Standard
 import curricula.models
 
@@ -289,3 +292,10 @@ class Annotation(models.Model):
 
     def ranges(self):
         return [self.range_start, self.range_end, self.range_startOffset, self.range_endOffset]
+
+@receiver(post_save, sender=Lesson)
+def handler(sender, instance, **kwargs):
+  if instance.status == 2 and not instance.login_required:
+    build_page_for_obj(sender, instance, **kwargs)
+  else:
+    return

@@ -19,7 +19,12 @@ from curricula.models import *
 from curricula.serializers import *
 
 def index(request):
-  curricula = Curriculum.objects.filter(login_required=False)
+  if (request.user.is_staff):
+    curricula = Curriculum.objects.all()
+  else:
+    curricula = Curriculum.objects.filter(login_required=False)
+
+
   return render(request, 'curricula/index.html', {'curricula': curricula})
 
 '''
@@ -29,15 +34,21 @@ Core curricula and lesson views
 
 def curriculum_view(request, slug):
   pdf = request.GET.get('pdf', False)
-  curriculum = get_object_or_404(Curriculum, slug = slug, login_required=False)
-  units = Unit.objects.filter(curriculum = curriculum, login_required=False)
+  curriculum = get_object_or_404(Curriculum, slug = slug)
+  if (request.user.is_staff):
+    units = Unit.objects.filter(curriculum = curriculum)
+  else:
+    units = Unit.objects.filter(curriculum = curriculum, login_required=False)
 
   return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units})
 
 def unit_view(request, slug, unit_slug):
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
-  unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug, login_required=False)
+  if (request.user.is_staff):
+    unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
+  else:
+    unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug, login_required=request.user.is_staff)
 
   return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 

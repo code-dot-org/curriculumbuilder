@@ -1,7 +1,10 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
+from jackfrost.utils import build_page_for_obj
 from standards.models import Standard, GradeBand, Category
 import lessons.models
 
@@ -116,3 +119,10 @@ class UnitLesson(Orderable):
   def url(self):
     return self.lesson.get_absolute_url()
 """
+
+@receiver(post_save)
+def handler(sender, instance, **kwargs):
+  if instance.status == 2 and not instance.login_required:
+    build_page_for_obj(sender, instance, **kwargs)
+  else:
+    return
