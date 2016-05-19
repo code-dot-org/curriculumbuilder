@@ -249,8 +249,8 @@ html, body{
     margin-right: 7px;
 }
 
-.admonition.tip .admonition-title, .admonition.tip-center .admonition-title,
-.admonition.discussion .admonition-title, .admonition.content .admonition-title {
+.admonition.tip > .admonition-title, .admonition.tip-center > .admonition-title,
+.admonition.discussion > .admonition-title, .admonition.content > .admonition-title {
     color: white!important;
     font-size: 12pt;
     height: 30px;
@@ -267,7 +267,7 @@ html, body{
     border: 2px solid #ffa400;
 }
 
-.admonition.tip p.admonition-title {
+.admonition.tip > p.admonition-title {
     background-color: #ffa400!important;
 }
 
@@ -275,7 +275,7 @@ html, body{
     border: 2px solid #7665a0;
 }
 
-.admonition.discussion p.admonition-title {
+.admonition.discussion > p.admonition-title {
     background-color: #7665a0!important;
 }
 
@@ -283,7 +283,7 @@ html, body{
     border: 2px solid #00adbc;
 }
 
-.admonition.content p.admonition-title {
+.admonition.content > p.admonition-title {
     background-color: #00adbc!important;
 }
 
@@ -308,7 +308,7 @@ html, body{
     color: #00adbc;
 }
 
-.say .admonition-title, .guide .admonition-title {
+.say > .admonition-title, .guide > .admonition-title {
     font-weight: bold;
     font-size: 1.2em;
     font-style: italic;
