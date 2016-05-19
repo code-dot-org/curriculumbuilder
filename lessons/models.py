@@ -293,9 +293,34 @@ class Annotation(models.Model):
     def ranges(self):
         return [self.range_start, self.range_end, self.range_startOffset, self.range_endOffset]
 
+"""
+These post_save receivers call the JackFrost build command
+to automatically publish lessons on save, as long as they
+are marked publish (status == 2) and do not require a login to view.
+We also kick off a save for the parent unit and chapter
+if applicable to ensure listing pages are updated
+
+"""
 @receiver(post_save, sender=Lesson)
-def handler(sender, instance, **kwargs):
+def lesson_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
     build_page_for_obj(sender, instance, **kwargs)
+    instance.unit.save()
+    if hasattr(instance.parent, "chapter"):
+      instance.parent.chapter.save()
+  else:
+    return
+
+@receiver(post_save, sender=Activity)
+def activity_handler(sender, instance, **kwargs):
+  if instance.lesson.status == 2 and not instance.lesson.login_required:
+    instance.lesson.save()
+  else:
+    return
+
+@receiver(post_save, sender=Objective)
+def objective_handler(sender, instance, **kwargs):
+  if instance.lesson.status == 2 and not instance.lesson.login_required:
+    instance.lesson.save()
   else:
     return

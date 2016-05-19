@@ -92,6 +92,10 @@ class Chapter(Page, RichText):
     return self.parent.unit
 
   @property
+  def curriculum(self):
+    return self.unit.curriculum
+
+  @property
   def lessons(self):
     return lessons.models.Lesson.objects.filter(parent__chapter = self)
 
@@ -106,20 +110,13 @@ class Chapter(Page, RichText):
     super(Chapter, self).save(*args, **kwargs)
 
 """
-Intermediary Model for lessons
-Deprecated
+These post_save receivers calls the JackFrost build command
+to automatically publish pages on save, as long as they
+are marked publish (status == 2) and do not require a login to view.
+We also kick off a save for the parent page (curric, unit, chapter)
+if applicable to ensure listing pages are updated.
 
-class UnitLesson(Orderable):
-  unit = models.ForeignKey(Unit)
-  lesson = models.ForeignKey(Lesson)
-
-  def __unicode__(self):
-    return self.lesson.title
-
-  def url(self):
-    return self.lesson.get_absolute_url()
 """
-
 @receiver(post_save, sender=Curriculum)
 def curriculum_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
@@ -131,6 +128,7 @@ def curriculum_handler(sender, instance, **kwargs):
 def unit_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
     build_page_for_obj(sender, instance, **kwargs)
+    instance.curriculum.save()
   else:
     return
 
@@ -138,5 +136,6 @@ def unit_handler(sender, instance, **kwargs):
 def chapter_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
     build_page_for_obj(sender, instance, **kwargs)
+    instance.unit.save()
   else:
     return
