@@ -83,7 +83,7 @@ class Resource(Orderable):
     if self.dl_url:
       formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
     elif self.gd:
-      formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
+      formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a>)" % (formatted, self.gd_pdf(), self.gd_doc())
     return formatted
 
   # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
@@ -108,6 +108,14 @@ class Resource(Orderable):
     try:
       pdf = re.search(r'^(.*[/])', self.url).group()
       pdf = pdf + 'export?format=pdf'
+      return pdf
+    except:
+      return self.url
+
+  def gd_doc(self):
+    try:
+      pdf = re.search(r'^(.*[/])', self.url).group()
+      pdf = pdf + 'export?format=doc'
       return pdf
     except:
       return self.url
