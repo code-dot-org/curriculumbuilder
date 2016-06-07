@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 #     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
 #     ("Users", ("auth.User", "auth.Group",)),
 # )
+ADMIN_MENU_COLLAPSED = False
 
 # A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
