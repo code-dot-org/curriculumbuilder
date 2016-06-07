@@ -95,10 +95,17 @@ html, body{
     color: #fefefe!important;
 }
 
-.lessons .chapter a {
+.lessons .chapter {
     width: auto;
+    height: 36px;
     padding: 0 5px;
     color: #fefefe!important;
+    text-align: center;
+    float: left;
+    margin: 5px;
+    line-height: 36px;
+    font-size: 14pt;
+    font-weight: 600;
 }
 
 .content {
@@ -452,6 +459,16 @@ th a:link, th a:visited, th a:hover, th a:active {
     clear:both;
 }
 
+.chapter_overviews summary {
+    margin-top: 25px;
+    color: #7665a0;
+    font-size: 19pt;
+    font-weight: bold;
+    line-height: 1em;
+    margin-bottom: 0em;
+    border: none;
+}
+
 .lesson_overview {
     clear:both;
 }
@@ -478,6 +495,8 @@ th a:link, th a:visited, th a:hover, th a:active {
     padding: 0 10px 10px 10px;
     margin-top: 10px;
 }
+
+
 
 @page
 {

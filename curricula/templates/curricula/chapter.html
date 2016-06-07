@@ -29,9 +29,7 @@
     {% if chapter %}
         {% for chap in unit.chapters %}
             <div class="lesson chapter">
-                <a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">
                 Ch. {{ chap.number }}
-            </a>
             </div>
             {% for stage in chap.lessons %}
                 {% if chap.number < chapter.number %}

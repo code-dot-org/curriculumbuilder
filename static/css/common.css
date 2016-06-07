@@ -14,6 +14,10 @@ img {
     max-width: 100%;
 }
 
+summary {
+    outline: none;
+}
+
 .container {
     max-width: 1024px; /* was !important */
     width: auto; /* was !important */
