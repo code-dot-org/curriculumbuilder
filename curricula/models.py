@@ -58,6 +58,8 @@ class Unit(Page, RichText):
 
     if not self.slug:
       self.slug = slugify(self.title)[:255]
+
+    # TODO: Need to make this logic more robust
     try:
       self.curriculum = self.parent.curriculum
     except:
@@ -120,22 +122,31 @@ if applicable to ensure listing pages are updated.
 @receiver(post_save, sender=Curriculum)
 def curriculum_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
-    build_page_for_obj(sender, instance, **kwargs)
+    try:
+      build_page_for_obj(sender, instance, **kwargs)
+    except:
+      pass
   else:
     return
 
 @receiver(post_save, sender=Unit)
 def unit_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
-    build_page_for_obj(sender, instance, **kwargs)
-    instance.curriculum.save()
+    try:
+      build_page_for_obj(sender, instance, **kwargs)
+      instance.curriculum.save()
+    except:
+      pass
   else:
     return
 
 @receiver(post_save, sender=Chapter)
 def chapter_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
-    build_page_for_obj(sender, instance, **kwargs)
-    instance.unit.save()
+    try:
+      build_page_for_obj(sender, instance, **kwargs)
+      instance.unit.save()
+    except:
+      pass
   else:
     return

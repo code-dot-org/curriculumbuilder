@@ -5,15 +5,16 @@ from django.contrib import messages
 from mezzanine.pages.models import Page, PageMoveException
 from mezzanine.pages import views
 from lessons.models import Lesson
-
+from curricula.models import Unit, Chapter
 
 """
 Mokeypatching the page order view to deal with out custom numbering logic
 
 """
+
+
 @staff_member_required
 def custom_admin_page_ordering(request):
-
   """
   Updates the ordering of pages via AJAX from within the admin.
   Then updates page numbering based on heirarchical ordering
@@ -41,9 +42,16 @@ def custom_admin_page_ordering(request):
     page.set_parent(new_parent)
     if hasattr(page, 'lesson'):
       lesson = Lesson.objects.get(id=page.id)
+      number = lesson.get_number()
       unit = lesson.get_unit()
       curriculum = lesson.get_curriculum()
-      Lesson.objects.filter(id=lesson.id).update(unit=unit, curriculum=curriculum)
+      Lesson.objects.filter(id=lesson.id).update(number=number, unit=unit, curriculum=curriculum)
+    elif hasattr(page, 'unit'):
+      unit = Unit.objects.get(id=page.id)
+      number = unit.get_number()
+      curriculum = unit.parent.curriculum
+      Unit.objects.filter(id=unit.id).update(number=number, curriculum=curriculum)
+
     pages = Page.objects.filter(parent_id=old_parent_id)
     for i, page in enumerate(pages.order_by('_order')):
       Page.objects.filter(id=page.id).update(_order=i)
@@ -59,7 +67,13 @@ def custom_admin_page_ordering(request):
       Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
     except:
       pass
+    try:
+      unit = Unit.objects.get(id=get_id(page_id))
+      Unit.objects.filter(id=unit.id).update(number=unit.get_number())
+    except:
+      pass
 
   return HttpResponse("ok")
+
 
 views.admin_page_ordering = custom_admin_page_ordering

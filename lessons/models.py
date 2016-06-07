@@ -183,10 +183,12 @@ class Lesson(Page, RichText):
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
     self.curriculum = self.get_curriculum()
+    ''' Moving this logic to a monkeypatch on Mezzanine's admin reordering view
     try:
       self.number = self.get_number()
     except:
       self.number = self.unit.lessons.count() + 1
+    '''
     super(Lesson, self).save(*args, **kwargs)
 
   def get_number(self):
@@ -312,10 +314,13 @@ if applicable to ensure listing pages are updated
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
   if instance.status == 2 and not instance.login_required:
-    build_page_for_obj(sender, instance, **kwargs)
-    instance.unit.save()
-    if hasattr(instance.parent, "chapter"):
-      instance.parent.chapter.save()
+    try:
+      build_page_for_obj(sender, instance, **kwargs)
+      instance.unit.save()
+      if hasattr(instance.parent, "chapter"):
+        instance.parent.chapter.save()
+    except:
+      pass
   else:
     return
 
