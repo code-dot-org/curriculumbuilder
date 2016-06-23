@@ -247,7 +247,7 @@
                 <h3>Students will be able to:</h3>
                 <ul>
                     {% for objective in lesson.objective_set.all %}
-                        <li>{{ objective.description }}</li>
+                        <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
