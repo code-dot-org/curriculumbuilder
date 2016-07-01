@@ -3,7 +3,8 @@ import itertools
 import datetime
 import urllib2
 from urlparse import urlparse
-from copy import copy, deepcopy
+#from copy import copy, deepcopy
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -180,17 +181,6 @@ class Lesson(Page, RichText):
       parent = parent.parent
     return parent.unit
 
-  def save(self, *args, **kwargs):
-    self.unit = self.get_unit()
-    self.curriculum = self.get_curriculum()
-    ''' Moving this logic to a monkeypatch on Mezzanine's admin reordering view
-    try:
-      self.number = self.get_number()
-    except:
-      self.number = self.unit.lessons.count() + 1
-    '''
-    super(Lesson, self).save(*args, **kwargs)
-
   def get_number(self):
     order = 1
     if hasattr(self.parent, 'unit'):
@@ -313,27 +303,36 @@ if applicable to ensure listing pages are updated
 """
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
-  if instance.status == 2 and not instance.login_required:
-    try:
-      build_page_for_obj(sender, instance, **kwargs)
-      instance.unit.save()
-      if hasattr(instance.parent, "chapter"):
-        instance.parent.chapter.save()
-    except:
-      pass
+  if settings.AUTO_PUBLISH:
+    if instance.status == 2 and not instance.login_required:
+      try:
+        build_page_for_obj(sender, instance, **kwargs)
+        instance.unit.save()
+        if hasattr(instance.parent, "chapter"):
+          instance.parent.chapter.save()
+      except:
+        pass
+    else:
+      return
   else:
     return
 
 @receiver(post_save, sender=Activity)
 def activity_handler(sender, instance, **kwargs):
-  if instance.lesson.status == 2 and not instance.lesson.login_required:
-    instance.lesson.save()
+  if settings.AUTO_PUBLISH:
+    if instance.lesson.status == 2 and not instance.lesson.login_required:
+      instance.lesson.save()
+    else:
+      return
   else:
     return
 
 @receiver(post_save, sender=Objective)
 def objective_handler(sender, instance, **kwargs):
-  if instance.lesson.status == 2 and not instance.lesson.login_required:
-    instance.lesson.save()
+  if settings.AUTO_PUBLISH:
+    if instance.lesson.status == 2 and not instance.lesson.login_required:
+      instance.lesson.save()
+    else:
+      return
   else:
     return
