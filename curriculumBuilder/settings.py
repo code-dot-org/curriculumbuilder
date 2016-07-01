@@ -329,6 +329,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
   "mezzanine.pages.context_processors.page",
 )
 
+TEMPLATE_LOADERS = (
+  ('django.template.loaders.cached.Loader', (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+  )),
+)
+
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.

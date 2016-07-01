@@ -23,6 +23,7 @@ class ObjectiveInline(TabularDynamicInlineAdmin):
   fields = ["name", "_order"]
   verbose_name = "Objective"
   verbose_name_plural = "Objectives"
+  extra = 3
 
   formfield_overrides = {
       models.CharField: {'widget': TextInput(attrs={'size':100, 'style':'width: 700px'})},
@@ -32,10 +33,12 @@ class PrereqInline(StackedDynamicInlineAdmin):
   model = Prereq
   verbose_name = "Prerequisite"
   verbose_name_plural = "Prerequisites"
+  extra = 3
 
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
+  extra = 3
 
   '''
   formfield_overrides = {
@@ -45,11 +48,12 @@ class ActivityInline(StackedDynamicInlineAdmin):
 
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
+  extra = 3
 
   #raw_id_fields = ('resource',)
 
-  class Meta:
-    ordering = ['_order']
+  #class Meta:
+  #  ordering = ['sort_value']
 
   readonly_fields = ('type', 'md_tag')
   verbose_name_plural = "Resources"
@@ -89,6 +93,11 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'classes': ['collapse-closed',],
     }),
   )
+
+  def get_queryset(self, request):
+    return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr')\
+                                                          .prefetch_related('standards', 'anchor_standards',
+                                                               'vocab', 'resources', 'activity_set')
 
 '''
 class MultiLessonForm(ModelForm):
