@@ -149,7 +149,7 @@
         </div>
     </div>
     {% for lesson in unit.lessons %}
-        <div class="pagebreak" id="U{{ unit.number }}L{{ lesson.number }}">
+        <div class="pagebreak" id="unit{{ unit.number }}lesson{{ lesson.number }}">
             {% include "curricula/partials/lesson.html" with lesson=lesson %}
         </div>
     {% endfor %}
