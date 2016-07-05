@@ -237,16 +237,15 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
 
-if os.environ.get('REDIS_KEY'):
-  CACHES = {
-    "default": {
-      "BACKEND": "django_redis.cache.RedisCache",
-      "LOCATION": "redis://:" + os.environ.get('REDIS_KEY') + "@pub-redis-16896.us-east-1-3.2.ec2.garantiadata.com:16896/rediscloud",
-      "OPTIONS": {
-        "CLIENT_CLASS": "django_redis.client.DefaultClient",
-      }
-    }
+#if os.environ.get('REDISCLOUD_PASSWORD'):
+CACHES = {
+  "default": {
+    "BACKEND": "django_redis.cache.RedisCache",
+    "LOCATION": 'redis://:%s@%s:%s/0' %(os.environ.get('REDISCLOUD_PASSWORD'),
+                                     os.environ.get('REDISCLOUD_HOSTNAME'),
+                                     os.environ.get('REDISCLOUD_PORT')),
   }
+}
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -543,6 +542,19 @@ COMMENTS_DISQUS_API_PUBLIC_KEY = 'wfS3VtMuylVdTyih6dAvcbztv0KzWYl8VplU8la3EgK4BC
 COMMENTS_DISQUS_API_SECRET_KEY = os.environ.get('DISQUS_API_SECRET_KEY')
 
 COMMENTS_DISQUS_SHORTNAME = 'CurriculumBuilder'
+
+################
+# CELERY STUFF #
+################
+
+BROKER_URL = 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
+                                      os.environ.get('REDISCLOUD_HOSTNAME'),
+                                      os.environ.get('REDISCLOUD_PORT'))
+CELERY_RESULT_BACKEND = BROKER_URL
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Los_Angeles'
 
 ###########
 # LOGGING #

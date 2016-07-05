@@ -198,6 +198,22 @@ footer {
     clear: both;
 }
 
+.teal {
+    color: #00adbc;
+}
+
+.purple {
+    color: #7665a0;
+}
+
+.cyan {
+    color: #0094ca;
+}
+
+.orange {
+    color: #ffa400;
+}
+
 /* prevent inline editor from squishing paragraphs */
 .editable-form .wmd-preview p {
     line-height: normal !important;
@@ -212,6 +228,10 @@ footer {
 
 .annotator-item:before {
     content: none;
+}
+
+.pagebreak {
+    page-break-after: always;
 }
 
 @media print {

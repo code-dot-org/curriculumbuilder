@@ -8,6 +8,7 @@ Werkzeug==0.10.4
 beautifulsoup4
 bleach==1.4.2
 boto
+celery
 chardet==2.3.0
 collectfast
 data-importer
