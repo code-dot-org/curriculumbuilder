@@ -517,7 +517,8 @@ JACKFROST_RENDERERS = (
   'curricula.jackfrost_renderers.CurriculumRenderer',
   'curricula.jackfrost_renderers.UnitRenderer',
   'curricula.jackfrost_renderers.ChapterRenderer',
-  'curricula.jackfrost_renderers.LessonRenderer'
+  'curricula.jackfrost_renderers.LessonRenderer',
+  'curricula.renderers.PDFRenderer'
 )
 AUTO_PUBLISH = False
 

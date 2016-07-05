@@ -44,9 +44,9 @@ class JSONRenderer(StaticSiteRenderer):
 class PDFRenderer(StaticSiteRenderer):
   def get_paths(self):
     paths = set([])
-    for curriculum in Curriculum.objects.all():
-      paths.add(curriculum.get_absolute_url() + 'pdf')
+    for unit in Unit.objects.all():
+      paths.add(unit.get_absolute_url() + 'pdf')
     return list(paths)
 
-renderers = [CurriculumRenderer, JSONRenderer, PDFRenderer]
+renderers = [PDFRenderer]
 #renderers = [JSONRenderer, ]

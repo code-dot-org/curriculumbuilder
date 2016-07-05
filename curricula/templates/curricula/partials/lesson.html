@@ -1,0 +1,219 @@
+{% load mezzanine_tags %}
+{% load staticfiles %}
+
+<div class="container">
+    <div class="header printbackground">
+        <div class="headercontent">
+            <div class="top">
+                <div class="logo">
+                    <img src="{% static "images/logo.png" %}">
+                </div>
+                <div class="unitnumber"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></div>
+
+                {% with lesson=parent|default_if_none:lesson %}
+                    <div class="lessons">
+                    {% if unit.chapters %}
+                        {% for chap in unit.chapters %}
+                            <div class="lesson chapter">
+                                Ch. {{ chap.number }}
+                            </div>
+                            {% for stage in chap.lessons %}
+                                {% if stage.number < lesson.number %}
+                                    <div class="lesson finished">
+                                {% elif stage.number == lesson.number %}
+                                    {% if optional %}
+                                        <div class="lesson finished">
+                                    {% else %}
+                                        <div class="lesson current">
+                                    {% endif %}
+                                {% else %}
+                                    <div class="lesson unfinished">
+                                {% endif %}
+                            <a href="#U{{ unit.number }}L{{ stage.number }}"
+                               data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                                {{ stage.number }}
+                            </a>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        {% for stage in unit.lessons %}
+                            {% if stage.number < lesson.number %}
+                                <div class="lesson finished">
+                            {% elif stage.number == lesson.number %}
+                                {% if optional %}
+                                    <div class="lesson finished">
+                                {% else %}
+                                    <div class="lesson current">
+                                {% endif %}
+                            {% else %}
+                                <div class="lesson unfinished">
+                            {% endif %}
+                        <a href="#U{{ unit.number }}L{{ stage.number }}"
+                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                            {{ stage.number }}
+                        </a>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endwith %}
+                </div>
+                <div class="bottom">
+                </div>
+                </div>
+                </div>
+                <div class="content">
+                    <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+                        {% if optional %}
+                            <h1>Optional Lesson: {{ lesson.title }}</h1>
+                        {% else %}
+                            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+                        {% endif %}
+
+                        <div class="keywords">
+                            <h4>
+                                {% for keyword in lesson.keywords.all %}
+                                    {% if not forloop.first %}| {% endif %}
+                                    {{ keyword }}
+                                {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="together overview-page row">
+
+                        <div class="col-sm-7 left-col">
+                            <h2>Overview</h2>
+                            {{ lesson.overview|richtext_filters|safe }}
+
+                            {% if lesson.cs_content %}
+                                <h2>Purpose</h2>
+                                {{ lesson.cs_content|richtext_filters|safe }}
+                            {% endif %}
+
+                            <h2>Agenda</h2>
+                            <div class="toc" id="toc{{ lesson|slugify }}">
+                                {% for activity in lesson.activity_set.all %}
+                                    <h3>{{ activity }}</h3>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-5 right-col">
+
+                            {% if lesson.anchor_standards.all.count > 0 %}
+                                <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+                                {% with lesson.anchor_standards.all as standards %}
+                                    {% regroup standards by framework as standards_by_framework %}
+                                    {% for framework in standards_by_framework %}
+                                        <h3>{{ framework.grouper }}</h3>
+                                        <ul>
+                                            {% for standard in framework.list %}
+                                                <li><strong>{{ standard.shortcode }}</strong>
+                                                    - {{ standard.description }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if lesson.objective_set.count > 0 %}
+                                <h2>Objectives</h2>
+                                <h3>Students will be able to:</h3>
+                                <ul>
+                                    {% for objective in lesson.objective_set.all %}
+                                        <li>{{ objective.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                            {% if lesson.prep %}
+                                <h2>Preparation</h2>
+                                <div class="prep">
+                                    {{ lesson.prep|richtext_filters|safe }}
+                                </div>
+                            {% endif %}
+
+                            {% if lesson.resources.count > 0 %}
+                                <h2>Links</h2>
+                                {% with lesson.resources.all as resources %}
+                                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                    {% for audience in resources_by_audience %}
+                                        <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                                        <ul>
+                                            {% for resource in audience.list %}
+                                                <li>
+                                                    {{ resource.formatted|safe }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if lesson.vocab.count > 0 %}
+                                <h2>Vocabulary</h2>
+                                <ul>
+                                    {% for word in lesson.vocab.all %}
+                                        <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div id="{{ lesson.title|slugify }}content">
+
+                        <h1>Teaching Guide</h1>
+
+                        {% for activity in lesson.activity_set.all %}
+                            <div class="activity">
+                                <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                                {{ activity.content|richtext_filters|safe }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="standards">
+                        <h2>Standards Alignment</h2>
+                        {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+                    </div>
+
+                </div>
+                </div>
+
+                <footer>
+                    <div class="container">
+                        <div class="row">
+                            <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}"
+                                                                       border="0"></a><br/>
+                            <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a
+                                    href="//code.org/contact">contact us.</a></span>
+                        </div>
+                    </div>
+                </footer>
+
+
+                <script type="text/javascript">
+                    $('#toc{{ lesson.title|slugify }}').toc({
+                        'selectors': 'h2,h3', //elements to use as headings
+                        'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
+                        'smoothScrolling': false, //enable or disable smooth scrolling on click
+                        'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
+                        'onHighlight': function (el) {
+                        }, //called when a new section is highlighted
+                        'highlightOnScroll': true, //add class to heading that is currently in focus
+                        'highlightOffset': 100, //offset to trigger the next headline
+                        'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                            return prefix + i;
+                        },
+                        'headerText': function (i, heading, $heading) { //custom function building the header-item text
+                            return $heading.text();
+                        },
+                        'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
+                            return $heading[0].tagName.toLowerCase();
+                        }
+                    });
+                </script>

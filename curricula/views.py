@@ -44,13 +44,18 @@ def curriculum_view(request, slug):
 
 def unit_view(request, slug, unit_slug):
   pdf = request.GET.get('pdf', False)
+  if pdf:
+    template = 'curricula/unit_lessons.html'
+  else:
+    template = 'curricula/unit.html'
+
   curriculum = get_object_or_404(Curriculum, slug = slug)
   if (request.user.is_staff):
     unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug)
   else:
     unit = get_object_or_404(Unit, curriculum = curriculum, slug = unit_slug, login_required=request.user.is_staff)
 
-  return render(request, 'curricula/unit.html', {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
+  return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 
 def chapter_view(request, slug, unit_slug, chapter_num):
   pdf = request.GET.get('pdf', False)
@@ -151,18 +156,19 @@ def unit_pdf(request, slug, unit_slug):
   c = pycurl.Curl()
   c.setopt(c.WRITEDATA, buffer)
 
-  unit = get_object_or_404(Unit, curriculum__slug = slug, slug = unit_slug)
+  unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
 
   c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
   c.perform()
 
+  '''
   for lesson in unit.lessons:
     print lesson
     c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
     print c
     c.perform()
 
-    '''
+
     for resource in lesson.resources.all():
       if resource.type != 'video':
         if resource.gd:
@@ -173,7 +179,7 @@ def unit_pdf(request, slug, unit_slug):
           print resource.url
           c.setopt(c.URL, resource.url)
           c.perform()
-    '''
+  '''
 
   c.close()
   compiled = buffer.getvalue()
@@ -218,11 +224,14 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
   # On production we should pull the pages locally to ensure the most recent copy,
   # This causes a crash on local dev, so in that case pull pages from S3
-  if aws or not settings.ON_PAAS:
+  '''
+  if False: #aws or not settings.ON_PAAS:
     print abs_url
     return settings.AWS_BASE_URL + abs_url + '?pdf=true'
   else:
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
+  '''
+  return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
 
 '''
 API views

@@ -203,6 +203,14 @@ class Lesson(Page, RichText):
   def optional_lessons(self):
     return Lesson.objects.filter(parent__lesson = self)
 
+  @property
+  def chapter(self):
+    parent = self.parent
+    if hasattr(parent, 'chapter'):
+      return parent.chapter
+    else:
+      return
+
 """
 Activities that compose a lesson
 
