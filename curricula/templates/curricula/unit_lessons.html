@@ -19,18 +19,12 @@
     {{ unit.description }}
 {% endmetablock %}{% endblock %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
-{% endblock %}
-
 {% block extra_js %}
-    <script src="{% static "js/drawer.min.js" %}"></script>
     <script src="{% static "js/toc.js" %}"></script>
     <script src="{% static "js/jquery.details.min.js" %}"></script>
 {% endblock %}
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span
-            class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></div>
 
     <div class="lessons">
         {% if unit.chapters %}
@@ -161,51 +155,6 @@
             var count = 1;
             $(".prep ul li:visible").each(function (li) {
                 $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
-            });
-
-            // read the current/previous setting
-            var $todos = $(".todo");
-            $todos.each(function () {
-                var todo = localStorage.getItem($(this).attr('name') + window.location.pathname);
-                if (todo && todo == "true") {
-                    $(this).prop('checked', todo);
-                }
-            });
-            $todos.change(function () {
-                localStorage.setItem($(this).attr("name") + window.location.pathname, $(this).prop('checked'));
-            });
-
-            // Settings toggles
-
-            // read the current/previous setting
-            $settings = $('.settings input');
-            $settings.each(function () {
-                var setting = localStorage.getItem($(this).attr('name'));
-                if (setting == undefined) {
-                    $(this).prop('checked', true);
-                } else if (setting == "true") {
-                    $(this).prop('checked', setting);
-                } else {
-                    $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
-                }
-            });
-            $settings.change(function () {
-                $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
-                localStorage.setItem($(this).attr("name"), $(this).prop('checked'));
-            });
-
-            $('.tiplink i').click(function () {
-                var $the_tip = $($(this).parent().attr('href'));
-                $the_tip.parent().toggle(true);
-            });
-
-            // Add tooltip toggles to vocab
-            $('.vocab').each(function () {
-                $(this).attr('data-toggle', 'tooltip');
-                $(this).attr('data-placement', 'bottom');
-            });
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
             });
         });
     </script>

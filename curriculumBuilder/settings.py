@@ -378,7 +378,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 OPTIONAL_APPS = (
   "debug_toolbar",
   "django_extensions",
-  "compressor",
+  #"compressor",
   PACKAGE_NAME_FILEBROWSER,
   PACKAGE_NAME_GRAPPELLI,
 )
