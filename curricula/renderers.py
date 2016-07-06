@@ -1,5 +1,5 @@
 from django_medusa.renderers import StaticSiteRenderer
-from curricula.models import Curriculum
+from curricula.models import Curriculum, Unit
 from standards.models import Framework
 
 class CurriculumRenderer(StaticSiteRenderer):
@@ -44,9 +44,9 @@ class JSONRenderer(StaticSiteRenderer):
 class PDFRenderer(StaticSiteRenderer):
   def get_paths(self):
     paths = set([])
-    for unit in Unit.objects.all():
-      paths.add(unit.get_absolute_url() + 'pdf')
+    for unit in Unit.objects.filter(status=2, login_required=False, curriculum__login_required=False):
+      paths.add('%s.pdf' % unit.get_absolute_url()[:-1])
     return list(paths)
 
-renderers = [PDFRenderer]
+renderers = [PDFRenderer, ]
 #renderers = [JSONRenderer, ]
