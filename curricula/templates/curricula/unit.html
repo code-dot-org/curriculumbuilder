@@ -102,6 +102,20 @@
                             </h4>
                             {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image}}">{% endif %}
                             <span class="lesson_desc">{{ lesson.description }}</span>
+                            {% if lesson.resources.count > 0 %}
+                                <h4>
+                                    {% with lesson.resources.all as resources %}
+                                        {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                        {% for audience in resources_by_audience %}
+                                            {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                {% for resource in audience.list %}
+                                                    {% if not forloop.first %} | {% endif %}
+                                                    <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                {% endfor %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                </h4>
+                            {% endif %}
                         </div>
                         {% if lesson.optional_lessons.count > 0 %}
                             {% for optional in lesson.optional_lessons %}
@@ -116,6 +130,20 @@
                                     </h4>
                                     {% if optional.image %}<img src="{% get_media_prefix %}{{ optional.image}}">{% endif %}
                                     <span class="lesson_desc">{{ optional.description }}</span>
+                                    {% if lesson.resources.count > 0 %}
+                                        <h4>
+                                            {% with optional.resources.all as resources %}
+                                                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                                {% for audience in resources_by_audience %}
+                                                    {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                        {% for resource in audience.list %}
+                                                            {% if not forloop.first %} | {% endif %}
+                                                            <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </h4>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         {% endif %}

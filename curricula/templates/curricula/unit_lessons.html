@@ -132,11 +132,10 @@
                 </div>
 
 
-                <details>
-                    <summary>Chapter Commentary</summary>
-
+                <div class="commentary">
+                    <h1>Chapter Commentary</h1>
                     {{ chapter.content|richtext_filters|safe }}
-                </details>
+                </div>
                 {% if not forloop.last %}
                     <hr/>{% endif %}
             {% endfor %}
