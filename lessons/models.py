@@ -14,6 +14,7 @@ from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
 from jackfrost.utils import build_page_for_obj
+from jackfrost.tasks import build_single
 from standards.models import Standard
 import curricula.models
 
@@ -199,6 +200,9 @@ class Lesson(Page, RichText):
   def get_curriculum(self):
     return self.unit.curriculum
 
+  def jackfrost_can_build(self):
+    return self.status == 2 and not self.login_required
+
   @property
   def optional_lessons(self):
     return Lesson.objects.filter(parent__lesson = self)
@@ -311,36 +315,24 @@ if applicable to ensure listing pages are updated
 """
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
-  if settings.AUTO_PUBLISH:
-    if instance.status == 2 and not instance.login_required:
-      try:
-        build_page_for_obj(sender, instance, **kwargs)
-        instance.unit.save()
-        if hasattr(instance.parent, "chapter"):
-          instance.parent.chapter.save()
-      except:
-        pass
-    else:
-      return
-  else:
-    return
+  print "post_save"
+  if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
+    print "publishing"
+    build_single.delay(instance.get_absolute_url())
+    instance.unit.save()
+    if hasattr(instance.parent, "chapter"):
+      instance.parent.chapter.save()
 
+'''
+# Too hacky, causes multiple saves for each activity and objective
+# Need to replace with a patch on the inline editor, which this attempts to accomodate
 @receiver(post_save, sender=Activity)
 def activity_handler(sender, instance, **kwargs):
-  if settings.AUTO_PUBLISH:
-    if instance.lesson.status == 2 and not instance.lesson.login_required:
-      instance.lesson.save()
-    else:
-      return
-  else:
-    return
+  if settings.AUTO_PUBLISH and instance.lesson.jackfrost_can_build():
+    instance.lesson.save()
 
 @receiver(post_save, sender=Objective)
 def objective_handler(sender, instance, **kwargs):
-  if settings.AUTO_PUBLISH:
-    if instance.lesson.status == 2 and not instance.lesson.login_required:
-      instance.lesson.save()
-    else:
-      return
-  else:
-    return
+  if settings.AUTO_PUBLISH and instance.lesson.jackfrost_can_build():
+    instance.lesson.save()
+'''

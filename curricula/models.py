@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -5,6 +6,7 @@ from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from jackfrost.utils import build_page_for_obj
+from jackfrost.tasks import build_single
 from standards.models import Standard, GradeBand, Category
 import lessons.models
 
@@ -24,6 +26,9 @@ class Curriculum(Page, RichText):
   def get_absolute_url(self):
     return '/%s/' %(self.slug)
 
+  def jackfrost_can_build(self):
+    return self.status == 2 and not self.login_required
+
   @property
   def units(self):
     return Unit.objects.filter(parent=self)
@@ -41,10 +46,24 @@ class Unit(Page, RichText):
     return self.title
 
   def get_absolute_url(self):
-    return self.curriculum.get_absolute_url() + self.slug + '/'
+    return '%s%s/' % (self.curriculum.get_absolute_url(), self.slug)
+
+  def get_pdf_url(self):
+    return '%s%s.pdf' % (self.curriculum.get_absolute_url(), self.slug)
+
+  def get_resources_url(self):
+    return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
   def get_number(self):
     return int(self._order) + 1
+
+  # Return publishable urls for JackFrost
+  def jackfrost_urls(self):
+    urls = [self.get_absolute_url(), self.get_pdf_url(), self.get_resources_url()]
+    return urls
+
+  def jackfrost_can_build(self):
+    return self.status == 2 and not self.login_required
 
   @property
   def lessons(self):
@@ -89,6 +108,9 @@ class Chapter(Page, RichText):
   def get_number(self):
     return int(self._order) + 1
 
+  def jackfrost_can_build(self):
+    return self.status == 2 and not self.login_required
+
   @property
   def unit(self):
     return self.parent.unit
@@ -121,32 +143,17 @@ if applicable to ensure listing pages are updated.
 """
 @receiver(post_save, sender=Curriculum)
 def curriculum_handler(sender, instance, **kwargs):
-  if instance.status == 2 and not instance.login_required:
-    try:
-      build_page_for_obj(sender, instance, **kwargs)
-    except:
-      pass
-  else:
-    return
+  if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
+    build_single.delay(instance.get_absolute_url())
 
 @receiver(post_save, sender=Unit)
 def unit_handler(sender, instance, **kwargs):
-  if instance.status == 2 and not instance.login_required:
-    try:
-      build_page_for_obj(sender, instance, **kwargs)
+  if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
+    for url in instance.jackfrost_urls():
+      build_single.delay(url)
       instance.curriculum.save()
-    except:
-      pass
-  else:
-    return
 
 @receiver(post_save, sender=Chapter)
 def chapter_handler(sender, instance, **kwargs):
-  if instance.status == 2 and not instance.login_required:
-    try:
-      build_page_for_obj(sender, instance, **kwargs)
-      instance.unit.save()
-    except:
-      pass
-  else:
-    return
+  if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
+    build_single.delay(instance.get_absolute_url())

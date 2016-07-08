@@ -1,11 +1,15 @@
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import get_object_or_404, render, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
+from django.template.loader import render_to_string
 #from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
 import pycurl
+import logging
+from PyPDF2 import PdfFileReader, PdfFileMerger
+from urllib2 import Request, urlopen
 #import dryscrape
 
 from rest_framework.decorators import api_view
@@ -161,26 +165,6 @@ def unit_pdf(request, slug, unit_slug):
   c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
   c.perform()
 
-  '''
-  for lesson in unit.lessons:
-    print lesson
-    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url(), True))
-    print c
-    c.perform()
-
-
-    for resource in lesson.resources.all():
-      if resource.type != 'video':
-        if resource.gd:
-          print resource.gd_pdf()
-          c.setopt(c.URL, resource.gd_pdf())
-          c.perform()
-        elif resource.url:
-          print resource.url
-          c.setopt(c.URL, resource.url)
-          c.perform()
-  '''
-
   c.close()
   compiled = buffer.getvalue()
 
@@ -189,7 +173,29 @@ def unit_pdf(request, slug, unit_slug):
   else:
     pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline;filename=unit.pdf'
+    response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
+  return response
+
+def unit_resources_pdf(request, slug, unit_slug):
+  merger = PdfFileMerger()
+  unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
+  for lesson in unit.lessons.exclude(keywords__keyword__slug="optional"):
+    lesson_string = render_to_string("curricula/lesson_title.html", {'unit': unit, 'lesson': lesson}, request=request)
+    lesson_page = pdfkit.from_string(lesson_string, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+    lesson_page_pdf = StringIO(lesson_page)
+    merger.append(PdfFileReader(lesson_page_pdf))
+    for resource in lesson.resources.all():
+      if resource.gd:
+        try:
+          remotePDF = urlopen(Request(resource.gd_pdf())).read()
+          memoryPDF = StringIO(remotePDF)
+          localPDF = PdfFileReader(memoryPDF)
+          merger.append(localPDF)
+        except:
+          logging.error('Failed to open resource: %s - %s (pk %s)' % (resource.name, resource.type, resource.pk))
+  response = HttpResponse(content_type='application/pdf')
+  merger.write(response)
+  response['Content-Disposition'] = 'inline;filename=unit%s_resources.pdf' % unit.number
   return response
 
 

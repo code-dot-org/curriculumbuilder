@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Activate VirtualEnv in order to use the correct libraries
+
+echo "--> ACTION HOOK: start <--"
+source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
+
+python celery -A curriculumBuilder worker -l info

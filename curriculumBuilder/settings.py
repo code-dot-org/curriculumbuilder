@@ -518,9 +518,9 @@ JACKFROST_RENDERERS = (
   'curricula.jackfrost_renderers.UnitRenderer',
   'curricula.jackfrost_renderers.ChapterRenderer',
   'curricula.jackfrost_renderers.LessonRenderer',
-  'curricula.renderers.PDFRenderer',
+  #'curricula.renderers.PDFRenderer',
 )
-AUTO_PUBLISH = False
+AUTO_PUBLISH = True
 
 #################
 # CORS SETTINGS #
