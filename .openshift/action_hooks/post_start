@@ -5,4 +5,4 @@
 
 echo "--> ACTION HOOK: post_start <--"
 
-celery multi start worker1 -A curriculumBuilder --pidfile="$OPENSHIFT_HOMEDIR/app-root/repo/run/celery/%n.pid" --logfile="$OPENSHIFT_HOMEDIR/app-root/repo/run/celery/%n.log"
+# celery multi start worker1 -A curriculumBuilder --pidfile="$OPENSHIFT_HOMEDIR/app-root/repo/run/celery/%n.pid" --logfile="$OPENSHIFT_LOG_DIR/%n.log"

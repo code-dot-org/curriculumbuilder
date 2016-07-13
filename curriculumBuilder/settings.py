@@ -138,14 +138,15 @@ DEBUG = DEBUG or os.getenv("debug", "false").lower() == "true"
 if ON_PAAS and DEBUG:
   print("*** Warning - Debug mode is on ***")
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 if ON_PAAS:
-  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver']
+  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '*-cdo.rhcloud.com']
 else:
   ALLOWED_HOSTS = ['*']
 
 ADMINS = [('Josh', 'josh@code.org')]
+SERVER_EMAIL = 'root@curriculumbuilder-cdo.rhcloud.com'
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -588,15 +589,21 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         }
     },
     'loggers': {
         'django': {
             'handlers': ['console', 'mail_admins'],
-            'level': 'ERROR',#os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': 'ERROR',
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
         },
         'jackfrost.models': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },
