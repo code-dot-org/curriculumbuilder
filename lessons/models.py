@@ -2,6 +2,7 @@ import re
 import itertools
 import datetime
 import urllib2
+import logging
 from urlparse import urlparse
 #from copy import copy, deepcopy
 from django.conf import settings
@@ -174,7 +175,10 @@ class Lesson(Page, RichText):
     # Check if this is the child of a lesson, and therefore optional
     if hasattr(self.parent, 'lesson'):
       return "%soptional/%s/" %(self.parent.lesson.get_absolute_url(), str(self.number))
-    return "%s%s/" %(self.unit.get_absolute_url(), str(self.number))
+    try:
+      return "%s%s/" %(self.unit.get_absolute_url(), str(self.number))
+    except AttributeError:
+      return "%s%s/" %(self.get_unit().get_absolute_url(), str(self.number))
 
   def get_unit(self):
     parent = self.parent
@@ -202,6 +206,11 @@ class Lesson(Page, RichText):
 
   def jackfrost_can_build(self):
     return self.status == 2 and not self.login_required
+
+  def save(self, *args, **kwargs):
+    self.unit = self.get_unit()
+    self.curriculum = self.get_curriculum()
+    super(Lesson, self).save(*args, **kwargs)
 
   @property
   def optional_lessons(self):
@@ -233,6 +242,12 @@ class Activity(Orderable):
     if self.time:
       return "%s (%s)" % (self.name, self.time)
     return self.name
+
+  def save(self, *args, **kwargs):
+    old_activity = Activity.objects.get(pk=self.pk)
+    if old_activity._order != self._order:
+      logging.error('Activity order changing! Activity %s, lesson %s');
+    super(Activity, self).save(*args, **kwargs)
 
 """
 Prerequisite Skills
@@ -315,9 +330,8 @@ if applicable to ensure listing pages are updated
 """
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
-  print "post_save"
   if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
-    print "publishing"
+    logging.debug("Attempting to publish lesson %s (pk %s)" % (instance.title, instance.pk))
     build_single.delay(instance.get_absolute_url())
     instance.unit.save()
     if hasattr(instance.parent, "chapter"):

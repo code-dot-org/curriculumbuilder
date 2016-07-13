@@ -1,0 +1,8 @@
+#!/bin/bash
+# This is a simple post deploy hook executed after your application
+# is started.  This script gets executed directly, so
+# it could be python, php, ruby, etc.
+
+echo "--> ACTION HOOK: post_start <--"
+
+celery multi start worker1 -A curriculumBuilder --pidfile="$OPENSHIFT_HOMEDIR/app-root/repo/run/celery/%n.pid"

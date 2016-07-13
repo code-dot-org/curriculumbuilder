@@ -13,6 +13,7 @@ chardet==2.3.0
 collectfast
 data-importer
 django-ajax-selects==1.3.6
+django-anymail[mailgun]
 django-appconf==1.0.1
 #django-codemirror-widget
 django-compressor==1.5

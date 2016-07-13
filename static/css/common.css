@@ -265,7 +265,7 @@ footer {
         margin: 0 30px !important;
     }
 
-    .standards, .video, #admin_edit, #editable-toolbar, .editable-link, #comments {
+    .video, #admin_edit, #editable-toolbar, .editable-link, #comments {
         display: none !important;
     }
 

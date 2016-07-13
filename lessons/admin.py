@@ -11,7 +11,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
-from mezzanine.core.fields import RichTextField
+from mezzanine.core.fields import RichTextField, OrderField
 from mezzanine.generic.fields import KeywordsField
 from mezzanine_pagedown.widgets import PlainWidget
 
@@ -40,11 +40,9 @@ class ActivityInline(StackedDynamicInlineAdmin):
   verbose_name_plural = "Activities"
   extra = 3
 
-  '''
   formfield_overrides = {
-    RichTextField: {'widget': PlainWidget(attrs={'rows':30})},
+    OrderField: {'widget': TextInput},
   }
-  '''
 
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through

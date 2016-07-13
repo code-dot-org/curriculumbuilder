@@ -141,9 +141,11 @@ if ON_PAAS and DEBUG:
 TEMPLATE_DEBUG = True
 
 if ON_PAAS:
-  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
+  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver']
 else:
   ALLOWED_HOSTS = ['*']
+
+ADMINS = [('Josh', 'josh@code.org')]
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -241,9 +243,9 @@ STATICFILES_DIRS = (
 CACHES = {
   "default": {
     "BACKEND": "django_redis.cache.RedisCache",
-    "LOCATION": 'redis://:%s@%s:%s/0' %(os.environ.get('REDISCLOUD_PASSWORD'),
-                                     os.environ.get('REDISCLOUD_HOSTNAME'),
-                                     os.environ.get('REDISCLOUD_PORT')),
+    "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
+                                      os.environ.get('REDISCLOUD_HOSTNAME'),
+                                      os.environ.get('REDISCLOUD_PORT')),
   }
 }
 
@@ -442,10 +444,6 @@ AJAX_LOOKUP_CHANNELS = {
   'resources': ('curriculumBuilder.lookups', 'ResourceLookup'),
   'vocab': {'model': 'lessons.vocab', 'search_field': 'word'},
   'standards': {'model': 'standards.standard', 'search_field': 'shortcode'},
-  #  simple: search Person.objects.filter(name__icontains=q)
-  # 'person'  : {'model': 'example.person', 'search_field': 'name'},
-  # define a custom lookup channel
-  # 'song'   : ('example.lookups', 'SongLookup')
 }
 
 ########################
@@ -520,7 +518,8 @@ JACKFROST_RENDERERS = (
   'curricula.jackfrost_renderers.LessonRenderer',
   #'curricula.renderers.PDFRenderer',
 )
-AUTO_PUBLISH = True
+
+AUTO_PUBLISH = os.getenv("AUTO_PUBLISH", "False").lower() == "true"
 
 #################
 # CORS SETTINGS #
@@ -544,6 +543,16 @@ COMMENTS_DISQUS_API_SECRET_KEY = os.environ.get('DISQUS_API_SECRET_KEY')
 
 COMMENTS_DISQUS_SHORTNAME = 'CurriculumBuilder'
 
+##################
+# EMAIL SETTINGS #
+##################
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 ################
 # CELERY STUFF #
 ################
@@ -564,18 +573,30 @@ CELERY_TIMEZONE = 'America/Los_Angeles'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'handlers': ['console', 'mail_admins'],
+            'level': 'ERROR',#os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'jackfrost.models': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },

@@ -4,6 +4,3 @@
 # it could be python, php, ruby, etc.
 
 echo "--> ACTION HOOK: post_deploy <--"
-source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
-
-python celery -A curriculumBuilder worker -l info &
