@@ -7,6 +7,9 @@
 echo "---> ACTION HOOK: deploy <---"
 source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
+echo "Installing python modules (cause why not do it twice?)"
+pip install -r "$OPENSHIFT_REPO_DIR"/requirements.txt
+
 echo "Executing 'python $OPENSHIFT_REPO_DIR/manage.py migrate --noinput'"
 python "$OPENSHIFT_REPO_DIR"/manage.py migrate --noinput
 
