@@ -245,9 +245,12 @@ class Activity(Orderable):
     return self.name
 
   def save(self, *args, **kwargs):
-    old_activity = Activity.objects.get(pk=self.pk)
-    if old_activity._order != self._order:
-      logging.error('Activity order changing! Activity %s, lesson %s');
+    try:
+      old_activity = Activity.objects.get(pk=self.pk)
+      if old_activity._order != self._order:
+        logging.error('Activity order changing! Activity %s, lesson %s' % (self.pk, self.lesson.pk));
+    except:
+      pass
     super(Activity, self).save(*args, **kwargs)
 
 """
