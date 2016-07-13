@@ -237,6 +237,7 @@ class Activity(Orderable):
 
   class Meta:
       verbose_name_plural = "activities"
+      order_with_respect_to = "lesson"
 
   def __unicode__(self):
     if self.time:
@@ -258,6 +259,9 @@ class Prereq(Orderable):
   description = models.TextField(blank=True, null=True)
   lesson = models.ForeignKey(Lesson)
 
+  class Meta:
+      order_with_respect_to = "lesson"
+
   def __unicode__(self):
     return self.name
 
@@ -274,6 +278,9 @@ class Objective(Orderable):
   name = models.CharField(max_length=255)
   description = models.TextField(blank=True, null=True)
   lesson = models.ForeignKey(Lesson)
+
+  class Meta:
+      order_with_respect_to = "lesson"
 
   def __unicode__(self):
     return self.name
