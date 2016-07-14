@@ -19,7 +19,7 @@ from jackfrost.tasks import build_single
 from standards.models import Standard
 import curricula.models
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('django')
 
 """
 Vocabulary
@@ -348,6 +348,8 @@ def lesson_handler(sender, instance, **kwargs):
     instance.unit.save()
     if hasattr(instance.parent, "chapter"):
       instance.parent.chapter.save()
+  else:
+    logger.debug("Couldn't publish lesson %s because settings %s and jackfrost build %s" % (instance.pk, settings.AUTO_PUBLISH, instance.jackfrost_can_build()))
 
 '''
 # Too hacky, causes multiple saves for each activity and objective
