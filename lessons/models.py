@@ -19,6 +19,8 @@ from jackfrost.tasks import build_single
 from standards.models import Standard
 import curricula.models
 
+logger = logging.getLogger(__name__)
+
 """
 Vocabulary
 
@@ -248,7 +250,7 @@ class Activity(Orderable):
     try:
       old_activity = Activity.objects.get(pk=self.pk)
       if old_activity._order != self._order:
-        logging.error('Activity order changing! Activity %s, lesson %s' % (self.pk, self.lesson.pk));
+        logger.debug('Activity order changing! Activity %s, lesson %s' % (self.pk, self.lesson.pk))
     except:
       pass
     super(Activity, self).save(*args, **kwargs)
@@ -341,7 +343,7 @@ if applicable to ensure listing pages are updated
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
   if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
-    logging.debug("Attempting to publish lesson %s (pk %s)" % (instance.title, instance.pk))
+    logger.debug("Attempting to publish lesson %s (pk %s)" % (instance.title, instance.pk))
     build_single.delay(instance.get_absolute_url())
     instance.unit.save()
     if hasattr(instance.parent, "chapter"):
