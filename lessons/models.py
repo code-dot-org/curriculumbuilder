@@ -191,7 +191,10 @@ class Lesson(Page, RichText):
   def get_number(self):
     order = 1
     if hasattr(self.parent, 'unit'):
-      return order + int(self._order)
+      try:
+        return order + int(self._order)
+      except:
+        return
     else:
       chapter = self.parent
       chapter_count = chapter._order
@@ -201,7 +204,10 @@ class Lesson(Page, RichText):
         order += chapter.children.count()
         chapter_count = chapter._order
 
-      return order + int(self._order)
+      try:
+        return order + int(self._order)
+      except:
+        return
 
   def get_curriculum(self):
     return self.unit.curriculum
@@ -343,6 +349,10 @@ if applicable to ensure listing pages are updated
 """
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
+  new_number = instance.get_number()
+  if instance.number != new_number:
+    instance.number = new_number
+    return
   if settings.AUTO_PUBLISH and instance.jackfrost_can_build():
     logger.debug("Attempting to publish lesson %s (pk %s)" % (instance.title, instance.pk))
     build_single.delay(instance.get_absolute_url())
