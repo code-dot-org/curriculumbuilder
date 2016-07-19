@@ -212,6 +212,7 @@ class Lesson(Page, RichText):
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
     self.curriculum = self.get_curriculum()
+    self.number = self.get_number()
     super(Lesson, self).save(*args, **kwargs)
 
   @property

@@ -38,20 +38,13 @@ class PrereqInline(StackedDynamicInlineAdmin):
 class ActivityInline(StackedDynamicInlineAdmin):
   model = Activity
   verbose_name_plural = "Activities"
-  extra = 3
+  extra = 5
 
-  formfield_overrides = {
-    OrderField: {'widget': TextInput},
-  }
+  exclude = ['ancestor', ]
 
 class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
   extra = 3
-
-  #raw_id_fields = ('resource',)
-
-  #class Meta:
-  #  ordering = ['sort_value']
 
   readonly_fields = ('type', 'md_tag')
   verbose_name_plural = "Resources"
