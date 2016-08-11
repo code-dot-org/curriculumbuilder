@@ -313,6 +313,7 @@ INSTALLED_APPS = (
   "standards",
   "lessons",
   "curricula",
+  "documentation"
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -433,7 +434,7 @@ PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curricu
                                 #'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
                                 'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
                                 'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
-                                'curriculumBuilder.iconfonts')
+                                'curriculumBuilder.iconfonts', 'curriculumBuilder.divclass')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 

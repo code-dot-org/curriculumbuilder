@@ -77,6 +77,7 @@ urlpatterns += patterns('',
     url("^edit/$", core_views.edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
     url("^None/$", views.index), # Dealing with JackFrost bug
+    url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^', include('curricula.urls', namespace="curriculum")),
 
     # MEZZANINE'S URLS

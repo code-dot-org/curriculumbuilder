@@ -24,7 +24,7 @@ class Curriculum(Page, RichText):
     return self.title
 
   def get_absolute_url(self):
-    return '/%s/' %(self.slug)
+    return '/%s/' % self.slug
 
   def jackfrost_can_build(self):
     return self.status == 2 and not self.login_required

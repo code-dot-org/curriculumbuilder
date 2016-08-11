@@ -1,0 +1,41 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ ide.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {{ ide.title }}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ ide.title }}</h1>
+{% endblock %}
+
+{% block main %}
+    <div class="together">
+        <p>{{ ide.content|richtext_filters|safe }}</p>
+        <a href="{{ ide.url }}">Try it out</a>
+        <ul>
+            {% for block in ide.block_set.all %}
+            <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

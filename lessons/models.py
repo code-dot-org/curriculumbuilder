@@ -17,6 +17,7 @@ from mezzanine.generic.fields import CommentsField
 from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
 from standards.models import Standard
+from documentation.models import Block
 import curricula.models
 
 logger = logging.getLogger('django')
@@ -153,6 +154,7 @@ class Lesson(Page, RichText):
   standards = models.ManyToManyField(Standard, blank=True)
   anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on', related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
+  #blocks = models.ManyToManyField(Block, related_name="Introduced Blocks", blank=True)
   comments = CommentsField()
   unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
   curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
