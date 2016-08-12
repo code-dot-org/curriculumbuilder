@@ -1,4 +1,4 @@
-{% extends "basecurriculum.html" %}
+{% extends "cdo_base.html" %}
 
 {% load staticfiles %}
 {% load mezzanine_tags %}
@@ -20,16 +20,9 @@
     {{ ide.title }}
 {% endblock %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
-{% endblock %}
-
-{% block header_title %}
-    <h1>{{ ide.title }}</h1>
-{% endblock %}
-
 {% block main %}
     <div class="together">
+        <h1>ide.title</h1>
         <p>{{ ide.content|richtext_filters|safe }}</p>
         <a href="{{ ide.url }}">Try it out</a>
         <ul>

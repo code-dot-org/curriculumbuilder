@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText
 
 """
@@ -35,6 +36,30 @@ class Block(Page, RichText):
     if hasattr(parent, 'ide'):
       return parent.ide
 
+
+  def set_parent(self, new_parent):
+      """
+      Change the parent of this page, changing this page's slug to match
+      the new parent if necessary.
+      """
+
+      # Make sure setting the new parent won't cause a cycle.
+      parent = new_parent
+      while parent is not None:
+        if parent.pk == self.pk:
+          raise AttributeError("You can't set a page or its child as"
+                                 " a parent.")
+        parent = parent.parent
+
+      self.parent = new_parent
+      self.save()
+
   def save(self, *args, **kwargs):
     self.IDE = self.get_IDE()
+    if not self.slug:
+      self.slug = slugify(self.title)
     super(Block, self).save(*args, **kwargs)
+
+
+IDE._meta.get_field('slug').verbose_name = 'Slug'
+Block._meta.get_field('slug').verbose_name = 'Slug'
