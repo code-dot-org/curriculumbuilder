@@ -25,8 +25,15 @@ class Block(Page, RichText):
   code = models.CharField('code', max_length=255)
   IDE = models.ForeignKey(IDE, blank=True, null=True)
 
+  class Meta:
+    ordering = ["IDE", "title"]
+
   def __unicode__(self):
-    return self.title
+    return self.block_with_ide
+
+  @property
+  def block_with_ide(self):
+    return "%s - %s" % (self.IDE, self.title)
 
   def get_absolute_url(self):
     return '/documentation/%s/%s/' %(self.IDE.slug, self.slug)

@@ -154,7 +154,7 @@ class Lesson(Page, RichText):
   standards = models.ManyToManyField(Standard, blank=True)
   anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on', related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
-  #blocks = models.ManyToManyField(Block, related_name="Introduced Blocks", blank=True)
+  blocks = models.ManyToManyField(Block, blank=True)
   comments = CommentsField()
   unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
   curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)

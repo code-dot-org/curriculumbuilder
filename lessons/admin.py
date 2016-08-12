@@ -65,7 +65,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
   inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
-  filter_horizontal = ('standards', 'anchor_standards', 'vocab')
+  filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
 
   fieldsets = (
     (None, {
@@ -75,8 +75,8 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
       'fields': ['cs_content', 'prep'],
       'classes': ['collapse-closed',],
     }),
-    ('Vocab', {
-      'fields': ['vocab',],
+    ('Vocab & Blocks', {
+      'fields': ['vocab', 'blocks'],
       'classes': ['collapse-closed'],
     }),
     ('Standards', {
