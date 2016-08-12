@@ -23,3 +23,9 @@
 {% block main %}
     {{ code_block.content|richtext_filters|safe }}
 {% endblock %}
+{% block footer_scripts %}
+<link rel="stylesheet" type="text/css" href="//code.org/css/codemirror.css">
+<link href="{% static "cdo/css/applab-docs.css" %}" rel="stylesheet" type="text/css">
+<script src="//code.org/js/codemirror.js"></script>
+<script src="//code.org/js/applab-docs.js"></script>
+{% endblock %}
