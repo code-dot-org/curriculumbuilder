@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.db import models
+from django.forms import Textarea
 
 from mezzanine.pages.admin import PageAdmin
 from documentation.models import Block, IDE
@@ -28,6 +30,10 @@ class BlockAdmin(PageAdmin):
       'fields': ['code', 'content'],
     }),
   )
+
+  formfield_overrides = {
+      models.CharField: {'widget': Textarea(attrs={'rows': 2})},
+  }
 
 admin.site.register(Block, BlockAdmin)
 admin.site.register(IDE, IDEAdmin)
