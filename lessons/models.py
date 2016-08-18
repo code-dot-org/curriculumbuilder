@@ -235,6 +235,17 @@ class Lesson(Page, RichText):
     else:
       return
 
+  @property
+  def is_optional(self):
+    if self.keywords.filter(keyword__title="Optional"):
+      return True
+    else:
+      return False
+
+  @property
+  def forum_link(self):
+    return "//forum.code.org/c/%s/lesson%02d" %(self.curriculum.slug, self.number)
+
 """
 Activities that compose a lesson
 

@@ -251,7 +251,9 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-
+            {%  if curriculum.slug == 'csp' %}
+                <h2><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h2>
+            {% endif %}
             {% if lesson.prep %}
                 <h2>Preparation</h2>
                 <div class="prep">

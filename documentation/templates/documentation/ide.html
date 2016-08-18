@@ -5,7 +5,7 @@
 {% load keyword_tags %}
 
 {% block meta_keywords %}{% metablock %}
-    {% keywords_for page as keywords %}
+    {% keywords_for ide as keywords %}
     {% for keyword in keywords %}
         {% if not forloop.first %}, {% endif %}
         {{ keyword }}
@@ -22,7 +22,7 @@
 
 {% block main %}
     <div class="together">
-        <h1>ide.title</h1>
+        <h1>{{ ide.title }}</h1>
         <p>{{ ide.content|richtext_filters|safe }}</p>
         <a href="{{ ide.url }}">Try it out</a>
         <ul>
