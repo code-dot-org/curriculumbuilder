@@ -10,6 +10,8 @@ import pdfkit
 import pycurl
 import logging
 import json
+import sys
+import pprint
 from PyPDF2 import PdfFileReader, PdfFileMerger
 from urllib2 import Request, urlopen
 #import dryscrape
@@ -255,10 +257,11 @@ def publish(request):
     type = request.POST.get('type')
     klass = globals()[type]
     object = klass.objects.get(pk=pk)
-    read, written = build_page_for_obj(type, object)
+    read, written = build_page_for_obj(klass, object)
     payload = {'response': written}
   except:
     payload = {'response': 'failed'}
+  print payload
   return HttpResponse(json.dumps(payload), content_type='application/json')
 
 

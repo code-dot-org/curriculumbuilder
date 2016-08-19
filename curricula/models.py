@@ -63,7 +63,7 @@ class Unit(Page, RichText):
     return urls
 
   def jackfrost_can_build(self):
-    return self.status == 2 and not self.login_required
+    return self.status == 2 and not self.login_required and not self.curriculum.login_required
 
   @property
   def lessons(self):

@@ -215,7 +215,8 @@ class Lesson(Page, RichText):
     return self.unit.curriculum
 
   def jackfrost_can_build(self):
-    return self.status == 2 and not self.login_required
+    return self.status == 2 and not self.login_required and \
+           not self.unit.login_required and not self.curriculum.login_required
 
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
