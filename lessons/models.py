@@ -218,6 +218,12 @@ class Lesson(Page, RichText):
     return self.status == 2 and not self.login_required and \
            not self.unit.login_required and not self.curriculum.login_required
 
+  def publish(self, children=False):
+    results = ["error", "Can't build"]
+    if self.jackfrost_can_build():
+      results = build_page_for_obj(Lesson, self)
+    return results
+
   def save(self, *args, **kwargs):
     self.unit = self.get_unit()
     self.curriculum = self.get_curriculum()

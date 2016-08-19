@@ -337,7 +337,22 @@
 
     {% if user.is_staff %}
         <script type="text/javascript">
-            var csrftoken = $.cookie('csrftoken');
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
 
             function csrfSafeMethod(method) {
                 // these HTTP methods do not require CSRF protection
@@ -430,23 +445,24 @@
             $("#publish_this").click(function () {
                 var pk = $(this).attr('data-pk');
                 var type = $(this).attr('data-type');
+                $(this).text("Publishing...");
                 $.ajax({
                     type: "POST",
                     url: "/publish/",
                     data: {pk: pk, type: type},
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert('error');
-                        console.log(xhr.status);
                         console.log(thrownError);
+                        $("#publish_this").addClass('btn-warning').text("Failed");
+                        $("#publish_results").html(JSON.stringify(thrownError, undefined, 2));
                     }
                 }).done(function(response) {
                     console.log(response);
-                    $("#publish_this").addClass('btn-success');
+                    $("#publish_this").addClass('btn-success').text("Success");
                     console.log(response);
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                 }).fail(function(response) {
                     console.log(response);
-                    $("#publish_this").addClass('btn-warning');
+                    $("#publish_this").addClass('btn-warning').text("Failed");
                     console.log(response);
                     $("#publish_results").html(JSON.stringify(response, undefined, 2));
                 });

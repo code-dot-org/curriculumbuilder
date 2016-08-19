@@ -29,6 +29,15 @@ class Curriculum(Page, RichText):
   def jackfrost_can_build(self):
     return self.status == 2 and not self.login_required
 
+  def publish(self, children=False):
+    results = ["error", "Can't build"]
+    if children:
+      for unit in self.units:
+        unit.publish(True)
+    if self.jackfrost_can_build():
+      results = build_page_for_obj(Curriculum, self)
+    return results
+
   @property
   def units(self):
     return Unit.objects.filter(parent=self)
@@ -64,6 +73,18 @@ class Unit(Page, RichText):
 
   def jackfrost_can_build(self):
     return self.status == 2 and not self.login_required and not self.curriculum.login_required
+
+  def publish(self, children=False):
+    results = ["error", "Can't build"]
+    if children:
+      for lesson in self.lesson_set.all():
+        lesson.publish()
+    if self.jackfrost_can_build():
+      for url in self.jackfrost_urls():
+        results = build_single(url)
+    return results
+
+
 
   @property
   def lessons(self):

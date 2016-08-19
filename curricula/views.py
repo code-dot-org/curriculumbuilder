@@ -255,9 +255,13 @@ def publish(request):
   try:
     pk = int(request.POST.get('pk'))
     type = request.POST.get('type')
+    if request.POST.get('lessons') == 'true':
+      children = True
+    else:
+      children = False
     klass = globals()[type]
     object = klass.objects.get(pk=pk)
-    read, written = build_page_for_obj(klass, object)
+    read, written = object.publish(children)
     payload = {'response': written}
   except:
     payload = {'response': 'failed'}
