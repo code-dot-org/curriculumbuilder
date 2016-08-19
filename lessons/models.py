@@ -246,9 +246,9 @@ class Lesson(Page, RichText):
   @property
   def forum_link(self):
     if self.is_optional:
-      return "//forum.code.org/c/%s/optional%02d" %(self.curriculum.slug, self.number)
+      return "//forum.code.org/c/%s%d/optional%02d" %(self.curriculum.slug, self.unit.number, self.number)
     else:
-      return "//forum.code.org/c/%s/lesson%02d" %(self.curriculum.slug, self.number)
+      return "//forum.code.org/c/%s%d/lesson%02d" %(self.curriculum.slug, self.unit.number, self.number)
 
 """
 Activities that compose a lesson

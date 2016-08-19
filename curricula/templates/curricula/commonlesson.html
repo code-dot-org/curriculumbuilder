@@ -335,6 +335,25 @@
 {% endblock %}
 {% block footer_js %}
 
+    {% if user.is_staff %}
+        <script type="text/javascript">
+            var csrftoken = $.cookie('csrftoken');
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+        </script>
+    {% endif %}
     <script type="text/javascript">
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
@@ -415,14 +434,22 @@
                     type: "POST",
                     url: "/publish/",
                     data: {pk: pk, type: type},
-                    success: function (response) {
-                        console.log(response);
-                        $button.addClass('btn-success')
-                        console.log(response);
-                        $("#publish_results").text(response);;
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                        console.log(xhr.status);
+                        console.log(thrownError);
                     }
+                }).done(function(response) {
+                    console.log(response);
+                    $("#publish_this").addClass('btn-success');
+                    console.log(response);
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                }).fail(function(response) {
+                    console.log(response);
+                    $("#publish_this").addClass('btn-warning');
+                    console.log(response);
+                    $("#publish_results").html(JSON.stringify(response, undefined, 2));
                 });
-                return false;
             });
         });
     </script>
