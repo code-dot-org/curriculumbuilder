@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea, ModelForm, BooleanField, ModelForm
 
+from jackfrost.utils import build_page_for_obj
+
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
 from ajax_select.fields import autoselect_fields_check_can_add
@@ -17,6 +19,11 @@ from mezzanine_pagedown.widgets import PlainWidget
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
+
+def publish(modeladmin, request, queryset):
+  for obj in queryset:
+    print obj
+
 
 class ObjectiveInline(TabularDynamicInlineAdmin):
   model = Objective
@@ -61,7 +68,8 @@ class ResourceInline(TabularDynamicInlineAdmin):
     return instance.resource.md_tag()
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
-  #form = make_ajax_form(Lesson, {'vocab': 'vocab'})
+
+  actions = [publish]
 
   inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
@@ -94,6 +102,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 class MultiLessonForm(ModelForm):
   class Meta:
     model = Lesson
+    fields = ['title', 'keywords']
 
   keywords = KeywordsField()
 
@@ -102,12 +111,15 @@ class MultiLesson(Lesson):
     proxy = True
 
 class MultiLessonAdmin(admin.ModelAdmin):
-  list_display = ('curriculum', 'parent', 'title', 'unplugged', 'keywords_string')
-  list_editable = ('title', 'unplugged')
+  list_display = ('curriculum', 'unit', 'title', 'keywords_string')
+  list_editable = ('title', )
+  list_filter = ('curriculum', 'unit')
+  actions = [publish]
 
   def get_changelist_form(self, request, **kwargs):
     return MultiLessonForm
 '''
+
 class ResourceAdmin(AjaxSelectAdmin):
   model = Resource
 

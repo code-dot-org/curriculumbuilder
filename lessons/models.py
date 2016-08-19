@@ -225,7 +225,7 @@ class Lesson(Page, RichText):
 
   @property
   def optional_lessons(self):
-    return Lesson.objects.filter(parent__lesson = self)
+    return Lesson.objects.filter(parent__lesson=self)
 
   @property
   def chapter(self):
@@ -244,7 +244,10 @@ class Lesson(Page, RichText):
 
   @property
   def forum_link(self):
-    return "//forum.code.org/c/%s/lesson%02d" %(self.curriculum.slug, self.number)
+    if self.is_optional:
+      return "//forum.code.org/c/%s/optional%02d" %(self.curriculum.slug, self.number)
+    else:
+      return "//forum.code.org/c/%s/lesson%02d" %(self.curriculum.slug, self.number)
 
 """
 Activities that compose a lesson

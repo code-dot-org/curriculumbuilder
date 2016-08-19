@@ -67,7 +67,8 @@ class Unit(Page, RichText):
 
   @property
   def lessons(self):
-    return self.lesson_set.all()
+    # Exclude optional lessons by default, they'll only show up if explicitly called from a parent lesson
+    return self.lesson_set.all().exclude(keywords__keyword__title="Optional")
 
   @property
   def chapters(self):

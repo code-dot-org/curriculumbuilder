@@ -2,12 +2,14 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
+from django.contrib.admin.views.decorators import staff_member_required
 from django.template.loader import render_to_string
 #from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
 import pycurl
 import logging
+import json
 from PyPDF2 import PdfFileReader, PdfFileMerger
 from urllib2 import Request, urlopen
 #import dryscrape
@@ -18,6 +20,8 @@ from rest_framework.reverse import reverse
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework import generics
 from rest_framework import viewsets
+
+from jackfrost.utils import build_page_for_obj
 
 from curricula.models import *
 from curricula.serializers import *
@@ -238,6 +242,25 @@ def get_url_for_pdf(request, abs_url, aws=False):
     return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
   '''
   return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
+
+'''
+Publishing views
+
+'''
+
+@staff_member_required
+def publish(request):
+  try:
+    pk = int(request.POST.get('pk'))
+    type = request.POST.get('type')
+    klass = globals()[type]
+    object = klass.objects.get(pk=pk)
+    read, written = build_page_for_obj(type, object)
+    payload = {'response': written}
+  except:
+    payload = {'response': 'failed'}
+  return HttpResponse(json.dumps(payload), content_type='application/json')
+
 
 '''
 API views

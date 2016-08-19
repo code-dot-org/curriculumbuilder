@@ -12,6 +12,7 @@ from mezzanine.conf import settings
 from mezzanine.core import views as core_views
 import mezzanine_pagedown.urls
 import freeze.urls
+import object_tools
 
 from curricula import views
 from standards.views import *
@@ -74,6 +75,7 @@ urlpatterns += patterns('',
 
     # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
 
+    url(r'^object-tools/', include(object_tools.tools.urls)),
     url("^edit/$", core_views.edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
     url("^None/$", views.index), # Dealing with JackFrost bug

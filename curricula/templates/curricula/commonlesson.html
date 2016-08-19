@@ -106,6 +106,13 @@
             </div>
             {% if user.is_staff %}
                 <div class="drawer-body">
+                <h2>Publishing</h2>
+                {% if lesson.jackfrost_can_build %}
+                    <button class="btn primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">Publish</button>
+                    <pre id="publish_results"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
                 <h2>Resources</h2>
                 <ul>
                 {% for resource in lesson.resources.all %}
@@ -398,6 +405,24 @@
             });
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
+            });
+
+            // Publish button
+            $("#publish_this").click(function () {
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type},
+                    success: function (response) {
+                        console.log(response);
+                        $button.addClass('btn-success')
+                        console.log(response);
+                        $("#publish_results").text(response);;
+                    }
+                });
+                return false;
             });
         });
     </script>
