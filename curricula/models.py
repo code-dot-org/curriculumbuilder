@@ -30,13 +30,15 @@ class Curriculum(Page, RichText):
     return self.status == 2 and not self.login_required
 
   def publish(self, children=False):
-    results = ["error", "Can't build"]
+    response = {}
     if children:
       for unit in self.units:
-        unit.publish(True)
+        response[unit] = unit.publish(True)
     if self.jackfrost_can_build():
-      results = build_page_for_obj(Curriculum, self)
-    return results
+      read, written = build_page_for_obj(Curriculum, self)
+      for result in written:
+        response[result.name] = result
+    return response
 
   @property
   def units(self):
@@ -75,14 +77,15 @@ class Unit(Page, RichText):
     return self.status == 2 and not self.login_required and not self.curriculum.login_required
 
   def publish(self, children=False):
-    results = ["error", "Can't build"]
+    response = {}
     if children:
       for lesson in self.lesson_set.all():
-        lesson.publish()
+        response[lesson] = lesson.publish()
     if self.jackfrost_can_build():
-      for url in self.jackfrost_urls():
-        results = build_single(url)
-    return results
+      read, written = build_page_for_obj(Unit, self)
+      for result in written:
+        response[result.name] = result
+    return response
 
 
 

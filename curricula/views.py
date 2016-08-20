@@ -261,10 +261,9 @@ def publish(request):
       children = False
     klass = globals()[type]
     object = klass.objects.get(pk=pk)
-    read, written = object.publish(children)
-    payload = {'response': written}
+    payload = object.publish(children)
   except:
-    payload = {'response': 'failed'}
+    payload = {'error': 'failed'}
   print payload
   return HttpResponse(json.dumps(payload), content_type='application/json')
 
