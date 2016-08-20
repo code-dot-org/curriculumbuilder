@@ -33,7 +33,7 @@ class Curriculum(Page, RichText):
     response = {}
     if children:
       for unit in self.units:
-        response[unit] = unit.publish(True)
+        response[unit.title] = unit.publish(True)
     if self.jackfrost_can_build():
       read, written = build_page_for_obj(Curriculum, self)
       for result in written:
@@ -80,7 +80,7 @@ class Unit(Page, RichText):
     response = {}
     if children:
       for lesson in self.lesson_set.all():
-        response[lesson] = lesson.publish()
+        response[lesson.title] = lesson.publish()
     if self.jackfrost_can_build():
       read, written = build_page_for_obj(Unit, self)
       for result in written:
