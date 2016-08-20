@@ -36,7 +36,7 @@
             <div class="drawer-body">
                 <h2>Publishing</h2>
                 {% if unit.jackfrost_can_build %}
-                    <button class="btn primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
                     <input type="checkbox" name="lessons" id="include_lessons"> Include Lessons</input>
                     <pre id="publish_results"></pre>
                 {% else %}
@@ -234,7 +234,7 @@
         $(document).ready(function () {
             // Publish button
             $("#publish_this").click(function () {
-                $('#publish_this').html("Publishing...");
+                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
                 var pk = $(this).attr('data-pk');
                 var type = $(this).attr('data-type');
                 var lessons = $('#include_lessons').prop('checked');
@@ -243,27 +243,16 @@
                     type: "POST",
                     url: "/publish/",
                     data: {pk: pk, type: type, lessons: lessons},
-                    timeout: 600000,
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        console.log(thrownError);
-                        $("#publish_this").addClass('btn-warning').text("Failed");
-                        $("#publish_results").html(JSON.stringify(thrownError, undefined, 2));
-                        $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                    }
+                    timeout: 9999999
                 }).done(function(response) {
-                    console.log(response);
                     $("#publish_this").addClass('btn-success').text("Success");
-                    console.log(response);
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                 }).fail(function(response) {
-                    console.log(response);
                     $("#publish_this").addClass('btn-warning').text("Failed");
-                    console.log(response);
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                 });
-            });
         });
     </script>
 {% endif %}
