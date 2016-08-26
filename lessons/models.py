@@ -145,7 +145,7 @@ Complete Lesson Page
 """
 class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
-  duration = models.IntegerField('Week', help_text='Week number within the unit', blank=True, null=True)
+  duration = models.IntegerField('Week', help_text='Week number within the unit (only use for first lesson of the week)', blank=True, null=True)
   unplugged = models.BooleanField(default=False)
   resources = models.ManyToManyField(Resource, blank=True)
   prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)

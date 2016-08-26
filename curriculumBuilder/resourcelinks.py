@@ -24,14 +24,14 @@ class AttrTagPattern(Pattern):
     try:
       resource = Resource.objects.get(slug=el.text)
       el.set('href', resource.fallback_url())
-      el.text = resource.name
+      el.text = str(resource)
 
     except Resource.DoesNotExist:
       print "slug not found, trying name"
       try:
         resource = Resource.objects.get(name=el.text)
         el.set('href', resource.fallback_url())
-        el.text = resource.name
+        el.text = str(resource)
 
       except Resource.DoesNotExist:
         print "couldn't find by name either!"
