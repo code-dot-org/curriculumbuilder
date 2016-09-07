@@ -247,11 +247,11 @@
                 }).done(function(response) {
                     $("#publish_this").addClass('btn-success').text("Success");
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
                 }).fail(function(response) {
                     $("#publish_this").addClass('btn-warning').text("Failed");
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
                 });
             });
         });

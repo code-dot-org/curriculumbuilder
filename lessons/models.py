@@ -11,9 +11,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
+
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
+from sortedm2m.fields import SortedManyToManyField
 from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
 from standards.models import Standard
@@ -147,7 +149,7 @@ class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
   duration = models.IntegerField('Week', help_text='Week number within the unit (only use for first lesson of the week)', blank=True, null=True)
   unplugged = models.BooleanField(default=False)
-  resources = models.ManyToManyField(Resource, blank=True)
+  resources = SortedManyToManyField(Resource, blank=True)
   prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
   cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in connection to greater CS concepts and its role in the progression', blank=True, null=True)
   ancestor = models.ForeignKey('self', blank=True, null=True)

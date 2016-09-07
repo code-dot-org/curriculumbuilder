@@ -325,6 +325,13 @@ html, body{
     background: white;
 }
 
+.guide > h4:before {
+    content: "\f044";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    margin-right: 7px;
+}
+
 .say {
     border-left: 5px solid #CCC;
     padding-left: 10px;
