@@ -94,6 +94,19 @@ class Resource(Orderable):
       formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a>)" % (formatted, self.gd_pdf(), self.gd_doc())
     return formatted
 
+  def formatted_md(self):
+    if self.url:
+      formatted = "[%s](%s)" % (self.name, self.fallback_url())
+    else:
+      formatted = self.name
+    if self.type:
+      formatted = "%s - %s" % (formatted, self.type)
+    if self.dl_url:
+      formatted = "%s ([download](%s))" % (formatted, self.dl_url)
+    elif self.gd:
+      formatted = "%s ([PDF](%s) | [DOCX](%s))" % (formatted, self.gd_pdf(), self.gd_doc())
+    return formatted
+
   # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
   def fallback_url(self):
     parsed = urlparse(self.url)
@@ -151,6 +164,7 @@ class Lesson(Page, RichText):
   unplugged = models.BooleanField(default=False)
   resources = SortedManyToManyField(Resource, blank=True)
   prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
+  questions = RichTextField('Open Questions', help_text='Open Questions About this Lesson', blank=True, null=True)
   cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in connection to greater CS concepts and its role in the progression', blank=True, null=True)
   ancestor = models.ForeignKey('self', blank=True, null=True)
   standards = models.ManyToManyField(Standard, blank=True)
@@ -201,13 +215,16 @@ class Lesson(Page, RichText):
         return
     else:
       chapter = self.parent
-      chapter_count = chapter._order
-
-      while chapter_count > 0:
-        chapter = chapter.get_previous_by_order()
-        order += chapter.children.count()
+      if hasattr(chapter, '_order'):
         chapter_count = chapter._order
 
+        while chapter_count > 0:
+          chapter = chapter.get_previous_by_order()
+          order += chapter.children.count()
+          chapter_count = chapter._order
+
+      else:
+        chapter_count = 1
       try:
         return order + int(self._order)
       except:
@@ -256,9 +273,20 @@ class Lesson(Page, RichText):
   @property
   def forum_link(self):
     if self.is_optional:
-      return "//forum.code.org/c/%s%d/optional%02d" %(self.curriculum.slug, self.unit.number, self.number)
+      return "//forum.code.org/c/%s%d/optional%02d" % (self.curriculum.slug, self.unit.number, self.number)
     else:
-      return "//forum.code.org/c/%s%d/lesson%02d" %(self.curriculum.slug, self.unit.number, self.number)
+      return "//forum.code.org/c/%s%d/lesson%02d" % (self.curriculum.slug, self.unit.number, self.number)
+
+  @property
+  def feedback_link(self):
+    if self.curriculum.feedback_url:
+      if self.curriculum.feedback_vars:
+        replacements = eval(self.curriculum.feedback_vars)
+        return self.curriculum.feedback_url % replacements
+      else:
+        return self.curriculum.feedback_url
+    else:
+      return
 
 """
 Activities that compose a lesson

@@ -16,6 +16,12 @@ Curriculum
 """
 class Curriculum(Page, RichText):
   gradeband = models.ForeignKey(GradeBand)
+  auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
+  display_questions = models.BooleanField(default=False, help_text='Display open questions and feedback form?')
+  feedback_url = models.URLField(blank=True, null=True, help_text='URL to feedback form, using % operators')
+  feedback_vars = models.CharField(max_length=255, blank=True, null=True,
+                                   help_text='Tuple of properties to use in feedback url')
+
 
   class Meta:
       verbose_name_plural = "curricula"
@@ -50,7 +56,7 @@ Curricular Unit
 """
 class Unit(Page, RichText):
   curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
-  number =  models.IntegerField('Number', blank=True, null=True)
+  number = models.IntegerField('Number', blank=True, null=True)
 
 
   def __unicode__(self):

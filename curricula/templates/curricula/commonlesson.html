@@ -258,7 +258,7 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            {%  if curriculum.slug == 'csp' %}
+            {%  if curriculum.auto_forum %}
                 <h2><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h2>
             {% endif %}
             {% if lesson.prep %}
@@ -303,6 +303,23 @@
                     <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
                 {% endfor %}
                 </ul>
+            {% endif %}
+            {% if curriculum.display_questions %}
+                <div class="open_questions no_print">
+                <h2>Open Questions</h2>
+                    {% if lesson.questions %}
+                        {% editable lesson.questions %}
+                            {{ lesson.questions|richtext_filters|safe }}
+                        {% endeditable %}
+                    {% else %}
+                        {% editable lesson.questions %}
+                            <p><em>No specific questions for this lesson, but we'd still love to get your feedback.</em></p>
+                        {% endeditable %}
+                    {% endif %}
+                    {% if curriculum.feedback_url %}
+                        <a class="btn btn-warning" href="{{ lesson.feedback_link }}" target="_blank">Give Us Feedback!</a>
+                    {% endif %}
+                </div>
             {% endif %}
 
         </div>

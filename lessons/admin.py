@@ -53,6 +53,7 @@ class ResourceInline(TabularDynamicInlineAdmin):
   model = Lesson.resources.through
   extra = 3
 
+  sortable_field_name = "sort_value"
   readonly_fields = ('type', 'md_tag')
   verbose_name_plural = "Resources"
 
@@ -79,8 +80,8 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
     (None, {
       'fields': ['title', ('status', 'duration', 'unplugged'), 'image', 'overview', 'keywords', ('description', 'gen_description')],
     }),
-    ('Purpose & Prep', {
-      'fields': ['cs_content', 'prep'],
+    ('Purpose, Prep, & Questions', {
+      'fields': ['cs_content', 'prep', 'questions'],
       'classes': ['collapse-closed',],
     }),
     ('Vocab & Blocks', {

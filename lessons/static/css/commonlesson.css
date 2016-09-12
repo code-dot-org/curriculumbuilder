@@ -316,7 +316,7 @@ html, body{
 }
 
 .say > .admonition-title, .guide > .admonition-title,
-.guide > h4 {
+.guide > h4:first-of-type {
     font-weight: bold;
     font-size: 18px;
     font-style: italic;
@@ -325,7 +325,7 @@ html, body{
     background: white;
 }
 
-.guide > h4:before {
+.guide > h4:first-of-type:before {
     content: "\f044";
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -500,11 +500,19 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .lesson_overview.practice-pt {
-    border: 1px solid rgb(0, 178, 192);;
+    border: 1px solid rgb(0, 178, 192);
     padding: 0 10px 10px 10px;
     margin-top: 10px;
 }
 
+.open_questions {
+    border: 2px solid #ffa400;
+    padding: 0 10px 10px 10px;
+}
+
+a.btn.btn-warning:visited {
+    color: #FFFFFF;
+}
 
 
 @page
