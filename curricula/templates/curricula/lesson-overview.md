@@ -13,6 +13,5 @@
 {% endfor %}{% endif %}
 {% if lesson.resources.count > 0 %}# Resources
 
-{% for resource in lesson.resources.all %}{% if resource.student %}* {{ resource.formatted|safe }}{% endif %}
+{% for resource in lesson.resources.all %}{% if resource.student %}* {{ resource.formatted_md|safe }}{% endif %}
 {% endfor %}{% endif %}
-<a class="btn btn-large btn-primary next-stage submitButton">Continue</a>

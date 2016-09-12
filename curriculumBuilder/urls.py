@@ -79,6 +79,7 @@ urlpatterns += patterns('',
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url("^None/$", views.index), # Dealing with JackFrost bug
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
+    url(r'^standards/', include('standards.urls', namespace="standards")),
     url(r'^', include('curricula.urls', namespace="curriculum")),
 
     # MEZZANINE'S URLS
@@ -107,7 +108,6 @@ urlpatterns += patterns('',
     #url(r'^api/v1/annotations$', AnnotationList.as_view()),
     #url(r'^api/v1/annotations/(?P<pk>[0-9]+)$', AnnotationMember.as_view()),
     url(r'^api/v1/comments/', include('curricula.api', namespace="api")),
-    url(r'^standards/', include('standards.urls', namespace="standards")),
 
     url(r'^freeze/', include(freeze.urls)),
     url(r'^pagedown/', include(mezzanine_pagedown.urls)),

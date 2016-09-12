@@ -510,10 +510,13 @@ th a:link, th a:visited, th a:hover, th a:active {
     padding: 0 10px 10px 10px;
 }
 
-a.btn.btn-warning:visited {
+a.btn.btn-warning:link {
     color: #FFFFFF;
 }
 
+a.btn.btn-warning:visited {
+    color: #FFFFFF;
+}
 
 @page
 {

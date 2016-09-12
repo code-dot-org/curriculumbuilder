@@ -32,6 +32,14 @@ class Curriculum(Page, RichText):
   def get_absolute_url(self):
     return '/%s/' % self.slug
 
+  def get_standards_url(self):
+    return '/%s/standards/' % self.slug
+
+  # Return publishable urls for JackFrost
+  def jackfrost_urls(self):
+    urls = [self.get_absolute_url(), self.get_standards_url()]
+    return urls
+
   def jackfrost_can_build(self):
     return self.status == 2 and not self.login_required
 
