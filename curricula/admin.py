@@ -7,6 +7,7 @@ from curricula.models import Curriculum, Unit, Chapter
 class CurriculumAdmin(PageAdmin):
   model = Curriculum
   verbose_name_plural = "Curricula"
+  filter_horizontal = ('frameworks',)
 
 class UnitAdmin(PageAdmin):
   model = Unit

@@ -7,7 +7,7 @@ from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
-from standards.models import Standard, GradeBand, Category
+from standards.models import Standard, GradeBand, Category, Framework
 import lessons.models
 
 """
@@ -16,6 +16,7 @@ Curriculum
 """
 class Curriculum(Page, RichText):
   gradeband = models.ForeignKey(GradeBand)
+  frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
   auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
   display_questions = models.BooleanField(default=False, help_text='Display open questions and feedback form?')
   feedback_url = models.URLField(blank=True, null=True, help_text='URL to feedback form, using % operators')

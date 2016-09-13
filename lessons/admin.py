@@ -68,7 +68,17 @@ class ResourceInline(TabularDynamicInlineAdmin):
   def md_tag(self, instance):
     return instance.resource.md_tag()
 
+class LessonForm(ModelForm):
+
+  def __init__(self, *args, **kwargs):
+    super(LessonForm, self).__init__(*args, **kwargs)
+    standards_queryset = Standard.objects.filter(framework=self.instance.curriculum.frameworks.all())
+    self.fields['standards'].queryset = standards_queryset
+    self.fields['anchor_standards'].queryset = standards_queryset
+
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
+
+  form = LessonForm
 
   actions = [publish]
 
