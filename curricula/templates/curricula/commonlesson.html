@@ -317,7 +317,9 @@
                         {% endeditable %}
                     {% endif %}
                     {% if curriculum.feedback_url %}
-                        <a class="btn btn-warning" href="{{ lesson.feedback_link }}" target="_blank">Give Us Feedback!</a>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
+                          Give us feedback!
+                        </button>
                     {% endif %}
                 </div>
             {% endif %}
@@ -348,6 +350,29 @@
 
     {% if user.is_staff %}
         {% comments_for lesson %}
+    {% endif %}
+
+    {% if curriculum.feedback_url %}
+        <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
+              </div>
+              <div class="modal-body">
+                <iframe width="568" height="1800" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+              </div>
+              <div class="modal-footer" style="text-align: left">
+                    <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close</button>
+                    {% if lesson.questions %}
+                        <h4>Open Questions</h4>
+                        {{ lesson.questions|richtext_filters|safe }}
+                    {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
     {% endif %}
 
 {% endblock %}
@@ -481,6 +506,16 @@
                 });
             });
         });
+
+    $('#feedbackModal').on('shown.bs.modal', function () {
+        if (!$(this).find('iframe').attr('src')) {
+            $(this).find('iframe').attr('src', "{{ lesson.feedback_link }}&embedded=true");
+        }
+
+        //$(this).find('.modal-body').css({
+        //    'max-height':'100%'
+        //});
+    });
     </script>
 
 {% endblock %}

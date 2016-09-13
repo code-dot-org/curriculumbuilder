@@ -518,6 +518,11 @@ a.btn.btn-warning:visited {
     color: #FFFFFF;
 }
 
+.modal-body {
+    max-height: calc(100vh - 275px);
+    overflow-y: auto;
+}
+
 @page
 {
     size: auto;
