@@ -2,14 +2,14 @@
 
 ## Background
 
-{{ lesson.overview }}
+{{ lesson.overview|safe }}
 {% if lesson.vocab.count > 0 %}# Vocabulary
 
-{% for word in lesson.vocab.all %}* **{{ word.word }}** - {{ word.detailDef }}
+{% for word in lesson.vocab.all %}* **{{ word.word }}** - {{ word.detailDef|safe }}
 {% endfor %}{% endif %}
 {% if lesson.blocks.count > 0 %}# New Blocks
 
-{% for block in lesson.blocks.all %}* **{{ block.title }}** - `{{ block.code }}`
+{% for block in lesson.blocks.all %}* **{{ block.title }}** - `{{ block.code|safe }}`
 {% endfor %}{% endif %}
 {% if lesson.resources.count > 0 %}# Resources
 

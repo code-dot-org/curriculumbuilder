@@ -509,7 +509,7 @@
 
     $('#feedbackModal').on('shown.bs.modal', function () {
         if (!$(this).find('iframe').attr('src')) {
-            $(this).find('iframe').attr('src', "{{ lesson.feedback_link }}&embedded=true");
+            $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
         }
 
         //$(this).find('.modal-body').css({
