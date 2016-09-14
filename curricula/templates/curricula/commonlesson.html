@@ -361,7 +361,9 @@
                 <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
               </div>
               <div class="modal-body">
-                <iframe width="568" height="1800" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+                <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0" marginwidth="0">
+                    <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
+                </iframe>
               </div>
               <div class="modal-footer" style="text-align: left">
                     <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close</button>
@@ -505,17 +507,29 @@
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                 });
             });
+
+            var isFeedbackActive = false;
+
+            $('#feedbackFrame').load(function(){
+                if ($(this).attr('src')) {
+                    isFeedbackActive = !isFeedbackActive;
+                    if (!isFeedbackActive) {
+                        $('#feedbackModal').modal('toggle');
+                    }
+                }
+            });
+
+
+            $('#feedbackModal').on('shown.bs.modal', function () {
+                if (!isFeedbackActive) {
+                    $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
+                }
+
+                //$(this).find('.modal-body').css({
+                //    'max-height':'100%'
+                //});
+            });
         });
-
-    $('#feedbackModal').on('shown.bs.modal', function () {
-        if (!$(this).find('iframe').attr('src')) {
-            $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
-        }
-
-        //$(this).find('.modal-body').css({
-        //    'max-height':'100%'
-        //});
-    });
     </script>
 
 {% endblock %}
