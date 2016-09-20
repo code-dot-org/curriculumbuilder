@@ -72,8 +72,11 @@ class LessonForm(ModelForm):
 
   def __init__(self, *args, **kwargs):
     super(LessonForm, self).__init__(*args, **kwargs)
-    if self.instance.curriculum.frameworks.count() > 0:
-      standards_queryset = Standard.objects.filter(framework=self.instance.curriculum.frameworks.all())
+    if hasattr(self.instance, 'curriculum'):
+      if self.instance.curriculum.frameworks.count() > 0:
+        standards_queryset = Standard.objects.filter(framework=self.instance.curriculum.frameworks.all())
+      else:
+        standards_queryset = Standard.objects.all()
     else:
       standards_queryset = Standard.objects.all()
     self.fields['standards'].queryset = standards_queryset
