@@ -20,100 +20,124 @@ from mezzanine_pagedown.widgets import PlainWidget
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
 
+
 def publish(modeladmin, request, queryset):
-  for obj in queryset:
-    print obj
+    for obj in queryset:
+        print obj
 
 
 class ObjectiveInline(TabularDynamicInlineAdmin):
-  model = Objective
-  fields = ["name", "_order"]
-  verbose_name = "Objective"
-  verbose_name_plural = "Objectives"
-  extra = 3
+    model = Objective
+    fields = ["name", "_order"]
+    verbose_name = "Objective"
+    verbose_name_plural = "Objectives"
+    extra = 3
 
-  formfield_overrides = {
-      models.CharField: {'widget': TextInput(attrs={'size':100, 'style':'width: 700px'})},
-  }
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': 100, 'style': 'width: 700px'})},
+    }
+
 
 class PrereqInline(StackedDynamicInlineAdmin):
-  model = Prereq
-  verbose_name = "Prerequisite"
-  verbose_name_plural = "Prerequisites"
-  extra = 3
+    model = Prereq
+    verbose_name = "Prerequisite"
+    verbose_name_plural = "Prerequisites"
+    extra = 3
+
 
 class ActivityInline(StackedDynamicInlineAdmin):
-  model = Activity
-  verbose_name_plural = "Activities"
-  extra = 5
+    model = Activity
+    verbose_name_plural = "Activities"
+    extra = 5
 
-  exclude = ['ancestor', ]
+    exclude = ['ancestor', ]
+
 
 class ResourceInline(TabularDynamicInlineAdmin):
-  model = Lesson.resources.through
-  extra = 3
+    model = Lesson.resources.through
+    extra = 3
 
-  sortable_field_name = "sort_value"
-  readonly_fields = ('type', 'md_tag')
-  verbose_name_plural = "Resources"
+    sortable_field_name = "sort_value"
+    readonly_fields = ('type', 'md_tag')
+    verbose_name_plural = "Resources"
 
-  def get_form(self, request, obj=None, **kwargs):
-    form = super(ResourceInline, self).get_form(request, obj, **kwargs)
-    autoselect_fields_check_can_add(form, self.model, request.user)
-    return form
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(ResourceInline, self).get_form(request, obj, **kwargs)
+        autoselect_fields_check_can_add(form, self.model, request.user)
+        return form
 
-  def type(self, instance):
-    return instance.resource.type
+    def type(self, instance):
+        return instance.resource.type
 
-  def md_tag(self, instance):
-    return instance.resource.md_tag()
+    def md_tag(self, instance):
+        return instance.resource.md_tag()
+
 
 class LessonForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(LessonForm, self).__init__(*args, **kwargs)
 
-  def __init__(self, *args, **kwargs):
-    super(LessonForm, self).__init__(*args, **kwargs)
-    if hasattr(self.instance, 'curriculum'):
-      if self.instance.curriculum.frameworks.count() > 0:
-        standards_queryset = Standard.objects.filter(framework=self.instance.curriculum.frameworks.all())
-      else:
-        standards_queryset = Standard.objects.all()
-    else:
-      standards_queryset = Standard.objects.all()
-    self.fields['standards'].queryset = standards_queryset
-    self.fields['anchor_standards'].queryset = standards_queryset
+        standards_queryset = None
+
+        try:
+            curriculum = None
+            if hasattr(self.instance.parent, 'chapter'):
+                curriculum = self.instance.parent.chapter.curriculum
+            elif hasattr(self.instance.parent, 'unit'):
+                curriculum = self.instance.parent.unit.curriculum
+            elif hasattr(self.instance.parent, 'curriculum'):
+                curriculum = self.instance.parent.curriculum
+            else:
+                pass
+
+            if curriculum.frameworks.count() > 0:
+                standards_queryset = Standard.objects.filter(framework=curriculum.frameworks.all())
+            else:
+                standards_queryset = Standard.objects.all()
+
+        except:
+            standards_queryset = Standard.objects.all()
+
+        if standards_queryset is None:
+            standards_queryset = Standard.objects.all()
+            
+        self.fields['standards'].queryset = standards_queryset
+        self.fields['anchor_standards'].queryset = standards_queryset
+
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin):
+    form = LessonForm
 
-  form = LessonForm
+    actions = [publish]
 
-  actions = [publish]
+    inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
-  inlines = [ObjectiveInline, ResourceInline, ActivityInline]
+    filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
 
-  filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
+    fieldsets = (
+        (None, {
+            'fields': ['title', ('status', 'duration', 'unplugged'), 'image', 'overview', 'keywords',
+                       ('description', 'gen_description')],
+        }),
+        ('Purpose, Prep, & Questions', {
+            'fields': ['cs_content', 'prep', 'questions'],
+            'classes': ['collapse-closed'],
+        }),
+        ('Vocab & Blocks', {
+            'fields': ['vocab', 'blocks'],
+            'classes': ['collapse-closed'],
+        }),
+        ('Standards', {
+            'fields': ['standards', 'anchor_standards'],
+            'classes': ['collapse-closed'],
+        }),
+    )
 
-  fieldsets = (
-    (None, {
-      'fields': ['title', ('status', 'duration', 'unplugged'), 'image', 'overview', 'keywords', ('description', 'gen_description')],
-    }),
-    ('Purpose, Prep, & Questions', {
-      'fields': ['cs_content', 'prep', 'questions'],
-      'classes': ['collapse-closed',],
-    }),
-    ('Vocab & Blocks', {
-      'fields': ['vocab', 'blocks'],
-      'classes': ['collapse-closed'],
-    }),
-    ('Standards', {
-      'fields': ['standards', 'anchor_standards'],
-      'classes': ['collapse-closed',],
-    }),
-  )
+    def get_queryset(self, request):
+        return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr') \
+            .prefetch_related('standards', 'anchor_standards',
+                              'vocab', 'resources', 'activity_set')
 
-  def get_queryset(self, request):
-    return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr')\
-                                                          .prefetch_related('standards', 'anchor_standards',
-                                                               'vocab', 'resources', 'activity_set')
 
 '''
 class MultiLessonForm(ModelForm):
@@ -137,24 +161,28 @@ class MultiLessonAdmin(admin.ModelAdmin):
     return MultiLessonForm
 '''
 
-class ResourceAdmin(AjaxSelectAdmin):
-  model = Resource
 
-  list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
-  list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
+class ResourceAdmin(AjaxSelectAdmin):
+    model = Resource
+
+    list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
+    list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
+
 
 class VocabAdmin(ImportExportModelAdmin):
-  model = Vocab
-
-  list_display = ('word', 'simpleDef')
-  list_editable = ('word', 'simpleDef')
-
-class VocabResource(resources.ModelResource):
-  class Meta:
     model = Vocab
 
+    list_display = ('word', 'simpleDef')
+    list_editable = ('word', 'simpleDef')
+
+
+class VocabResource(resources.ModelResource):
+    class Meta:
+        model = Vocab
+
+
 admin.site.register(Lesson, LessonAdmin)
-#admin.site.register(MultiLesson, MultiLessonAdmin)
+# admin.site.register(MultiLesson, MultiLessonAdmin)
 admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)

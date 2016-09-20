@@ -288,6 +288,12 @@ class Lesson(Page, RichText):
     else:
       return
 
+  @property
+  def zendesk_link(self):
+    message = "Bug in %s unit %s lesson %d curriculum.code.org%s" % (str(self.curriculum), self.unit.number, self.number, self.get_absolute_url())
+    url = "https://support.code.org/hc/en-us/requests/new?description=%s" % urllib2.quote(message)
+    return url
+
 """
 Activities that compose a lesson
 
