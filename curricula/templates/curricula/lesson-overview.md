@@ -2,7 +2,7 @@
 
 ## Background
 
-{{ lesson.overview|safe }}
+{{ lesson.description|safe }}
 {% if lesson.vocab.count > 0 %}# Vocabulary
 
 {% for word in lesson.vocab.all %}* **{{ word.word }}** - {{ word.detailDef|safe }}
