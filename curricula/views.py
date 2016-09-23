@@ -42,6 +42,7 @@ Core curricula and lesson views
 
 '''
 
+
 def curriculum_view(request, slug):
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
@@ -51,6 +52,7 @@ def curriculum_view(request, slug):
     units = Unit.objects.filter(curriculum = curriculum, login_required=False)
 
   return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units})
+
 
 def unit_view(request, slug, unit_slug):
   pdf = request.GET.get('pdf', False)
@@ -67,6 +69,7 @@ def unit_view(request, slug, unit_slug):
 
   return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
 
+
 def chapter_view(request, slug, unit_slug, chapter_num):
   pdf = request.GET.get('pdf', False)
   curriculum = get_object_or_404(Curriculum, slug = slug)
@@ -74,6 +77,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
   chapter = get_object_or_404(Chapter, parent__unit = unit, number = chapter_num)
 
   return render(request, 'curricula/chapter.html', {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
+
 
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
@@ -106,15 +110,11 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
       chapter = lesson.parent.chapter
     else:
       chapter = None
-  '''
-  if lesson.curriculum.slug == 'csp' or lesson.curriculum.slug == 'algebra' or request.GET.get('csp'):
-    template = 'curricula/commonlesson.html'
-  elif lesson.curriculum.slug == 'hoc':
-    template = 'curricula/hoclesson.html'
+
+  if request.GET.get('codestudio', False):
+    template = 'curricula/codestudiolesson.html'
   else:
-    template = 'curricula/lesson.html'
-  '''
-  template = 'curricula/commonlesson.html'
+    template = 'curricula/commonlesson.html'
 
   return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,
                                     'pdf': pdf, 'parent': parent, 'optional':optional})
@@ -273,11 +273,13 @@ API views
 
 '''
 
+
 @api_view(['GET',])
 def curriculum_list(request, format=None):
   curricula = Curriculum.objects.all()
   serializer = CurriculumSerializer(curricula, many=True)
   return Response(serializer.data)
+
 
 @api_view(['GET',])
 def curriculum_element(request, slug, format=None):
@@ -286,6 +288,7 @@ def curriculum_element(request, slug, format=None):
   serializer = CurriculumSerializer(curriculum)
   return Response(serializer.data)
 
+
 @api_view(['GET',])
 def unit_list(request, slug, format=None):
   curriculum = get_object_or_404(Curriculum, slug = slug)
@@ -293,6 +296,7 @@ def unit_list(request, slug, format=None):
   units = curriculum.units
   serializer = UnitSerializer(units, many=True)
   return Response(serializer.data)
+
 
 @api_view(['GET',])
 def unit_element(request, slug, unit_slug, format=None):
@@ -303,11 +307,13 @@ def unit_element(request, slug, unit_slug, format=None):
   serializer = UnitSerializer(unit)
   return Response(serializer.data)
 
+
 @api_view(['GET',])
 def api_root(request, format=None):
   return Response({
     'curriculum': reverse('curriculum_list', request=request, format=format)
   })
+
 
 @api_view(['GET',])
 def lesson_element(request, slug, unit_slug, lesson_num):

@@ -66,6 +66,7 @@ Curricular Unit
 class Unit(Page, RichText):
   curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
   number = models.IntegerField('Number', blank=True, null=True)
+  stage_name = models.CharField(max_length=255, blank=True, null=True, help_text='Name of Code Studio stage')
 
 
   def __unicode__(self):
@@ -127,6 +128,10 @@ class Unit(Page, RichText):
       self.number = self.get_number()
     except:
       self.number = self.curriculum.units.count() + 1
+
+    if not self.stage_name:
+      self.stage_name = "%s%d" % (self.curriculum.slug, self.number)
+
     super(Unit, self).save(*args, **kwargs)
 
 """

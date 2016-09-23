@@ -3,6 +3,7 @@ import itertools
 import datetime
 import urllib2
 import logging
+import json
 from urlparse import urlparse
 #from copy import copy, deepcopy
 from django.conf import settings
@@ -18,6 +19,7 @@ from mezzanine.generic.fields import CommentsField
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
+from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
 import curricula.models
@@ -160,15 +162,18 @@ Complete Lesson Page
 """
 class Lesson(Page, RichText):
   overview = RichTextField('Lesson Overview')
-  duration = models.IntegerField('Week', help_text='Week number within the unit (only use for first lesson of the week)', blank=True, null=True)
+  duration = models.IntegerField('Week', help_text='Week within the unit (only use for first lesson of the week)',
+                                 blank=True, null=True)
   unplugged = models.BooleanField(default=False)
   resources = SortedManyToManyField(Resource, blank=True)
   prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
   questions = RichTextField('Open Questions', help_text='Open Questions About this Lesson', blank=True, null=True)
-  cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in connection to greater CS concepts and its role in the progression', blank=True, null=True)
+  cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',
+                             blank=True, null=True)
   ancestor = models.ForeignKey('self', blank=True, null=True)
   standards = models.ManyToManyField(Standard, blank=True)
-  anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on', related_name="anchors", blank=True)
+  anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
+                                            related_name="anchors", blank=True)
   vocab = models.ManyToManyField(Vocab, blank=True)
   blocks = models.ManyToManyField(Block, blank=True)
   comments = CommentsField()
@@ -176,6 +181,7 @@ class Lesson(Page, RichText):
   curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
   number = models.IntegerField('Number', blank=True, null=True)
   image = models.ImageField('Image', blank=True, null=True)
+  stage = JSONField('Code Studio stage', blank=True, null=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:
@@ -249,6 +255,15 @@ class Lesson(Page, RichText):
     self.unit = self.get_unit()
     self.curriculum = self.get_curriculum()
     self.number = self.get_number()
+
+    try:
+      url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (self.unit.stage_name, self.number)
+      response = urllib2.urlopen(url)
+      data = json.loads(response.read())
+      self.stage = data
+    except:
+      pass
+
     super(Lesson, self).save(*args, **kwargs)
 
   @property
