@@ -505,6 +505,79 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-top: 10px;
 }
 
+/* Stage Overview */
+
+.stage_guide .named-False.teacher-markdown-false {
+    float: left;
+}
+
+.stage_guide .stage-level {
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid #7665a0;
+    border-radius: 5px;
+}
+
+.stage_guide .named-True, .stage_guide .teacher-markdown-true {
+    clear: both;
+}
+
+.stage_guide .type-External .level-icon:before {
+    content: "\f0f6";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-StandaloneVideo .level-icon:before {
+    content: "\f03d";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-FreeResponse .level-icon:before {
+    content: "\f040";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-Multi .level-icon:before {
+    content: "\f040";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-Match .level-icon:before {
+    content: "\f040";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-Applab .level-icon:before {
+    content: "\f10b";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-NetSim .level-icon:before {
+    content: "\f07e";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-Gamelab .level-icon:before {
+    content: "\f11b";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+.stage_guide .type-Weblab .level-icon:before {
+    content: "\f13b";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+}
+
+/* Feedback Section */
+
 .open_questions {
     border: 2px solid #ffa400;
     padding: 0 10px 10px 10px;
