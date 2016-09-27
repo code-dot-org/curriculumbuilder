@@ -112,6 +112,11 @@
                     {% else %}
                         <em>Can't publish, check settings in admin</em>
                     {% endif %}
+                    <h2>Code Studio</h2>
+                        <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                            Get Code Studio Stage Deatils
+                        </button><i id="stage_progress_spinner"></i>
+                        <pre id="stage_details_results"></pre>
                     <h2>Resources</h2>
                     <ul>
                         {% for resource in lesson.resources.all %}
@@ -349,15 +354,27 @@
 
         <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide">
             <h2>Code Studio Guide</h2>
+
             {% for level in lesson.stage.levels %}
+
                 <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
                      class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}">
-                    <a href="https://studio.code.org{{ level.path }}" target="_blank">
+                    <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
                         <span class="level-icon"></span>
                         {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
                     </a>
-                {{ level.teacher_markdown|richtext_filters|safe }}
+                    {% if level.teacher_markdown %}
+                        <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
+                    {% endif %}
+                    {% if level.markdown or level.markdown_instructions %}
+                        <details class="instructions-markdown">
+                            <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                        </details>
+                    {% endif %}
                 </div>
+
             {% endfor %}
 
             <table width="100%" style="display: none;">
@@ -371,17 +388,18 @@
                 <tbody>
                 {% for level in lesson.stage.levels %}
                     <tr>
-                    <td rowspan="2" valign="top"><a href="https://studio.code.org{{ level.path }}" target="_blank">{{ level.position }}</a></td>
-                    <td rowspan="2" valign="top">{{ level.type }}</td>
-                    <td>{{ level.teacher_markdown|richtext_filters|safe }}</td>
+                        <td rowspan="2" valign="top"><a href="https://studio.code.org{{ level.path }}"
+                                                        target="_blank">{{ level.position }}</a></td>
+                        <td rowspan="2" valign="top">{{ level.type }}</td>
+                        <td>{{ level.teacher_markdown|richtext_filters|safe }}</td>
                     </tr>
                     <tr>
-                    <td>
-                        <details>
-                            {{ level.markdown|richtext_filters|safe }}
-                            {{ level.markdown_instructions|richtext_filters|safe }}
-                        </details>
-                    </td>
+                        <td>
+                            <details>
+                                {{ level.markdown|richtext_filters|safe }}
+                                {{ level.markdown_instructions|richtext_filters|safe }}
+                            </details>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -440,6 +458,7 @@
         $('#toc{{ lesson.title|slugify }}').toc({
             'selectors': 'h2,h3', //elements to use as headings
             'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
+            'exclude': '.stage_guide h2, .stage_guide h3', //selectors to exlude
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
             'onHighlight': function (el) {

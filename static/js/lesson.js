@@ -74,6 +74,28 @@ $(document).ready(function () {
         });
     });
 
+    // Get Stage Details Button
+    $("#get_stage_details").click(function () {
+        $('#get_stage_details').html("Getting Stage Details...").removeClass('btn-warning btn-success').addClass('btn-primary');
+        var pk = $(this).attr('data-pk');
+        $('#stage_progress_spinner').addClass('fa fa-cog fa-spin');
+        $.ajax({
+            type: "POST",
+            url: "/get_stage_details/",
+            data: {pk: pk},
+            timeout: 9999999
+        }).done(function (response) {
+            $("#get_stage_details").addClass('btn-success').text("Success");
+            $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
+            $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
+            location.reload();
+        }).fail(function (response) {
+            $("#get_stage_details").addClass('btn-warning').text("Failed");
+            $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
+            $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
+        });
+    });
+
     var isFeedbackActive = false;
 
     $('#feedbackFrame').load(function () {

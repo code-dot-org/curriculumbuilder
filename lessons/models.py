@@ -262,7 +262,7 @@ class Lesson(Page, RichText):
       data = json.loads(response.read())
       self.stage = data
     except:
-      pass
+      print "Couldn't get the stage details"
 
     super(Lesson, self).save(*args, **kwargs)
 

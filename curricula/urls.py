@@ -6,6 +6,7 @@ from standards import views as standards_views
 urlpatterns = patterns('curricula.views',
                         url(r'^$', views.index, name='home'),
                         url(r'^publish/$', views.publish, name='publish'),
+                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
                         url(r'^(?P<slug>[0-9a-zA-Z]+)/$', views.curriculum_view, name='curriculum_view'),
                         url(r'^(?P<slug>[0-9a-zA-Z]+)/pdf$', views.curriculum_pdf, name='curriculum_pdf'),
                         url(r'^(?P<slug>[0-9a-zA-Z]+)/resources/$', views.curriculum_resources, name='curriculum_resources'),

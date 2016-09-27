@@ -268,6 +268,23 @@ def publish(request):
   return HttpResponse(json.dumps(payload), content_type='application/json')
 
 
+@staff_member_required
+def get_stage_details(request):
+  try:
+    pk = int(request.POST.get('pk'))
+    lesson = Lesson.objects.get(pk=pk)
+    print lesson
+    if not hasattr(lesson.unit, 'stage_name'):
+      payload = {'error': 'No stage name for unit'}
+    else:
+      lesson.save()
+      payload = {'success': 'true'}
+  except:
+    payload = {'error': 'failed'}
+  print payload
+  return HttpResponse(json.dumps(payload), content_type='application/json')
+
+
 '''
 API views
 

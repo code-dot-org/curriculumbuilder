@@ -62,7 +62,7 @@ $.fn.toc = function(options) {
   var opts = $.extend({}, jQuery.fn.toc.defaults, options);
 
   var container = $(opts.container);
-  var headings = $(opts.selectors, container);
+  var headings = $(opts.selectors, container).not(opts.exclude);
   var headingOffsets = [];
   var activeClassName = opts.activeClass;
 
