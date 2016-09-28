@@ -1,6 +1,6 @@
 {% extends "basecurriculum.html" %}
 
-{% load staticfiles mezzanine_tags keyword_tags comment_tags  i18n %}
+{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n no_autoplay %}
 
 {% block meta_title %}{{ lesson.meta_title }}{% endblock %}
 
@@ -121,15 +121,15 @@
                     <ul>
                         {% for resource in lesson.resources.all %}
                             <li>{{ resource }}</li>
-                            <tt draggable="true"
-                                ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</tt>
+                            <kbd draggable="true"
+                                ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
                         {% endfor %}
                     </ul>
                     <h2>Vocab</h2>
                     {% for vocab in lesson.vocab.all %}
                         <li>{{ vocab.word }}</li>
-                        <tt draggable="true"
-                            ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</tt>
+                        <kbd draggable="true"
+                            ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
                     {% endfor %}
                 </div>
             {% endif %}
@@ -207,8 +207,6 @@
                 <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
             {% endif %}
         {% endeditable %}
-
-        <h1>Code Studio</h1>
 
         <div class="keywords">
             <h4>
@@ -365,9 +363,18 @@
                     <span class="level-icon"></span>
                     {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
                 </a>
+
+                {% if level.video_youtube %}
+                    <br/>
+                    <iframe width="210" height="107"
+                    src="{{ level.video_youtube|no_autoplay }} %}">
+                    </iframe>
+                {% endif %}
+
                 {% if level.teacher_markdown %}
                     <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
                 {% endif %}
+
                 {% if level.markdown or level.markdown_instructions %}
                     <details class="instructions-markdown">
                         <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
@@ -375,6 +382,7 @@
                         {{ level.markdown_instructions|richtext_filters|safe }}
                     </details>
                 {% endif %}
+
             </div>
 
         {% endfor %}
@@ -455,21 +463,25 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.stage_guide').each( function(){
+            $('.stage_guide').each(function(){
                 console.log(this);
                 var start = $(this).attr('data-start');
                 var end = $(this).attr('data-end');
                 console.log('Start ' + start + " end " + end)
                 if (start) {
                     if (end) {
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
+
                         for (var i=start; i<=end; i++){
                             $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
                         }
                     } else {
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio level ' + start + '</h3>');
                         $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
                     }
                 } else {
-                    $('.stage_guide_hidden .stage-level').appendTo('.stage_guide');
+                    $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                    $('.stage_guide_hidden .stage-level').appendTo(this);
                 }
             });
 

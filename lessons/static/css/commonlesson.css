@@ -539,7 +539,9 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-left: -18px;
 }
 
-.named-True, .named-True + .stage-level, .teacher-markdown-true, .teacher-markdown-true + .stage-level {
+.named-True, .named-True + .stage-level,
+.teacher-markdown-true, .teacher-markdown-true + .stage-level,
+.type-StandaloneVideo, .type-StandaloneVideo + .stage-level {
     clear: both;
 }
 
