@@ -430,12 +430,12 @@ RICHTEXT_ALLOWED_ATTRIBUTES = ('abbr', 'accept', 'accept-charset', 'accesskey', 
                                'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
                                'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
                                'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
-                               'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title')
+                               'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
 PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
                                 #'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
                                 'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
                                 'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
-                                'curriculumBuilder.iconfonts', 'curriculumBuilder.divclass')
+                                'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 

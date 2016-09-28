@@ -507,6 +507,14 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 /* Stage Overview */
 
+.stage_guide {
+    overflow: auto;
+}
+
+.stage_guide_hidden {
+    /*display: none;*/
+}
+
 .stage-level{
     float: left;
 }

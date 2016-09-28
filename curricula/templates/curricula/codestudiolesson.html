@@ -351,60 +351,34 @@
                 {% endeditable %}
             </div>
         {% endfor %}
+    </div>
 
-        <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide">
-            <h2>Code Studio Guide</h2>
+    <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
+        <h2>Code Studio Guide</h2>
 
-            {% for level in lesson.stage.levels %}
+        {% for level in lesson.stage.levels %}
 
-                <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
-                     class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}">
-                    <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                        <span class="level-icon"></span>
-                        {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
-                    </a>
-                    {% if level.teacher_markdown %}
-                        <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
-                    {% endif %}
-                    {% if level.markdown or level.markdown_instructions %}
-                        <details class="instructions-markdown">
-                            <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
-                            {{ level.markdown|richtext_filters|safe }}
-                            {{ level.markdown_instructions|richtext_filters|safe }}
-                        </details>
-                    {% endif %}
-                </div>
+            <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
+                 class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
+                 data-level="{{ level.position }}">
+                <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                    <span class="level-icon"></span>
+                    {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
+                </a>
+                {% if level.teacher_markdown %}
+                    <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
+                {% endif %}
+                {% if level.markdown or level.markdown_instructions %}
+                    <details class="instructions-markdown">
+                        <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
+                        {{ level.markdown|richtext_filters|safe }}
+                        {{ level.markdown_instructions|richtext_filters|safe }}
+                    </details>
+                {% endif %}
+            </div>
 
-            {% endfor %}
+        {% endfor %}
 
-            <table width="100%" style="display: none;">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Type</th>
-                    <th width="100%">Notes</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for level in lesson.stage.levels %}
-                    <tr>
-                        <td rowspan="2" valign="top"><a href="https://studio.code.org{{ level.path }}"
-                                                        target="_blank">{{ level.position }}</a></td>
-                        <td rowspan="2" valign="top">{{ level.type }}</td>
-                        <td>{{ level.teacher_markdown|richtext_filters|safe }}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <details>
-                                {{ level.markdown|richtext_filters|safe }}
-                                {{ level.markdown_instructions|richtext_filters|safe }}
-                            </details>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
     </div>
 
     <div class="standards">
@@ -478,5 +452,28 @@
     </script>
 
     <script src="{% static "js/lesson.js" %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.stage_guide').each( function(){
+                console.log(this);
+                var start = $(this).attr('data-start');
+                var end = $(this).attr('data-end');
+                console.log('Start ' + start + " end " + end)
+                if (start) {
+                    if (end) {
+                        for (var i=start; i<=end; i++){
+                            $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
+                        }
+                    } else {
+                        $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
+                    }
+                } else {
+                    $('.stage_guide_hidden .stage-level').appendTo('.stage_guide');
+                }
+            });
+
+        });
+    </script>
 
 {% endblock %}
