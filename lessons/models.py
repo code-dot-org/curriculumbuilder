@@ -240,8 +240,13 @@ class Lesson(Page, RichText):
     return self.unit.curriculum
 
   def jackfrost_can_build(self):
-    return self.status == 2 and not self.login_required and \
+    try:
+      can_build = self.status == 2 and not self.login_required and \
            not self.unit.login_required and not self.curriculum.login_required
+    except:
+      can_build = False
+
+    return can_build
 
   def publish(self, children=False):
     response = {}
@@ -252,9 +257,19 @@ class Lesson(Page, RichText):
     return response
 
   def save(self, *args, **kwargs):
-    self.unit = self.get_unit()
-    self.curriculum = self.get_curriculum()
-    self.number = self.get_number()
+    self.parent = Page.objects.get(pk=self.parent_id)
+    try:
+      self.unit = self.get_unit()
+    except:
+      print "Couldn't get unit"
+    try:
+      self.curriculum = self.get_curriculum()
+    except:
+      print "Couldn't get curriculum"
+    try:
+      self.number = self.get_number()
+    except:
+      print "Coun't get number"
 
     try:
       url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (self.unit.stage_name, self.number)
