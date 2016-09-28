@@ -561,6 +561,13 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-Odometer .level-icon:before {                 content: "\f0e4"; }
 .type-Gamelab .level-icon:before {                  content: "\f11b"; }
 .type-Weblab .level-icon:before {                   content: "\f0ac"; }
+.type-Unplugged .level-icon:before {                content: "\f127"; }
+.type-Maze .level-icon:before {                     content: "\f047"; }
+.type-Karel .level-icon:before {                    content: "\f047"; }
+.type-Artist .level-icon:before {                   content: "\f040"; }
+.type-Playlab .level-icon:before {                  content: "\f135"; }
+.type-Calc .level-icon:before {                     content: "\f1ec"; }
+.type-Eval .level-icon:before {                     content: "\f040"; }
 .level-icon:before {                                content: "\f085"; }
 
 /* Feedback Section */
