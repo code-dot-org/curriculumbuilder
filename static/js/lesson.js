@@ -1,5 +1,27 @@
-
 $(document).ready(function () {
+
+    // Move Code Studio overivew levels to tagged locations
+    $('.stage_guide').each(function () {
+        console.log(this);
+        var start = $(this).attr('data-start');
+        var end = $(this).attr('data-end');
+        console.log('Start ' + start + " end " + end)
+        if (start) {
+            if (end) {
+                $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
+
+                for (var i = start; i <= end; i++) {
+                    $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
+                }
+            } else {
+                $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio level ' + start + '</h3>');
+                $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
+            }
+        } else {
+            $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+            $('.stage_guide_hidden .stage-level').appendTo(this);
+        }
+    });
 
     // add checkboxes to lists in the prep section
     var count = 1;
