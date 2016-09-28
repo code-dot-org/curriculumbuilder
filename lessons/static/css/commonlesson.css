@@ -523,7 +523,8 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .stage-level.teacher-markdown-true {
-    margin-left: 25px;
+    padding-left: 25px;
+    background-color: #efefef;
 }
 
 .stage-level.teacher-markdown-true .level-link {
@@ -548,15 +549,19 @@ th a:link, th a:visited, th a:hover, th a:active {
     font-size: inherit;
 }
 
-.type-External .level-icon:before {        content: "\f0f6"; }
-.type-StandaloneVideo .level-icon:before { content: "\f03d"; }
-.type-FreeResponse .level-icon:before {    content: "\f040"; }
-.type-Multi .level-icon:before {           content: "\f040"; }
-.type-Match .level-icon:before {           content: "\f040"; }
-.type-Applab .level-icon:before {          content: "\f10b"; }
-.type-NetSim .level-icon:before {          content: "\f0e8"; }
-.type-Gamelab .level-icon:before {         content: "\f11b"; }
-.type-Weblab .level-icon:before {          content: "\f0ac"; }
+.type-External .level-icon:before {                 content: "\f0f6"; }
+.type-StandaloneVideo .level-icon:before {          content: "\f03d"; }
+.type-FreeResponse .level-icon:before {             content: "\f040"; }
+.type-Multi .level-icon:before {                    content: "\f040"; }
+.type-Match .level-icon:before {                    content: "\f040"; }
+.type-Applab .level-icon:before {                   content: "\f10b"; }
+.type-NetSim .level-icon:before {                   content: "\f0e8"; }
+.type-Pixelation .level-icon:before {               content: "\f00a"; }
+.type-TextCompression .level-icon:before {          content: "\f066"; }
+.type-Odometer .level-icon:before {                 content: "\f0e4"; }
+.type-Gamelab .level-icon:before {                  content: "\f11b"; }
+.type-Weblab .level-icon:before {                   content: "\f0ac"; }
+.level-icon:before {                                content: "\f085"; }
 
 /* Feedback Section */
 
