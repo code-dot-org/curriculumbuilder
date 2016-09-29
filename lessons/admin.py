@@ -183,6 +183,7 @@ class VocabResource(resources.ModelResource):
 
 admin.site.register(Lesson, LessonAdmin)
 # admin.site.register(MultiLesson, MultiLessonAdmin)
+admin.site.register(Lesson.resources.through)
 admin.site.register(Prereq)
 admin.site.register(Objective)
 admin.site.register(Activity)

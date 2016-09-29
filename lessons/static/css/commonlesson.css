@@ -507,13 +507,17 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 /* Stage Overview */
 
-.stage_guide {
+.stage_guide, .stage_guide_hidden {
     overflow: auto;
     background-color: #f5fcff;
     padding-left: 20px;
     padding-bottom: 10px;
     margin-left: -20px;
     border-radius: 10px;
+}
+
+.stage_guide:empty, .stage_guide_hidden:empty {
+    display: none;
 }
 
 .stage_guide_hidden {

@@ -111,10 +111,14 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     else:
       chapter = None
 
+  '''
   if request.GET.get('codestudio', False):
     template = 'curricula/codestudiolesson.html'
   else:
     template = 'curricula/commonlesson.html'
+  '''
+
+  template = 'curricula/codestudiolesson.html'
 
   return render(request, template, {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,
                                     'pdf': pdf, 'parent': parent, 'optional':optional})

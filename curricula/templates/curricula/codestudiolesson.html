@@ -289,13 +289,16 @@
                         <ul>
                             {% for resource in audience.list %}
                                 <li>
+                                {% editable resource.name resource.type resource.url %}
                                     {{ resource.formatted|safe }}
+                                {% endeditable %}
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endfor %}
                 {% endwith %}
             {% endif %}
+            {% if user.is_staff %}<a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a resource</a>{% endif %}
 
             {% if lesson.vocab.count > 0 %}
                 <h2>Vocabulary</h2>
@@ -351,43 +354,42 @@
             </div>
         {% endfor %}
 
-        <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
-            <h2>Code Studio Guide</h2>
+    </div>
 
-            {% for level in lesson.stage.levels %}
+    <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
 
-                <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
-                     class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
-                     data-level="{{ level.position }}">
-                    <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                        <span class="level-icon"></span>
-                        {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
-                    </a>
+        {% for level in lesson.stage.levels %}
 
-                    {% if level.video_youtube %}
-                        <br/>
-                        <iframe width="210" height="107"
-                                src="{{ level.video_youtube|no_autoplay }} %}">
-                        </iframe>
-                    {% endif %}
+            <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
+                 class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
+                 data-level="{{ level.position }}">
+                <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                    <span class="level-icon"></span>
+                    {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
+                </a>
 
-                    {% if level.teacher_markdown %}
-                        <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
-                    {% endif %}
+                {% if level.video_youtube %}
+                    <br/>
+                    <iframe width="210" height="107"
+                            src="{{ level.video_youtube|no_autoplay }} %}">
+                    </iframe>
+                {% endif %}
 
-                    {% if level.markdown or level.markdown_instructions %}
-                        <details class="instructions-markdown">
-                            <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
-                            {{ level.markdown|richtext_filters|safe }}
-                            {{ level.markdown_instructions|richtext_filters|safe }}
-                        </details>
-                    {% endif %}
+                {% if level.teacher_markdown %}
+                    <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
+                {% endif %}
 
-                </div>
+                {% if level.markdown or level.markdown_instructions %}
+                    <details class="instructions-markdown">
+                        <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
+                        {{ level.markdown|richtext_filters|safe }}
+                        {{ level.markdown_instructions|richtext_filters|safe }}
+                    </details>
+                {% endif %}
 
-            {% endfor %}
+            </div>
 
-        </div>
+        {% endfor %}
 
     </div>
 
@@ -439,7 +441,7 @@
     {% endif %}
 
     <script src="{% static "js/lesson.js" %}"></script>
-    
+
     <script defer type="text/javascript">
         $(window).on('load', function () {
             $('#toc{{ lesson.title|slugify }}').toc({
