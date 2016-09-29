@@ -430,6 +430,11 @@ class Annotation(models.Model):
     def ranges(self):
         return [self.range_start, self.range_end, self.range_startOffset, self.range_endOffset]
 
+
+Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
+Lesson._meta.get_field('login_required').help_text = "If checked, this lesson won't show up in lesson listings."
+Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be scooped during publish."
+
 """
 These post_save receivers call the JackFrost build command
 to automatically publish lessons on save, as long as they

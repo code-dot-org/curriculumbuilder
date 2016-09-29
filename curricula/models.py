@@ -166,7 +166,7 @@ class Chapter(Page, RichText):
 
   @property
   def lessons(self):
-    return lessons.models.Lesson.objects.filter(parent__chapter = self)
+    return lessons.models.Lesson.objects.filter(parent__chapter=self, login_required=False)
 
   def save(self, *args, **kwargs):
 

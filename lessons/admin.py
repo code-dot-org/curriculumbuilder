@@ -116,7 +116,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', ('status', 'duration', 'unplugged'), 'image', 'overview', 'keywords',
+            'fields': ['title', ('status', 'login_required', 'duration', 'unplugged'), 'image', 'overview', 'keywords',
                        ('description', 'gen_description')],
         }),
         ('Purpose, Prep, & Questions', {
