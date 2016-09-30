@@ -51,6 +51,7 @@ def custom_admin_page_ordering(request):
       number = unit.get_number()
       curriculum = unit.parent.curriculum
       Unit.objects.filter(id=unit.id).update(number=number, curriculum=curriculum)
+      Lesson.objects.filter(unit=unit).update(unit=unit, curriculum=curriculum)
 
     pages = Page.objects.filter(parent_id=old_parent_id)
     for i, page in enumerate(pages.order_by('_order')):
