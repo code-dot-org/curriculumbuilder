@@ -521,7 +521,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .stage_guide_hidden {
-    /*display: none;*/
+    display: none;
 }
 
 .stage-level{
