@@ -408,8 +408,13 @@ th a:link, th a:visited, th a:hover, th a:active {
     padding-left: 0;
 }
 
-.prep ul li input {
-    margin-right: 10px;
+.prep ul li {
+    margin-left: 25px;
+}
+
+.prep ul input {
+    margin-left: 3px;
+    float: left;
 }
 
 .vocab {

@@ -281,7 +281,7 @@ INSTALLED_APPS = (
   "django.contrib.sessions",
   "django.contrib.sites",
   "django.contrib.sitemaps",
-  "collectfast", # Needs to come before staticfiles
+  "collectfast",  # Needs to come before staticfiles
   "django.contrib.staticfiles",
   "mezzanine.boot",
   "mezzanine.conf",
@@ -296,12 +296,12 @@ INSTALLED_APPS = (
   "mezzanine.mobile",
   # Third party apps
   "mezzanine_pagedown",
-  #"csvimport.app.CSVImportConf",
+  # "csvimport.app.CSVImportConf",
   "gunicorn",
   "import_export",
-  #"data_importer",
+  # "data_importer",
   "ajax_select",
-  #"wkhtmltopdf",
+  # "wkhtmltopdf",
   "django_medusa",
   "freeze",
   "jackfrost",

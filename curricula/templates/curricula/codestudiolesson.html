@@ -473,31 +473,31 @@
 
             // Move Code Studio overivew levels to tagged locations
             $('.stage_guide').each(function () {
-                console.log(this);
-                var start = $(this).attr('data-start');
-                var end = $(this).attr('data-end');
-                console.log('Start ' + start + " end " + end)
-                if (start) {
-                    if (end) {
-                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
+                if ($('.stage_guide_hidden').children().length > 0) {
+                    var start = $(this).attr('data-start');
+                    var end = $(this).attr('data-end');
+                    if (start) {
+                        if (end) {
+                            $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
 
-                        for (var i = start; i <= end; i++) {
-                            $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
+                            for (var i = start; i <= end; i++) {
+                                $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
+                            }
+                        } else {
+                            $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio level ' + start + '</h3>');
+                            $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
                         }
                     } else {
-                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio level ' + start + '</h3>');
-                        $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                        $('.stage_guide_hidden .stage-level').appendTo(this);
                     }
-                } else {
-                    $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
-                    $('.stage_guide_hidden .stage-level').appendTo(this);
                 }
             });
 
             // add checkboxes to lists in the prep section
             var count = 1;
             $(".prep ul li:visible").each(function (li) {
-                $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
+                $(this).before('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
             });
 
             // read the current/previous setting
