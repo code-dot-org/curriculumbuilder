@@ -144,6 +144,9 @@ class Chapter(Page, RichText):
   understandings = models.ManyToManyField(Category, blank=True)
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
+  class Meta:
+      order_with_respect_to = "unit"
+
   def __unicode__(self):
     return self.title
 
