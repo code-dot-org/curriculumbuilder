@@ -316,7 +316,7 @@ html, body{
 }
 
 .say > .admonition-title, .guide > .admonition-title,
-.guide > h4:first-of-type {
+.guide > h4:first-of-type, .slides > h4:first-of-type {
     font-weight: bold;
     font-size: 18px;
     font-style: italic;
@@ -332,6 +332,13 @@ html, body{
     margin-right: 7px;
 }
 
+.slides > h4:first-of-type:before {
+    content: "\f24d";
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    margin-right: 7px;
+}
+
 .say {
     border-left: 5px solid #CCC;
     padding-left: 10px;
@@ -342,11 +349,16 @@ html, body{
     padding-left: 10px;
 }
 
-.say .tiplink, .guide .tiplink {
+.slides {
+    border-left: 5px solid #ffa400;
+    padding-left: 10px;
+}
+
+.say .tiplink, .guide .tiplink, .slides .tiplink {
     margin-left: -35px;
 }
 
-.say ul .tiplink, .guide ul .tiplink {
+.say ul .tiplink, .guide ul .tiplink, .slides ul .tiplink {
     margin-left: -55px;
 }
 
@@ -632,7 +644,8 @@ a.btn.btn-warning:visited {
 }
 
 @media print {
-    .say .admonition-title, .guide .admonition-title {
+    .say .admonition-title, .guide .admonition-title,
+    .say h4, .guide h4, .slides h4{
         background: white !important;
     }
 }
