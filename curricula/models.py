@@ -145,7 +145,7 @@ class Chapter(Page, RichText):
   _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
   class Meta:
-      order_with_respect_to = "unit"
+      order_with_respect_to = "parent"
 
   def __unicode__(self):
     return self.title
