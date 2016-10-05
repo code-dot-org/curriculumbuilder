@@ -310,6 +310,7 @@ INSTALLED_APPS = (
   "corsheaders",
   "smuggler",
   "sortedm2m",
+  "reversion",
   # Custom apps for Code.org curriculum
   "standards",
   "lessons",

@@ -223,25 +223,17 @@ class Lesson(Page, RichText):
 
     def get_number(self):
         order = 1
-        if hasattr(self.parent, 'unit'):
-            try:
-                return order + int(self._order)
-            except:
-                return
-        else:
-            if hasattr(self.parent, 'chapter'):
-                chapter = self.parent.chapter
-                if hasattr(chapter, '_order'):
+        if hasattr(self.parent, 'chapter'):
+            chapter = self.parent.chapter
+            if hasattr(chapter, '_order'):
+                chapter_count = chapter._order
+
+                while chapter_count > 0:
+                    chapter = chapter.get_previous_by_order().chapter
+                    order += chapter.lessons.count()
                     chapter_count = chapter._order
 
-                    while chapter_count > 0:
-                        chapter = chapter.get_previous_by_order().chapter
-                        order += chapter.lessons.count()
-                        chapter_count = chapter._order
-                try:
-                    return order + int(self._order)
-                except:
-                    return
+        return order + int(self._order)
 
     def get_curriculum(self):
         return self.unit.curriculum

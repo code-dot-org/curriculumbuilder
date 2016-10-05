@@ -11,6 +11,8 @@ from ajax_select.fields import autoselect_fields_check_can_add
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from reversion.admin import VersionAdmin
+
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.core.fields import RichTextField, OrderField
@@ -105,7 +107,7 @@ class LessonForm(ModelForm):
         self.fields['anchor_standards'].queryset = standards_queryset
 
 
-class LessonAdmin(PageAdmin, AjaxSelectAdmin):
+class LessonAdmin(PageAdmin, AjaxSelectAdmin, VersionAdmin):
     form = LessonForm
 
     actions = [publish]
@@ -180,13 +182,31 @@ class VocabResource(resources.ModelResource):
     class Meta:
         model = Vocab
 
+class ActivityAdmin(VersionAdmin):
+    class Meta:
+        model = Activity
+
+    readonly_fields = ('curriculum', 'unit')
+    list_display = ('curriculum', 'unit', 'lesson', 'name')
+    list_filter = ('lesson__curriculum', 'lesson__unit')
+
+    def curriculum(self, instance):
+        return instance.lesson.curriculum
+
+    def unit(self, instance):
+        return instance.lesson.unit
+
+    curriculum.admin_order_field = 'lesson__curriculum'
+    unit.admin_order_field = 'lesson__unit'
+
+
 
 admin.site.register(Lesson, LessonAdmin)
 # admin.site.register(MultiLesson, MultiLessonAdmin)
 admin.site.register(Lesson.resources.through)
 admin.site.register(Prereq)
 admin.site.register(Objective)
-admin.site.register(Activity)
+admin.site.register(Activity, ActivityAdmin)
 admin.site.register(Vocab, VocabAdmin)
 admin.site.register(Resource, ResourceAdmin)
 admin.site.register(Annotation)
