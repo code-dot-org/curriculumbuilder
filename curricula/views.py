@@ -3,8 +3,9 @@ from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from django.contrib.admin.views.decorators import staff_member_required
+from mezzanine.core.views import edit
 from django.template.loader import render_to_string
-#from wkhtmltopdf import WKHtmlToPdf
+# from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
 import pycurl
@@ -14,7 +15,7 @@ import sys
 import pprint
 from PyPDF2 import PdfFileReader, PdfFileMerger
 from urllib2 import Request, urlopen
-#import dryscrape
+# import dryscrape
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -23,7 +24,9 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModel
 from rest_framework import generics
 from rest_framework import viewsets
 
-from jackfrost.utils import build_page_for_obj
+
+import reversion
+from reversion.views import create_revision
 
 from curricula.models import *
 from curricula.serializers import *
@@ -358,14 +361,17 @@ class AnnotationMember(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = AnnotationSerializer
 '''
 
+
 class AnnotationViewSet(viewsets.ModelViewSet):
-  queryset = Annotation.objects.all()
-  serializer_class = AnnotationSerializer
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
+
 
 class AnnotationListCreateView(generics.ListCreateAPIView):
     queryset = Annotation.objects.all()
     filter_fields = ('uri', 'owner', 'lesson')
     serializer_class = AnnotationSerializer
+
 
 class AnnotationSearchView(generics.ListCreateAPIView):
     queryset = Annotation.objects.all()
@@ -381,6 +387,15 @@ class AnnotationSearchView(generics.ListCreateAPIView):
             serializer = AnnotationSerializer(queryset, many=True)
             return Response({'rows': serializer.data, 'total': len(serializer.data)})
 
+
 class AnnotationReadUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Annotation.objects.all()
     serializer_class = AnnotationSerializer
+
+
+@create_revision()
+def reversion_edit(request):
+
+    reversion.set_comment("Changed %s of %s from frontend" % (request.POST.get("fields"), request.POST.get("model")))
+    response = edit(request)
+    return response

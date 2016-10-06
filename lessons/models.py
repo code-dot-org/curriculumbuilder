@@ -22,6 +22,9 @@ from jackfrost.tasks import build_single
 from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
+
+import reversion
+
 import curricula.models
 
 logger = logging.getLogger('django')
@@ -233,7 +236,10 @@ class Lesson(Page, RichText):
                     order += chapter.lessons.count()
                     chapter_count = chapter._order
 
-        return order + int(self._order)
+        if self._order is not None:
+            order += int(self._order)
+
+        return order
 
     def get_curriculum(self):
         return self.unit.curriculum
@@ -448,6 +454,10 @@ Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
 Lesson._meta.get_field('login_required').help_text = "If checked, this lesson won't show up in lesson listings."
 Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be scooped during publish."
 
+reversion.register(Activity, follow=('lesson', ))
+reversion.register(Objective, follow=('lesson', ))
+
+
 """
 These post_save receivers call the JackFrost build command
 to automatically publish lessons on save, as long as they
@@ -457,7 +467,7 @@ if applicable to ensure listing pages are updated
 
 """
 
-
+'''
 @receiver(post_save, sender=Lesson)
 def lesson_handler(sender, instance, **kwargs):
     new_number = instance.get_number()
@@ -473,7 +483,7 @@ def lesson_handler(sender, instance, **kwargs):
     else:
         logger.debug("Couldn't publish lesson %s because settings %s and jackfrost build %s" % (
         instance.pk, settings.AUTO_PUBLISH, instance.jackfrost_can_build()))
-
+'''
 
 '''
 # Too hacky, causes multiple saves for each activity and objective
