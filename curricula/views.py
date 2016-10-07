@@ -396,6 +396,10 @@ class AnnotationReadUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 @create_revision()
 def reversion_edit(request):
 
-    reversion.set_comment("Changed %s of %s from frontend" % (request.POST.get("fields"), request.POST.get("model")))
+    if request.POST.get("model") == "activity":
+        reversion.set_comment("Changed activity %s from frontend" % request.POST.get("name", ''))
+    else:
+        reversion.set_comment("Changed %s of %s from frontend" % (request.POST.get("fields"),
+                                                                  request.POST.get("model")))
     response = edit(request)
     return response
