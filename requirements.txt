@@ -28,7 +28,7 @@ django-postgrespool==0.3.0
 django_redis
 django-remplacer==0.1.1
 django-reversion==2.0.6
-django-smuggler
+django-smuggler==0.7.0
 django-sortedm2m==1.3.2
 django-storages
 djangorestframework

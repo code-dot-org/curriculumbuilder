@@ -401,11 +401,6 @@
         {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
     </div>
 
-
-    {% if user.is_staff %}
-        {% comments_for lesson %}
-    {% endif %}
-
     {% if curriculum.feedback_url %}
         <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
             <div class="modal-dialog" role="document">
@@ -474,13 +469,16 @@
             // Move Code Studio overivew levels to tagged locations
             $('.stage_guide').each(function () {
                 if ($('.stage_guide_hidden').children().length > 0) {
-                    var start = $(this).attr('data-start');
-                    var end = $(this).attr('data-end');
+                    var start = parseInt($(this).attr('data-start'));
+                    console.log("start " + start);
+                    var end = parseInt($(this).attr('data-end'));
+                    console.log("end " + end);
                     if (start) {
                         if (end) {
                             $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
 
                             for (var i = start; i <= end; i++) {
+                                console.log("iterator " + i);
                                 $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
                             }
                         } else {

@@ -451,8 +451,8 @@ class Annotation(models.Model):
 
 
 Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
-Lesson._meta.get_field('login_required').help_text = "If checked, this lesson won't show up in lesson listings."
-Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be scooped during publish."
+Lesson._meta.get_field('login_required').help_text = "Hide from listings and prevent be publishing."
+Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be updated during publish."
 
 reversion.register(Activity, follow=('lesson', ))
 reversion.register(Objective, follow=('lesson', ))
@@ -483,18 +483,4 @@ def lesson_handler(sender, instance, **kwargs):
     else:
         logger.debug("Couldn't publish lesson %s because settings %s and jackfrost build %s" % (
         instance.pk, settings.AUTO_PUBLISH, instance.jackfrost_can_build()))
-'''
-
-'''
-# Too hacky, causes multiple saves for each activity and objective
-# Need to replace with a patch on the inline editor, which this attempts to accomodate
-@receiver(post_save, sender=Activity)
-def activity_handler(sender, instance, **kwargs):
-  if settings.AUTO_PUBLISH and instance.lesson.jackfrost_can_build():
-    instance.lesson.save()
-
-@receiver(post_save, sender=Objective)
-def objective_handler(sender, instance, **kwargs):
-  if settings.AUTO_PUBLISH and instance.lesson.jackfrost_can_build():
-    instance.lesson.save()
 '''
