@@ -36,7 +36,7 @@ djangorestframework-recursive
 #dryscrape
 filebrowser-safe==0.4.1
 future==0.15.2
-#-e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
+-e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
 -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
