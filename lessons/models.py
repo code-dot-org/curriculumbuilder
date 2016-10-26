@@ -13,7 +13,7 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
-from mezzanine.pages.models import Page, RichText, Orderable
+from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
 from sortedm2m.fields import SortedManyToManyField
@@ -139,7 +139,7 @@ class Resource(Orderable):
     def gd_pdf(self):
         try:
             pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = pdf + 'export?format=pdf'
+            pdf = '%sexport?format=pdf' % pdf
             return pdf
         except:
             return self.url
@@ -147,7 +147,7 @@ class Resource(Orderable):
     def gd_doc(self):
         try:
             pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = pdf + 'export?format=doc'
+            pdf = '%sexport?format=doc' % pdf
             return pdf
         except:
             return self.url
@@ -209,6 +209,13 @@ class Lesson(Page, RichText):
         lesson_copy.save()
         return lesson_copy
 
+    def can_move(self, request, new_parent):
+        parent_type = getattr(new_parent, 'content_model', None)
+        if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):
+            print "no unit here"
+            msg = 'Lesson cannot live under a %s' % parent_type
+            raise PageMoveException(msg)
+
     def get_absolute_url(self):
         # Check if this is the child of a lesson, and therefore optional
         if hasattr(self.parent, 'lesson'):
@@ -220,8 +227,10 @@ class Lesson(Page, RichText):
 
     def get_unit(self):
         parent = self.parent
-        while not hasattr(parent, 'unit'):
+        while not parent.content_model == 'unit':
             parent = parent.parent
+            if parent is None:
+                return None
         return parent.unit
 
     def get_number(self):
