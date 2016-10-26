@@ -370,24 +370,38 @@
                     {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
                 </a>
 
-                {% if level.video_youtube %}
-                    <br/>
-                    <iframe width="210" height="107"
-                            src="{{ level.video_youtube|no_autoplay }} %}">
-                    </iframe>
-                {% endif %}
-
                 {% if level.teacher_markdown %}
                     <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
                 {% endif %}
 
-                {% if level.markdown or level.markdown_instructions %}
-                    <details class="instructions-markdown">
-                        <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
-                        {{ level.markdown|richtext_filters|safe }}
-                        {{ level.markdown_instructions|richtext_filters|safe }}
-                    </details>
-                {% endif %}
+
+                <details class="instructions-markdown">
+                    <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
+
+                    {% if level.type == "Multi" %}<h3>Multiple Choice</h3>{% endif %}
+                    {% if level.type == "Match" %}<h3>Matching</h3>{% endif %}
+                    {% if level.type == "FreeResponse" %}<h3>Free Response</h3>{% endif %}
+                    {% if level.video_youtube %}
+                        <iframe width="210" height="107"
+                                src="{{ level.video_youtube|no_autoplay }} %}">
+                        </iframe>
+                    {% endif %}
+                    {{ level.markdown|richtext_filters|safe }}
+                    {{ level.markdown_instructions|richtext_filters|safe }}
+
+                    {% if level.questions %}
+                        {% for question in level.questions %}
+                            <h4>{{ question.text }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                    {% if level.answers %}
+                        <ul class="multi">
+                        {% for answer in level.answers %}
+                            <li class="correct-{{ answer.correct }}">{{ answer.text|richtext_filters|safe }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </details>
 
             </div>
 
@@ -470,15 +484,12 @@
             $('.stage_guide').each(function () {
                 if ($('.stage_guide_hidden').children().length > 0) {
                     var start = parseInt($(this).attr('data-start'));
-                    console.log("start " + start);
                     var end = parseInt($(this).attr('data-end'));
-                    console.log("end " + end);
                     if (start) {
                         if (end) {
                             $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
 
                             for (var i = start; i <= end; i++) {
-                                console.log("iterator " + i);
                                 $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
                             }
                         } else {

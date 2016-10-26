@@ -588,8 +588,8 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-External .level-icon:before {                 content: "\f0f6"; }
 .type-StandaloneVideo .level-icon:before {          content: "\f03d"; }
 .type-FreeResponse .level-icon:before {             content: "\f040"; }
-.type-Multi .level-icon:before {                    content: "\f040"; }
-.type-Match .level-icon:before {                    content: "\f040"; }
+.type-Multi .level-icon:before {                    content: "\f0ca"; }
+.type-Match .level-icon:before {                    content: "\f009"; }
 .type-Applab .level-icon:before {                   content: "\f10b"; }
 .type-NetSim .level-icon:before {                   content: "\f0e8"; }
 .type-Pixelation .level-icon:before {               content: "\f00a"; }
@@ -605,6 +605,28 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-Calc .level-icon:before {                     content: "\f1ec"; }
 .type-Eval .level-icon:before {                     content: "\f040"; }
 .level-icon:before {                                content: "\f085"; }
+
+ul.multi {
+    list-style-type: none;
+}
+
+ul.multi li {
+    text-indent: -1.4em;
+}
+
+li.correct-False:before {
+    font-family: 'FontAwesome';
+    content: '\f096';
+    float: left;
+    width: 1.4em;
+}
+
+li.correct-True:before {
+    font-family: 'FontAwesome';
+    content: '\f046';
+    float: left;
+    width: 1.4em;
+}
 
 /* Feedback Section */
 
