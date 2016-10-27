@@ -90,13 +90,11 @@ def custom_admin_page_ordering(request):
 
     # If this is a lesson under a chapter, we need to renumber all children sibling chapters as well :/
     if page.content_model == 'lesson' and page.parent.content_model == 'chapter':
-        for chapter in page.parent.chapter.unit.chapter:
-            for lesson in chapter.lessons:
-                update_numbering(lesson, Lesson)
+        for lesson in page.lesson.unit.lessons:
+            update_numbering(lesson, Lesson)
 
     # if this is a chapter renumber all children
     if page.content_model == 'chapter':
-        print "updating children"
         for lesson in page.chapter.unit.lessons:
             update_numbering(lesson, Lesson)
 
