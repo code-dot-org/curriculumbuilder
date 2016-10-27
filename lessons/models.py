@@ -235,15 +235,15 @@ class Lesson(Page, RichText):
 
     def get_number(self):
         order = 1
-        if hasattr(self.parent, 'chapter'):
+        if self.parent.content_model == 'chapter':
             chapter = self.parent.chapter
-            if hasattr(chapter, '_order'):
-                chapter_count = chapter._order
-
-                while chapter_count > 0:
+            while chapter is not None:
+                try:
                     chapter = chapter.get_previous_by_order().chapter
                     order += chapter.lessons.count()
-                    chapter_count = chapter._order
+                except AttributeError:
+                    chapter = None
+                    print "Reached final chapter"
 
         if self._order is not None:
             order += int(self._order)

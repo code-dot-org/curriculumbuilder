@@ -68,29 +68,45 @@ def custom_admin_page_ordering(request):
             Page.objects.filter(id=page.id).update(_order=i)
 
             if page.content_model == 'lesson':
-                update_numbering(page, Lesson)
+                update_numbering(page.lesson, Lesson)
             elif page.content_model == 'chapter':
-                update_numbering(page, Chapter)
+                update_numbering(page.chapter, Chapter)
             elif page.content_model == 'unit':
-                update_numbering(page, Unit)
+                update_numbering(page.unit, Unit)
 
     # Set the new order for the moved page and its current siblings.
     for i, page_id in enumerate(request.POST.getlist('siblings[]')):
         Page.objects.filter(id=get_id(page_id)).update(_order=i)
 
+        sibling = Page.objects.get(id=get_id(page_id))
+
         # Need to make sure that children get renumbered as well
         if page.content_model == 'lesson':
-            update_numbering(page, Lesson)
+            update_numbering(sibling.lesson, Lesson)
         elif page.content_model == 'chapter':
-            update_numbering(page, Chapter)
+            update_numbering(sibling.chapter, Chapter)
         elif page.content_model == 'unit':
-            update_numbering(page, Unit)
+            update_numbering(sibling.unit, Unit)
+
+    # If this is a lesson under a chapter, we need to renumber all children sibling chapters as well :/
+    if page.content_model == 'lesson' and page.parent.content_model == 'chapter':
+        for chapter in page.parent.chapter.unit.chapter:
+            for lesson in chapter.lessons:
+                update_numbering(lesson, Lesson)
+
+    # if this is a chapter renumber all children
+    if page.content_model == 'chapter':
+        print "updating children"
+        for lesson in page.chapter.unit.lessons:
+            update_numbering(lesson, Lesson)
 
     return HttpResponse("ok")
 
 
-def update_numbering(page, model):
-    obj = model.objects.get(id=page.id)
+def update_numbering(obj, model):
+    print "updating numbering"
+    print obj
+    print obj.number, obj.get_number()
     model.objects.filter(id=obj.id).update(number=obj.get_number())
 
 
