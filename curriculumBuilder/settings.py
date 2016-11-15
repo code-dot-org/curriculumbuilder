@@ -240,15 +240,15 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
 
-#if os.environ.get('REDISCLOUD_PASSWORD'):
-CACHES = {
-  "default": {
-    "BACKEND": "django_redis.cache.RedisCache",
-    "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
-                                      os.environ.get('REDISCLOUD_HOSTNAME'),
-                                      os.environ.get('REDISCLOUD_PORT')),
-  }
-}
+if os.environ.get('REDISCLOUD_PASSWORD'):
+    CACHES = {
+      "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
+                                          os.environ.get('REDISCLOUD_HOSTNAME'),
+                                          os.environ.get('REDISCLOUD_PORT')),
+      }
+    }
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
