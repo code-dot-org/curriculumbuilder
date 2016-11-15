@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('lessons', '0011_auto_20150820_1125'),
     ]

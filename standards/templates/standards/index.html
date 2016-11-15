@@ -33,16 +33,16 @@
 {% block main %}
     <h2>By Standards Framework</h2>
     {% for framework in frameworks.all %}
-    <div class="together">
-        <h3><a href="{% url 'standards:by_framework' framework.slug %}">{{ framework.name }}</a></h3>
-    </div>
+        <div class="together">
+            <h3><a href="{% url 'standards:by_framework' framework.slug %}">{{ framework.name }}</a></h3>
+        </div>
     {% endfor %}
 
     <h2>By Curriculum</h2>
     {% for curriculum in curricula.all %}
-    <div class="together">
-        <h3><a href="{% url 'standards:by_curriculum' curriculum.slug %}">{{ curriculum.title }}</a></h3>
-    </div>
+        <div class="together">
+            <h3><a href="{% url 'standards:by_curriculum' curriculum.slug %}">{{ curriculum.title }}</a></h3>
+        </div>
     {% endfor %}
 
 {% endblock %}

@@ -27,57 +27,63 @@
 {% endblock %}
 
 {% if user.is_staff %}
-{% block admin_link %}
-    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
-        <div class="drawer-controls">
-            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
-        </div>
-        <div class="drawer-contents">
-            <div class="drawer-body">
-                <h2>Publishing</h2>
-                {% if unit.jackfrost_can_build %}
-                    <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
-                    <input type="checkbox" name="lessons" id="include_lessons"> Include Lessons</input>
-                    <pre id="publish_results"></pre>
-                {% else %}
-                    <em>Can't publish, check settings in admin</em>
-                {% endif %}
+    {% block admin_link %}
+        <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+            <div class="drawer-controls">
+                <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit"
+                   class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+            </div>
+            <div class="drawer-contents">
+                <div class="drawer-body">
+                    <h2>Publishing</h2>
+                    {% if unit.jackfrost_can_build %}
+                        <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">
+                            Publish
+                        </button><i id="progress_spinner" style="margin: 5px;"></i><br/>
+                        <input type="checkbox" name="lessons" id="include_lessons"> Include Lessons</input>
+                        <pre id="publish_results"></pre>
+                    {% else %}
+                        <em>Can't publish, check settings in admin</em>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-{% endblock %}
+    {% endblock %}
 {% endif %}
 
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span
+            class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
 
     <div class="lessons">
-    {% if unit.chapters %}
-        {% for chap in unit.chapters %}
-            <div class="lesson chapter">
-                {% comment %}<a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">{% endcomment %}
-                Ch. {{ chap.number }}
-                {% comment %}</a>{% endcomment %}
-            </div>
-            {% for stage in chap.lessons %}
-                <div class="lesson unfinished">
-                <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                {{ stage.number }}
-            </a>
-            </div>
+        {% if unit.chapters %}
+            {% for chap in unit.chapters %}
+                <div class="lesson chapter">
+                    {% comment %}<a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">{% endcomment %}
+                    Ch. {{ chap.number }}
+                    {% comment %}</a>{% endcomment %}
+                </div>
+                {% for stage in chap.lessons %}
+                    <div class="lesson unfinished">
+                        <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                            {{ stage.number }}
+                        </a>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    {% else %}
-        {% for stage in unit.lessons %}
-            <div class="lesson unfinished">
-            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-            {{ stage.number }}
-        </a>
-        </div>
-        {% endfor %}
-    {% endif %}
-</div>
+        {% else %}
+            {% for stage in unit.lessons %}
+                <div class="lesson unfinished">
+                    <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                        {{ stage.number }}
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
 {% endblock %}
 
@@ -88,95 +94,104 @@
     <div class="together" id="unit{{ unit.number }}">
         <h1>Unit {{ unit.number }} - {{ unit.title }}</h1>
         {% editable unit.content %}
-        {{ unit.content|richtext_filters|safe }}
+            {{ unit.content|richtext_filters|safe }}
         {% endeditable %}
 
         <div class="chapter_overviews">
             {% for chapter in unit.chapters %}
 
                 <div class="chapter">
-                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
+                    <h1>
+                        <a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Chapter {{ chapter.number }}: {{ chapter.title }}</a>
+                    </h1>
 
-                {% if chapter.questions %}
-                    <div class="big_questions">
-                    <h3>Big Questions</h3>
-                    {{ chapter.questions|richtext_filters|safe }}
-                </div>
-                {% endif %}
-
-                {% if chapter.understandings.count > 0 %}
-                    <div class="enduring_understandings">
-                    <h3>Enduring Understandings</h3>
-                        <ul>
-                            {% for understanding in chapter.understandings.all %}
-                                <li>{{ understanding.shortcode }} {{ understanding.name }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-                {% regroup chapter.lessons by duration as lessons_by_week %}
-                {% for week in lessons_by_week %}
-                    {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
-                    {% for lesson in week.list %}
-                        {% keywords_for lesson as keywords %}
-                        <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
-                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
-                            <h4>
-                            {% for keyword in keywords %}
-                                {% if not forloop.first %}| {% endif %}
-                                {{ keyword }}
-                            {% endfor %}
-                            </h4>
-                            {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image}}">{% endif %}
-                            <span class="lesson_desc">{{ lesson.description }}</span>
-                            {% if lesson.resources.count > 0 %}
-                                <h4>
-                                    {% with lesson.resources.all as resources %}
-                                        {% regroup resources|dictsort:"student" by student as resources_by_audience %}
-                                        {% for audience in resources_by_audience %}
-                                            {{ audience.grouper|yesno:"Student,Teacher" }} Links:
-                                                {% for resource in audience.list %}
-                                                    {% if not forloop.first %} | {% endif %}
-                                                    <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
-                                                {% endfor %}
-                                        {% endfor %}
-                                    {% endwith %}
-                                </h4>
-                            {% endif %}
+                    {% if chapter.questions %}
+                        <div class="big_questions">
+                            <h3>Big Questions</h3>
+                            {{ chapter.questions|richtext_filters|safe }}
                         </div>
-                        {% if lesson.optional_lessons.count > 0 %}
-                            {% for optional in lesson.optional_lessons %}
-                                <div class="lesson_overview optional">
-                                    <h3><a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional Lesson: {{ optional.title }}</a></h3>
-                                    <h4>
-                                    {% keywords_for optional as keywords %}
+                    {% endif %}
+
+                    {% if chapter.understandings.count > 0 %}
+                        <div class="enduring_understandings">
+                            <h3>Enduring Understandings</h3>
+                            <ul>
+                                {% for understanding in chapter.understandings.all %}
+                                    <li>{{ understanding.shortcode }} {{ understanding.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% regroup chapter.lessons by duration as lessons_by_week %}
+                    {% for week in lessons_by_week %}
+                        {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
+                        {% for lesson in week.list %}
+                            {% keywords_for lesson as keywords %}
+                            <div class="lesson_overview
+                                    {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
+                                <h3>
+                                    <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a>
+                                </h3>
+                                <h4>
                                     {% for keyword in keywords %}
                                         {% if not forloop.first %}| {% endif %}
                                         {{ keyword }}
                                     {% endfor %}
+                                </h4>
+                                {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image }}">{% endif %}
+                                <span class="lesson_desc">{{ lesson.description }}</span>
+                                {% if lesson.resources.count > 0 %}
+                                    <h4>
+                                        {% with lesson.resources.all as resources %}
+                                            {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                            {% for audience in resources_by_audience %}
+                                                {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                {% for resource in audience.list %}
+                                                    {% if not forloop.first %} | {% endif %}
+                                                    <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endwith %}
                                     </h4>
-                                    {% if optional.image %}<img src="{% get_media_prefix %}{{ optional.image}}">{% endif %}
-                                    <span class="lesson_desc">{{ optional.description }}</span>
-                                    {% if lesson.resources.count > 0 %}
+                                {% endif %}
+                            </div>
+                            {% if lesson.optional_lessons.count > 0 %}
+                                {% for optional in lesson.optional_lessons %}
+                                    <div class="lesson_overview optional">
+                                        <h3>
+                                            <a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional
+                                                Lesson: {{ optional.title }}</a></h3>
                                         <h4>
-                                            {% with optional.resources.all as resources %}
-                                                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
-                                                {% for audience in resources_by_audience %}
-                                                    {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                            {% keywords_for optional as keywords %}
+                                            {% for keyword in keywords %}
+                                                {% if not forloop.first %}| {% endif %}
+                                                {{ keyword }}
+                                            {% endfor %}
+                                        </h4>
+                                        {% if optional.image %}
+                                            <img src="{% get_media_prefix %}{{ optional.image }}">{% endif %}
+                                        <span class="lesson_desc">{{ optional.description }}</span>
+                                        {% if lesson.resources.count > 0 %}
+                                            <h4>
+                                                {% with optional.resources.all as resources %}
+                                                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                                    {% for audience in resources_by_audience %}
+                                                        {{ audience.grouper|yesno:"Student,Teacher" }} Links:
                                                         {% for resource in audience.list %}
                                                             {% if not forloop.first %} | {% endif %}
-                                                            <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                            <a href="{{ resource.url }}"
+                                                               target="_blank">{{ resource.type }}</a>
                                                         {% endfor %}
-                                                {% endfor %}
-                                            {% endwith %}
-                                        </h4>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                                                    {% endfor %}
+                                                {% endwith %}
+                                            </h4>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
                 </div>
 
 
@@ -184,10 +199,11 @@
                     <summary>Chapter Commentary</summary>
 
                     {% editable chapter.content %}
-                    {{ chapter.content|richtext_filters|safe }}
+                        {{ chapter.content|richtext_filters|safe }}
                     {% endeditable %}
                 </details>
-                {% if not forloop.last %}<hr/>{% endif %}
+                {% if not forloop.last %}
+                    <hr/>{% endif %}
             {% endfor %}
         </div>
 
@@ -198,63 +214,63 @@
 
 {% block footer_js %}
 
-{% if user.is_staff %}
-    <script type="text/javascript">
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+    {% if user.is_staff %}
+        <script type="text/javascript">
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
                     }
                 }
+                return cookieValue;
             }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
+            var csrftoken = getCookie('csrftoken');
 
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
 
 
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                 }
-            }
-        });
+            });
 
-        $(document).ready(function () {
-            // Publish button
-            $("#publish_this").click(function () {
-                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
-                var pk = $(this).attr('data-pk');
-                var type = $(this).attr('data-type');
-                var lessons = $('#include_lessons').prop('checked');
-                $('#progress_spinner').addClass('fa fa-cog fa-spin');
-                $.ajax({
-                    type: "POST",
-                    url: "/publish/",
-                    data: {pk: pk, type: type, lessons: lessons},
-                    timeout: 9999999
-                }).done(function(response) {
-                    $("#publish_this").addClass('btn-success').text("Success");
-                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
-                }).fail(function(response) {
-                    $("#publish_this").addClass('btn-warning').text("Failed");
-                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+            $(document).ready(function () {
+                // Publish button
+                $("#publish_this").click(function () {
+                    $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                    var pk = $(this).attr('data-pk');
+                    var type = $(this).attr('data-type');
+                    var lessons = $('#include_lessons').prop('checked');
+                    $('#progress_spinner').addClass('fa fa-cog fa-spin');
+                    $.ajax({
+                        type: "POST",
+                        url: "/publish/",
+                        data: {pk: pk, type: type, lessons: lessons},
+                        timeout: 9999999
+                    }).done(function (response) {
+                        $("#publish_this").addClass('btn-success').text("Success");
+                        $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                        $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                    }).fail(function (response) {
+                        $("#publish_this").addClass('btn-warning').text("Failed");
+                        $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                        $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                    });
                 });
             });
-        });
-    </script>
-{% endif %}
+        </script>
+    {% endif %}
 {% endblock %}

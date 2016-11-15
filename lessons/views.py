@@ -1,5 +1,7 @@
-from fm.views import AjaxCreateView, AjaxUpdateView
+from fm.views import AjaxCreateView
+
 from forms import ResourceForm
 
+
 class ResourceCreateView(AjaxCreateView):
-  form_class = ResourceForm
+    form_class = ResourceForm

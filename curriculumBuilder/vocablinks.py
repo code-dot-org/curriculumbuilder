@@ -1,6 +1,6 @@
-from markdown.util import etree
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
+from markdown.util import etree
 
 from lessons.models import Vocab
 

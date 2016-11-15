@@ -27,7 +27,7 @@
         <a href="{{ ide.url }}">Try it out</a>
         <ul>
             {% for block in ide.block_set.all %}
-            <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
+                <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
             {% endfor %}
         </ul>
     </div>

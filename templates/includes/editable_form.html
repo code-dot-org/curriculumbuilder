@@ -3,17 +3,17 @@
 
 {# Edit form #}
 <form style="display:none;" class="editable-form" method="post"
-    action="{% url "edit" %}" id="{{ editable_form.uuid }}"
-    {% if editable_form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+      action="{% url "edit" %}" id="{{ editable_form.uuid }}"
+        {% if editable_form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
     {% for field in editable_form %}
-    <div{% if field.is_hidden %} style="display:none;"{% endif %}>
-        {{ field.label_tag }}
-        <br />{{ field }}{{ field.errors }}
-        {% if field.help_text %}
-        <span class="helptext">{{ field.help_text }}</span>
-        {% endif %}
-    </div>
+        <div{% if field.is_hidden %} style="display:none;"{% endif %}>
+            {{ field.label_tag }}
+            <br/>{{ field }}{{ field.errors }}
+            {% if field.help_text %}
+                <span class="helptext">{{ field.help_text }}</span>
+            {% endif %}
+        </div>
     {% endfor %}
     <input type="submit" value="{% trans "Save" %}" class="btn btn-primary btn-lg">
     <input type="button" value="{% trans "Cancel" %}" class="btn btn-default btn-lg">
@@ -24,7 +24,7 @@
 
 {# Edit link #}
 <a style="visibility:hidden;" class="editable-link" href="#"
-    rel="#{{ editable_form.uuid }}">{% trans "Edit" %}</a>
+   rel="#{{ editable_form.uuid }}">{% trans "Edit" %}</a>
 
 {# Edit highlight #}
 <div style="visibility:hidden;" class="editable-highlight"></div>

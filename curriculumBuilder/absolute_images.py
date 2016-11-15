@@ -1,13 +1,15 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from urlparse import urljoin
+
 import urllib2
+from urlparse import urljoin
 
 from markdown import Extension
 from markdown.treeprocessors import Treeprocessor
 
 BASE_URL = "https://code.org/curriculum/docs/"
 STAGING_URL = "https://staging.code.org/curriculum/docs/"
+
 
 class AbsoluteImagesExtension(Extension):
     """ Absolute Images Extension """
@@ -22,6 +24,7 @@ class AbsoluteImagesExtension(Extension):
 
 class AbsoluteImagesTreeprocessor(Treeprocessor):
     """ Absolute Images Treeprocessor """
+
     def run(self, root):
         imgs = root.getiterator("img")
         for image in imgs:

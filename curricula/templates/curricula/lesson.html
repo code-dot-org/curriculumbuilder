@@ -44,11 +44,11 @@
 {% block header_title %}
     {% if lesson.unplugged %}UNPLUGGED{% endif %}
     {% editable lesson.title %}
-    <h1>{{ lesson.title }}</h1>
+        <h1>{{ lesson.title }}</h1>
     {% endeditable %}
     <hr>
     Class sessions: {{ lesson.duration }}
-<span class="disclaimer">
+    <span class="disclaimer">
   Basic lesson time includes activity only. Introductory and Wrap-Up suggestions can be used to delve deeper when time allows.
 </span>
 {% endblock %}
@@ -73,18 +73,18 @@
             </ul>
         </div>
     {% endif %}
-    {% if lesson.anchor_standards.all.count > 0  %}
+    {% if lesson.anchor_standards.all.count > 0 %}
         <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
         {% with lesson.anchor_standards.all as standards %}
-        {% regroup standards by framework as standards_by_framework %}
-        {% for framework in standards_by_framework %}
-            <h3>{{ framework.grouper }}</h3>
-            <ul>
-            {% for standard in framework.list %}
-                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+            {% regroup standards by framework as standards_by_framework %}
+            {% for framework in standards_by_framework %}
+                <h3>{{ framework.grouper }}</h3>
+                <ul>
+                    {% for standard in framework.list %}
+                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                    {% endfor %}
+                </ul>
             {% endfor %}
-            </ul>
-        {% endfor %}
         {% endwith %}
     {% endif %}
 
@@ -113,27 +113,27 @@
             {% if lesson.resources.count > 0 %}
                 <h2>Resources</h2>
                 <ul>
-                {% for resource in lesson.resources.all %}
-                    <li>{{ resource.name }}</li>
-                {% endfor %}
+                    {% for resource in lesson.resources.all %}
+                        <li>{{ resource.name }}</li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 
             {% if lesson.vocab.count > 0 %}
                 <h2>Vocabulary</h2>
                 <ul>
-                {% for word in lesson.vocab.all %}
-                    <li><strong>{{ word.word }}</strong> - {{ word.simpleDef }}</li>
-                {% endfor %}
+                    {% for word in lesson.vocab.all %}
+                        <li><strong>{{ word.word }}</strong> - {{ word.simpleDef }}</li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 
             {% if lesson.blocks.count > 0 %}
                 <h2>Introduced Blocks</h2>
                 <ul>
-                {% for block in lesson.blocks.all %}
-                    <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
-                {% endfor %}
+                    {% for block in lesson.blocks.all %}
+                        <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 
@@ -152,20 +152,20 @@
     <div id="standards">
         <h2>Standards Alignment</h2>
         {% with lesson.standards.all as standards %}
-        {% regroup standards by framework as standards_by_framework %}
-        {% for framework in standards_by_framework %}
-            <details class="framework">
-            <summary>{{ framework.grouper }}</summary>
-            <!--<ul>-->
-            {% for standard in framework.list %}
-                <details class="standard">
-                <summary>{{ standard.shortcode }}</summary>
-                    <p>{{ standard.description }}</p>
+            {% regroup standards by framework as standards_by_framework %}
+            {% for framework in standards_by_framework %}
+                <details class="framework">
+                    <summary>{{ framework.grouper }}</summary>
+                    <!--<ul>-->
+                    {% for standard in framework.list %}
+                        <details class="standard">
+                            <summary>{{ standard.shortcode }}</summary>
+                            <p>{{ standard.description }}</p>
+                        </details>
+                    {% endfor %}
+                    <!--</ul>-->
                 </details>
             {% endfor %}
-            <!--</ul>-->
-            </details>
-        {% endfor %}
         {% endwith %}
     </div>
     <script type="text/javascript">
@@ -174,16 +174,17 @@
             'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
-            'onHighlight': function(el) {}, //called when a new section is highlighted
+            'onHighlight': function (el) {
+            }, //called when a new section is highlighted
             'highlightOnScroll': true, //add class to heading that is currently in focus
             'highlightOffset': 100, //offset to trigger the next headline
-            'anchorName': function(i, heading, prefix) { //custom function for anchor name
-                return prefix+i;
+            'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                return prefix + i;
             },
-            'headerText': function(i, heading, $heading) { //custom function building the header-item text
+            'headerText': function (i, heading, $heading) { //custom function building the header-item text
                 return $heading.text();
             },
-            'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+            'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
         });

@@ -27,15 +27,15 @@
     <h2>{{ standard.shortcode }}</h2>
     <p>{{ standard.description }}</p>
     {% with standard.lesson_set.all as lessons %}
-    {% regroup lessons by curriculum as lessons_by_curriculum %}
-    {% for curriculum in lessons_by_curriculum %}
-        <h3><a href="{% url 'standards:by_curriculum' curriculum.grouper.slug %}">{{ curriculum.grouper }}</a></h3>
-        <ul>
-        {% for lesson in curriculum.list %}
-            <li><a href="{{ lesson.slug }}">{{ lesson.title }}</a></li>
+        {% regroup lessons by curriculum as lessons_by_curriculum %}
+        {% for curriculum in lessons_by_curriculum %}
+            <h3><a href="{% url 'standards:by_curriculum' curriculum.grouper.slug %}">{{ curriculum.grouper }}</a></h3>
+            <ul>
+                {% for lesson in curriculum.list %}
+                    <li><a href="{{ lesson.slug }}">{{ lesson.title }}</a></li>
+                {% endfor %}
+            </ul>
         {% endfor %}
-        </ul>
-    {% endfor %}
     {% endwith %}
 
 {% endblock %}

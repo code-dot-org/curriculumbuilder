@@ -1,50 +1,52 @@
 from rest_framework import serializers
+
 from curricula.models import Unit, Curriculum
 from lessons.models import Lesson, Annotation
 
+
 class LessonSerializer(serializers.ModelSerializer):
+    unit = serializers.SerializerMethodField()
+    unit_number = serializers.SerializerMethodField()
 
-  unit = serializers.SerializerMethodField()
-  unit_number = serializers.SerializerMethodField()
+    class Meta:
+        model = Lesson
+        # depth = 1
+        fields = ('title', 'number', 'unit', 'unit_number', 'description')
 
-  class Meta:
-    model = Lesson
-    #depth = 1
-    fields = ('title', 'number', 'unit', 'unit_number', 'description')
+    def get_unit(self, obj):
+        return obj.unit.title
 
-  def get_unit(self, obj):
-    return obj.unit.title
+    def get_unit_number(self, obj):
+        return obj.unit.number
 
-  def get_unit_number(self, obj):
-    return obj.unit.number
 
 class UnitSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
 
-  lessons = serializers.SerializerMethodField()
+    class Meta:
+        model = Unit
+        # depth = 1
+        fields = ('title', 'slug', 'description', 'number', 'curriculum', 'lessons')
 
-  class Meta:
-    model = Unit
-    #depth = 1
-    fields = ('title', 'slug', 'description', 'number', 'curriculum', 'lessons')
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonSerializer(lessons, many=True)
+        return serializer.data
 
-  def get_lessons(self, obj):
-    lessons = obj.lessons
-    serializer = LessonSerializer(lessons, many=True)
-    return serializer.data
 
 class CurriculumSerializer(serializers.ModelSerializer):
+    units = serializers.SerializerMethodField()
 
-  units = serializers.SerializerMethodField()
+    class Meta:
+        model = Curriculum
+        # depth = 2
+        fields = ('title', 'slug', 'description', 'units')
 
-  class Meta:
-    model = Curriculum
-    #depth = 2
-    fields = ('title', 'slug', 'description', 'units')
+    def get_units(self, obj):
+        units = obj.units
+        serializer = UnitSerializer(units, many=True)
+        return serializer.data
 
-  def get_units(self, obj):
-    units = obj.units
-    serializer = UnitSerializer(units, many=True)
-    return serializer.data
 
 class Range():
     def __init__(self, start, end, startOffset, endOffset):
@@ -52,6 +54,7 @@ class Range():
         self.end = end
         self.startOffset = startOffset
         self.endOffset = endOffset
+
 
 class RangeSerializer(serializers.BaseSerializer):
     start = serializers.CharField(max_length=50)
@@ -72,6 +75,8 @@ class RangeSerializer(serializers.BaseSerializer):
             return Range(start, end, startOffset, endOffset)
         except AttributeError:
             return AttributeError
+
+
 '''
 class AnnotationSerializer(serializers.ModelSerializer):
 
@@ -80,6 +85,7 @@ class AnnotationSerializer(serializers.ModelSerializer):
         fields = ('pk', 'owner', 'lesson', 'annotator_schema_version', 'text', 'quote', 'uri', 'range_start',
 				        				'range_end', 'range_startOffset', 'range_endOffset')
 '''
+
 
 class AnnotationSerializer(serializers.Serializer):
     id = serializers.CharField(label="id", required=False)
@@ -94,7 +100,8 @@ class AnnotationSerializer(serializers.Serializer):
     lesson = serializers.CharField()
 
     def update(self, instance, validated_data):
-        instance.annotator_schema_version = validated_data.get('annotator_schema_version', instance.annotator_schema_version)
+        instance.annotator_schema_version = validated_data.get('annotator_schema_version',
+                                                               instance.annotator_schema_version)
         instance.text = validated_data.get('text', instance.text)
         instance.quote = validated_data.get('quote', instance.quote)
         instance.uri = validated_data.get('uri', instance.uri)

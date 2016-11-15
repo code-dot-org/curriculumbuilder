@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
+
 def update_numbers(apps, schema_editor):
     # Resave all lessons so they get their units updated
     Lesson = apps.get_model("lessons", "Lesson")
@@ -11,7 +12,6 @@ def update_numbers(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('lessons', '0019_auto_20160418_1420'),
     ]

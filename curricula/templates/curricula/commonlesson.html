@@ -50,17 +50,17 @@
                             showEditPermissionsCheckbox: false
                         })
                         .annotator('addPlugin', 'RichText', {
-                            tinymce:{
+                            tinymce: {
                                 selector: "li.annotator-item textarea",
                                 plugins: "media image insertdatetime link code",
                                 menubar: false,
                                 toolbar_items_size: 'small',
-                                extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
+                                extended_valid_elements: "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
                                 toolbar: "bold italic | bullist numlist outdent indent ",
                             }
                         });
-                        //.annotator('addPlugin', 'Reply')
-                        //.annotator('addPlugin', 'AnnotatorViewer');
+                //.annotator('addPlugin', 'Reply')
+                //.annotator('addPlugin', 'AnnotatorViewer');
                 //Annotation scroll
                 //$('#anotacions-uoc-panel').slimscroll({height: '100%'});
             });
@@ -72,7 +72,8 @@
 {% block admin_link %}
     <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
         <div class="drawer-controls">
-            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit"
+               class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
         </div>
         <div class="drawer-contents">
             <div class="drawer-heading">
@@ -80,51 +81,55 @@
             </div>
             <div class="drawer-body">
                 <div class="checkbox settings">
-                  <label>
-                    <input type="checkbox" name="say">
-                    Show "Say" Prompts
-                  </label>
+                    <label>
+                        <input type="checkbox" name="say">
+                        Show "Say" Prompts
+                    </label>
                 </div>
                 <div class="checkbox settings">
-                  <label>
-                    <input type="checkbox" name="tip">
-                    Show Teaching Tips
-                  </label>
+                    <label>
+                        <input type="checkbox" name="tip">
+                        Show Teaching Tips
+                    </label>
                 </div>
                 <div class="checkbox settings">
-                  <label>
-                    <input type="checkbox" name="discussion">
-                    Show Discussion Goals
-                  </label>
+                    <label>
+                        <input type="checkbox" name="discussion">
+                        Show Discussion Goals
+                    </label>
                 </div>
                 <div class="checkbox settings">
-                  <label>
-                    <input type="checkbox" name="content">
-                    Show Content Corners
-                  </label>
+                    <label>
+                        <input type="checkbox" name="content">
+                        Show Content Corners
+                    </label>
                 </div>
             </div>
             {% if user.is_staff %}
                 <div class="drawer-body">
-                <h2>Publishing</h2>
-                {% if lesson.jackfrost_can_build %}
-                    <button class="btn btn-primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">Publish</button><i id="progress_spinner"></i>
-                    <pre id="publish_results"></pre>
-                {% else %}
-                    <em>Can't publish, check settings in admin</em>
-                {% endif %}
-                <h2>Resources</h2>
-                <ul>
-                {% for resource in lesson.resources.all %}
-                    <li>{{ resource }}</li>
-                    <tt draggable="true" ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</tt>
-                {% endfor %}
-                </ul>
-                <h2>Vocab</h2>
-                {% for vocab in lesson.vocab.all %}
-                    <li>{{ vocab.word }}</li>
-                    <tt draggable="true" ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</tt>
-                {% endfor %}
+                    <h2>Publishing</h2>
+                    {% if lesson.jackfrost_can_build %}
+                        <button class="btn btn-primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                            Publish
+                        </button><i id="progress_spinner"></i>
+                        <pre id="publish_results"></pre>
+                    {% else %}
+                        <em>Can't publish, check settings in admin</em>
+                    {% endif %}
+                    <h2>Resources</h2>
+                    <ul>
+                        {% for resource in lesson.resources.all %}
+                            <li>{{ resource }}</li>
+                            <tt draggable="true"
+                                ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</tt>
+                        {% endfor %}
+                    </ul>
+                    <h2>Vocab</h2>
+                    {% for vocab in lesson.vocab.all %}
+                        <li>{{ vocab.word }}</li>
+                        <tt draggable="true"
+                            ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</tt>
+                    {% endfor %}
                 </div>
             {% endif %}
             <ul class="drawer-nav">
@@ -135,16 +140,37 @@
 {% endblock %}
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span
+            class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
 
     {% with lesson=parent|default_if_none:lesson %}
-    <div class="lessons">
-    {% if chapter %}
-        {% for chap in unit.chapters %}
-            <div class="lesson chapter">
-                Ch. {{ chap.number }}
-            </div>
-            {% for stage in chap.lessons %}
+        <div class="lessons">
+        {% if chapter %}
+            {% for chap in unit.chapters %}
+                <div class="lesson chapter">
+                    Ch. {{ chap.number }}
+                </div>
+                {% for stage in chap.lessons %}
+                    {% if stage.number < lesson.number %}
+                        <div class="lesson finished">
+                    {% elif stage.number == lesson.number %}
+                        {% if optional %}
+                            <div class="lesson finished">
+                        {% else %}
+                            <div class="lesson current">
+                        {% endif %}
+                    {% else %}
+                        <div class="lesson unfinished">
+                    {% endif %}
+                <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+                   data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                    {{ stage.number }}
+                </a>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            {% for stage in unit.lessons %}
                 {% if stage.number < lesson.number %}
                     <div class="lesson finished">
                 {% elif stage.number == lesson.number %}
@@ -156,32 +182,14 @@
                 {% else %}
                     <div class="lesson unfinished">
                 {% endif %}
-            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+               data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                 {{ stage.number }}
             </a>
             </div>
             {% endfor %}
-        {% endfor %}
-    {% else %}
-        {% for stage in unit.lessons %}
-            {% if stage.number < lesson.number %}
-                <div class="lesson finished">
-            {% elif stage.number == lesson.number %}
-                {% if optional %}
-                    <div class="lesson finished">
-                {% else %}
-                    <div class="lesson current">
-                {% endif %}
-            {% else %}
-                <div class="lesson unfinished">
-            {% endif %}
-        <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-            {{ stage.number }}
-        </a>
-        </div>
-        {% endfor %}
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
     {% endwith %}
 
 {% endblock %}
@@ -200,11 +208,11 @@
         {% endeditable %}
 
         <div class="keywords">
-        <h4>
-            {% for keyword in lesson.keywords.all %}
-                {% if not forloop.first %}| {% endif %}
-                {{ keyword }}
-            {% endfor %}
+            <h4>
+                {% for keyword in lesson.keywords.all %}
+                    {% if not forloop.first %}| {% endif %}
+                    {{ keyword }}
+                {% endfor %}
         </div>
     </div>
 
@@ -234,7 +242,7 @@
 
         <div class="col-sm-5 right-col">
 
-            {% if lesson.anchor_standards.all.count > 0  %}
+            {% if lesson.anchor_standards.all.count > 0 %}
                 <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
                 {% with lesson.anchor_standards.all as standards %}
                     {% regroup standards by framework as standards_by_framework %}
@@ -258,15 +266,15 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            {%  if curriculum.auto_forum %}
+            {% if curriculum.auto_forum %}
                 <h2><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h2>
             {% endif %}
             {% if lesson.prep %}
                 <h2>Preparation</h2>
                 <div class="prep">
-                {% editable lesson.prep %}
-                    {{ lesson.prep|richtext_filters|safe }}
-                {% endeditable %}
+                    {% editable lesson.prep %}
+                        {{ lesson.prep|richtext_filters|safe }}
+                    {% endeditable %}
                 </div>
             {% endif %}
 
@@ -299,26 +307,27 @@
             {% if lesson.blocks.count > 0 %}
                 <h2>Introduced Code</h2>
                 <ul>
-                {% for block in lesson.blocks.all %}
-                    <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
-                {% endfor %}
+                    {% for block in lesson.blocks.all %}
+                        <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
+                    {% endfor %}
                 </ul>
             {% endif %}
             {% if curriculum.display_questions %}
                 <div class="open_questions no_print">
-                <h2>Open Questions</h2>
+                    <h2>Open Questions</h2>
                     {% if lesson.questions %}
                         {% editable lesson.questions %}
                             {{ lesson.questions|richtext_filters|safe }}
                         {% endeditable %}
                     {% else %}
                         {% editable lesson.questions %}
-                            <p><em>No specific questions for this lesson, but we'd still love to get your feedback.</em></p>
+                            <p><em>No specific questions for this lesson, but we'd still love to get your feedback.</em>
+                            </p>
                         {% endeditable %}
                     {% endif %}
                     {% if curriculum.feedback_url %}
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
-                          Give us feedback!
+                            Give us feedback!
                         </button>
                     {% endif %}
                 </div>
@@ -354,27 +363,30 @@
 
     {% if curriculum.feedback_url %}
         <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
-                  <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Got a bug to report?</a></p>
-              </div>
-              <div class="modal-body">
-                <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0" marginwidth="0">
-                    <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
-                </iframe>
-              </div>
-              <div class="modal-footer" style="text-align: left">
-                    <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close</button>
-                    {% if lesson.questions %}
-                        <h4>Open Questions</h4>
-                        {{ lesson.questions|richtext_filters|safe }}
-                    {% endif %}
-              </div>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
+                        <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Got a bug to report?</a></p>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0"
+                                marginwidth="0">
+                            <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
+                        </iframe>
+                    </div>
+                    <div class="modal-footer" style="text-align: left">
+                        <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close
+                        </button>
+                        {% if lesson.questions %}
+                            <h4>Open Questions</h4>
+                            {{ lesson.questions|richtext_filters|safe }}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
     {% endif %}
 
@@ -421,16 +433,17 @@
             'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
-            'onHighlight': function(el) {}, //called when a new section is highlighted
+            'onHighlight': function (el) {
+            }, //called when a new section is highlighted
             'highlightOnScroll': true, //add class to heading that is currently in focus
             'highlightOffset': 100, //offset to trigger the next headline
-            'anchorName': function(i, heading, prefix) { //custom function for anchor name
-                return prefix+i;
+            'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                return prefix + i;
             },
-            'headerText': function(i, heading, $heading) { //custom function building the header-item text
+            'headerText': function (i, heading, $heading) { //custom function building the header-item text
                 return $heading.text();
             },
-            'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+            'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
         });
@@ -438,19 +451,19 @@
         $(document).ready(function () {
             // add checkboxes to lists in the prep section
             var count = 1;
-            $(".prep ul li:visible").each(function(li) {
+            $(".prep ul li:visible").each(function (li) {
                 $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
             });
 
             // read the current/previous setting
             var $todos = $(".todo");
-            $todos.each(function() {
+            $todos.each(function () {
                 var todo = localStorage.getItem($(this).attr('name') + window.location.pathname);
                 if (todo && todo == "true") {
                     $(this).prop('checked', todo);
                 }
             });
-            $todos.change(function() {
+            $todos.change(function () {
                 localStorage.setItem($(this).attr("name") + window.location.pathname, $(this).prop('checked'));
             });
 
@@ -458,28 +471,28 @@
 
             // read the current/previous setting
             $settings = $('.settings input');
-            $settings.each(function() {
+            $settings.each(function () {
                 var setting = localStorage.getItem($(this).attr('name'));
                 if (setting == undefined) {
                     $(this).prop('checked', true);
-                } else if (setting == "true"){
+                } else if (setting == "true") {
                     $(this).prop('checked', setting);
                 } else {
                     $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
                 }
             });
-            $settings.change(function() {
+            $settings.change(function () {
                 $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
                 localStorage.setItem($(this).attr("name"), $(this).prop('checked'));
             });
 
-            $('.tiplink i').click(function(){
+            $('.tiplink i').click(function () {
                 var $the_tip = $($(this).parent().attr('href'));
                 $the_tip.parent().toggle(true);
             });
 
             // Add tooltip toggles to vocab
-            $('.vocab').each(function() {
+            $('.vocab').each(function () {
                 $(this).attr('data-toggle', 'tooltip');
                 $(this).attr('data-placement', 'bottom');
             });
@@ -498,11 +511,11 @@
                     url: "/publish/",
                     data: {pk: pk, type: type},
                     timeout: 9999999
-                }).done(function(response) {
+                }).done(function (response) {
                     $("#publish_this").addClass('btn-success').text("Success");
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                }).fail(function(response) {
+                }).fail(function (response) {
                     $("#publish_this").addClass('btn-warning').text("Failed");
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
@@ -511,7 +524,7 @@
 
             var isFeedbackActive = false;
 
-            $('#feedbackFrame').load(function(){
+            $('#feedbackFrame').load(function () {
                 if ($(this).attr('src')) {
                     isFeedbackActive = !isFeedbackActive;
                     if (!isFeedbackActive) {

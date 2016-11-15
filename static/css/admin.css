@@ -1,5 +1,8 @@
 /*input[type=text] { width: 100% !important; }*/
-.inline-item-tools { width: auto !important; }
+.inline-item-tools {
+    width: auto !important;
+}
+
 .page_type {
     margin-left: 5px;
     font-size: .8em;

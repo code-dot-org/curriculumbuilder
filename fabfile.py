@@ -1,27 +1,25 @@
 from __future__ import print_function, unicode_literals
-from future.builtins import open
 
-import os
-import re
 import sys
 from contextlib import contextmanager
 from functools import wraps
 from getpass import getpass, getuser
 from glob import glob
 from importlib import import_module
-from posixpath import join
 
-from mezzanine.utils.conf import real_project_name
-
+import os
+import re
 from fabric.api import abort, env, cd, prefix, sudo as _sudo, run as _run, \
     hide, task, local
+from fabric.colors import yellow, green, blue, red
 from fabric.context_managers import settings as fab_settings
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists, upload_template
 from fabric.contrib.project import rsync_project
-from fabric.colors import yellow, green, blue, red
 from fabric.decorators import hosts
-
+from future.builtins import open
+from mezzanine.utils.conf import real_project_name
+from posixpath import join
 
 ################
 # Config setup #
@@ -74,7 +72,6 @@ if env.deploy_tool == "git":
     env.repo_path = "/home/%s/git/%s.git" % (env.user, env.proj_name)
 else:
     env.repo_path = env.proj_path
-
 
 ##################
 # Template setup #
@@ -209,6 +206,7 @@ def log_call(func):
         header = "-" * len(func.__name__)
         _print(green("\n".join([header, func.__name__, header]), bold=True))
         return func(*args, **kawrgs)
+
     return logged
 
 
@@ -524,7 +522,7 @@ def create():
             pip("-r %s/%s" % (env.proj_path, env.reqs_path))
         pip("gunicorn setproctitle psycopg2 "
             "django-compressor python-memcached")
-    # Bootstrap the DB
+        # Bootstrap the DB
         manage("createdb --noinput --nodata")
         python("from django.conf import settings;"
                "from django.contrib.sites.models import Site;"
@@ -610,9 +608,9 @@ def deploy():
     if env.deploy_tool in env.vcs_tools:
         with cd(env.repo_path):
             if env.deploy_tool == "git":
-                    run("git rev-parse HEAD > %s/last.commit" % env.proj_path)
+                run("git rev-parse HEAD > %s/last.commit" % env.proj_path)
             elif env.deploy_tool == "hg":
-                    run("hg id -i > last.commit")
+                run("hg id -i > last.commit")
         with project():
             static_dir = static()
             if exists(static_dir):
@@ -654,10 +652,10 @@ def rollback():
         if env.deploy_tool in env.vcs_tools:
             with cd(env.repo_path):
                 if env.deploy_tool == "git":
-                        run("GIT_WORK_TREE={0} git checkout -f "
-                            "`cat {0}/last.commit`".format(env.proj_path))
+                    run("GIT_WORK_TREE={0} git checkout -f "
+                        "`cat {0}/last.commit`".format(env.proj_path))
                 elif env.deploy_tool == "hg":
-                        run("hg update -C `cat last.commit`")
+                    run("hg update -C `cat last.commit`")
             with project():
                 with cd(join(static(), "..")):
                     run("tar -xf %s/static.tar" % env.proj_path)

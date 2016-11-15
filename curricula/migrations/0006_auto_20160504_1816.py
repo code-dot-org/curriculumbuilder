@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
 import mezzanine.core.fields
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('standards', '0004_auto_20160122_2141'),
         ('curricula', '0005_chapter_number'),

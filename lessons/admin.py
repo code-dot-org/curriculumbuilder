@@ -1,23 +1,13 @@
+from ajax_select.admin import AjaxSelectAdmin
+from ajax_select.fields import autoselect_fields_check_can_add
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput, Textarea, ModelForm, BooleanField, ModelForm
-
-from jackfrost.utils import build_page_for_obj
-
-from ajax_select import make_ajax_form
-from ajax_select.admin import AjaxSelectAdmin, AjaxSelectAdminTabularInline
-from ajax_select.fields import autoselect_fields_check_can_add
-
+from django.forms import TextInput, ModelForm
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-
-from reversion.admin import VersionAdmin
-
-from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
-from mezzanine.core.fields import RichTextField, OrderField
-from mezzanine.generic.fields import KeywordsField
-from mezzanine_pagedown.widgets import PlainWidget
+from mezzanine.pages.admin import PageAdmin
+from reversion.admin import VersionAdmin
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
@@ -102,7 +92,7 @@ class LessonForm(ModelForm):
 
         if standards_queryset is None:
             standards_queryset = Standard.objects.all()
-            
+
         self.fields['standards'].queryset = standards_queryset
         self.fields['anchor_standards'].queryset = standards_queryset
 
@@ -182,6 +172,7 @@ class VocabResource(resources.ModelResource):
     class Meta:
         model = Vocab
 
+
 class ActivityAdmin(VersionAdmin):
     class Meta:
         model = Activity
@@ -198,7 +189,6 @@ class ActivityAdmin(VersionAdmin):
 
     curriculum.admin_order_field = 'lesson__curriculum'
     unit.admin_order_field = 'lesson__unit'
-
 
 
 admin.site.register(Lesson, LessonAdmin)

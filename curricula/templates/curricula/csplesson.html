@@ -43,18 +43,19 @@
     <div class="lessons">
     {% for stage in unit.lessons %}
         {% if stage.number < lesson.number %}
-        <div class="lesson finished">
+            <div class="lesson finished">
         {% elif stage.number == lesson.number %}
-        <div class="lesson current">
+            <div class="lesson current">
         {% else %}
-        <div class="lesson unfinished">
+            <div class="lesson unfinished">
         {% endif %}
-            <a href="{{ unit.get_absolute_url }}{{ stage.number }}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                {{ stage.number }}
-            </a>
-        </div>
-    {% endfor %}
+    <a href="{{ unit.get_absolute_url }}{{ stage.number }}"
+       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+        {{ stage.number }}
+    </a>
     </div>
+    {% endfor %}
+</div>
 
 {% endblock %}
 
@@ -65,7 +66,7 @@
 
     <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
         {% editable lesson.title %}
-        <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
         {% endeditable %}
     </div>
 
@@ -96,18 +97,18 @@
 
         <div class="col-sm-4 right-col">
 
-            {% if lesson.anchor_standards.all.count > 0  %}
+            {% if lesson.anchor_standards.all.count > 0 %}
                 <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
                 {% with lesson.anchor_standards.all as standards %}
-                {% regroup standards by framework as standards_by_framework %}
-                {% for framework in standards_by_framework %}
-                    <h3>{{ framework.grouper }}</h3>
-                    <ul>
-                    {% for standard in framework.list %}
-                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                    {% regroup standards by framework as standards_by_framework %}
+                    {% for framework in standards_by_framework %}
+                        <h3>{{ framework.grouper }}</h3>
+                        <ul>
+                            {% for standard in framework.list %}
+                                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
-                    </ul>
-                {% endfor %}
                 {% endwith %}
             {% endif %}
 
@@ -131,26 +132,26 @@
             {% if lesson.resources.count > 0 %}
                 <h2>Resources</h2>
                 {% with lesson.resources.all as resources %}
-                {% regroup resources by student as resources_by_audience %}
-                {% for audience in resources_by_audience %}
-                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
-                    <ul>
-                    {% for resource in audience.list %}
-                        <li>
-                            {{ resource|safe }}
-                        </li>
+                    {% regroup resources by student as resources_by_audience %}
+                    {% for audience in resources_by_audience %}
+                        <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                        <ul>
+                            {% for resource in audience.list %}
+                                <li>
+                                    {{ resource|safe }}
+                                </li>
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
-                    </ul>
-                {% endfor %}
                 {% endwith %}
             {% endif %}
 
             {% if lesson.vocab.count > 0 %}
                 <h2>Vocabulary</h2>
                 <ul>
-                {% for word in lesson.vocab.all %}
-                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
-                {% endfor %}
+                    {% for word in lesson.vocab.all %}
+                        <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 
@@ -174,20 +175,20 @@
     <div id="standards">
         <h2>Standards Alignment</h2>
         {% with lesson.standards.all as standards %}
-        {% regroup standards by framework as standards_by_framework %}
-        {% for framework in standards_by_framework %}
-            <details class="framework">
-            <summary>{{ framework.grouper }}</summary>
-            <!--<ul>-->
-            {% for standard in framework.list %}
-                <details class="standard">
-                <summary>{{ standard.shortcode }}</summary>
-                    <p>{{ standard.description }}</p>
+            {% regroup standards by framework as standards_by_framework %}
+            {% for framework in standards_by_framework %}
+                <details class="framework">
+                    <summary>{{ framework.grouper }}</summary>
+                    <!--<ul>-->
+                    {% for standard in framework.list %}
+                        <details class="standard">
+                            <summary>{{ standard.shortcode }}</summary>
+                            <p>{{ standard.description }}</p>
+                        </details>
+                    {% endfor %}
+                    <!--</ul>-->
                 </details>
             {% endfor %}
-            <!--</ul>-->
-            </details>
-        {% endfor %}
         {% endwith %}
     </div>
     <script type="text/javascript">
@@ -196,16 +197,17 @@
             'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
             'smoothScrolling': false, //enable or disable smooth scrolling on click
             'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
-            'onHighlight': function(el) {}, //called when a new section is highlighted
+            'onHighlight': function (el) {
+            }, //called when a new section is highlighted
             'highlightOnScroll': true, //add class to heading that is currently in focus
             'highlightOffset': 100, //offset to trigger the next headline
-            'anchorName': function(i, heading, prefix) { //custom function for anchor name
-                return prefix+i;
+            'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                return prefix + i;
             },
-            'headerText': function(i, heading, $heading) { //custom function building the header-item text
+            'headerText': function (i, heading, $heading) { //custom function building the header-item text
                 return $heading.text();
             },
-            'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
+            'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
         });

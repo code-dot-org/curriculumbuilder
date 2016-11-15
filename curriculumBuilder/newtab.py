@@ -8,6 +8,7 @@ ones which point to anchors on the existing page.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
 from markdown import Extension
 from markdown.inlinepatterns import \
     LinkPattern, ReferencePattern, AutolinkPattern, AutomailPattern, \
@@ -17,6 +18,7 @@ from markdown.inlinepatterns import \
 # pylint: disable=invalid-name, too-few-public-methods
 class NewTabMixin(object):
     """Common extension logic; mixed into the existing classes."""
+
     def handleMatch(self, match):
         """Handles a match on a pattern; used by existing implementation."""
         elem = super(NewTabMixin, self).handleMatch(match)
@@ -47,6 +49,7 @@ class NewTabAutomailPattern(NewTabMixin, AutomailPattern):
 
 class NewTabExtension(Extension):
     """Modifies HTML output to open links in a new tab."""
+
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns['link'] = \
             NewTabLinkPattern(LINK_RE, md)

@@ -32,29 +32,29 @@
 
 {% block main %}
     {% for unit in curriculum.units %}
-    <div class="together resource_list">
-        <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+        <div class="together resource_list">
+            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
             <div>
-            {% for lesson in unit.lessons %}
-                <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
-                <div>
-                {% with lesson.resources.all as resources %}
-                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
-                    {% for audience in resources_by_audience %}
-                        <h4>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h4>
-                        <ul>
-                            {% for resource in audience.list %}
-                                <li>
-                                    {{ resource.formatted|safe }}
-                                </li>
+                {% for lesson in unit.lessons %}
+                    <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                    <div>
+                        {% with lesson.resources.all as resources %}
+                            {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                            {% for audience in resources_by_audience %}
+                                <h4>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h4>
+                                <ul>
+                                    {% for resource in audience.list %}
+                                        <li>
+                                            {{ resource.formatted|safe }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             {% endfor %}
-                        </ul>
-                    {% endfor %}
-                {% endwith %}
-                </div>
-            {% endfor %}
+                        {% endwith %}
+                    </div>
+                {% endfor %}
             </div>
-    </div>
+        </div>
     {% endfor %}
 
 {% endblock %}
