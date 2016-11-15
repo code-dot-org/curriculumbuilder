@@ -57,12 +57,12 @@
                 </div>
             </div>
             <div class="printbackground" id="bottom">
-                {% block header_title %}
-                    {% editable page.title %}
-                        <h1>{{ page.title }}</h1>
-                    {% endeditable %}
-                    <hr>
-                {% endblock %}
+            {% block header_title %}
+                {% editable page.title %}
+                <h1>{{ page.title }}</h1>
+                {% endeditable %}
+                <hr>
+            {% endblock %}
             </div>
         </div>
     </div>
@@ -73,25 +73,24 @@
 <footer>
     <div class="container">
         <div class="row">
-            <a href="http://creativecommons.org/"><img src="http://www.thinkersmith.org/images/creativeCommons.png"
-                                                       border="0"></a>
+            <a href="http://creativecommons.org/"><img src="http://www.thinkersmith.org/images/creativeCommons.png" border="0"></a>
         </div>
     </div>
 </footer>
 <div id="print_trigger"></div>
 {% if pdf %}
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        jQuery(function () {
-            console.log('working');
-            console.log($("print_trigger"));
-            console.log('should do it');
-            $('a[data-pdf-link]').each(function () {
-                console.log(this.href);
-                this.href = $(this).attr('data-pdf-link');
-            });
+    jQuery(function() {
+        console.log('working');
+        console.log($("print_trigger"));
+        console.log('should do it');
+        $('a[data-pdf-link]').each(function() {
+            console.log(this.href);
+            this.href = $(this).attr('data-pdf-link');
         });
-    </script>
+    });
+</script>
 {% endif %}
 
 {% include "includes/footer_scripts.html" %}

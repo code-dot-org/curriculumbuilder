@@ -1,8 +1,8 @@
-html, body {
+html, body{
     margin: 0 !important;
     font-size: 16px;
     line-height: 1.35em;
-    height: 100%;
+    height:100%;
     font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -14,7 +14,7 @@ html, body {
     font-size: 50px;
     /*line-height: 72px;*/
     height: 100px;
-    color: white !important;
+    color: white!important;
 }
 
 .unitnumber a:hover {
@@ -22,7 +22,7 @@ html, body {
 }
 
 .unitnumber .h2 {
-    font-size: 14pt;
+	font-size: 14pt;
     text-transform: uppercase;
     margin: 10px 0 0 0;
     display: block;
@@ -33,7 +33,7 @@ html, body {
     display: block;
 }
 
-.pagebreak {
+.pagebreak{
     page-break-after: always;
 }
 
@@ -49,8 +49,8 @@ html, body {
 .headercontent .h1 {
     font-size: 60px;
     line-height: 1em;
-    margin-top: .125em;
-    margin-bottom: .25em;
+    margin-top:.125em;
+    margin-bottom:.25em;
 }
 
 .headercontent .lessons {
@@ -63,17 +63,17 @@ html, body {
 }
 
 .lessons .lesson a {
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
+	border-radius: 20px;
+	width: 40px;
+	height: 40px;
 }
 
 .lessons .current a {
-    background-color: #fefefe !important;
+    background-color: #fefefe!important;
 }
 
 .lessons .finished a {
-    background-color: rgba(254, 254, 254, .5) !important;
+    background-color: rgba(254,254,254,.5)!important;
 }
 
 .lessons .lesson a {
@@ -88,18 +88,18 @@ html, body {
 }
 
 .lessons .current a {
-    color: #7665a0 !important;
+    color: #7665a0!important;
 }
 
 .lessons .unfinished a {
-    color: #fefefe !important;
+    color: #fefefe!important;
 }
 
 .lessons .chapter {
     width: auto;
     height: 36px;
     padding: 0 5px;
-    color: #fefefe !important;
+    color: #fefefe!important;
     text-align: center;
     float: left;
     margin: 6px;
@@ -118,8 +118,8 @@ html, body {
     font-size: 19pt;
     font-weight: bold;
     line-height: 1em;
-    margin-top: .5em;
-    margin-bottom: 0em;
+    margin-top:.5em;
+    margin-bottom:0em;
     border: none;
 }
 
@@ -134,8 +134,8 @@ html, body {
 .content h3 {
     font-size: 18px;
     line-height: 1em;
-    margin-top: 1em;
-    margin-bottom: .5em;
+    margin-top:1em;
+    margin-bottom:.5em;
 }
 
 .content p, .content li {
@@ -160,8 +160,8 @@ html, body {
     color: #5d6770;
     font-size: 10pt;
     line-height: 1em;
-    margin-top: 1em;
-    margin-bottom: .5em;
+    margin-top:1em;
+    margin-bottom:.5em;
     font-weight: bold;
     list-style-type: none;
     padding: 0;
@@ -174,7 +174,7 @@ html, body {
 }
 
 .summary {
-    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 5px 5px rgba(0,0,0,0.25);
     padding: 10px 20px 10px 20px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -183,23 +183,22 @@ html, body {
     clear: both;
     /*page-break-after:always;*/
 }
-
 .summary h2 {
-    color: rgb(120, 101, 161);
-    text-transform: uppercase;
-    font-size: 15px;
-    line-height: 1em;
-    margin-top: 1em;
-    margin-bottom: 1em;
+  color: rgb(120,101,161);
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .summary .h2 {
-    color: rgb(120, 101, 161);
-    text-transform: uppercase;
+    color:rgb(120,101,161);
+    text-transform:uppercase;
     font-size: 18px;
     line-height: 1em;
-    margin-top: 1em;
-    margin-bottom: .5em;
+    margin-top:1em;
+    margin-bottom:.5em;
     font-weight: bold;
 }
 
@@ -226,21 +225,11 @@ html, body {
     box-shadow: inset -5px 0px 10px -5px #000;
 }*/
 
-.toc .h2 {
-    margin-top: 0.5em;
-}
+.toc .h2 { margin-top: 0.5em; }
+.toc .h3 { margin-top: 0; }
 
-.toc .h3 {
-    margin-top: 0;
-}
-
-.toc a {
-    color: #428bca;
-}
-
-.toc a:visited {
-    color: #428bca;
-}
+.toc a { color: #428bca; }
+.toc a:visited { color: #428bca; }
 
 .admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content {
     margin: 40px 15px 15px 15px;
@@ -269,7 +258,7 @@ html, body {
 
 .admonition.tip > .admonition-title, .admonition.tip-center > .admonition-title,
 .admonition.discussion > .admonition-title, .admonition.content > .admonition-title {
-    color: white !important;
+    color: white!important;
     font-size: 12pt;
     height: 30px;
     border-top-left-radius: 10px;
@@ -286,7 +275,7 @@ html, body {
 }
 
 .admonition.tip > p.admonition-title {
-    background-color: #ffa400 !important;
+    background-color: #ffa400!important;
 }
 
 .admonition.discussion {
@@ -294,7 +283,7 @@ html, body {
 }
 
 .admonition.discussion > p.admonition-title {
-    background-color: #7665a0 !important;
+    background-color: #7665a0!important;
 }
 
 .admonition.content {
@@ -302,7 +291,7 @@ html, body {
 }
 
 .admonition.content > p.admonition-title {
-    background-color: #00adbc !important;
+    background-color: #00adbc!important;
 }
 
 .tiplink {
@@ -373,9 +362,8 @@ html, body {
     margin-left: -55px;
 }
 
-table {
-    border-spacing: 0;
-}
+table { border-spacing: 0; }
+
 
 th {
     background-color: rgb(0, 178, 192);
@@ -397,9 +385,10 @@ th a:link, th a:visited, th a:hover, th a:active {
     color: white;
 }
 
-.lesson-table tr td:nth-child(2) {
-    width: 1%;
-    white-space: nowrap;
+
+.lesson-table tr td:nth-child(2){
+    width:1%;
+    white-space:nowrap;
 }
 
 .rollout-table td, .rollout-table th {
@@ -414,9 +403,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     font-weight: bold;
 }
 
-.video {
-    float: right !important;
-}
+.video { float: right !important; }
 
 .video div {
     width: auto !important;
@@ -494,7 +481,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .chapter_overviews h2 {
-    clear: both;
+    clear:both;
 }
 
 .chapter_overviews summary {
@@ -509,7 +496,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .lesson_overview {
     display: inline-block;
-    clear: both;
+    clear:both;
 }
 
 .lesson_overview img {
@@ -554,7 +541,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     display: none;
 }
 
-.stage-level {
+.stage-level{
     float: left;
 }
 
@@ -590,7 +577,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .teacher-markdown-false .instructions-markdown[open] {
-    clear: both;
+    clear:both;
 }
 
 .level-icon:before {
@@ -598,85 +585,26 @@ th a:link, th a:visited, th a:hover, th a:active {
     font-size: inherit;
 }
 
-.type-External .level-icon:before {
-    content: "\f0f6";
-}
-
-.type-StandaloneVideo .level-icon:before {
-    content: "\f03d";
-}
-
-.type-FreeResponse .level-icon:before {
-    content: "\f040";
-}
-
-.type-Multi .level-icon:before {
-    content: "\f0ca";
-}
-
-.type-Match .level-icon:before {
-    content: "\f009";
-}
-
-.type-Applab .level-icon:before {
-    content: "\f10b";
-}
-
-.type-NetSim .level-icon:before {
-    content: "\f0e8";
-}
-
-.type-Pixelation .level-icon:before {
-    content: "\f00a";
-}
-
-.type-TextCompression .level-icon:before {
-    content: "\f066";
-}
-
-.type-Odometer .level-icon:before {
-    content: "\f0e4";
-}
-
-.type-Gamelab .level-icon:before {
-    content: "\f11b";
-}
-
-.type-Weblab .level-icon:before {
-    content: "\f0ac";
-}
-
-.type-Unplugged .level-icon:before {
-    content: "\f127";
-}
-
-.type-Maze .level-icon:before {
-    content: "\f047";
-}
-
-.type-Karel .level-icon:before {
-    content: "\f047";
-}
-
-.type-Artist .level-icon:before {
-    content: "\f040";
-}
-
-.type-Playlab .level-icon:before {
-    content: "\f135";
-}
-
-.type-Calc .level-icon:before {
-    content: "\f1ec";
-}
-
-.type-Eval .level-icon:before {
-    content: "\f040";
-}
-
-.level-icon:before {
-    content: "\f085";
-}
+.type-External .level-icon:before {                 content: "\f0f6"; }
+.type-StandaloneVideo .level-icon:before {          content: "\f03d"; }
+.type-FreeResponse .level-icon:before {             content: "\f040"; }
+.type-Multi .level-icon:before {                    content: "\f0ca"; }
+.type-Match .level-icon:before {                    content: "\f009"; }
+.type-Applab .level-icon:before {                   content: "\f10b"; }
+.type-NetSim .level-icon:before {                   content: "\f0e8"; }
+.type-Pixelation .level-icon:before {               content: "\f00a"; }
+.type-TextCompression .level-icon:before {          content: "\f066"; }
+.type-Odometer .level-icon:before {                 content: "\f0e4"; }
+.type-Gamelab .level-icon:before {                  content: "\f11b"; }
+.type-Weblab .level-icon:before {                   content: "\f0ac"; }
+.type-Unplugged .level-icon:before {                content: "\f127"; }
+.type-Maze .level-icon:before {                     content: "\f047"; }
+.type-Karel .level-icon:before {                    content: "\f047"; }
+.type-Artist .level-icon:before {                   content: "\f040"; }
+.type-Playlab .level-icon:before {                  content: "\f135"; }
+.type-Calc .level-icon:before {                     content: "\f1ec"; }
+.type-Eval .level-icon:before {                     content: "\f040"; }
+.level-icon:before {                                content: "\f085"; }
 
 ul.multi {
     list-style-type: none;
@@ -720,12 +648,13 @@ a.btn.btn-warning:visited {
     overflow-y: auto;
 }
 
-@page {
+@page
+{
     size: auto;
     margin: .25in .25in .25in .25in;
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width : 480px) {
     .admonition.tip, .admonition.discussion, .admonition.content {
         text-align: inherit;
         width: 100%;
@@ -733,14 +662,12 @@ a.btn.btn-warning:visited {
         float: none;
     }
 
-    .tiplink {
-        display: none;
-    }
+    .tiplink { display: none;}
 }
 
 @media print {
     .say .admonition-title, .guide .admonition-title,
-    .say h4, .guide h4, .slides h4 {
+    .say h4, .guide h4, .slides h4{
         background: white !important;
     }
 }

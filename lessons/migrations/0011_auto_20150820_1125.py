@@ -5,6 +5,7 @@ from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('lessons', '0010_auto_20150818_1003'),
     ]
@@ -17,8 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='resource',
             name='dl_url',
-            field=models.URLField(help_text=b'Alternate download url', null=True, verbose_name=b'Download URL',
-                                  blank=True),
+            field=models.URLField(help_text=b'Alternate download url', null=True, verbose_name=b'Download URL', blank=True),
         ),
         migrations.AddField(
             model_name='resource',

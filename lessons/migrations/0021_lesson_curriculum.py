@@ -5,6 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('curricula', '0003_unit_number'),
         ('lessons', '0020_auto_20160418_1516'),

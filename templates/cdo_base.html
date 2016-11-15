@@ -3,34 +3,34 @@
 {% load pages_tags mezzanine_tags i18n future staticfiles %}
 
 <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <title>{% block meta_title %}Code.org Curriculum{% endblock %}</title>
-    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<title>{% block meta_title %}Code.org Curriculum{% endblock %}</title>
+<link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
-    {% compress css %}
-        <link href="//code.org/css/common.css" rel="stylesheet" type="text/css">
-        <link href="//code.org/style.css" rel="stylesheet" type="text/css">
-        <link href="//code.org/css/brstrap-nonresponsive.css" rel="stylesheet" type="text/css">
-        <link href="//code.org/css/simple-embedded.css" rel="stylesheet" type="text/css">
-        {% block extra_css %}{% endblock %}
-    {% endcompress %}
+{% compress css %}
+<link href="//code.org/css/common.css" rel="stylesheet" type="text/css">
+<link href="//code.org/style.css" rel="stylesheet" type="text/css">
+<link href="//code.org/css/brstrap-nonresponsive.css" rel="stylesheet" type="text/css">
+<link href="//code.org/css/simple-embedded.css" rel="stylesheet" type="text/css">
+{% block extra_css %}{% endblock %}
+{% endcompress %}
 
-    {% compress js %}
-        <script src="//code.org/js/jquery.min.js"></script>
-        <script src="{% static "js/bootstrap.js" %}"></script>
-        <script src="{% static "js/bootstrap-extras.js" %}"></script>
-        {% block extra_js %}{% endblock %}
-    {% endcompress %}
+{% compress js %}
+<script src="//code.org/js/jquery.min.js"></script>
+<script src="{% static "js/bootstrap.js" %}"></script>
+<script src="{% static "js/bootstrap-extras.js" %}"></script>
+{% block extra_js %}{% endblock %}
+{% endcompress %}
 
-    <!--[if lt IE 9]>
+<!--[if lt IE 9]>
 <script src="{% static "js/html5shiv.js" %}"></script>
 <script src="{% static "js/respond.min.js" %}"></script>
 <![endif]-->
 
-    {% block extra_head %}{% endblock %}
+{% block extra_head %}{% endblock %}
 </head>
 
 <body id="{% block body_id %}body{% endblock %}">
@@ -40,16 +40,14 @@
     </div>
 </div>
 {% block footer %}
-    <footer>
-        <div class="container">
-            <div class="row">
-                <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}"
-                                                           border="0"></a><br/>
-                <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a
-                        href="//code.org/contact">contact us.</a></span>
-            </div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}" border="0"></a><br/>
+            <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a href="//code.org/contact">contact us.</a></span>
         </div>
-    </footer>
+    </div>
+</footer>
 {% endblock %}
 {% block footer_scripts %}{% endblock %}
 {% include "includes/footer_scripts.html" %}

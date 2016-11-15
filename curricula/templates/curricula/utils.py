@@ -1,11 +1,10 @@
 from django.conf import settings
-# from wkhtmltopdf import WKHtmlToPdf
-# import boto
-# from boto.s3.key import Key
+#from wkhtmltopdf import WKHtmlToPdf
+#import boto
+#from boto.s3.key import Key
 
 import pdfkit
-
-# import dryscrape
+#import dryscrape
 
 '''
 New plan!

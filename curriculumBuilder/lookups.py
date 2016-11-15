@@ -1,19 +1,16 @@
 from ajax_select import LookupChannel
 from django.core import urlresolvers
-
 from lessons.models import Resource
 
-
 class ResourceLookup(LookupChannel):
-    model = Resource
+  model = Resource
 
-    def get_query(self, q, request):
-        return Resource.objects.filter(name__icontains=q).order_by('name')
+  def get_query(self, q, request):
+    return Resource.objects.filter(name__icontains=q).order_by('name')
 
-    def format_item_display(self, obj):
-        display_text = obj.name
-        if obj.url:
-            display_text += u"  -  [r %s]" % (obj.name,)
-        display_text += u"  -  <a href='%s' target='_blank'>edit</a>" % (
-        urlresolvers.reverse('admin:lessons_resource_change', args=(obj.pk,)),)
-        return display_text
+  def format_item_display(self, obj):
+    display_text = obj.name
+    if obj.url:
+      display_text += u"  -  [r %s]" % (obj.name,)
+    display_text += u"  -  <a href='%s' target='_blank'>edit</a>" % (urlresolvers.reverse('admin:lessons_resource_change', args=(obj.pk,)),)
+    return display_text

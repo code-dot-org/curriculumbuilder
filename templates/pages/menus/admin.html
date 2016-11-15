@@ -2,75 +2,74 @@
 
 <ol>
     {% for page in page_branch %}
-        <li id="ordering_{{ page.id }}">
-            <div class="{% cycle 'row1' 'row2' %} page_type_{{ page.content_model }}">
-                <a href="#" class="tree-toggle" id="page-{{ page.id }}"
-                   {% if not page.has_children %}style="visibility:hidden;"{% endif %}>
-                    <span class="icon open">+</span>
-                    <span class="icon close">-</span>
-                </a>
-                {% set_page_permissions page %}
-                {% if page.perms.delete %}
-                    <a href="{% url "admin:pages_page_delete" page.id %}?fromtree" class="delete"></a>
-                {% else %}
-                    <span class="delete" style="background:none;"></span>
-                {% endif %}
-                {% if page.perms.change %}
-                    <a href="
-                            {% url "admin:pages_page_change" page.id %}{% if not page.is_primary %}?parent={{ page.parent_id }}{% endif %}"
-                       class="changelink">{{ page.title }}</a>
-                {% else %}
-                    <span class="uneditable">{{ page.title }}</span>
-                {% endif %}
-                <span class="page_type">{{ page.content_model }}</span>
+    <li id="ordering_{{ page.id }}">
+        <div class="{% cycle 'row1' 'row2' %} page_type_{{ page.content_model }}">
+            <a href="#" class="tree-toggle" id="page-{{ page.id }}"
+                {% if not page.has_children %}style="visibility:hidden;"{% endif %}>
+                <span class="icon open">+</span>
+                <span class="icon close">-</span>
+            </a>
+            {% set_page_permissions page %}
+            {% if page.perms.delete %}
+            <a href="{% url "admin:pages_page_delete" page.id %}?fromtree" class="delete"></a>
+            {% else %}
+            <span class="delete" style="background:none;"></span>
+            {% endif %}
+            {% if page.perms.change %}
+            <a href="{% url "admin:pages_page_change" page.id %}{% if not page.is_primary %}?parent={{ page.parent_id }}{% endif %}"
+                class="changelink">{{ page.title }}</a>
+            {% else %}
+            <span class="uneditable">{{ page.title }}</span>
+            {% endif %}
+            <span class="page_type">{{ page.content_model }}</span>
             <span class="ordering"{% if not page.perms.change %}
-                  style="visibility:hidden;"{% endif %}>
+                style="visibility:hidden;"{% endif %}>
                 <img src="{% static settings.MEZZANINE_ADMIN_PREFIX|add:"img/admin/arrow-up.gif" %}">
                 <img src="{% static settings.MEZZANINE_ADMIN_PREFIX|add:"img/admin/arrow-down.gif" %}">
             </span>
-                {% if page.perms.add and page.content_model != 'block' %}
-                    <select class="addlist" id="addlink-{{ page.id }}">
-                        <option value="">{% trans "Add" %} ...</option>
-                        {% for model in page_models %}
-                            {% set_model_permissions model %}
-                            {% if model.perms.add %}
-                                {% if page.content_model == 'curriculum' %}
-                                    {% if model.meta_verbose_name == 'unit' %}
-                                        <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                            {{ model.meta_verbose_name|capfirst }}
-                                        </option>
-                                    {% endif %}
-                                {% elif page.content_model == 'unit' %}
-                                    {% if model.meta_verbose_name == 'chapter' or model.meta_verbose_name == 'lesson' %}
-                                        <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                            {{ model.meta_verbose_name|capfirst }}
-                                        </option>
-                                    {% endif %}
-                                {% elif page.content_model == 'chapter' or page.content_model == 'lesson' %}
-                                    {% if model.meta_verbose_name == 'lesson' %}
-                                        <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                            {{ model.meta_verbose_name|capfirst }}
-                                        </option>
-                                    {% endif %}
-                                {% elif page.content_model == 'ide' %}
-                                    {% if model.meta_verbose_name == 'block' %}
-                                        <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                            {{ model.meta_verbose_name|capfirst }}
-                                        </option>
-                                    {% endif %}
-                                {% else %}
-                                    <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                        {{ model.meta_verbose_name|capfirst }}
-                                    </option>
-                                {% endif %}
+            {% if page.perms.add and page.content_model != 'block' %}
+            <select class="addlist" id="addlink-{{ page.id }}">
+                <option value="">{% trans "Add" %} ...</option>
+                {% for model in page_models %}
+                    {% set_model_permissions model %}
+                    {% if model.perms.add %}
+                        {% if page.content_model == 'curriculum' %}
+                            {% if model.meta_verbose_name == 'unit' %}
+                                <option value="{{ model.add_url }}?parent={{ page.id }}">
+                                    {{ model.meta_verbose_name|capfirst }}
+                                </option>
                             {% endif %}
-                        {% endfor %}
-                    </select>
-                {% endif %}
+                        {% elif page.content_model == 'unit' %}
+                            {% if model.meta_verbose_name == 'chapter' or model.meta_verbose_name == 'lesson' %}
+                                <option value="{{ model.add_url }}?parent={{ page.id }}">
+                                    {{ model.meta_verbose_name|capfirst }}
+                                </option>
+                            {% endif %}
+                        {% elif page.content_model == 'chapter' or page.content_model == 'lesson' %}
+                            {% if model.meta_verbose_name == 'lesson' %}
+                                <option value="{{ model.add_url }}?parent={{ page.id }}">
+                                    {{ model.meta_verbose_name|capfirst }}
+                                </option>
+                            {% endif %}
+                        {% elif page.content_model == 'ide' %}
+                            {% if model.meta_verbose_name == 'block' %}
+                                <option value="{{ model.add_url }}?parent={{ page.id }}">
+                                    {{ model.meta_verbose_name|capfirst }}
+                                </option>
+                            {% endif %}
+                        {% else %}
+                            <option value="{{ model.add_url }}?parent={{ page.id }}">
+                                {{ model.meta_verbose_name|capfirst }}
+                            </option>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </select>
+            {% endif %}
 
-            </div>
-            <br style="clear:both;">
-            {% if page.has_children %}{% page_menu page %}{% endif %}
-        </li>
+        </div>
+        <br style="clear:both;">
+        {% if page.has_children %}{% page_menu page %}{% endif %}
+    </li>
     {% endfor %}
 </ol>

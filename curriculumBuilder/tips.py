@@ -19,97 +19,97 @@ License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
-
-import re
-from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
+from markdown.blockprocessors import BlockProcessor
 from markdown.util import etree
+import re
 
 
 class TipsExtension(Extension):
-    """ Admonition extension for Python-Markdown. """
+  """ Admonition extension for Python-Markdown. """
 
-    def extendMarkdown(self, md, md_globals):
-        """ Add Admonition to Markdown instance. """
-        md.registerExtension(self)
+  def extendMarkdown(self, md, md_globals):
+    """ Add Admonition to Markdown instance. """
+    md.registerExtension(self)
 
-        md.parser.blockprocessors.add('admonition',
-                                      TipsProcessor(md.parser),
-                                      '_begin')
+    md.parser.blockprocessors.add('admonition',
+                                  TipsProcessor(md.parser),
+                                  '_begin')
 
 
 class TipsProcessor(BlockProcessor):
-    CLASSNAME = 'admonition'
-    CLASSNAME_TITLE = 'admonition-title'
-    RE = re.compile(r'(?:^|\n)!!!\ ?([\w\-]+)(?:\ "(.*?)")?(?:\ <(.*?)>)?')
 
-    def test(self, parent, block):
-        sibling = self.lastChild(parent)
-        return self.RE.search(block) or \
-               (block.startswith(' ' * self.tab_length) and sibling is not None and
-                sibling.get('class', '').find(self.CLASSNAME) != -1)
+  CLASSNAME = 'admonition'
+  CLASSNAME_TITLE = 'admonition-title'
+  RE = re.compile(r'(?:^|\n)!!!\ ?([\w\-]+)(?:\ "(.*?)")?(?:\ <(.*?)>)?')
 
-    def run(self, parent, blocks):
-        sibling = self.lastChild(parent)
-        block = blocks.pop(0)
-        m = self.RE.search(block)
+  def test(self, parent, block):
+    sibling = self.lastChild(parent)
+    return self.RE.search(block) or \
+           (block.startswith(' ' * self.tab_length) and sibling is not None and
+            sibling.get('class', '').find(self.CLASSNAME) != -1)
 
-        if m:
-            block = block[m.end() + 1:]  # removes the first line
+  def run(self, parent, blocks):
+    sibling = self.lastChild(parent)
+    block = blocks.pop(0)
+    m = self.RE.search(block)
 
-        block, theRest = self.detab(block)
+    if m:
+      block = block[m.end() + 1:]  # removes the first line
 
-        if m:
-            klass, title, anchor, icon = self.get_class_and_title(m)
-            div = etree.SubElement(parent, 'div')
-            div.set('class', '%s %s' % (self.CLASSNAME, klass))
-            if title:
-                p = etree.SubElement(div, 'p')
-                p.text = '%s%s' % (icon, title)
-                p.set('class', self.CLASSNAME_TITLE)
-                p.set('id', '%s_%s' % (klass, anchor))
-        else:
-            div = sibling
+    block, theRest = self.detab(block)
 
-        content = etree.SubElement(div, 'div')
+    if m:
+      klass, title, anchor, icon = self.get_class_and_title(m)
+      div = etree.SubElement(parent, 'div')
+      div.set('class', '%s %s' % (self.CLASSNAME, klass))
+      if title:
+        p = etree.SubElement(div, 'p')
+        p.text = '%s%s' % (icon, title)
+        p.set('class', self.CLASSNAME_TITLE)
+        p.set('id', '%s_%s' % (klass, anchor))
+    else:
+      div = sibling
+      
+    content = etree.SubElement(div, 'div')
 
-        self.parser.parseChunk(content, block)
+    self.parser.parseChunk(content, block)
 
-        if theRest:
-            # This block contained unindented line(s) after the first indented
-            # line. Insert these lines as the first block of the master blocks
-            # list for future processing.
-            blocks.insert(0, theRest)
+    if theRest:
+      # This block contained unindented line(s) after the first indented
+      # line. Insert these lines as the first block of the master blocks
+      # list for future processing.
+      blocks.insert(0, theRest)
 
-    def get_class_and_title(self, match):
-        klass, title, anchor, icon = match.group(1).lower(), match.group(2), match.group(3), ''
+  def get_class_and_title(self, match):
+    klass, title, anchor, icon = match.group(1).lower(), match.group(2), match.group(3), ''
 
-        if klass == 'tip':
-            new_title = 'Teaching Tip'
-            icon = '<i class="fa fa-lightbulb-o"></i>'
-        elif klass == 'discussion':
-            new_title = 'Discussion Goal'
-            icon = '<i class="fa fa-comments"></i>'
-        elif klass == 'content':
-            new_title = 'Content Corner'
-            icon = '<i class="fa fa-mortar-board"></i>'
-        elif klass == 'say':
-            new_title = 'Remarks'
-            icon = '<i class="fa fa-microphone"></i>'
-        elif klass == 'guide':
-            new_title = None
-            icon = '<i class="fa fa-pencil-square-o"></i>'
-        else:
-            new_title = klass.capitalize()
-            icon = ''
-        if title is None:
-            title = new_title
-        elif title == '':
-            # an explicit blank title should not be rendered
-            # e.g.: `!!! warning ""` will *not* render `p` with a title
-            title = None
-        return klass, title, anchor, icon
+    if klass == 'tip':
+      new_title = 'Teaching Tip'
+      icon = '<i class="fa fa-lightbulb-o"></i>'
+    elif klass == 'discussion':
+      new_title = 'Discussion Goal'
+      icon = '<i class="fa fa-comments"></i>'
+    elif klass == 'content':
+      new_title = 'Content Corner'
+      icon = '<i class="fa fa-mortar-board"></i>'
+    elif klass =='say':
+      new_title = 'Remarks'
+      icon = '<i class="fa fa-microphone"></i>'
+    elif klass =='guide':
+      new_title = None
+      icon = '<i class="fa fa-pencil-square-o"></i>'
+    else:
+      new_title = klass.capitalize()
+      icon = ''
+    if title is None:
+      title = new_title
+    elif title == '':
+      # an explicit blank title should not be rendered
+      # e.g.: `!!! warning ""` will *not* render `p` with a title
+      title = None
+    return klass, title, anchor, icon
 
 
 def makeExtension(*args, **kwargs):
-    return TipsExtension(*args, **kwargs)
+  return TipsExtension(*args, **kwargs)

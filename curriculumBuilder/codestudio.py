@@ -1,6 +1,6 @@
+from markdown.util import etree
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
-from markdown.util import etree
 
 CODESTUDIO_RE = r'(\[code-studio\s*)(?P<start>\d+)?-?(?P<end>\d+)?\]'
 

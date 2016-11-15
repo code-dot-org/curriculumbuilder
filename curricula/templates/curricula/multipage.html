@@ -24,17 +24,17 @@
 {% endblock %}
 
 {% block main %}
-    {% for unit in curriculum.units %}
+{% for unit in curriculum.units %}
 
-        <h1>{{ unit.title }}</h1>
+    <h1>{{ unit.title }}</h1>
 
-        {% for lesson in unit.lessons %}
-            {% include 'curricula/partials/detail_header.html' with lesson=lesson %}
-
-
-            {% include 'curricula/partials/csp.html' with lesson=lesson %}
+    {% for lesson in unit.lessons %}
+        {% include 'curricula/partials/detail_header.html' with lesson=lesson %}
 
 
-        {% endfor %}
+        {% include 'curricula/partials/csp.html' with lesson=lesson %}
+
+
     {% endfor %}
+{% endfor %}
 {% endblock %}

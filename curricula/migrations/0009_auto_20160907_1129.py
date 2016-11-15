@@ -5,6 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('curricula', '0008_auto_20160907_1006'),
     ]

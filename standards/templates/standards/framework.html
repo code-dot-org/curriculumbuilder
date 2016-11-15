@@ -32,58 +32,51 @@
 
 {% block main %}
     {% for top in top_categories.all %}
-        <div class="together">
-            <h2>{{ top.shortcode }} - {{ top.name }}</h2>
-            {% if top.children.count > 0 %}
-                {% for child in top.children.all %}
-                    <h3>{{ child.shortcode }} - {{ child.name }}</h3>
-                    {% if child.children.count > 0 %}
-                        {% for child2 in child.children.all %}
-                            <h4>{{ child2.shortcode }} - {{ child2.name }}</h4>
+    <div class="together">
+        <h2>{{ top.shortcode }} - {{ top.name }}</h2>
+        {% if top.children.count > 0 %}
+            {% for child in top.children.all %}
+                <h3>{{ child.shortcode }} - {{ child.name }}</h3>
+                {% if child.children.count > 0 %}
+                    {% for child2 in child.children.all %}
+                        <h4>{{ child2.shortcode }} - {{ child2.name }}</h4>
+                        <ul>
+                        {% for standard in child2.standard_set.all %}
+                            <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
                             <ul>
-                                {% for standard in child2.standard_set.all %}
-                                    <li><strong><a
-                                            href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong>
-                                        - {{ standard.description }}</li>
-                                    <ul>
-                                        {% for lesson in standard.lesson_set.all %}
-                                            <li><a href="{{ lesson.url }}">{{ lesson.title }}
-                                                - {{ lesson.curriculum }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
+                            {% for lesson in standard.lesson_set.all  %}
+                                <li><a href="{{ lesson.url }}">{{ lesson.title }} - {{ lesson.curriculum }}</a></li>
+                            {% endfor %}
                             </ul>
                         {% endfor %}
-                    {% else %}
-                        <ul>
-                            {% for standard in child.standard_set.all %}
-                                <li><strong><a
-                                        href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong>
-                                    - {{ standard.description }}</li>
-                                <ul>
-                                    {% for lesson in standard.lesson_set.all %}
-                                        <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <ul>
-                    {% for standard in top.standard_set.all %}
-                        <li><strong><a
-                                href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong>
-                            - {{ standard.description }}</li>
-                        <ul>
-                            {% for lesson in standard.lesson_set.all %}
-                                <li><a href="{{ lesson.url }}">{{ lesson.curriculum }} - {{ lesson.title }}</a></li>
-                            {% endfor %}
                         </ul>
                     {% endfor %}
+                {% else %}
+                    <ul>
+                    {% for standard in child.standard_set.all %}
+                        <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
+                        <ul>
+                        {% for lesson in standard.lesson_set.all  %}
+                            <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <ul>
+            {% for standard in top.standard_set.all %}
+                <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
+                <ul>
+                {% for lesson in standard.lesson_set.all  %}
+                    <li><a href="{{ lesson.url }}">{{ lesson.curriculum }} - {{ lesson.title }}</a></li>
+                {% endfor %}
                 </ul>
-            {% endif %}
-        </div>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
     {% endfor %}
 
 {% endblock %}

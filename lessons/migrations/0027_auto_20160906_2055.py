@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import sortedm2m.fields
 from django.db import migrations, models
+import sortedm2m.fields
 from sortedm2m.operations import AlterSortedManyToManyField
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('lessons', '0026_lesson_blocks'),
     ]
@@ -15,8 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='lesson',
             name='duration',
-            field=models.IntegerField(help_text=b'Week number within the unit (only use for first lesson of the week)',
-                                      null=True, verbose_name=b'Week', blank=True),
+            field=models.IntegerField(help_text=b'Week number within the unit (only use for first lesson of the week)', null=True, verbose_name=b'Week', blank=True),
         ),
         AlterSortedManyToManyField(
             model_name='lesson',

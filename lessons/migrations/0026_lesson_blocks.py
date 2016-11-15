@@ -5,6 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('documentation', '0002_auto_20160811_1545'),
         ('lessons', '0025_resource__order'),

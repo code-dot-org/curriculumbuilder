@@ -1,13 +1,15 @@
-import datetime
-import itertools
-import json
-import logging
-import urllib2
-from urlparse import urlparse
-
 import re
+import itertools
+import datetime
+import urllib2
+import logging
+import json
+from urlparse import urlparse
 # from copy import copy, deepcopy
+from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
@@ -16,6 +18,7 @@ from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.utils import build_page_for_obj
+from jackfrost.tasks import build_single
 from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
@@ -99,7 +102,7 @@ class Resource(Orderable):
             formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
         elif self.gd:
             formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a>)" % (
-                formatted, self.gd_pdf(), self.gd_doc())
+            formatted, self.gd_pdf(), self.gd_doc())
         return formatted
 
     def formatted_md(self):
@@ -284,7 +287,7 @@ class Lesson(Page, RichText):
 
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-                self.unit.stage_name, self.number)
+            self.unit.stage_name, self.number)
             response = urllib2.urlopen(url)
             data = json.loads(response.read())
             self.stage = data
@@ -333,7 +336,7 @@ class Lesson(Page, RichText):
     @property
     def zendesk_link(self):
         message = "Bug in %s unit %s lesson %d curriculum.code.org%s" % (
-            str(self.curriculum), self.unit.number, self.number, self.get_absolute_url())
+        str(self.curriculum), self.unit.number, self.number, self.get_absolute_url())
         url = "https://support.code.org/hc/en-us/requests/new?description=%s" % urllib2.quote(message)
         return url
 
@@ -460,8 +463,9 @@ Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
 Lesson._meta.get_field('login_required').help_text = "Hide from listings and prevent be publishing."
 Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be updated during publish."
 
-reversion.register(Activity, follow=('lesson',))
-reversion.register(Objective, follow=('lesson',))
+reversion.register(Activity, follow=('lesson', ))
+reversion.register(Objective, follow=('lesson', ))
+
 
 """
 These post_save receivers call the JackFrost build command

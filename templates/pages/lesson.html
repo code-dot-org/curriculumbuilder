@@ -38,11 +38,11 @@
 {% block header_title %}
     {% if page.lesson.unplugged %}UNPLUGGED{% endif %}
     {% editable page.title %}
-        <h1>{{ page.title }}</h1>
+    <h1>{{ page.title }}</h1>
     {% endeditable %}
     <hr>
     Class sessions: {{ page.lesson.duration }}
-    <span class="disclaimer">
+<span class="disclaimer">
   Basic lesson time includes activity only. Introductory and Wrap-Up suggestions can be used to delve deeper when time allows.
 </span>
 {% endblock %}
@@ -67,18 +67,18 @@
             </ul>
         </div>
     {% endif %}
-    {% if page.lesson.anchor_standards.all.count > 0 %}
+    {% if page.lesson.anchor_standards.all.count > 0  %}
         <h2>Anchor Standard{% if page.lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
         {% with standards=page.lesson.anchor_standards.all %}
-            {% regroup standards by framework as standards_by_framework %}
-            {% for framework in standards_by_framework %}
-                <h3>{{ framework.grouper }}</h3>
-                <ul>
-                    {% for standard in framework.list %}
-                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
-                    {% endfor %}
-                </ul>
+        {% regroup standards by framework as standards_by_framework %}
+        {% for framework in standards_by_framework %}
+            <h3>{{ framework.grouper }}</h3>
+            <ul>
+            {% for standard in framework.list %}
+                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
             {% endfor %}
+            </ul>
+        {% endfor %}
         {% endwith %}
     {% endif %}
 
@@ -126,15 +126,15 @@
     <div id="standards">
         <h2>Standards Alignment</h2>
         {% with standards=page.lesson.standards.all %}
-            {% regroup standards by framework as standards_by_framework %}
-            {% for framework in standards_by_framework %}
-                <h3>{{ framework.grouper }}</h3>
-                <ul>
-                    {% for standard in framework.list %}
-                        <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
-                    {% endfor %}
-                </ul>
+        {% regroup standards by framework as standards_by_framework %}
+        {% for framework in standards_by_framework %}
+            <h3>{{ framework.grouper }}</h3>
+            <ul>
+            {% for standard in framework.list %}
+                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
             {% endfor %}
+            </ul>
+        {% endfor %}
         {% endwith %}
     </div>
     <script type="text/javascript">
@@ -143,17 +143,16 @@
             'container': '#lesson_content', //element to find all selectors in
             'smoothScrolling': true, //enable or disable smooth scrolling on click
             'prefix': 'toc', //prefix for anchor tags and class names
-            'onHighlight': function (el) {
-            }, //called when a new section is highlighted
+            'onHighlight': function(el) {}, //called when a new section is highlighted
             'highlightOnScroll': true, //add class to heading that is currently in focus
             'highlightOffset': 100, //offset to trigger the next headline
-            'anchorName': function (i, heading, prefix) { //custom function for anchor name
-                return prefix + i;
+            'anchorName': function(i, heading, prefix) { //custom function for anchor name
+                return prefix+i;
             },
-            'headerText': function (i, heading, $heading) { //custom function building the header-item text
+            'headerText': function(i, heading, $heading) { //custom function building the header-item text
                 return $heading.text();
             },
-            'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
+            'itemClass': function(i, heading, $heading, prefix) { // custom function for item class
                 return $heading[0].tagName.toLowerCase();
             }
         });

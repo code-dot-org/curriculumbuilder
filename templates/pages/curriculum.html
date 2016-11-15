@@ -28,14 +28,14 @@
 
 {% block main %}
     {% for unit in page.curriculum.unit_set.all %}
-        <div class="together">
-            <h2>{{ unit.title }}</h2>
-            <ul>
-                {% for lesson in unit.unitlesson_set.all %}
-                    <li><a href="{{ lesson.url }}">{{ lesson }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="together">
+        <h2>{{ unit.title }}</h2>
+        <ul>
+        {% for lesson in unit.unitlesson_set.all %}
+            <li><a href="{{ lesson.url }}">{{ lesson }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
     {% endfor %}
 
 {% endblock %}

@@ -396,9 +396,9 @@
                     {% endif %}
                     {% if level.answers %}
                         <ul class="multi">
-                            {% for answer in level.answers %}
-                                <li class="correct-{{ answer.correct }}">{{ answer.text|richtext_filters|safe }}</li>
-                            {% endfor %}
+                        {% for answer in level.answers %}
+                            <li class="correct-{{ answer.correct }}">{{ answer.text|richtext_filters|safe }}</li>
+                        {% endfor %}
                         </ul>
                     {% endif %}
                 </details>

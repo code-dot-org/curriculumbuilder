@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.db import migrations, models
 import jsonfield.fields
 import mezzanine.core.fields
-from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('lessons', '0028_lesson_questions'),
     ]
@@ -20,14 +21,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='lesson',
             name='cs_content',
-            field=mezzanine.core.fields.RichTextField(
-                help_text=b'Purpose of this lesson in progression and CS in general', null=True,
-                verbose_name=b'Purpose', blank=True),
+            field=mezzanine.core.fields.RichTextField(help_text=b'Purpose of this lesson in progression and CS in general', null=True, verbose_name=b'Purpose', blank=True),
         ),
         migrations.AlterField(
             model_name='lesson',
             name='duration',
-            field=models.IntegerField(help_text=b'Week within the unit (only use for first lesson of the week)',
-                                      null=True, verbose_name=b'Week', blank=True),
+            field=models.IntegerField(help_text=b'Week within the unit (only use for first lesson of the week)', null=True, verbose_name=b'Week', blank=True),
         ),
     ]

@@ -1,12 +1,11 @@
-from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from mezzanine.pages import views
+from django.contrib import messages
 from mezzanine.pages.models import Page, PageMoveException
-
-from curricula.models import Unit, Chapter
+from mezzanine.pages import views
 from lessons.models import Lesson
+from curricula.models import Unit, Chapter
 
 """
 Mokeypatching the page order view to deal with out custom numbering logic

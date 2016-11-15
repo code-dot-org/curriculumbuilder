@@ -11,8 +11,8 @@
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
@@ -22,9 +22,9 @@
         <link rel="stylesheet" href="{% static "css/commonlesson.css" %}">
         <link rel="stylesheet" href="{% static "css/lightbox.css" %}">
     {% endcompress %}
-    {% block extra_css %}{% endblock %}
+        {% block extra_css %}{% endblock %}
 
-    <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+        <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
     {% if user.is_staff %}
         <link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
         <link rel="stylesheet" type="text/css" href="{% static "codemirror/addon/display/buttons.css" %}">
@@ -38,9 +38,11 @@
         <script src="{% static "codemirror/addon/edit/closetag.js" %}"></script>
         <script src="{% static "codemirror/addon/edit/continuelist.js" %}"></script>
     {% endif %}
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="{% static "js/bootstrap-extras.js" %}"></script>
-    {% block extra_js %}{% endblock %}
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="{% static "js/bootstrap-extras.js" %}"></script>
+        {% block extra_js %}{% endblock %}
+
+
 
 
     <!--[if lt IE 9]>
@@ -67,12 +69,12 @@
                 {% endblock %}
             </div>
             <div class="bottom">
-                {% block header_title %}
-                    {% editable page.title %}
-                        <h1>{{ page.title }}</h1>
-                    {% endeditable %}
-                    <hr>
-                {% endblock %}
+            {% block header_title %}
+                {% editable page.title %}
+                <h1>{{ page.title }}</h1>
+                {% endeditable %}
+                <hr>
+            {% endblock %}
             </div>
         </div>
     </div>
@@ -81,28 +83,26 @@
     </div>
 </div>
 {% block footer %}
-    <footer>
-        <div class="container">
-            <div class="row">
-                <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}"
-                                                           border="0"></a><br/>
-                <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a
-                        href="//code.org/contact">contact us.</a></span>
-            </div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}" border="0"></a><br/>
+            <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a href="//code.org/contact">contact us.</a></span>
         </div>
-    </footer>
+    </div>
+</footer>
 {% endblock %}
 <div id="print_trigger"></div>
 <script type="text/javascript">
     var vars = [], hash;
-    var q = document.URL.split('?')[1];
-    if (q != undefined) {
-        q = q.split('&');
-        for (var i = 0; i < q.length; i++) {
-            hash = q[i].split('=');
-            vars.push(hash[1]);
-            vars[hash[0]] = hash[1];
-        }
+        var q = document.URL.split('?')[1];
+        if(q != undefined){
+            q = q.split('&');
+            for(var i = 0; i < q.length; i++){
+                hash = q[i].split('=');
+                vars.push(hash[1]);
+                vars[hash[0]] = hash[1];
+            }
     }
 
     if (vars['pdf']) {
