@@ -37,6 +37,8 @@
 
 {% block main %}
     <div class="together standards row">
+    <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
+    <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
     {% if unit %}{# If unit is passed, just grab that unit #}
         <div class="together">
             <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
@@ -62,4 +64,21 @@
     {% endif %}
     </div>
 
+{% endblock %}
+
+{% block footer_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#expand-all").click(function () {
+                $("details").each(function() {
+                    this.open = true;
+                });
+            });
+            $("#collapse-all").click(function () {
+                $("details").each(function() {
+                    this.open = false;
+                });
+            });
+        });
+    </script>
 {% endblock %}
