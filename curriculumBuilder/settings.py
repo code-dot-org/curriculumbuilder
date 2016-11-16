@@ -574,6 +574,13 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Los_Angeles'
 
+#####################
+# COMPRESS SETTINGS #
+#####################
+
+COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+COMPRESS_URL = STATIC_URL
+
 ###########
 # LOGGING #
 ###########
