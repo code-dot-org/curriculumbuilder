@@ -141,35 +141,49 @@ Unit List Views
 
 def curriculum_resources(request, slug):
     curriculum = Curriculum.objects.get(slug=slug)
-    return render(request, 'curricula/resources.html', {'curriculum': curriculum})
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'list_type': 'Resources',
+                                                        'include_template': 'curricula/partials/resource_list.html'})
 
 
 def unit_resources(request, slug, unit_slug):
     curriculum = Curriculum.objects.get(slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
-    return render(request, 'curricula/resources.html', {'curriculum': curriculum, 'unit': unit})
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'unit': unit,
+                                                        'list_type': 'Resources',
+                                                        'include_template': 'curricula/partials/resource_list.html'})
 
 
 def curriculum_vocab(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
-    return render(request, 'curricula/vocab.html', {'curriculum': curriculum})
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                    'list_type': 'Vocab',
+                                                    'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def unit_vocab(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
-    return render(request, 'curricula/vocab.html', {'curriculum': curriculum, 'unit': unit})
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                    'unit': unit,
+                                                    'list_type': 'Vocab',
+                                                    'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def curriculum_code(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
-    return render(request, 'curricula/code.html', {'curriculum': curriculum})
-
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                   'list_type': 'Introduced Code',
+                                                   'include_template': 'curricula/partials/code_list.html'})
 
 def unit_code(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
-    return render(request, 'curricula/code.html', {'curriculum': curriculum, 'unit': unit})
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                   'unit': unit,
+                                                   'list_type': 'Introduced Code',
+                                                   'include_template': 'curricula/partials/code_list.html'})
 
 
 '''

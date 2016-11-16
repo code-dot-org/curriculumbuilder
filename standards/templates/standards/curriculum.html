@@ -27,8 +27,16 @@
     <span class="disclaimer">Standards Alignment</span>
 {% endblock %}
 
+{% block resources_nav %}
+    {% if unit %}
+        {% include "curricula/partials/unit_pills.html" with unit=unit %}
+    {% else %}
+        {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
+    {% endif %}
+{% endblock %}
+
 {% block main %}
-    <div class="standards">
+    <div class="together standards row">
     {% if unit %}{# If unit is passed, just grab that unit #}
         <div class="together">
             <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>

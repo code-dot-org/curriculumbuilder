@@ -200,13 +200,7 @@
 {% endblock %}
 
 {% block resources_nav %}
-    <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Lesson Resources">
-        <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
-            <a href="{{ unit.get_absolute_url }}" class="btn" role="button">Unit Overview</a>
-            <a href="{{ unit.get_pdf_url }}" class="btn" role="button">All Lessons PDF</a>
-            <a href="{{ unit.get_resources_url }}" class="btn" role="button">All Handouts PDF</a>
-        </div>
-    </div>
+    {% include "curricula/partials/lesson_pills.html" with unit=unit %}
 {% endblock %}
 
 {% block main %}

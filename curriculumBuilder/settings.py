@@ -578,8 +578,9 @@ CELERY_TIMEZONE = 'America/Los_Angeles'
 # COMPRESS SETTINGS #
 #####################
 
-COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
-COMPRESS_URL = STATIC_URL
+if ON_PAAS:
+    COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+    COMPRESS_URL = STATIC_URL
 
 ###########
 # LOGGING #

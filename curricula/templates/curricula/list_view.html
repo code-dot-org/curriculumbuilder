@@ -29,16 +29,26 @@
 {% block header_title %}
     <h1>{{ curriculum.title }}</h1>
     {% if unit %}<h2>{{ unit.title }}</h2>{% endif %}
-    <h3 class="disclaimer">Vocab</h3>
+    <h3 class="disclaimer">{{ list_type }}</h3>
+{% endblock %}
+
+{% block resources_nav %}
+    {% if unit %}
+        {% include "curricula/partials/unit_pills.html" with unit=unit %}
+    {% else %}
+        {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
+    {% endif %}
 {% endblock %}
 
 {% block main %}
-    {% if unit %}
-        {% include 'curricula/partials/vocab_list.html' with unit=unit %}
-    {% else %}
-        {% for unit in curriculum.units %}
-            {% include 'curricula/partials/vocab_list.html' with unit=unit %}
-        {% endfor %}
-    {% endif %}
+    <div class="together row">
+        {% if unit %}
+            {% include include_template with unit=unit %}
+        {% else %}
+            {% for unit in curriculum.units %}
+                {% include include_template with unit=unit %}
+            {% endfor %}
+        {% endif %}
+    </div>
 
 {% endblock %}
