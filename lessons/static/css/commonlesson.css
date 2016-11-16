@@ -31,6 +31,8 @@ html, body{
 .unitnumber .h1 {
     margin: 0;
     display: block;
+    font-size: 60px;
+    line-height: 1em;
 }
 
 .pagebreak{
@@ -38,12 +40,13 @@ html, body{
 }
 
 .header {
-    height: 100px;
+    overflow: auto;
     margin-top: 20px;
 }
 
 .headercontent {
     margin-left: 0;
+    margin-right: 97px;
 }
 
 .headercontent .h1 {
@@ -431,6 +434,10 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .vocab {
     text-decoration: underline;
+}
+
+.vocab-word {
+    font-weight: bold;
 }
 
 .drawer-controls i {

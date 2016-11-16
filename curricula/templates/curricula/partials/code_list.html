@@ -1,0 +1,19 @@
+
+<div class="together resource_list">
+    <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+    <div>
+    {% for lesson in unit.lessons %}
+        {% if lesson.blocks.count > 0 %}
+            <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+            <div>
+            <ul>
+
+                {% for block in lesson.blocks.all %}
+                    <li><a href="{{ code.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
+                {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>

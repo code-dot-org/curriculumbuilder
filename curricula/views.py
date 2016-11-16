@@ -135,13 +135,41 @@ def lesson_markdown(request, slug, unit_slug, lesson_num):
 
 
 '''
-Resource list views
+Unit List Views
 '''
 
 
 def curriculum_resources(request, slug):
     curriculum = Curriculum.objects.get(slug=slug)
-    return render(request, 'curricula/resources_curriculum.html', {'curriculum': curriculum})
+    return render(request, 'curricula/resources.html', {'curriculum': curriculum})
+
+
+def unit_resources(request, slug, unit_slug):
+    curriculum = Curriculum.objects.get(slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    return render(request, 'curricula/resources.html', {'curriculum': curriculum, 'unit': unit})
+
+
+def curriculum_vocab(request, slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    return render(request, 'curricula/vocab.html', {'curriculum': curriculum})
+
+
+def unit_vocab(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    return render(request, 'curricula/vocab.html', {'curriculum': curriculum, 'unit': unit})
+
+
+def curriculum_code(request, slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    return render(request, 'curricula/code.html', {'curriculum': curriculum})
+
+
+def unit_code(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    return render(request, 'curricula/code.html', {'curriculum': curriculum, 'unit': unit})
 
 
 '''

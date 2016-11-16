@@ -60,21 +60,22 @@
 
 <div class="container">
     <div class="header printbackground">
+        <div class="logo">
+            <img src="{% static "images/logo.png" %}">
+        </div>
+        {% block lessonnumber %}
+        {% endblock %}
         <div class="headercontent">
             <div class="top">
-                <div class="logo">
-                    <img src="{% static "images/logo.png" %}">
-                </div>
-                {% block lessonnumber %}
-                {% endblock %}
-            </div>
-            <div class="bottom">
             {% block header_title %}
                 {% editable page.title %}
                 <h1>{{ page.title }}</h1>
                 {% endeditable %}
                 <hr>
             {% endblock %}
+            </div>
+            <div class="bottom">
+                {% block header_subtitle %}{% endblock %}
             </div>
         </div>
     </div>

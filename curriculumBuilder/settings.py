@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
-import os
+
 import socket
+
+import os
 from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -91,7 +93,6 @@ USE_MODELTRANSLATION = False
 JQUERY_FILENAME = "jquery-1.12.3.min.js"
 JQUERY_UI_FILENAME = "jquery-ui-1.9.1.custom.min.js"
 
-
 ########################
 # MAIN DJANGO SETTINGS #
 ########################
@@ -114,7 +115,7 @@ LANGUAGE_CODE = "en"
 
 # Supported languages
 LANGUAGES = (
-  ('en', _('English')),
+    ('en', _('English')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -125,10 +126,10 @@ LANGUAGES = (
 ON_PAAS = 'OPENSHIFT_REPO_DIR' in os.environ
 
 if ON_PAAS:
-  SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
+    SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
 else:
-  # SECURITY WARNING: keep the secret key used in production secret!
-  SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
@@ -136,14 +137,15 @@ DEBUG = not ON_PAAS
 # DEBUG = DEBUG or os.getenv("debug", "false").lower() == "true"
 
 if ON_PAAS and DEBUG:
-  print("*** Warning - Debug mode is on ***")
+    print("*** Warning - Debug mode is on ***")
 
 TEMPLATE_DEBUG = DEBUG
 
 if ON_PAAS:
-  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com']
+    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
+                     '.codecurricula.com']
 else:
-  ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['*']
 
 ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@curriculumbuilder-cdo.rhcloud.com'
@@ -170,42 +172,42 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 #############
 
 if ON_PAAS:
-  # determine if we are on MySQL or POSTGRESQL
-  if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
+    # determine if we are on MySQL or POSTGRESQL
+    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
 
-    DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['OPENSHIFT_APP_NAME'],
-        'USER': os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
-        'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
-        'HOST': os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
-        'PORT': os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
-      }
-    }
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': os.environ['OPENSHIFT_APP_NAME'],
+                'USER': os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
+                'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
+                'HOST': os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
+                'PORT': os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
+            }
+        }
 
-  elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
+    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
 
-    DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['OPENSHIFT_APP_NAME'],
-        'USER': os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
-        'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
-        'HOST': os.environ['OPENSHIFT_MYSQL_DB_HOST'],
-        'PORT': os.environ['OPENSHIFT_MYSQL_DB_PORT'],
-      }
-    }
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': os.environ['OPENSHIFT_APP_NAME'],
+                'USER': os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
+                'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
+                'HOST': os.environ['OPENSHIFT_MYSQL_DB_HOST'],
+                'PORT': os.environ['OPENSHIFT_MYSQL_DB_PORT'],
+            }
+        }
 
 
 else:
-  # stock django, local development.
-  DATABASES = {
-    'default': {
-      'ENGINE': 'django.db.backends.sqlite3',
-      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # stock django, local development.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-  }
 
 #########
 # PATHS #
@@ -232,22 +234,22 @@ CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_APP
 STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi', 'static')
 
 STATICFILES_FINDERS = (
-  'django.contrib.staticfiles.finders.FileSystemFinder',
-  'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
 STATICFILES_DIRS = (
-  os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 if os.environ.get('REDISCLOUD_PASSWORD'):
     CACHES = {
-      "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
-                                          os.environ.get('REDISCLOUD_HOSTNAME'),
-                                          os.environ.get('REDISCLOUD_PORT')),
-      }
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
+                                                 os.environ.get('REDISCLOUD_HOSTNAME'),
+                                                 os.environ.get('REDISCLOUD_PORT')),
+        }
     }
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -268,107 +270,106 @@ ROOT_URLCONF = "%s.urls" % PROJECT_APP
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
-
 ################
 # APPLICATIONS #
 ################
 
 INSTALLED_APPS = (
-  "django.contrib.admin",
-  "django.contrib.auth",
-  "django.contrib.contenttypes",
-  "django.contrib.redirects",
-  "django.contrib.sessions",
-  "django.contrib.sites",
-  "django.contrib.sitemaps",
-  "collectfast",  # Needs to come before staticfiles
-  "django.contrib.staticfiles",
-  "mezzanine.boot",
-  "mezzanine.conf",
-  "mezzanine.core",
-  "mezzanine.generic",
-  "mezzanine.pages",
-  # "mezzanine.blog",
-  # "mezzanine.forms",
-  # "mezzanine.galleries",
-  # "mezzanine.twitter",
-  # "mezzanine.accounts",
-  "mezzanine.mobile",
-  # Third party apps
-  "mezzanine_pagedown",
-  # "csvimport.app.CSVImportConf",
-  "gunicorn",
-  "import_export",
-  # "data_importer",
-  "ajax_select",
-  # "wkhtmltopdf",
-  "django_medusa",
-  "freeze",
-  "jackfrost",
-  "storages",
-  "rest_framework",
-  "corsheaders",
-  "smuggler",
-  "sortedm2m",
-  "reversion",
-  # Custom apps for Code.org curriculum
-  "standards",
-  "lessons",
-  "curricula",
-  "documentation"
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.redirects",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
+    "collectfast",  # Needs to come before staticfiles
+    "django.contrib.staticfiles",
+    "mezzanine.boot",
+    "mezzanine.conf",
+    "mezzanine.core",
+    "mezzanine.generic",
+    "mezzanine.pages",
+    # "mezzanine.blog",
+    # "mezzanine.forms",
+    # "mezzanine.galleries",
+    # "mezzanine.twitter",
+    # "mezzanine.accounts",
+    "mezzanine.mobile",
+    # Third party apps
+    "mezzanine_pagedown",
+    # "csvimport.app.CSVImportConf",
+    "gunicorn",
+    "import_export",
+    # "data_importer",
+    "ajax_select",
+    # "wkhtmltopdf",
+    "django_medusa",
+    "freeze",
+    "jackfrost",
+    "storages",
+    "rest_framework",
+    "corsheaders",
+    "smuggler",
+    "sortedm2m",
+    "reversion",
+    # Custom apps for Code.org curriculum
+    "standards",
+    "lessons",
+    "curricula",
+    "documentation"
 )
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
 TEMPLATE_CONTEXT_PROCESSORS = (
-  "django.contrib.auth.context_processors.auth",
-  "django.contrib.messages.context_processors.messages",
-  "django.core.context_processors.debug",
-  "django.core.context_processors.i18n",
-  "django.core.context_processors.static",
-  "django.core.context_processors.media",
-  "django.core.context_processors.request",
-  "django.core.context_processors.tz",
-  "mezzanine.conf.context_processors.settings",
-  "mezzanine.pages.context_processors.page",
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.static",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "django.core.context_processors.tz",
+    "mezzanine.conf.context_processors.settings",
+    "mezzanine.pages.context_processors.page",
 )
 
 TEMPLATE_LOADERS = (
-  ('django.template.loaders.cached.Loader', (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-  )),
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
-  "mezzanine.core.middleware.UpdateCacheMiddleware",
+    "mezzanine.core.middleware.UpdateCacheMiddleware",
 
-  'django.contrib.sessions.middleware.SessionMiddleware',
-  # Uncomment if using internationalisation or localisation
-  # 'django.middleware.locale.LocaleMiddleware',
-  'corsheaders.middleware.CorsMiddleware',
-  'django.middleware.common.CommonMiddleware',
-  'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
-  'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # Uncomment if using internationalisation or localisation
+    # 'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-  "mezzanine.core.request.CurrentRequestMiddleware",
-  "mezzanine.core.middleware.RedirectFallbackMiddleware",
-  "mezzanine.core.middleware.TemplateForDeviceMiddleware",
-  "mezzanine.core.middleware.TemplateForHostMiddleware",
-  "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
-  "mezzanine.core.middleware.SitePermissionMiddleware",
-  # Uncomment the following if using any of the SSL settings:
-  # "mezzanine.core.middleware.SSLRedirectMiddleware",
-  "mezzanine.pages.middleware.PageMiddleware",
-  "mezzanine.core.middleware.FetchFromCacheMiddleware",
-  "curriculumBuilder.disable_csrf.DisableCSRF"
+    "mezzanine.core.request.CurrentRequestMiddleware",
+    "mezzanine.core.middleware.RedirectFallbackMiddleware",
+    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+    "mezzanine.core.middleware.TemplateForHostMiddleware",
+    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    "mezzanine.core.middleware.SitePermissionMiddleware",
+    # Uncomment the following if using any of the SSL settings:
+    # "mezzanine.core.middleware.SSLRedirectMiddleware",
+    "mezzanine.pages.middleware.PageMiddleware",
+    "mezzanine.core.middleware.FetchFromCacheMiddleware",
+    "curriculumBuilder.disable_csrf.DisableCSRF"
 )
 
 # Store these package names here as they may change in the future since
@@ -382,11 +383,11 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-  "debug_toolbar",
-  "django_extensions",
-  #"compressor",
-  PACKAGE_NAME_FILEBROWSER,
-  PACKAGE_NAME_GRAPPELLI,
+    "debug_toolbar",
+    "django_extensions",
+    # "compressor",
+    PACKAGE_NAME_FILEBROWSER,
+    PACKAGE_NAME_GRAPPELLI,
 )
 
 #####################
@@ -395,48 +396,50 @@ OPTIONAL_APPS = (
 
 CODEMIRROR_MODE = 'markdown'
 CODEMIRROR_CONFIG = {
-  'lineNumbers': False,
-  'lineWrapping': True,
-  'autoRefresh': True,
-  'autoCloseBrackets': True,
-  'matchBrackets': True,
+    'lineNumbers': False,
+    'lineWrapping': True,
+    'autoRefresh': True,
+    'autoCloseBrackets': True,
+    'matchBrackets': True,
 }
 CODEMIRROR_ADDON_JS = (
-  "display/autorefresh",
-  "edit/closebrackets",
-  "edit/matchbrackets",
-  "edit/closetag",
-  "edit/continuelist",
-  "display/panel",
-  "display/buttons",
+    "display/autorefresh",
+    "edit/closebrackets",
+    "edit/matchbrackets",
+    "edit/closetag",
+    "edit/continuelist",
+    "display/panel",
+    "display/buttons",
 )
 CODEMIRROR_ADDON_CSS = {
-  "display/buttons"
+    "display/buttons"
 }
 
-#CODEMIRROR_JS_VAR_FORMAT = "%s_editor"
+# CODEMIRROR_JS_VAR_FORMAT = "%s_editor"
 
-#RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
+# RICHTEXT_WIDGET_CLASS = 'mezzanine_pagedown.widgets.PageDownWidget'
 RICHTEXT_WIDGET_CLASS = 'codemirror.CodeMirrorTextarea'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
                            'data-pdf-link', 'data-lightbox', 'data-title')
-RICHTEXT_ALLOWED_ATTRIBUTES = ('abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
-                               'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-                               'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
-                               'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
-                               'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
-                               'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
-                               'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
-                               'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
-                               'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
-PAGEDOWN_MARKDOWN_EXTENSIONS = ('extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
-                                #'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
-                                'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
-                                'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
-                                'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
+RICHTEXT_ALLOWED_ATTRIBUTES = (
+'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
+'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
+'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
+'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
+'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
+'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
+'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
+'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
+'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
+PAGEDOWN_MARKDOWN_EXTENSIONS = (
+'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
+# 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
+'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
+'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
+'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 
@@ -445,9 +448,9 @@ PAGEDOWN_SERVER_SIDE_PREVIEW = False
 #######################
 
 AJAX_LOOKUP_CHANNELS = {
-  'resources': ('curriculumBuilder.lookups', 'ResourceLookup'),
-  'vocab': {'model': 'lessons.vocab', 'search_field': 'word'},
-  'standards': {'model': 'standards.standard', 'search_field': 'shortcode'},
+    'resources': ('curriculumBuilder.lookups', 'ResourceLookup'),
+    'vocab': {'model': 'lessons.vocab', 'search_field': 'word'},
+    'standards': {'model': 'standards.standard', 'search_field': 'shortcode'},
 }
 
 ########################
@@ -455,11 +458,11 @@ AJAX_LOOKUP_CHANNELS = {
 ########################
 
 WKHTMLTOPDF_CMD_OPTIONS = {
-  'page-size': 'Letter',
-  'print-media-type': '',
-  'javascript-delay': 3000,
-  'debug-javascript': '',
-  'no-stop-slow-scripts': '',
+    'page-size': 'Letter',
+    'print-media-type': '',
+    'javascript-delay': 3000,
+    'debug-javascript': '',
+    'no-stop-slow-scripts': '',
 }
 
 ###################
@@ -467,63 +470,63 @@ WKHTMLTOPDF_CMD_OPTIONS = {
 ###################
 
 if ON_PAAS:
-  AWS_QUERYSTRING_AUTH = False
-  AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-  AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-  AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
-  AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-  AWS_PRELOAD_METADATA = True # helps collectstatic do updates
-  #AWS_HEADERS = {
-  #  'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
-  #  'Cache-Control': 'max-age=3600',
-  #}
+    AWS_QUERYSTRING_AUTH = False
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
+    # AWS_HEADERS = {
+    #  'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
+    #  'Cache-Control': 'max-age=3600',
+    # }
 
-  AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
+    AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
-  STATICFILES_LOCATION = 'static'
-  STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
-  STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
-  MEDIAFILES_LOCATION = 'media'
-  DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
-  MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
-  #STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
-  #ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
-  #MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
+    # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
+    # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
+    # MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
 
 ###################
 # MEDUSA SETTINGS #
 ###################
 if ON_PAAS:
-  MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
-  MEDUSA_MULTITHREAD = False
-  AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
-  MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
+    MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
+    MEDUSA_MULTITHREAD = False
+    AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
+    MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
-#)
+# )
 
 ###################
 # FREEZE SETTINGS #
 ###################
 if ON_PAAS:
-  FREEZE_INCLUDE_STATIC = False
+    FREEZE_INCLUDE_STATIC = False
 
 ######################
 # JACKFROST SETTINGS #
 ######################
 if ON_PAAS: JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 JACKFROST_RENDERERS = (
-  'curricula.jackfrost_renderers.CurriculumRenderer',
-  'curricula.jackfrost_renderers.UnitRenderer',
-  'curricula.jackfrost_renderers.ChapterRenderer',
-  'curricula.jackfrost_renderers.LessonRenderer',
-  #'curricula.renderers.PDFRenderer',
+    'curricula.jackfrost_renderers.CurriculumRenderer',
+    'curricula.jackfrost_renderers.UnitRenderer',
+    'curricula.jackfrost_renderers.ChapterRenderer',
+    'curricula.jackfrost_renderers.LessonRenderer',
+    # 'curricula.renderers.PDFRenderer',
 )
 
-AUTO_PUBLISH = True#os.getenv("AUTO_PUBLISH", "False").lower() == "true"
+AUTO_PUBLISH = True  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"
 
 #################
 # CORS SETTINGS #
@@ -624,10 +627,10 @@ LOGGING = {
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-  from .local_settings import *
+    from .local_settings import *
 except ImportError as e:
-  if "local_settings" not in str(e):
-    raise e
+    if "local_settings" not in str(e):
+        raise e
 
 ####################
 # DYNAMIC SETTINGS #
@@ -640,8 +643,8 @@ except ImportError as e:
 # fabfile, where setting the dynamic settings below isn't strictly
 # required.
 try:
-  from mezzanine.utils.conf import set_dynamic_settings
+    from mezzanine.utils.conf import set_dynamic_settings
 except ImportError:
-  pass
+    pass
 else:
-  set_dynamic_settings(globals())
+    set_dynamic_settings(globals())
