@@ -65,7 +65,9 @@
 
 {% endblock %}
 
+{% if user.is_staff %}
 {% block admin_link %}
+
     <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
         <div class="drawer-controls">
             <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit"
@@ -101,7 +103,6 @@
                     </label>
                 </div>
             </div>
-            {% if user.is_staff %}
                 <div class="drawer-body">
                     <h2>Publishing</h2>
                     {% if lesson.jackfrost_can_build %}
@@ -133,13 +134,12 @@
                              ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
                     {% endfor %}
                 </div>
-            {% endif %}
             <ul class="drawer-nav">
             </ul>
         </div>
     </div>
-
 {% endblock %}
+{% endif %}
 
 {% block lessonnumber %}
     <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span
