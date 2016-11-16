@@ -111,6 +111,14 @@ html, body{
     font-weight: 600;
 }
 
+.resource-nav {
+    float:right;
+}
+
+.resource-nav .btn {
+    background: #cfc9de;
+}
+
 .content {
     padding: 0;
     margin: 30px 0;

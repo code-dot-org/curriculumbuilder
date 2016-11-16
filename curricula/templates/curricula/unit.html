@@ -84,6 +84,19 @@
 {% block header_title %}
 {% endblock %}
 
+{% block resources_nav %}
+    <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Unit Resources">
+        <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
+            <a href="{{ unit.get_pdf_url }}" class="btn" role="button">Lessons PDF</a>
+            <a href="{{ unit.get_resources_url }}" class="btn" role="button">Handouts PDF</a>
+            <a href="standards/" class="btn" role="button">Standards</a>
+            <a href="vocab/" class="btn" role="button">Vocab</a>
+            <a href="code/" class="btn" role="button">Code Documentation</a>
+            <a href="resources/" class="btn" role="button">Other Resources</a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block main %}
     <div class="together" id="unit{{ unit.number }}">
         <h1>Unit {{ unit.number }} - {{ unit.title }}</h1>

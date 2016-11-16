@@ -7,9 +7,8 @@
             <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
             <div>
             <ul>
-
                 {% for block in lesson.blocks.all %}
-                    <li><a href="{{ code.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
+                    <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
                 {% endfor %}
             </ul>
             </div>
