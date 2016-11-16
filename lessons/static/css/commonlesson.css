@@ -119,6 +119,14 @@ html, body{
     background: #cfc9de;
 }
 
+.resource-nav .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-top-left-radius: 0;
+}
+
+.resource-nav .btn-group>.btn:last-child:not(:first-child), .btn-group>.dropdown-toggle:not(:first-child) {
+    border-top-right-radius: 0;
+}
+
 .content {
     padding: 0;
     margin: 30px 0;
@@ -562,23 +570,34 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .teacher-markdown-false .level-link {
     float: left;
+    margin-bottom: 15px;
 }
 
-.stage-level.teacher-markdown-false {
+.level-link {
     margin: 5px 10px 5px 0;
     padding: 5px;
     border: 2px solid #cfc9de;
     border-radius: 5px;
 }
 
+/*
+.stage-level.teacher-markdown-false {
+    margin: 5px 10px 5px 0;
+    padding: 5px;
+    border: 2px solid #cfc9de;
+    border-radius: 5px;
+}
+*/
+
+/*
 .stage-level.teacher-markdown-true {
     padding-left: 25px;
-    /*background-color: #efefef;*/
 }
 
 .stage-level.teacher-markdown-true .level-link {
     margin-left: -18px;
 }
+*/
 
 .named-True, .named-True + .stage-level,
 .teacher-markdown-true, .teacher-markdown-true + .stage-level,
@@ -646,8 +665,10 @@ li.correct-True:before {
 /* Feedback Section */
 
 .open_questions {
-    border: 2px solid #ffa400;
-    padding: 0 10px 10px 10px;
+    /*border: 2px solid #ffa400;*/
+    background: #ebe8f1;
+    padding: 10px 15px;
+    margin-left: -15px
 }
 
 a.btn.btn-warning:link {

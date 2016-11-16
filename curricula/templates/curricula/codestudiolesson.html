@@ -210,249 +210,222 @@
 {% endblock %}
 
 {% block main %}
-    <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
-        {% editable lesson.title %}
-            {% if optional %}
-                <h1>Optional Lesson: {{ lesson.title }}</h1>
-            {% else %}
-                <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
-            {% endif %}
+<div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+    {% editable lesson.title %}
+        {% if optional %}
+            <h1>Optional Lesson: {{ lesson.title }}</h1>
+        {% else %}
+            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+        {% endif %}
+    {% endeditable %}
+
+    <div class="keywords">
+        <h4>
+            {% for keyword in lesson.keywords.all %}
+                {% if not forloop.first %}| {% endif %}
+                {{ keyword }}
+            {% endfor %}
+    </div>
+</div>
+
+<div class="together overview-page row">
+
+    <div class="col-sm-7 left-col">
+        <h2>Overview</h2>
+        {% editable lesson.overview %}
+            {{ lesson.overview|richtext_filters|safe }}
         {% endeditable %}
 
-        <div class="keywords">
-            <h4>
-                {% for keyword in lesson.keywords.all %}
-                    {% if not forloop.first %}| {% endif %}
-                    {{ keyword }}
-                {% endfor %}
-        </div>
-    </div>
-
-    <div class="together overview-page row">
-
-        <div class="col-sm-7 left-col">
-            <h2>Overview</h2>
-            {% editable lesson.overview %}
-                {{ lesson.overview|richtext_filters|safe }}
+        {% if lesson.cs_content %}
+            <h2>Purpose</h2>
+            {% editable lesson.cs_content %}
+                {{ lesson.cs_content|richtext_filters|safe }}
             {% endeditable %}
+        {% endif %}
 
-            {% if lesson.cs_content %}
-                <h2>Purpose</h2>
-                {% editable lesson.cs_content %}
-                    {{ lesson.cs_content|richtext_filters|safe }}
-                {% endeditable %}
-            {% endif %}
+        <h2>Agenda</h2>
+        <div class="toc" id="toc{{ lesson|slugify }}">
+            {% for activity in lesson.activity_set.all %}
+                <h3>{{ activity }}</h3>
+            {% endfor %}
+        </div>
 
-            <h2>Agenda</h2>
-            <div class="toc" id="toc{{ lesson|slugify }}">
-                {% for activity in lesson.activity_set.all %}
-                    <h3>{{ activity }}</h3>
+    </div>
+
+    <div class="col-sm-5 right-col">
+
+        {% if lesson.anchor_standards.all.count > 0 %}
+            <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+            {% with lesson.anchor_standards.all as standards %}
+                {% regroup standards by framework as standards_by_framework %}
+                {% for framework in standards_by_framework %}
+                    <h3>{{ framework.grouper }}</h3>
+                    <ul>
+                        {% for standard in framework.list %}
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
-            </div>
+            {% endwith %}
+        {% endif %}
 
-        </div>
-
-        <div class="col-sm-5 right-col">
-
-            {% if lesson.anchor_standards.all.count > 0 %}
-                <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
-                {% with lesson.anchor_standards.all as standards %}
-                    {% regroup standards by framework as standards_by_framework %}
-                    {% for framework in standards_by_framework %}
-                        <h3>{{ framework.grouper }}</h3>
-                        <ul>
-                            {% for standard in framework.list %}
-                                <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endfor %}
-                {% endwith %}
-            {% endif %}
-
-            {% if lesson.objective_set.count > 0 %}
-                <h2>Objectives</h2>
-                <h3>Students will be able to:</h3>
-                <ul>
-                    {% for objective in lesson.objective_set.all %}
-                        <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% if curriculum.auto_forum %}
-                <h2><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h2>
-            {% endif %}
-            {% if lesson.prep %}
-                <h2>Preparation</h2>
-                <div class="prep">
-                    {% editable lesson.prep %}
-                        {{ lesson.prep|richtext_filters|safe }}
-                    {% endeditable %}
-                </div>
-            {% endif %}
-
-            {% if lesson.resources.count > 0 %}
-                <h2>Links</h2>
-                {% with lesson.resources.all as resources %}
-                    {% regroup resources|dictsort:"student" by student as resources_by_audience %}
-                    {% for audience in resources_by_audience %}
-                        <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
-                        <ul>
-                            {% for resource in audience.list %}
-                                <li>
-                                    {% editable resource.name resource.type resource.url %}
-                                        {{ resource.formatted|safe }}
-                                    {% endeditable %}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endfor %}
-                {% endwith %}
-            {% endif %}
-            {% if user.is_staff %}
-                <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
-                    resource</a>{% endif %}
-
-            {% if lesson.vocab.count > 0 %}
-                <h2>Vocabulary</h2>
-                <ul>
-                    {% for word in lesson.vocab.all %}
-                        <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if lesson.blocks.count > 0 %}
-                <h2>Introduced Code</h2>
-                <ul>
-                    {% for block in lesson.blocks.all %}
-                        <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% if curriculum.display_questions %}
-                <div class="open_questions no_print">
-                    <h2>Open Questions</h2>
-                    {% if lesson.questions %}
-                        {% editable lesson.questions %}
-                            {{ lesson.questions|richtext_filters|safe }}
-                        {% endeditable %}
-                    {% else %}
-                        {% editable lesson.questions %}
-                            <p><em>No specific questions for this lesson, but we'd still love to get your feedback.</em>
-                            </p>
-                        {% endeditable %}
-                    {% endif %}
-                    {% if curriculum.feedback_url %}
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
-                            Give us feedback!
-                        </button>
-                    {% endif %}
-                </div>
-            {% endif %}
-
-        </div>
-    </div>
-
-    <div id="{{ lesson.title|slugify }}content">
-
-        <h1>Teaching Guide</h1>
-
-        {% for activity in lesson.activity_set.all %}
-            <div class="activity">
-                {% editable activity.name activity.time activity.content %}
-                    <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
-                    {{ activity.content|richtext_filters|safe }}
+        {% if lesson.objective_set.count > 0 %}
+            <h2>Objectives</h2>
+            <h3>Students will be able to:</h3>
+            <ul>
+                {% for objective in lesson.objective_set.all %}
+                    <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if lesson.prep %}
+            <h2>Preparation</h2>
+            <div class="prep">
+                {% editable lesson.prep %}
+                    {{ lesson.prep|richtext_filters|safe }}
                 {% endeditable %}
             </div>
-        {% endfor %}
+        {% endif %}
 
-    </div>
+        {% if lesson.resources.count > 0 %}
+            <h2>Links</h2>
+            {% with lesson.resources.all as resources %}
+                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <ul>
+                        {% for resource in audience.list %}
+                            <li>
+                                {% editable resource.name resource.type resource.url %}
+                                    {{ resource.formatted|safe }}
+                                {% endeditable %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+        {% if user.is_staff %}
+            <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
+                resource</a>{% endif %}
 
-    <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
+        {% if lesson.vocab.count > 0 %}
+            <h2>Vocabulary</h2>
+            <ul>
+                {% for word in lesson.vocab.all %}
+                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        {% for level in lesson.stage.levels %}
+        {% if lesson.blocks.count > 0 %}
+            <h2>Introduced Code</h2>
+            <ul>
+                {% for block in lesson.blocks.all %}
+                    <li><a href="{{ block.get_absolute_url }}"><code>{{ block.code }}</code></a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="open_questions no_print">
+            <h2>Support</h2>
 
-            <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
-                 class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
-                 data-level="{{ level.position }}">
-                <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                    <span class="level-icon"></span>
-                    {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
-                </a>
+            {% if curriculum.auto_forum %}
+                <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
+            {% endif %}
 
-                {% if level.teacher_markdown %}
-                    <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
+            <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></p>
+
+            {% if curriculum.display_questions %}
+                {% if lesson.questions %}
+                    {% editable lesson.questions %}
+                        {{ lesson.questions|richtext_filters|safe }}
+                    {% endeditable %}
+                {% else %}
+                    {% editable lesson.questions %}
+                        <p><em>No specific questions for this lesson, but we'd still love to get your feedback.</em>
+                        </p>
+                    {% endeditable %}
                 {% endif %}
-
-
-                <details class="instructions-markdown">
-                    <summary>{% if level.teacher_markdown %}Student Facing Instructions{% endif %}</summary>
-
-                    {% if level.type == "Multi" %}<h3>Multiple Choice</h3>{% endif %}
-                    {% if level.type == "Match" %}<h3>Matching</h3>{% endif %}
-                    {% if level.type == "FreeResponse" %}<h3>Free Response</h3>{% endif %}
-                    {% if level.video_youtube %}
-                        <iframe width="210" height="107"
-                                src="{{ level.video_youtube|no_autoplay }} %}">
-                        </iframe>
-                    {% endif %}
-                    {{ level.markdown|richtext_filters|safe }}
-                    {{ level.markdown_instructions|richtext_filters|safe }}
-
-                    {% if level.questions %}
-                        {% for question in level.questions %}
-                            <h4>{{ question.text }}</h4>
-                        {% endfor %}
-                    {% endif %}
-                    {% if level.answers %}
-                        <ul class="multi">
-                        {% for answer in level.answers %}
-                            <li class="correct-{{ answer.correct }}">{{ answer.text|richtext_filters|safe }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </details>
-
-            </div>
-
-        {% endfor %}
+            {% endif %}
+            {% if curriculum.feedback_url %}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
+                    Give us feedback!
+                </button>
+            {% endif %}
+        </div>
 
     </div>
+</div>
 
-    <div class="standards">
-        <h2>Standards Alignment</h2>
-        <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
-        {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
-    </div>
+<div id="{{ lesson.title|slugify }}content">
 
-    {% if curriculum.feedback_url %}
-        <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
-                        <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Got a bug to report?</a></p>
-                    </div>
-                    <div class="modal-body">
-                        <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0"
-                                marginwidth="0">
-                            <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
-                        </iframe>
-                    </div>
-                    <div class="modal-footer" style="text-align: left">
-                        <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close
-                        </button>
-                        {% if lesson.questions %}
-                            <h4>Open Questions</h4>
-                            {{ lesson.questions|richtext_filters|safe }}
-                        {% endif %}
-                    </div>
+    <h1>Teaching Guide</h1>
+
+    {% for activity in lesson.activity_set.all %}
+        <div class="activity">
+            {% editable activity.name activity.time activity.content %}
+                <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                {{ activity.content|richtext_filters|safe }}
+            {% endeditable %}
+        </div>
+    {% endfor %}
+
+</div>
+
+<div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
+
+    {% for level in lesson.stage.levels %}
+
+        <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
+             class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
+             data-level="{{ level.position }}">
+            <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                <span class="level-icon"></span>
+                {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
+            </a>
+
+            {% if level.teacher_markdown %}
+                <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="standards">
+    <h2>Standards Alignment</h2>
+    <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
+    {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+</div>
+
+{% if curriculum.feedback_url %}
+    <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0"
+                            marginwidth="0">
+                        <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
+                    </iframe>
+                </div>
+                <div class="modal-footer" style="text-align: left">
+                    <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close
+                    </button>
+                    {% if lesson.questions %}
+                        <h4>Open Questions</h4>
+                        {{ lesson.questions|richtext_filters|safe }}
+                    {% endif %}
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
+{% endif %}
 
 {% endblock %}
 {% block footer_js %}
