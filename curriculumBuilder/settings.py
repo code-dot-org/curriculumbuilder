@@ -141,7 +141,7 @@ if ON_PAAS and DEBUG:
 TEMPLATE_DEBUG = DEBUG
 
 if ON_PAAS:
-  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com']
+  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com', '.codecurricula.com']
 else:
   ALLOWED_HOSTS = ['*']
 
