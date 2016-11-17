@@ -234,6 +234,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi', 'static')
 STATICFILES_FINDERS = (
   'django.contrib.staticfiles.finders.FileSystemFinder',
   'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+  'compressor.finders.CompressorFinder',
 )
 
 STATICFILES_DIRS = (
@@ -384,7 +385,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 OPTIONAL_APPS = (
   "debug_toolbar",
   "django_extensions",
-  #"compressor",
+  "compressor",
   PACKAGE_NAME_FILEBROWSER,
   PACKAGE_NAME_GRAPPELLI,
 )
@@ -569,6 +570,13 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Los_Angeles'
+
+#####################
+# COMPRESS SETTINGS #
+#####################
+
+COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+COMPRESS_URL = STATIC_URL
 
 ###########
 # LOGGING #
