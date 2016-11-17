@@ -46,7 +46,7 @@ Core curricula and lesson views
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
     curriculum = get_object_or_404(Curriculum, slug=slug)
-    if (request.user.is_staff):
+    if request.user.is_staff:
         units = Unit.objects.filter(curriculum=curriculum)
     else:
         units = Unit.objects.filter(curriculum=curriculum, login_required=False)
@@ -62,7 +62,7 @@ def unit_view(request, slug, unit_slug):
         template = 'curricula/unit.html'
 
     curriculum = get_object_or_404(Curriculum, slug=slug)
-    if (request.user.is_staff):
+    if request.user.is_staff:
         unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     else:
         unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug, login_required=request.user.is_staff)
