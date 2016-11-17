@@ -253,6 +253,26 @@ class Lesson(Page, RichText):
     def get_curriculum(self):
         return self.unit.curriculum
 
+    def get_levels(self):
+        raw_levels = self.stage.get('levels')
+
+        levels = []  # To store levels organized by logical chunk
+        counter = 0
+        last_type = raw_levels[0].get('named_level')
+        levels.insert(counter, {'named': last_type, 'levels': []})
+
+        for level in raw_levels:
+
+            current_type = level.get('named_level')
+            if last_type != current_type:
+                last_type = current_type
+                counter += 1
+                levels.insert(counter, {'named': last_type, 'levels': []})
+
+            levels[counter]['levels'].append(level)
+
+        return levels
+
     def jackfrost_can_build(self):
         try:
             can_build = self.status == 2 and not self.login_required and \

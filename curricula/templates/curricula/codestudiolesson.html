@@ -387,6 +387,77 @@
 
 </div>
 
+<div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
+
+    {% with lesson.get_levels as stage %}
+    {% for chunk in stage %}
+        <div class="stage-chunk named-{{ chunk.named }}">
+            {% if chunk.named %}
+            <ul>
+                {% for level in chunk.levels %}
+                    <li class="level-bubble type-{{ level.type }}">
+                        <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                            <span class="level-icon"></span> {{ level.name }}
+                        </a>
+                    </li>
+                    <li class="level-bubble">
+                        <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                            Student Instructions
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <ul>
+                {% for level in chunk.levels %}
+                    <li class="level-bubble type-{{ level.type }}">
+                        <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                            <span class="level-icon"></span> {{ level.position }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% for level in chunk.levels %}
+                <div id="level-expando-{{ lesson.number }}-{{ level.position }}">
+
+                    <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                        View on Code Studio
+                    </a>
+
+                    {% if level.teacher_markdown %}
+                        <div class="instructions-markdown teacher-markdown">
+                        <h3>Teaching Tips</h3>
+                            {{ level.teacher_markdown|richtext_filters|safe }}
+                        </div>
+                    {% endif %}
+
+                    {% if not level.named_level %}
+                        <div class="instructions-markdown">
+                            <h3>Student Instructions</h3>
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                {% if level.named_level %}
+                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                        <div class="instructions-markdown">
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% endwith %}
+</div>
+
 <div class="standards">
     <h2>Standards Alignment</h2>
     <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
@@ -455,9 +526,22 @@
         });
 
 
+        $(function () {
+            $(".named-False").tabs({
+                collapsible: true,
+                active: false
+            });
+            $(".named-True").tabs({
+                collapsible: true
+            });
+        });
+
+
         $(document).ready(function () {
 
-            // Move Code Studio overivew levels to tagged locations
+            // Move Code Studio overview levels to tagged locations
+            /*
+            // Original level chunk supporting approach
             $('.stage_guide').each(function () {
                 if ($('.stage_guide_hidden').children().length > 0) {
                     var start = parseInt($(this).attr('data-start'));
@@ -477,6 +561,14 @@
                         $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
                         $('.stage_guide_hidden .stage-level').appendTo(this);
                     }
+                }
+            });
+            */
+            // New Code Studio Integration
+            $('.stage_guide').each(function () {
+                if ($('.stage_guide_hidden').children().length > 0) {
+                    $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                    $('.stage_guide_hidden .stage-chunk').appendTo(this);
                 }
             });
 

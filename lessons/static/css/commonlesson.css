@@ -574,10 +574,13 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .level-link {
+    /*
     margin: 5px 10px 5px 0;
     padding: 5px;
     border: 2px solid #cfc9de;
     border-radius: 5px;
+    */
+    font-size: .75em;
 }
 
 /*
@@ -598,7 +601,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-left: -18px;
 }
 */
-
+/*
 .named-True, .named-True + .stage-level,
 .teacher-markdown-true, .teacher-markdown-true + .stage-level,
 .type-StandaloneVideo, .type-StandaloneVideo + .stage-level {
@@ -613,7 +616,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 .teacher-markdown-false .instructions-markdown[open] {
     clear:both;
 }
-
+*/
 .level-icon:before {
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
