@@ -10,20 +10,16 @@
 <title>{% block meta_title %}Code.org Curriculum{% endblock %}</title>
 <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
-{% compress css %}
 <link href="//code.org/css/common.css" rel="stylesheet" type="text/css">
 <link href="//code.org/style.css" rel="stylesheet" type="text/css">
 <link href="//code.org/css/brstrap-nonresponsive.css" rel="stylesheet" type="text/css">
 <link href="//code.org/css/simple-embedded.css" rel="stylesheet" type="text/css">
 {% block extra_css %}{% endblock %}
-{% endcompress %}
 
-{% compress js %}
 <script src="//code.org/js/jquery.min.js"></script>
 <script src="{% static "js/bootstrap.js" %}"></script>
 <script src="{% static "js/bootstrap-extras.js" %}"></script>
 {% block extra_js %}{% endblock %}
-{% endcompress %}
 
 <!--[if lt IE 9]>
 <script src="{% static "js/html5shiv.js" %}"></script>
