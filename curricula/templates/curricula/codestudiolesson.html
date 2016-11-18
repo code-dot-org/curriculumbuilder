@@ -426,14 +426,18 @@
                         View on Code Studio
                     </a>
 
-                    {% if level.teacher_markdown %}
-                        <div class="instructions-markdown teacher-markdown">
+                    {% if level.named_level %}
+                        <div class="teacher-markdown">
                         <h3>Teaching Tips</h3>
                             {{ level.teacher_markdown|richtext_filters|safe }}
                         </div>
-                    {% endif %}
-
-                    {% if not level.named_level %}
+                    {% else %}
+                        {% if level.teacher_markdown %}
+                            <div class="teacher-markdown admonition tip">
+                            <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+                                {{ level.teacher_markdown|richtext_filters|safe }}
+                            </div>
+                        {% endif %}
                         <div class="instructions-markdown">
                             <h3>Student Instructions</h3>
                             {{ level.markdown|richtext_filters|safe }}

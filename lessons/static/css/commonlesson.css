@@ -643,6 +643,10 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-Eval .level-icon:before {                     content: "\f040"; }
 .level-icon:before {                                content: "\f085"; }
 
+.ui-tabs-panel {
+    overflow: auto;
+}
+
 ul.multi {
     list-style-type: none;
 }
