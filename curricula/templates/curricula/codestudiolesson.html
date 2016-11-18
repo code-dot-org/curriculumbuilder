@@ -419,6 +419,7 @@
                         </a>
                     </li>
                 {% endfor %}
+                <li class="level-expando-tip">(click tabs to see student view)</li>
             </ul>
             {% endif %}
 
@@ -538,12 +539,24 @@
 
 
         $(function () {
+
+            function toggleCollapse(event, ui) {
+                console.log(ui);
+            }
+
             $(".named-False").tabs({
                 collapsible: true,
-                active: false
+                active: false,
+                classes: { "ui-tabs-tab": "ui-corner-all" },
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
             });
             $(".named-True").tabs({
-                collapsible: true
+                collapsible: true,
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
             });
         });
 

@@ -570,6 +570,10 @@ th a:link, th a:visited, th a:hover, th a:active {
     padding: 0;
 }
 
+.stage-chunk.named-True {
+    margin-top: 15px;
+}
+
 .stage-chunk .ui-tabs-panel {
     overflow: auto;
     background-color: #f5fcff;
@@ -616,6 +620,26 @@ th a:link, th a:visited, th a:hover, th a:active {
 .stage-chunk .ui-state-active {
     border: 2px solid  #0094ca;
     background: #59b9dc;
+}
+
+.stage-chunk.named-False .ui-tabs-tab {
+    border-bottom-width: 1px;
+}
+
+.stage-chunk.named-False .admonition {
+    clear: right;
+}
+
+.stage-chunk.named-False .ui-tabs-tab.ui-state-active {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.stage-chunk .ui-tabs-nav .level-expando-tip {
+    font-style: oblique;
+    font-size: .75em;
+    color: #949ca2;
+    padding: 1em 0 0 .5em;
 }
 
 /*
