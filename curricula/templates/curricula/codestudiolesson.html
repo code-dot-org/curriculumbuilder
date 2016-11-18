@@ -395,14 +395,17 @@
             {% if chunk.named %}
             <ul>
                 {% for level in chunk.levels %}
+                    <li class="chunk-header type-{{ level.type }} ">
+                        <span class="level-icon"></span> {{ level.name }}
+                    </li>
                     <li class="level-bubble type-{{ level.type }}">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                            <span class="level-icon"></span> {{ level.name }}
+                            Teacher Overview
                         </a>
                     </li>
                     <li class="level-bubble">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
-                            Student Instructions
+                            Student Overview
                         </a>
                     </li>
                 {% endfor %}
@@ -428,7 +431,6 @@
 
                     {% if level.named_level %}
                         <div class="teacher-markdown">
-                        <h3>Teaching Tips</h3>
                             {{ level.teacher_markdown|richtext_filters|safe }}
                         </div>
                     {% else %}
@@ -449,6 +451,11 @@
 
                 {% if level.named_level %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+
+                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                            View on Code Studio
+                        </a>
+
                         <div class="instructions-markdown">
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}

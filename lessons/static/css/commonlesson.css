@@ -547,6 +547,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 /* Stage Overview */
 
+/*
 .stage_guide, .stage_guide_hidden {
     overflow: auto;
     background-color: #f5fcff;
@@ -555,6 +556,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-left: -20px;
     border-radius: 10px;
 }
+*/
 
 .stage_guide:empty, .stage_guide_hidden:empty {
     display: none;
@@ -564,6 +566,59 @@ th a:link, th a:visited, th a:hover, th a:active {
     display: none;
 }
 
+.stage-chunk {
+    padding: 0;
+}
+
+.stage-chunk .ui-tabs-panel {
+    overflow: auto;
+    background-color: #f5fcff;
+    border: 2px solid  #0094ca;
+}
+
+.stage-chunk.named-True + .stage-chunk.named-False  {
+    background-color: #f5fcff;
+    border: 2px solid  #0094ca;
+    border-top: none;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.stage-chunk.named-True + .stage-chunk.named-False .ui-tabs-panel  {
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.stage-chunk.named-True .ui-tabs-panel {
+    border-bottom: none;
+    border-top-left-radius: 3 !important;
+    border-top-right-radius: 3 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.stage-chunk.ui-widget.ui-widget-content {
+    border: none;
+}
+
+.stage-chunk .ui-widget-header {
+    border: none;
+    background: none;
+}
+
+.stage-chunk .ui-widget-header .chunk-header {
+    padding: .2em 1em 0 .5em;
+    font-size: 1.2em;
+    color: #0094ca;
+}
+
+.stage-chunk .ui-state-active {
+    border: 2px solid  #0094ca;
+    background: #59b9dc;
+}
+
+/*
 .stage-level{
     float: left;
 }
@@ -572,6 +627,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     float: left;
     margin-bottom: 15px;
 }
+*/
 
 .level-link {
     /*
@@ -581,6 +637,13 @@ th a:link, th a:visited, th a:hover, th a:active {
     border-radius: 5px;
     */
     font-size: .75em;
+    float: right;
+}
+
+.level-link:after {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    content: "\f08e";
 }
 
 /*
@@ -643,9 +706,6 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-Eval .level-icon:before {                     content: "\f040"; }
 .level-icon:before {                                content: "\f085"; }
 
-.ui-tabs-panel {
-    overflow: auto;
-}
 
 ul.multi {
     list-style-type: none;
