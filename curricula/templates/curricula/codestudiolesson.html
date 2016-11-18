@@ -412,6 +412,9 @@
             </ul>
             {% else %}
             <ul>
+                <li class="chunk-header">
+                    Levels
+                </li>
                 {% for level in chunk.levels %}
                     <li class="level-bubble type-{{ level.type }}">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
@@ -542,18 +545,32 @@
 
             function toggleCollapse(event, ui) {
                 console.log(ui);
+                if ($(ui.newPanel).length === 0) {
+                    console.log("collapsing");
+                    $(ui.oldPanel).addClass("collapsed");
+                    $(ui.oldPanel).siblings().removeClass("collapsed");
+                } else {
+                    console.log("not collapsing");
+                    $(ui.newPanel).removeClass("collapsed");
+                    $(ui.newPanel).siblings().removeClass("collapsed");
+                }
+
             }
 
             $(".named-False").tabs({
                 collapsible: true,
                 active: false,
-                classes: { "ui-tabs-tab": "ui-corner-all" },
+                classes: { "ui-tabs-panel": "ui-corner-all"},
                 /*show: { effect: "blind", duration: 500 },
                 hide: { effect: "fade", duration: 500 },*/
                 activate: toggleCollapse
+            }).each(function() {
+                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
             });
+
             $(".named-True").tabs({
                 collapsible: true,
+                classes: { "ui-tabs-panel": "ui-corner-all" },
                 /*show: { effect: "blind", duration: 500 },
                 hide: { effect: "fade", duration: 500 },*/
                 activate: toggleCollapse

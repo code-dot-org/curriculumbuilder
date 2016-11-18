@@ -568,9 +568,6 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .stage-chunk {
     padding: 0;
-}
-
-.stage-chunk.named-True {
     margin-top: 15px;
 }
 
@@ -580,26 +577,16 @@ th a:link, th a:visited, th a:hover, th a:active {
     border: 2px solid  #0094ca;
 }
 
-.stage-chunk.named-True + .stage-chunk.named-False  {
-    background-color: #f5fcff;
-    border: 2px solid  #0094ca;
-    border-top: none;
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
+.stage-chunk .ui-tabs-panel.collapsed {
+    padding: 0;
+    height: 15px;
+    display: block !important;  /* overriding default jQuery ui behavior */
+    border-color: #c5c5c5;
+    background: #f6f6f6;
 }
 
-.stage-chunk.named-True + .stage-chunk.named-False .ui-tabs-panel  {
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-}
-
-.stage-chunk.named-True .ui-tabs-panel {
-    border-bottom: none;
-    border-top-left-radius: 3 !important;
-    border-top-right-radius: 3 !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+.stage-chunk .ui-tabs-panel.collapsed * {
+    display: none;
 }
 
 .stage-chunk.ui-widget.ui-widget-content {
@@ -617,22 +604,17 @@ th a:link, th a:visited, th a:hover, th a:active {
     color: #0094ca;
 }
 
+.stage-chunk.named-False .ui-widget-header .chunk-header {
+    color: #949ca2;
+}
+
 .stage-chunk .ui-state-active {
     border: 2px solid  #0094ca;
     background: #59b9dc;
 }
 
-.stage-chunk.named-False .ui-tabs-tab {
-    border-bottom-width: 1px;
-}
-
 .stage-chunk.named-False .admonition {
     clear: right;
-}
-
-.stage-chunk.named-False .ui-tabs-tab.ui-state-active {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
 }
 
 .stage-chunk .ui-tabs-nav .level-expando-tip {
