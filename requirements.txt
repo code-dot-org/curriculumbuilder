@@ -11,7 +11,7 @@ boto
 celery
 chardet==2.3.0
 collectfast
-#data-importer
+#data-importer==2.2.1
 django-ajax-selects==1.3.6
 django-anymail[mailgun]
 django-appconf==1.0.1
