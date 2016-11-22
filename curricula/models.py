@@ -117,6 +117,11 @@ class Unit(Page, RichText):
                 response[result.name] = result
         return response
 
+    # Eventually this will need to address naming differences between CSF and CSD/CSP
+    @property
+    def short_name(self):
+        return "Unit %d" % self.number
+
     @property
     def lessons(self):
         # Exclude optional lessons by default, they'll only show up if explicitly called from a parent lesson

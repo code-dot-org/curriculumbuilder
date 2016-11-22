@@ -21,83 +21,10 @@
 {% endblock %}
 
 {% block main %}
-    {% if code_block.category %}
-        <div id="doc_category">
-            <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.category.name }}</span>
-        </div>
-    {% endif %}
-
-    <h2>Description</h2>
-
-    {{ code_block.content|richtext_filters|safe }}
-
-    {% if code_block.example_set.count > 0 %}
-
-        <h2>Examples</h2>
-
-        {% for example in code_block.example_set.all %}
-            {% if example.app %}
-                <div class="row">
-                    <div class="col-sm-7">
-                        <h3>{{ example.name }}</h3>
-                        <p>{{ example.description|richtext_filters|safe }}</p>
-                        <pre>
-                            {{ example.code|richtext_filters|safe }}
-                        </pre>
-                    </div>
-                        <div class="col-sm-3">
-                            <iframe width="352" height="620" style="border: 0px;" src="{{ example.get_embed_app }}"></iframe>
-                        </div>
-                </div>
-            {% else %}
-                <h3>{{ example.name }}</h3>
-                <p>{{ example.description|richtext_filters|safe }}</p>
-                <pre>
-                    {{ example.code|safe }}
-                </pre>
-            {% endif %}
-        {% endfor %}
-
-    {% endif %}
-
-    {% if code_block.syntax %}
-        <h2>Syntax</h2>
-        <pre>
-            {{ code_block.syntax|safe }}
-        </pre>
-    {% endif %}
-
-    {% if code_block.parameter_set.count > 0 %}
-        <div class="parameters">
-            <h2>Parameters</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th><th>Type</th><th>Required?</th><th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for parameter in code_block.parameter_set.all %}
-                    <tr>
-                        <td>{{ parameter.name }}</td>
-                        <td>{{ parameter.type }}</td>
-                        <td><span class="required_param_{{ parameter.required }}"></span></td>
-                        <td>{{ parameter.description }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% endif %}
-
-    {% if code_block.return_value %}
-        <h2>Returns</h2>
-        {{ code_block.return_value|richtext_filters|safe }}
-    {% endif %}
-
-    {% if code_block.tips %}
-        <h2>Tips</h2>
-        {{ code_block.tips|richtext_filters|safe }}
+    {% if code_block.proxy %}
+        {% include "documentation/partials/block.html" with code_block=code_block.proxy %}
+    {% else %}
+        {% include "documentation/partials/block.html" with code_block=code_block %}
     {% endif %}
 
     <p>Found a bug in the documentation? Let us know at <a href="mailto:documentation@code.org">documentation@code.org</a></p>
@@ -105,7 +32,25 @@
 {% endblock %}
 
 {% block footer_scripts %}
-<link rel="stylesheet" type="text/css" href="//code.org/css/codemirror.css">
-<script src="//code.org/js/codemirror.js"></script>
-<script src="//code.org/js/applab-docs.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
+<script src="{% static "codemirror/lib/codemirror.js" %}"></script>
+<script src="{% static "codemirror/mode/javascript/javascript.js" %}"></script>
+<script type="text/javascript">
+$(function() {
+  $('pre').each(function() {
+
+        var $this = $(this);
+        var $code = $this.text().trimRight();
+
+        $this.empty();
+
+        var editor = CodeMirror(this, {
+            value: $code,
+            mode: 'javascript',
+            lineNumbers: !$this.is('inline'),
+            readOnly: true
+        });
+    });
+});
+</script>
 {% endblock %}

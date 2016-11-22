@@ -43,7 +43,7 @@ class BlockForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(BlockForm, self).__init__(*args, **kwargs)
 
-        if self.instance.parent.content_model == 'ide':
+        if self.instance.parent:
             categories_queryset = Category.objects.filter(IDE=self.instance.parent.ide)
         else:
             categories_queryset = Category.objects.all()
@@ -61,7 +61,7 @@ class BlockAdmin(PageAdmin):
             'fields': ['title', 'slug', 'keywords', ('description', 'gen_description')],
         }),
         ('Documentation', {
-            'fields': ['ext_doc', 'category', 'content'],
+            'fields': ['proxy', 'ext_doc', 'category', 'content'],
         }),
         ('Details', {
             'fields': ['syntax', 'return_value'],

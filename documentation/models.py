@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
@@ -31,8 +33,11 @@ class Category(Orderable):
     color = models.CharField(max_length=255)
     IDE = models.ForeignKey(IDE)
 
+    class Meta:
+        ordering = ["IDE", "_order"]
+
     def __unicode__(self):
-        return self.name
+        return "%s: %s" % (self.IDE.title, self.name)
 
 
 """
@@ -46,6 +51,7 @@ class Block(Page, RichText):
     syntax = RichTextField(blank=True, null=True)
     ext_doc = models.URLField('External Documentation', blank=True, null=True,
                               help_text='Link to external documentation')
+    proxy = models.ForeignKey("self",blank=True, null=True, help_text='Existing block to pull documentation from')
     signature = models.CharField(max_length=255, blank=True, null=True)
     category = models.ForeignKey(Category, blank=True, null=True)
     return_value = models.CharField(max_length=255, blank=True, null=True,
@@ -63,12 +69,16 @@ class Block(Page, RichText):
     def block_with_ide(self):
         return "%s - %s" % (self.IDE, self.title)
 
+    @property
+    def lessons_introduced(self):
+        return self.lesson_set.filter(unit__login_required=False, curriculum__login_required=False)
+
     def get_absolute_url(self):
         return '/documentation/%s/%s/' % (self.IDE.slug, self.slug)
 
     def get_IDE(self):
         parent = self.parent
-        if hasattr(parent, 'ide'):
+        if parent.content_model == 'ide':
             return parent.ide
 
     def set_parent(self, new_parent):
@@ -129,8 +139,12 @@ class Example(Orderable):
 
     def get_embed_app(self):
         if self.app:
-            embed_code = '%s/embed' % self.app
-            return embed_code
+            re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
+            if re.search(re_url, self.app):
+                embed_code = 'https://%s/embed' % re.search(re_url, self.app).group(0)
+                return embed_code
+            else:
+                return
         else:
             return
 

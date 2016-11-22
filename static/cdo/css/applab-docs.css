@@ -1,10 +1,14 @@
 .CodeMirror {
     /* Makes e.g. single line comments not take up the whole height */
-    height: auto;
+    height: auto !important;
 }
 
 #doc_header h1 {
     color: #00adbc;
+}
+
+#doc_category {
+    margin-bottom: 20px;
 }
 
 #doc_category .category_label {
@@ -51,6 +55,28 @@
 
 #categories ul.category_blocks li a {
     font-family: 'Gotham 4r', sans-serif;
+}
+
+.introduced_in {
+    float: right;
+    margin-left: 15px;
+    clear: right;
+}
+
+.introduced_in .introduced_lesson {
+    float: right;
+    padding: 10px;
+    background: #ebe8f1;
+    margin-bottom: 15px;
+    clear: right;
+}
+
+.introduced_in .introduced_lesson h3 {
+    margin: 0 0 15px 0;
+}
+
+.introduced_in .introduced_lesson ul {
+    list-style: none;
 }
 
 .content {
