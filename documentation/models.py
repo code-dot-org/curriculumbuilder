@@ -57,6 +57,7 @@ class Block(Page, RichText):
     return_value = models.CharField(max_length=255, blank=True, null=True,
                                     help_text='Description of return value or alternate functionality')
     tips = RichTextField(blank=True, null=True, help_text='List of tips for using this block')
+    video = models.ForeignKey('lessons.Resource', blank=True, null=True)
     _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
     class Meta:
@@ -72,6 +73,10 @@ class Block(Page, RichText):
     @property
     def lessons_introduced(self):
         return self.lesson_set.filter(unit__login_required=False, curriculum__login_required=False)
+
+    @property
+    def code(self):
+        return self.syntax
 
     def get_absolute_url(self):
         return '/documentation/%s/%s/' % (self.IDE.slug, self.slug)

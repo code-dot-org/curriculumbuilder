@@ -4,6 +4,8 @@ from django.forms import Textarea, ModelForm
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
+from lessons.models import Resource
+
 from documentation.models import Block, IDE, Category, Parameter, Example
 
 
@@ -48,7 +50,10 @@ class BlockForm(ModelForm):
         else:
             categories_queryset = Category.objects.all()
 
+        videos_queryset = Resource.objects.filter(type__iexact="video")
+
         self.fields['category'].queryset = categories_queryset
+        self.fields['video'].queryset = videos_queryset
 
 
 class BlockAdmin(PageAdmin):
@@ -58,7 +63,7 @@ class BlockAdmin(PageAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', ('description', 'gen_description')],
+            'fields': ['title', 'slug', 'keywords', 'video', ('description', 'gen_description')],
         }),
         ('Documentation', {
             'fields': ['proxy', 'ext_doc', 'category', 'content'],
