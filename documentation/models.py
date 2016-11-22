@@ -76,7 +76,10 @@ class Block(Page, RichText):
 
     @property
     def code(self):
-        return self.syntax
+        if self.syntax:
+            return self.syntax
+        else:
+            return self.title
 
     def get_absolute_url(self):
         return '/documentation/%s/%s/' % (self.IDE.slug, self.slug)
