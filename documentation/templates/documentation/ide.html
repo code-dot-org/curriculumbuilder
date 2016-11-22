@@ -16,13 +16,12 @@
     {{ ide.description }}
 {% endmetablock %}{% endblock %}
 
-{% block title %}
-    {{ ide.title }}
+{% block header %}
+    <h1>{{ ide }} Documentation: {{ code_block.title }}</h1>
 {% endblock %}
 
 {% block main %}
     <div class="together">
-        <h1>{{ ide.title }}</h1>
         <p>{{ ide.content|richtext_filters|safe }}</p>
         <a href="{{ ide.url }}">Try it out</a>
         <ul>

@@ -2,3 +2,82 @@
     /* Makes e.g. single line comments not take up the whole height */
     height: auto;
 }
+
+#doc_header h1 {
+    color: #00adbc;
+}
+
+#doc_category .category_label {
+    font-weight: bold;
+}
+
+#doc_category .category_name {
+    padding: 5px 10px;
+    margin-left: 10px;
+    color: #000;
+}
+
+#categories {
+    border-right: 1px solid #949ca2;
+}
+
+#categories ul.category_list {
+    padding: 0;
+    list-style: none;
+}
+
+#categories ul.category_list li.category_name {
+    padding: 5px 10px;
+    margin: 5px 0;
+    color: #696970;
+    background: none;
+    border-left: 10px solid;
+    font-family: 'Gotham 4r', sans-serif;
+}
+
+#categories ul.category_list li.category_name.active {
+    color: #000;
+}
+
+#categories ul.category_blocks {
+    list-style: none;
+    padding: 0;
+}
+
+#categories ul.category_blocks li {
+    font-size: .9em;
+    padding-left: 15px;
+}
+
+#categories ul.category_blocks li a {
+    font-family: 'Gotham 4r', sans-serif;
+}
+
+.content {
+    margin-top: 0;
+    padding: 0 15px;
+}
+
+.content h2 {
+    margin: 20px 0;
+}
+
+.parameters table {
+    width: 100%;
+}
+
+.parameters .required_param_True:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.5em;
+    content: "\f00c";
+    text-align: center;
+    display: block;
+}
+
+.parameters .required_param_False:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.5em;
+    content: "\f00d";
+    text-align: center;
+    display: block;
+}

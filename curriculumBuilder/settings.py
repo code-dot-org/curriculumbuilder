@@ -426,21 +426,21 @@ RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
                            'data-pdf-link', 'data-lightbox', 'data-title')
 RICHTEXT_ALLOWED_ATTRIBUTES = (
-'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
-'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
-'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
-'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
-'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
-'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
-'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
-'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
+    'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
+    'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
+    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
+    'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
+    'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
+    'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
+    'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
+    'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
+    'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
 PAGEDOWN_MARKDOWN_EXTENSIONS = (
-'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
-# 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
-'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
-'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
-'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
+    'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
+    # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
+    'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
+    'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
+    'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 

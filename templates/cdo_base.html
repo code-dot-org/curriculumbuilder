@@ -3,40 +3,68 @@
 {% load pages_tags mezzanine_tags i18n future staticfiles %}
 
 <head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-<meta name="description" content="{% block meta_description %}{% endblock %}">
-<title>{% block meta_title %}Code.org Curriculum{% endblock %}</title>
-<link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block meta_title %}Code.org Tool Documentation{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
-{% compress css %}
-<link href="//code.org/css/common.css" rel="stylesheet" type="text/css">
-<link href="//code.org/style.css" rel="stylesheet" type="text/css">
-<link href="//code.org/css/brstrap-nonresponsive.css" rel="stylesheet" type="text/css">
-<link href="//code.org/css/simple-embedded.css" rel="stylesheet" type="text/css">
-{% block extra_css %}{% endblock %}
-{% endcompress %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
-{% compress js %}
-<script src="//code.org/js/jquery.min.js"></script>
-<script src="{% static "js/bootstrap.js" %}"></script>
-<script src="{% static "js/bootstrap-extras.js" %}"></script>
-{% block extra_js %}{% endblock %}
-{% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+        <link rel="stylesheet" href="{% static "css/codeorg.css" %}">
+        <link rel="stylesheet" href="{% static "css/common.css" %}">
+        <link href="{% static "cdo/css/applab-docs.css" %}" rel="stylesheet" type="text/css">
+    {% endcompress %}
 
-<!--[if lt IE 9]>
-<script src="{% static "js/html5shiv.js" %}"></script>
-<script src="{% static "js/respond.min.js" %}"></script>
-<![endif]-->
+    {% block extra_css %}{% endblock %}
 
-{% block extra_head %}{% endblock %}
+    <script src="//code.org/js/jquery.min.js"></script>
+    <script src="{% static "js/bootstrap.js" %}"></script>
+    <script src="{% static "js/bootstrap-extras.js" %}"></script>
+    {% block extra_js %}{% endblock %}
+
+    <!--[if lt IE 9]>
+    <script src="{% static "js/html5shiv.js" %}"></script>
+    <script src="{% static "js/respond.min.js" %}"></script>
+    <![endif]-->
+
+    {% block extra_head %}{% endblock %}
 </head>
 
 <body id="{% block body_id %}body{% endblock %}">
 <div class="container">
-    <div class="content">
-        {% block main %}{% endblock %}
+    <div id="doc_header">
+        {% block header %}<h1>{{ ide }}Documentation</h1>{% endblock %}
+    </div>
+    <div class="row">
+        <div id="categories" class="col-sm-2">
+            {% block categories %}
+                {% if ide.category_set.count > 0 %}
+                    <ul class="category_list">
+                    {% for category in ide.category_set.all %}
+                        <li class="category_name{% if category == code_block.category %} active{% endif %}"
+                            style="{% if category == code_block.category %}background: {{ category.color }}; {% endif %}border-left-color: {{ category.color }}">{{ category.name }}</li>
+                        {% if category.block_set.count > 0 %}
+                            <ul class="category_blocks">
+                            {% for block in category.block_set.all %}
+                                <li style="border-left: 5px solid {{ category.color }};"><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endblock %}
+        </div>
+        <div class="content col-sm-10">
+            {% block main %}{% endblock %}
+        </div>
     </div>
 </div>
 {% block footer %}

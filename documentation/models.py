@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
-from mezzanine.pages.models import Page, RichText
+from mezzanine.pages.models import Page, RichText, Orderable
+from mezzanine.core.fields import RichTextField
+
 
 """
 Programming Environments
@@ -19,17 +21,40 @@ class IDE(Page, RichText):
 
 
 """
+Toolbox Categories
+
+"""
+
+
+class Category(Orderable):
+    name = models.CharField(max_length=255)
+    color = models.CharField(max_length=255)
+    IDE = models.ForeignKey(IDE)
+
+    def __unicode__(self):
+        return self.name
+
+
+"""
 Individual Code Elements
 
 """
 
 
 class Block(Page, RichText):
-    code = models.CharField('code', max_length=255)
     IDE = models.ForeignKey(IDE, blank=True, null=True)
+    syntax = RichTextField(blank=True, null=True)
+    ext_doc = models.URLField('External Documentation', blank=True, null=True,
+                              help_text='Link to external documentation')
+    signature = models.CharField(max_length=255, blank=True, null=True)
+    category = models.ForeignKey(Category, blank=True, null=True)
+    return_value = models.CharField(max_length=255, blank=True, null=True,
+                                    help_text='Description of return value or alternate functionality')
+    tips = RichTextField(blank=True, null=True, help_text='List of tips for using this block')
+    _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
     class Meta:
-        ordering = ["IDE", "title"]
+        ordering = ["IDE", "category"]
 
     def __unicode__(self):
         return self.block_with_ide
@@ -56,8 +81,7 @@ class Block(Page, RichText):
         parent = new_parent
         while parent is not None:
             if parent.pk == self.pk:
-                raise AttributeError("You can't set a page or its child as"
-                                     " a parent.")
+                raise AttributeError("You can't set a page or its child as a parent.")
             parent = parent.parent
 
         self.parent = new_parent
@@ -68,6 +92,47 @@ class Block(Page, RichText):
         if not self.slug:
             self.slug = slugify(self.title)
         super(Block, self).save(*args, **kwargs)
+
+
+"""
+Parameters
+
+"""
+
+
+class Parameter(Orderable):
+    name = models.CharField(max_length=255)
+    block = models.ForeignKey(Block)
+    type = models.CharField(max_length=64, blank=True, null=True, help_text='Data type, capitalized')
+    required = models.BooleanField(default=True)
+    description = RichTextField()
+
+    def __unicode__(self):
+        return self.name
+
+
+"""
+Code Examples
+
+"""
+
+
+class Example(Orderable):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    block = models.ForeignKey(Block)
+    description = models.TextField(blank=True, null=True)
+    code = RichTextField()
+    app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
+
+    def __unicode__(self):
+        return self.name
+
+    def get_embed_app(self):
+        if self.app:
+            embed_code = '%s/embed' % self.app
+            return embed_code
+        else:
+            return
 
 
 IDE._meta.get_field('slug').verbose_name = 'Slug'
