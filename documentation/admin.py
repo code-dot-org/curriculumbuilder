@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea, ModelForm
-from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
+from mezzanine.pages.admin import PageAdmin
 
 from documentation.models import Block, IDE, Category, Parameter, Example
 
@@ -68,7 +68,7 @@ class BlockAdmin(PageAdmin):
             'classes': ['collapse-closed'],
         }),
         ('Tips', {
-            'fields': ['tips',],
+            'fields': ['tips', ],
             'classes': ['collapse-closed'],
         }),
     )
@@ -78,5 +78,26 @@ class BlockAdmin(PageAdmin):
     }
 
 
+class MultiBlockForm(ModelForm):
+    class Meta:
+        model = Block
+        fields = ['IDE', 'title', 'category', 'ext_doc', 'proxy']
+
+
+class MultiBlock(Block):
+    class Meta:
+        proxy = True
+
+
+class MultiBlockAdmin(admin.ModelAdmin):
+    list_display = ('IDE', 'title', 'category', 'ext_doc')
+    list_editable = ('title', 'category', 'ext_doc')
+    list_filter = ('IDE',)
+
+    def get_changelist_form(self, request, **kwargs):
+        return MultiBlockForm
+
+
 admin.site.register(Block, BlockAdmin)
 admin.site.register(IDE, IDEAdmin)
+admin.site.register(MultiBlock, MultiBlockAdmin)
