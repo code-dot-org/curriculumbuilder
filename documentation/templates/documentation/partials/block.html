@@ -1,12 +1,6 @@
 {% load mezzanine_tags %}
 {% load staticfiles %}
 
-{% if code_block.category %}
-    <div id="doc_category">
-        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.category.name }}</span>
-    </div>
-{% endif %}
-
 {% with code_block.lessons_introduced as lessons %}
     {% if lessons.count > 0%}
         <div class="introduced_in">
@@ -25,6 +19,12 @@
         </div>
     {% endif %}
 {% endwith %}
+
+{% if code_block.category %}
+    <div id="doc_category">
+        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.category.name }}</span>
+    </div>
+{% endif %}
 
 {{ code_block.content|richtext_filters|safe }}
 
