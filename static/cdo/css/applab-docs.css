@@ -62,14 +62,8 @@
     font-family: 'Gotham 4r', sans-serif;
 }
 
-.introduced_in {
-    float: right;
-    margin-left: 15px;
-    clear: right;
-}
-
 .introduced_in .introduced_lesson {
-    float: right;
+    width: 100%;
     padding: 10px;
     background: #ebe8f1;
     margin-bottom: 15px;
@@ -111,4 +105,13 @@
     content: "\f00d";
     text-align: center;
     display: block;
+}
+
+
+@media (min-width: 768px) {
+
+    .introduced_in {
+        float: right;
+        width: 300px;
+    }
 }
