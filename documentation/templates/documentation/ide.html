@@ -23,11 +23,14 @@
 {% block main %}
     <div class="together">
         <p>{{ ide.content|richtext_filters|safe }}</p>
-        <a href="{{ ide.url }}">Try it out</a>
-        <ul>
-            {% for block in ide.block_set.all %}
-            <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
+        <h2><a href="{{ ide.url }}">Try it out</a></h2>
+        {% for category in ide.category_set.all %}
+            <h3 style="background: {{ category.color }}; color: #696970">{{ category.name }}</h3>
+            <ul>
+            {% for block in category.block_set.all %}
+                <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
             {% endfor %}
-        </ul>
+            </ul>
+        {% endfor %}
     </div>
 {% endblock %}
