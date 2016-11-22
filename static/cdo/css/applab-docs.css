@@ -31,12 +31,17 @@
 }
 
 #categories ul.category_list li.category_name {
-    padding: 5px 10px;
     margin: 5px 0;
     color: #696970;
-    background: none;
     border-left: 10px solid;
     font-family: 'Gotham 4r', sans-serif;
+    padding: 0;
+}
+
+#categories ul.category_list li.category_name > span {
+    padding: 5px 10px;
+    display: block;
+    cursor: pointer;
 }
 
 #categories ul.category_list li.category_name.active {
@@ -45,12 +50,12 @@
 
 #categories ul.category_blocks {
     list-style: none;
-    padding: 0;
+    padding: 5px 10px;
+    background: white;
 }
 
 #categories ul.category_blocks li {
     font-size: .9em;
-    padding-left: 15px;
 }
 
 #categories ul.category_blocks li a {

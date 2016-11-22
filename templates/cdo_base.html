@@ -49,14 +49,16 @@
                     <ul class="category_list">
                     {% for category in ide.category_set.all %}
                         <li class="category_name{% if category == code_block.category %} active{% endif %}"
-                            style="{% if category == code_block.category %}background: {{ category.color }}; {% endif %}border-left-color: {{ category.color }}">{{ category.name }}</li>
+                            style="background: {{ category.color }}; border-left-color: {{ category.color }}"
+                            data-color="{{ category.color }}"><span>{{ category.name }}</span>
                         {% if category.block_set.count > 0 %}
-                            <ul class="category_blocks">
+                            <ul class="category_blocks" {% if category != code_block.category %}style="display: none;"{% endif %}>
                             {% for block in category.block_set.all %}
-                                <li style="border-left: 5px solid {{ category.color }};"><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
+                                <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
                             {% endfor %}
                             </ul>
                         {% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                 {% endif %}
@@ -79,5 +81,17 @@
 {% endblock %}
 {% block footer_scripts %}{% endblock %}
 {% include "includes/footer_scripts.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.category_name').each(function() {
+            $(this).click(function() {
+                console.log($(this));
+                $(this).find('ul').slideToggle();
+                $(this).toggleClass("active");
+                $(this).siblings().removeClass("active");
+            })
+        })
+    })
+</script>
 </body>
 </html>
