@@ -19,7 +19,7 @@
 {% endmetablock %}{% endblock %}
 
 {% block title %}
-    {{ curriculum.title }}{% if unit %} {{ unit.title }}{% endif %}: Resources
+    {{ curriculum.title }}{% if unit %} {{ unit.short_name }}{% endif %}: Resources
 {% endblock %}
 
 {% block extra_css %}
@@ -28,7 +28,7 @@
 
 {% block header_title %}
     <h1>{{ curriculum.title }}</h1>
-    {% if unit %}<h2>{{ unit.title }}</h2>{% endif %}
+    {% if unit %}<h2>{{ unit.short_name }}</h2>{% endif %}
     <h3 class="disclaimer">{{ list_type }}</h3>
 {% endblock %}
 

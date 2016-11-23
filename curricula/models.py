@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
@@ -19,6 +21,7 @@ Curriculum
 class Curriculum(Page, RichText):
     gradeband = models.ForeignKey(GradeBand)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
+    unit_numbering = models.BooleanField(default=True)
     auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
     display_questions = models.BooleanField(default=False, help_text='Display open questions and feedback form?')
     feedback_url = models.URLField(blank=True, null=True, help_text='URL to feedback form, using % operators')
@@ -98,6 +101,12 @@ class Unit(Page, RichText):
     def get_number(self):
         return int(self._order) + 1
 
+    def get_unit_numbering(self):
+        if self.curriculum.unit_numbering:
+            return "Unit %d" % self.number
+        else:
+            return
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_pdf_url(), self.get_resources_url()]
@@ -120,7 +129,26 @@ class Unit(Page, RichText):
     # Eventually this will need to address naming differences between CSF and CSD/CSP
     @property
     def short_name(self):
-        return "Unit %d" % self.number
+        if self.curriculum.unit_numbering:
+            return self.get_unit_numbering()
+        else:
+            return self.title
+
+    @property
+    def long_name(self):
+        if self.curriculum.unit_numbering:
+            return "%s - %s" % (self.get_unit_numbering(), self.title)
+        else:
+            return self.title
+
+    @property
+    def header_corner(self):
+        if self.curriculum.unit_numbering:
+            return "<span class='h2'>Unit</span><span class='h1'>%d</span>" % self.number
+        else:
+            re_title = "(\w+) (\w+)"
+            re_match = re.search(re_title, self.title)
+            return "<span class='h2'>%s</span><span class='h1'>%s</span>" % (re_match.group(1), re_match.group(2))
 
     @property
     def lessons(self):

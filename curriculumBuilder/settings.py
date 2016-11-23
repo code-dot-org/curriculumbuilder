@@ -444,6 +444,12 @@ PAGEDOWN_MARKDOWN_EXTENSIONS = (
 RICHTEXT_FILTER_LEVEL = 3
 PAGEDOWN_SERVER_SIDE_PREVIEW = False
 
+#####################
+# SMUGGLER SETTINGS #
+#####################
+
+SMUGGLER_EXCLUDE_LIST = ['sites.Site']
+
 #######################
 # AJAXSELECT SETTINGS #
 #######################

@@ -1,6 +1,6 @@
 
 <div class="together resource_list">
-    <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+    <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
     <div>
     {% for lesson in unit.lessons %}
         {% if lesson.blocks.count > 0 %}

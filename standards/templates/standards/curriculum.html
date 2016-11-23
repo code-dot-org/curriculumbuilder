@@ -41,7 +41,7 @@
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
     {% if unit %}{# If unit is passed, just grab that unit #}
         <div class="together">
-            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+            <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
 
             {% for lesson in unit.lessons %}
                 <h3><a href="{{ lesson.get_absolute_url }}">

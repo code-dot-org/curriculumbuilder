@@ -142,8 +142,7 @@
 {% endif %}
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span
-            class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a></div>
 
     {% with lesson=parent|default_if_none:lesson %}
         <div class="lessons">
