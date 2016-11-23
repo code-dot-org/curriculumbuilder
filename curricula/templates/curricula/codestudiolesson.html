@@ -65,6 +65,9 @@
 
 {% endblock %}
 
+
+<!-- Admin Toolbox -->
+
 {% if user.is_staff %}
 {% block admin_link %}
 
@@ -141,6 +144,8 @@
 {% endblock %}
 {% endif %}
 
+<!-- Header Bubbles -->
+
 {% block lessonnumber %}
     <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a></div>
 
@@ -198,11 +203,16 @@
 {% block header_title %}
 {% endblock %}
 
+<!-- Nav Pills -->
+
 {% block resources_nav %}
     {% include "curricula/partials/lesson_pills.html" with unit=unit %}
 {% endblock %}
 
 {% block main %}
+
+<!-- One Pager -->
+
 <div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
     {% editable lesson.title %}
         {% if optional %}
@@ -218,6 +228,7 @@
                 {% if not forloop.first %}| {% endif %}
                 {{ keyword }}
             {% endfor %}
+        </h4>
     </div>
 </div>
 
@@ -247,6 +258,10 @@
 
     <div class="col-sm-5 right-col">
 
+<!-- Sidebar -->
+
+<!-- Anchor Standards -->
+
         {% if lesson.anchor_standards.all.count > 0 %}
             <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
             {% with lesson.anchor_standards.all as standards %}
@@ -262,6 +277,8 @@
             {% endwith %}
         {% endif %}
 
+<!-- Objectives -->
+
         {% if lesson.objective_set.count > 0 %}
             <h2>Objectives</h2>
             <h3>Students will be able to:</h3>
@@ -271,6 +288,9 @@
                 {% endfor %}
             </ul>
         {% endif %}
+
+<!-- Prep -->
+
         {% if lesson.prep %}
             <h2>Preparation</h2>
             <div class="prep">
@@ -279,6 +299,8 @@
                 {% endeditable %}
             </div>
         {% endif %}
+
+<!-- Resources -->
 
         {% if lesson.resources.count > 0 %}
             <h2>Links</h2>
@@ -302,6 +324,8 @@
             <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
                 resource</a>{% endif %}
 
+<!-- Vocab -->
+
         {% if lesson.vocab.count > 0 %}
             <h2>Vocabulary</h2>
             <ul>
@@ -311,6 +335,8 @@
             </ul>
         {% endif %}
 
+<!-- Introduced Code -->
+
         {% if lesson.blocks.count > 0 %}
             <h2>Introduced Code</h2>
             <ul>
@@ -319,6 +345,9 @@
                 {% endfor %}
             </ul>
         {% endif %}
+
+<!-- Support -->
+
         <div class="open_questions no_print">
             <h2>Support</h2>
 
@@ -350,6 +379,8 @@
     </div>
 </div>
 
+<!-- Lesson Content -->
+
 <div id="{{ lesson.title|slugify }}content">
 
     <h1>Teaching Guide</h1>
@@ -364,6 +395,8 @@
     {% endfor %}
 
 </div>
+
+<!-- Code Studio Levels -->
 
 <div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
 
@@ -394,15 +427,15 @@
             {% if chunk.named %}
             <ul>
                 {% for level in chunk.levels %}
-                    <li class="chunk-header type-{{ level.type }} ">
+                    <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
                         <span class="level-icon"></span> {{ level.name }}
                     </li>
-                    <li class="level-bubble type-{{ level.type }}">
+                    <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
                             Teacher Overview
                         </a>
                     </li>
-                    <li class="level-bubble">
+                    <li class="level-bubble {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
                             Student Overview
                         </a>
@@ -415,7 +448,7 @@
                     Levels
                 </li>
                 {% for level in chunk.levels %}
-                    <li class="level-bubble type-{{ level.type }}">
+                    <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
                         <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
                             <span class="level-icon"></span> {{ level.position }}
                         </a>
@@ -426,7 +459,7 @@
             {% endif %}
 
             {% for level in chunk.levels %}
-                <div id="level-expando-{{ lesson.number }}-{{ level.position }}">
+                <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
 
                     <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
                         View on Code Studio
@@ -453,7 +486,7 @@
                 </div>
 
                 {% if level.named_level %}
-                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}">
 
                         <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
                             View on Code Studio
@@ -472,11 +505,15 @@
     {% endwith %}
 </div>
 
+<!-- Standards Alignment -->
+
 <div class="standards">
     <h2>Standards Alignment</h2>
     <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
+
+<!-- Feedback Modal -->
 
 {% if curriculum.feedback_url %}
     <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
@@ -516,6 +553,9 @@
     <!--<script src="{% static "js/lesson.js" %}"></script>-->
 
     <script defer type="text/javascript">
+
+        // Table of Contents generation
+
         $(window).on('load', function () {
             $('#toc{{ lesson.title|slugify }}').toc({
                 'selectors': 'h2,h3', //elements to use as headings
@@ -540,74 +580,66 @@
         });
 
 
-        $(function () {
-
-            function toggleCollapse(event, ui) {
-                if ($(ui.newPanel).length === 0) {
-                    console.log("collapsing");
-                    $(ui.oldPanel).addClass("collapsed");
-                    $(ui.oldPanel).siblings().removeClass("collapsed");
-                } else {
-                    console.log("not collapsing");
-                    $(ui.newPanel).removeClass("collapsed");
-                    $(ui.newPanel).siblings().removeClass("collapsed");
-                }
-
-            }
-
-            $(".named-False").tabs({
-                collapsible: true,
-                active: false,
-                classes: { "ui-tabs-panel": "ui-corner-all"},
-                /*show: { effect: "blind", duration: 500 },
-                hide: { effect: "fade", duration: 500 },*/
-                activate: toggleCollapse
-            }).each(function() {
-                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
-            });
-
-            $(".named-True").tabs({
-                collapsible: true,
-                classes: { "ui-tabs-panel": "ui-corner-all" },
-                /*show: { effect: "blind", duration: 500 },
-                hide: { effect: "fade", duration: 500 },*/
-                activate: toggleCollapse
-            });
-        });
-
-
         $(document).ready(function () {
+            
 
-            // Move Code Studio overview levels to tagged locations
-            /*
-            // Original level chunk supporting approach
+            // New Code Studio Integration
             $('.stage_guide').each(function () {
-                if ($('.stage_guide_hidden').children().length > 0) {
-                    var start = parseInt($(this).attr('data-start'));
-                    var end = parseInt($(this).attr('data-end'));
-                    if (start) {
-                        if (end) {
-                            $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels ' + start + ' through ' + end + '</h3>');
+                var start = parseInt($(this).attr('data-start'));
+                var end = parseInt($(this).attr('data-end'));
 
+
+                if ($('.stage_guide_hidden').children().length > 0) {
+                    if (start) {
+                        console.log(this);
+                        $(this).append('<div class="stage-chunk named-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
+                        var chunk = $(this).find('.stage-chunk');
+                        var tabs = $(chunk).find('ul');
+                        console.log(tabs);
+                        if (end) {
                             for (var i = start; i <= end; i++) {
-                                $('.stage_guide_hidden .stage-level[data-level=' + i + ']').appendTo(this);
+                                $('.stage_guide_hidden .stage-chunk li[data-level=' + i + ']').appendTo(tabs);
+                                $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']').appendTo(chunk);
                             }
                         } else {
-                            $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio level ' + start + '</h3>');
-                            $('.stage_guide_hidden .stage-level[data-level=' + start + ']').appendTo(this);
+                            $('.stage_guide_hidden .stage-chunk li[data-level=' + start + ']').appendTo(tabs);
+                            $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']').appendTo(chunk);
                         }
                     } else {
                         $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
-                        $('.stage_guide_hidden .stage-level').appendTo(this);
+                        $('.stage_guide_hidden .stage-chunk').appendTo(this);
                     }
                 }
-            });
-            */
-            // New Code Studio Integration
-            $('.stage_guide').each(function () {
-                if ($('.stage_guide_hidden').children().length > 0) {
-                    $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
-                    $('.stage_guide_hidden .stage-chunk').appendTo(this);
+
+                $(".named-False").tabs({
+                    collapsible: true,
+                    active: false,
+                    classes: { "ui-tabs-panel": "ui-corner-all"},
+                    /*show: { effect: "blind", duration: 500 },
+                    hide: { effect: "fade", duration: 500 },*/
+                    activate: toggleCollapse
+                }).each(function() {
+                    $(this).children(".ui-tabs-panel").first().addClass("collapsed");
+                });
+
+                $(".named-True").tabs({
+                    collapsible: true,
+                    classes: { "ui-tabs-panel": "ui-corner-all" },
+                    /*show: { effect: "blind", duration: 500 },
+                    hide: { effect: "fade", duration: 500 },*/
+                    activate: toggleCollapse
+                });
+
+                function toggleCollapse(event, ui) {
+                    if ($(ui.newPanel).length === 0) {
+                        $(ui.oldPanel).addClass("collapsed");
+                        $(ui.oldPanel).siblings().removeClass("collapsed");
+                    } else {
+                        console.log("not collapsing");
+                        $(ui.newPanel).removeClass("collapsed");
+                        $(ui.newPanel).siblings().removeClass("collapsed");
+                    }
+
                 }
             });
 
