@@ -581,7 +581,7 @@
 
 
         $(document).ready(function () {
-            
+
 
             // New Code Studio Integration
             $('.stage_guide').each(function () {
@@ -610,38 +610,37 @@
                         $('.stage_guide_hidden .stage-chunk').appendTo(this);
                     }
                 }
-
-                $(".named-False").tabs({
-                    collapsible: true,
-                    active: false,
-                    classes: { "ui-tabs-panel": "ui-corner-all"},
-                    /*show: { effect: "blind", duration: 500 },
-                    hide: { effect: "fade", duration: 500 },*/
-                    activate: toggleCollapse
-                }).each(function() {
-                    $(this).children(".ui-tabs-panel").first().addClass("collapsed");
-                });
-
-                $(".named-True").tabs({
-                    collapsible: true,
-                    classes: { "ui-tabs-panel": "ui-corner-all" },
-                    /*show: { effect: "blind", duration: 500 },
-                    hide: { effect: "fade", duration: 500 },*/
-                    activate: toggleCollapse
-                });
-
-                function toggleCollapse(event, ui) {
-                    if ($(ui.newPanel).length === 0) {
-                        $(ui.oldPanel).addClass("collapsed");
-                        $(ui.oldPanel).siblings().removeClass("collapsed");
-                    } else {
-                        console.log("not collapsing");
-                        $(ui.newPanel).removeClass("collapsed");
-                        $(ui.newPanel).siblings().removeClass("collapsed");
-                    }
-
-                }
             });
+            
+            $(".named-False").tabs({
+                collapsible: true,
+                active: false,
+                classes: { "ui-tabs-panel": "ui-corner-all"},
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            }).each(function() {
+                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
+            });
+
+            $(".named-True").tabs({
+                collapsible: true,
+                classes: { "ui-tabs-panel": "ui-corner-all" },
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            });
+
+            function toggleCollapse(event, ui) {
+                if ($(ui.newPanel).length === 0) {
+                    $(ui.oldPanel).addClass("collapsed");
+                    $(ui.oldPanel).siblings().removeClass("collapsed");
+                } else {
+                    $(ui.newPanel).removeClass("collapsed");
+                    $(ui.newPanel).siblings().removeClass("collapsed");
+                }
+
+            }
 
             // add checkboxes to lists in the prep section
             var count = 1;
