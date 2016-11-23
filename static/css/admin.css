@@ -10,3 +10,7 @@
     /* Makes e.g. single line comments not take up the whole height */
     height: auto !important;
 }
+
+textarea {
+    height: 50px;
+}

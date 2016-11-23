@@ -33,7 +33,7 @@ class IDEAdmin(PageAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', ('description', 'gen_description')],
+            'fields': ['title', 'slug', 'keywords', 'language', ('description', 'gen_description')],
         }),
         ('Documentation', {
             'fields': ['url', 'content'],

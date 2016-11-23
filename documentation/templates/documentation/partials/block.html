@@ -44,7 +44,7 @@
                     <h3>{{ example.name }}</h3>
                     <p>{{ example.description|richtext_filters|safe }}</p>
 <pre>
-{{ example.code|safe }}
+{{ example.code }}
 </pre>
                 </div>
                     <div class="col-sm-3">
@@ -55,7 +55,7 @@
             <h3>{{ example.name }}</h3>
             <p>{{ example.description|richtext_filters|safe }}</p>
 <pre>
-{{ example.code|safe }}
+{{ example.code }}
 </pre>
         {% endif %}
     {% endfor %}
@@ -65,7 +65,7 @@
 {% if code_block.syntax %}
     <h2>Syntax</h2>
 <pre>
-{{ code_block.syntax|safe }}
+{{ code_block.syntax }}
 </pre>
 {% endif %}
 

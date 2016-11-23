@@ -14,6 +14,7 @@ Programming Environments
 
 class IDE(Page, RichText):
     url = models.URLField()
+    language = models.CharField(blank=True, null=True, max_length=64)
 
     def __unicode__(self):
         return self.title
