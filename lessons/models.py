@@ -47,9 +47,9 @@ class Vocab(models.Model):
 
     def __unicode__(self):
         if self.mathy:
-            return self.word + ' (math)' + ': ' + self.simpleDef
+            return "%s (math): %s" % (self.word, self.simpleDef)
         else:
-            return self.word + ': ' + self.simpleDef
+            return "%s: %s" % (self.word, self.simpleDef)
 
     def save(self, *args, **kwargs):
         if not self.detailDef:
@@ -86,7 +86,7 @@ class Resource(Orderable):
         elif self.gd:
           formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
         '''
-        if (self.type):
+        if self.type:
             return "%s - %s" % (self.name, self.type)
         else:
             return self.name
@@ -138,16 +138,18 @@ class Resource(Orderable):
 
     def gd_pdf(self):
         try:
-            pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = '%sexport?format=pdf' % pdf
+            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            doc_id = re.search(re_doc, self.url).group('doc_id')
+            pdf = 'https://docs.google.com/document/d/%s/export?format=pdf' % doc_id
             return pdf
         except:
             return self.url
 
     def gd_doc(self):
         try:
-            pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = '%sexport?format=doc' % pdf
+            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            doc_id = re.search(re_doc, self.url).group('doc_id')
+            pdf = 'https://docs.google.com/document/d/%s/export?format=doc' % doc_id
             return pdf
         except:
             return self.url
