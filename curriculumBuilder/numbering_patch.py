@@ -37,8 +37,7 @@ def custom_admin_page_ordering(request):
 
     # Perform the page move
     if new_parent_id != page.parent_id:
-        # Parent changed - set the new parent and re-order the
-        # previous siblings.
+        # Parent changed - set the new parent
         page.set_parent(new_parent)
 
         # Ensure lessons, chapters, and units are in the correct hierarchy
@@ -53,8 +52,9 @@ def custom_admin_page_ordering(request):
             chapter = Chapter.objects.get(id=page.id)
             number = chapter.get_number()
             unit = chapter.parent.unit
+            curriculum = unit.curriculum
             Chapter.objects.filter(id=chapter.id).update(number=number)
-            Lesson.objects.filter(chapter=chapter).update(unit=unit)
+            Lesson.objects.filter(parent=page).update(unit=unit, curriculum=curriculum)
 
         elif page.content_model == 'unit':
             unit = Unit.objects.get(id=page.id)
@@ -63,6 +63,7 @@ def custom_admin_page_ordering(request):
             Unit.objects.filter(id=unit.id).update(number=number, curriculum=curriculum)
             Lesson.objects.filter(unit=unit).update(unit=unit, curriculum=curriculum)
 
+        # Reorder previous siblings.
         pages = Page.objects.filter(parent_id=old_parent_id)
         for i, page in enumerate(pages.order_by('_order')):
             Page.objects.filter(id=page.id).update(_order=i)
@@ -71,8 +72,12 @@ def custom_admin_page_ordering(request):
                 update_numbering(page.lesson, Lesson)
             elif page.content_model == 'chapter':
                 update_numbering(page.chapter, Chapter)
+                for lesson in page.chapter.lessons:
+                    update_numbering(lesson, Lesson)
             elif page.content_model == 'unit':
                 update_numbering(page.unit, Unit)
+                for lesson in page.unit.lessons:
+                    update_numbering(lesson, Lesson)
 
     # Set the new order for the moved page and its current siblings.
     for i, page_id in enumerate(request.POST.getlist('siblings[]')):
@@ -85,6 +90,8 @@ def custom_admin_page_ordering(request):
             update_numbering(sibling.lesson, Lesson)
         elif page.content_model == 'chapter':
             update_numbering(sibling.chapter, Chapter)
+            for lesson in sibling.chapter.lessons:
+                update_numbering(lesson, Lesson)
         elif page.content_model == 'unit':
             update_numbering(sibling.unit, Unit)
 
@@ -102,9 +109,6 @@ def custom_admin_page_ordering(request):
 
 
 def update_numbering(obj, model):
-    print "updating numbering"
-    print obj
-    print obj.number, obj.get_number()
     model.objects.filter(id=obj.id).update(number=obj.get_number())
 
 

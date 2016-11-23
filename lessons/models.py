@@ -8,7 +8,7 @@ from urlparse import urlparse
 # from copy import copy, deepcopy
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -245,7 +245,6 @@ class Lesson(Page, RichText):
                     order += chapter.lessons.count()
                 except AttributeError:
                     chapter = None
-                    print "Reached final chapter"
 
         if self._order is not None:
             order += int(self._order)
@@ -256,24 +255,27 @@ class Lesson(Page, RichText):
         return self.unit.curriculum
 
     def get_levels(self):
-        raw_levels = self.stage.get('levels')
+        if self.stage:
+            raw_levels = self.stage.get('levels')
 
-        levels = []  # To store levels organized by logical chunk
-        counter = 0
-        last_type = raw_levels[0].get('named_level')
-        levels.insert(counter, {'named': last_type, 'levels': []})
+            levels = []  # To store levels organized by logical chunk
+            counter = 0
+            last_type = raw_levels[0].get('named_level')
+            levels.insert(counter, {'named': last_type, 'levels': []})
 
-        for level in raw_levels:
+            for level in raw_levels:
 
-            current_type = level.get('named_level')
-            if last_type != current_type:
-                last_type = current_type
-                counter += 1
-                levels.insert(counter, {'named': last_type, 'levels': []})
+                current_type = level.get('named_level')
+                if last_type != current_type:
+                    last_type = current_type
+                    counter += 1
+                    levels.insert(counter, {'named': last_type, 'levels': []})
 
-            levels[counter]['levels'].append(level)
+                levels[counter]['levels'].append(level)
 
-        return levels
+            return levels
+        else:
+            return
 
     def jackfrost_can_build(self):
         try:
@@ -487,6 +489,12 @@ Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will
 
 reversion.register(Activity, follow=('lesson', ))
 reversion.register(Objective, follow=('lesson', ))
+
+
+@receiver(post_delete, sender=Lesson)
+def reorder_peers(sender, instance, **kwargs):
+    for lesson in instance.curriculum.lesson_set.all():
+        Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
 
 
 """
