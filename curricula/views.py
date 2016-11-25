@@ -1,6 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.models import get_current_site
-from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from mezzanine.core.views import edit
@@ -23,13 +24,15 @@ from rest_framework import viewsets
 
 import reversion
 from reversion.views import create_revision
+from reversion.models import Version
 
 from curricula.models import *
 from curricula.serializers import *
+from lessons.forms import ChangelogForm
 
 
 def index(request):
-    if (request.user.is_staff):
+    if request.user.is_staff:
         curricula = Curriculum.objects.all()
     else:
         curricula = Curriculum.objects.filter(login_required=False)
@@ -84,6 +87,7 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
     optional = False
+    form = ChangelogForm
 
     if optional_num:
         optional = True
@@ -108,23 +112,37 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
                                             'parent__unit', 'parent__unit__curriculum', 'parent__children',
                                             'vocab', 'resources', 'activity_set'),
             unit__slug=unit_slug, unit__curriculum__slug=slug, number=lesson_num, parent__lesson__isnull=True)
-        if hasattr(lesson.parent, 'chapter'):
+        if lesson.parent.content_model == 'chapter':
             chapter = lesson.parent.chapter
         else:
             chapter = None
 
-    '''
-    if request.GET.get('codestudio', False):
-      template = 'curricula/codestudiolesson.html'
-    else:
-      template = 'curricula/commonlesson.html'
-    '''
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ChangelogForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
+
+                lesson.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(form.cleaned_data['comment'])
+            return HttpResponseRedirect(lesson.get_absolute_url())
+
+    # if a GET (or any other method) we'll create a blank form
+    form = ChangelogForm()
+
+    changelog = Version.objects.get_for_object(lesson).filter(revision__user__username=settings.CHANGELOG_USER)
 
     template = 'curricula/codestudiolesson.html'
 
     return render(request, template,
                   {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,
-                   'pdf': pdf, 'parent': parent, 'optional': optional})
+                   'pdf': pdf, 'parent': parent, 'optional': optional, 'form': form, 'changelog': changelog})
 
 
 def lesson_markdown(request, slug, unit_slug, lesson_num):
@@ -176,6 +194,7 @@ def curriculum_code(request, slug):
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
                                                    'list_type': 'Introduced Code',
                                                    'include_template': 'curricula/partials/code_list.html'})
+
 
 def unit_code(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)

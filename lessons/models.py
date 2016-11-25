@@ -23,7 +23,10 @@ from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
 
+from curriculumBuilder import settings
+
 import reversion
+from reversion.models import Version
 
 import curricula.models
 
@@ -307,7 +310,7 @@ class Lesson(Page, RichText):
         try:
             self.number = self.get_number()
         except:
-            print "Coun't get number"
+            print "Couldn't get number"
 
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
@@ -363,6 +366,10 @@ class Lesson(Page, RichText):
         str(self.curriculum), self.unit.number, self.number, self.get_absolute_url())
         url = "https://support.code.org/hc/en-us/requests/new?description=%s" % urllib2.quote(message)
         return url
+
+    @property
+    def changelog(self):
+        return Version.objects.get_for_object(self).filter(revision__user__username=settings.CHANGELOG_USER)
 
 
 """

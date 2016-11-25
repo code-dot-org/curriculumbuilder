@@ -535,6 +535,12 @@ JACKFROST_RENDERERS = (
 
 AUTO_PUBLISH = True  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"
 
+######################
+# REVERSION SETTINGS #
+######################
+
+CHANGELOG_USER = "changelog"
+
 #################
 # CORS SETTINGS #
 #################

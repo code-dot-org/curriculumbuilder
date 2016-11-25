@@ -107,6 +107,11 @@
                 </div>
             </div>
                 <div class="drawer-body">
+                    <h2>Add to Changelog</h2>
+                        <form method="POST" action="." class="post-form">{% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-primary">Save</button>
+                        </form>
                     <h2>Publishing</h2>
                     {% if lesson.jackfrost_can_build %}
                         <button class="btn btn-primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">
@@ -206,7 +211,7 @@
 <!-- Nav Pills -->
 
 {% block resources_nav %}
-    {% include "curricula/partials/lesson_pills.html" with unit=unit %}
+    {% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}
 {% endblock %}
 
 {% block main %}
