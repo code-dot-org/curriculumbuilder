@@ -34,6 +34,11 @@
         </div>
         <div class="drawer-contents">
             <div class="drawer-body">
+                <h2>Add to Changelog</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
                 <h2>Publishing</h2>
                 {% if unit.jackfrost_can_build %}
                     <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>

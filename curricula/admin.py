@@ -1,16 +1,18 @@
 from django.contrib import admin
 from mezzanine.pages.admin import PageAdmin
 
+from reversion.admin import VersionAdmin
+
 from curricula.models import Curriculum, Unit, Chapter
 
 
-class CurriculumAdmin(PageAdmin):
+class CurriculumAdmin(PageAdmin, VersionAdmin):
     model = Curriculum
     verbose_name_plural = "Curricula"
     filter_horizontal = ('frameworks',)
 
 
-class UnitAdmin(PageAdmin):
+class UnitAdmin(PageAdmin, VersionAdmin):
     model = Unit
 
 

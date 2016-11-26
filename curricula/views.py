@@ -28,7 +28,7 @@ from reversion.models import Version
 
 from curricula.models import *
 from curricula.serializers import *
-from lessons.forms import ChangelogForm
+from curricula.forms import ChangelogForm
 
 
 def index(request):
@@ -54,7 +54,29 @@ def curriculum_view(request, slug):
     else:
         units = Unit.objects.filter(curriculum=curriculum, login_required=False)
 
-    return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units})
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ChangelogForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
+
+                curriculum.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(form.cleaned_data['comment'])
+            return HttpResponseRedirect(curriculum.get_absolute_url())
+
+    # if a GET (or any other method) we'll create a blank form
+    form = ChangelogForm()
+
+    changelog = Version.objects.get_for_object(curriculum).filter(revision__user__username=settings.CHANGELOG_USER)
+
+    return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units,
+                                                         'form': form, 'changelog': changelog})
 
 
 def unit_view(request, slug, unit_slug):
@@ -70,7 +92,29 @@ def unit_view(request, slug, unit_slug):
     else:
         unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug, login_required=request.user.is_staff)
 
-    return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf})
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ChangelogForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
+
+                unit.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(form.cleaned_data['comment'])
+            return HttpResponseRedirect(unit.get_absolute_url())
+
+    # if a GET (or any other method) we'll create a blank form
+    form = ChangelogForm()
+
+    changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
+
+    return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf,
+                                      'form': form, 'changelog': changelog})
 
 
 def chapter_view(request, slug, unit_slug, chapter_num):

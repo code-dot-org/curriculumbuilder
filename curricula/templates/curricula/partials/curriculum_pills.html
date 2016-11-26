@@ -4,5 +4,20 @@
         <a href="{{ curriculum.get_absolute_url }}vocab/" class="btn" role="button">Vocab</a>
         <a href="{{ curriculum.get_absolute_url }}code/" class="btn" role="button">Code Documentation</a>
         <a href="{{ curriculum.get_absolute_url }}resources/" class="btn" role="button">Other Resources</a>
+        {% if changelog.count > 0 %}
+
+            <div class="btn-group" role="group">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                Last updated {{ changelog.first.revision.date_created|date:"n/j/y" }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                {% for version in changelog%}
+                <li><strong>{{ version.revision.date_created|date:"n/j/y" }}</strong><span style="display:block">{{ version.revision.comment }}</span></li>
+                {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
     </div>
 </div>
