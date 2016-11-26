@@ -8,12 +8,12 @@
             <div class="btn-group" role="group">
             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                Last updated {{ changelog.first.revision.date_created|date:"M d y" }}
+                Last updated {{ changelog.first.revision.date_created|date:"n/j/y" }}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 {% for version in changelog%}
-                <li><strong>{{ version.revision.date_created|date:"M d y" }}: </strong>{{ version.revision.comment }}</li>
+                <li><strong>{{ version.revision.date_created|date:"n/j/y" }}</strong><span style="display:block">{{ version.revision.comment }}</span></li>
                 {% endfor %}
             </ul>
             </div>

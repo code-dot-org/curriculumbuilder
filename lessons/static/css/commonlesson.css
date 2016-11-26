@@ -137,8 +137,16 @@ html, body{
     font-family: 'Gotham 7r', sans-serif;
 }
 
-.resource-nav li {
+.resource-nav ul.dropdown-menu {
+    min-width: 300px;
+    left: auto;
+    right: 0;
+}
+
+.resource-nav ul.dropdown-menu li {
     font-size: 12px;
+    margin: 5px 15px;
+    line-height: 1.2em;
 }
 .content {
     padding: 0;
