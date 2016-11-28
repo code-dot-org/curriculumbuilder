@@ -363,7 +363,7 @@
             <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></p>
 
             {% editable lesson.questions %}
-                {{ lesson.questions|richtext_filters|safe }}
+                {% if lesson.questions %}{{ lesson.questions|richtext_filters|safe }}{% endif %}
             {% endeditable %}
             {% if curriculum.feedback_url %}
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
