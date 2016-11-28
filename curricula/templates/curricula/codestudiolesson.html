@@ -424,7 +424,7 @@
             {% if chunk.named %}
                 {% for level in chunk.levels %}
 
-                <div class="stage-chunk named-{{ chunk.named }}">
+                <div class="stage-chunk named-{{ chunk.named }} always-on-{% if level.teacher_markdown %}True{% else %}False{% endif %}">
 
                     <!-- Header tabs -->
                     <ul>
@@ -476,10 +476,9 @@
 
             <!-- Unnamed Levels are grouped in a row together -->
             {% else %}
-                <div class="stage-chunk named-{{ chunk.named }}">
+                <div class="stage-chunk named-{{ chunk.named }} always-on-False">
 
                     <!-- Header tabs -->
-                    {% for level in chunk.levels %}
                     <ul>
                         <li class="chunk-header">
                             Levels
@@ -493,7 +492,6 @@
                         {% endfor %}
                         <li class="level-expando-tip">(click tabs to see student view)</li>
                     </ul>
-                    {% endfor %}
 
                     <!-- Body panels -->
                     {% for level in chunk.levels %}
@@ -610,7 +608,7 @@
                 if ($('.stage_guide_hidden').children().length > 0) {
                     if (start) {
                         console.log(this);
-                        $(this).append('<div class="stage-chunk named-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
+                        $(this).append('<div class="stage-chunk named-False always-on-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
                         var chunk = $(this).find('.stage-chunk');
                         var tabs = $(chunk).find('ul');
                         console.log(tabs);
@@ -630,7 +628,7 @@
                 }
             });
 
-            $(".named-False").tabs({
+            $(".always-on-False").tabs({
                 collapsible: true,
                 active: false,
                 classes: { "ui-tabs-panel": "ui-corner-all"},
@@ -641,7 +639,7 @@
                 $(this).children(".ui-tabs-panel").first().addClass("collapsed");
             });
 
-            $(".named-True").tabs({
+            $(".always-on-True").tabs({
                 collapsible: true,
                 classes: { "ui-tabs-panel": "ui-corner-all" },
                 /*show: { effect: "blind", duration: 500 },
