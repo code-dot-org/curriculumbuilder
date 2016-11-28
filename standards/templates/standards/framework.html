@@ -32,7 +32,7 @@
 
 {% block main %}
     {% for top in top_categories.all %}
-    <div class="together">
+    <div class="together row">
         <h2>{{ top.shortcode }} - {{ top.name }}</h2>
         {% if top.children.count > 0 %}
             {% for child in top.children.all %}

@@ -16,16 +16,42 @@
     {{ code_block.description }}
 {% endmetablock %}{% endblock %}
 
-{% block title %}
-    {{ code_block.title }}
+{% block header %}
+    <h1>{{ ide }} Documentation: {{ code_block.title }}</h1>
 {% endblock %}
 
 {% block main %}
-    {{ code_block.content|richtext_filters|safe }}
+    {% if code_block.proxy %}
+        {% include "documentation/partials/block.html" with code_block=code_block.proxy %}
+    {% else %}
+        {% include "documentation/partials/block.html" with code_block=code_block %}
+    {% endif %}
+
+    <p>Found a bug in the documentation? Let us know at <a href="mailto:documentation@code.org">documentation@code.org</a></p>
+
 {% endblock %}
+
 {% block footer_scripts %}
-<link rel="stylesheet" type="text/css" href="//code.org/css/codemirror.css">
-<link href="{% static "cdo/css/applab-docs.css" %}" rel="stylesheet" type="text/css">
-<script src="//code.org/js/codemirror.js"></script>
-<script src="//code.org/js/applab-docs.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
+<script src="{% static "codemirror/lib/codemirror.js" %}"></script>
+<script src="{% static "codemirror/mode/javascript/javascript.js" %}"></script>
+<script src="{% static "codemirror/mode/htmlmixed/htmlmixed.js" %}"></script>
+<script type="text/javascript">
+$(function() {
+  $('pre').each(function() {
+
+        var $this = $(this);
+        var $code = $this.text().trimRight();
+
+        $this.empty();
+
+        var editor = CodeMirror(this, {
+            value: $code,
+            mode: '{{ ide.language|default:"javascript" }}',
+            lineNumbers: !$this.is('inline'),
+            readOnly: true
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -13,6 +13,8 @@
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
@@ -25,6 +27,7 @@
         {% block extra_css %}{% endblock %}
 
         <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     {% if user.is_staff %}
         <link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
         <link rel="stylesheet" type="text/css" href="{% static "codemirror/addon/display/buttons.css" %}">
@@ -60,24 +63,25 @@
 
 <div class="container">
     <div class="header printbackground">
+        <div class="logo">
+            <img src="{% static "images/logo.png" %}">
+        </div>
+        {% block lessonnumber %}
+        {% endblock %}
         <div class="headercontent">
             <div class="top">
-                <div class="logo">
-                    <img src="{% static "images/logo.png" %}">
-                </div>
-                {% block lessonnumber %}
-                {% endblock %}
-            </div>
-            <div class="bottom">
             {% block header_title %}
                 {% editable page.title %}
                 <h1>{{ page.title }}</h1>
                 {% endeditable %}
-                <hr>
             {% endblock %}
+            </div>
+            <div class="bottom">
+                {% block header_subtitle %}{% endblock %}
             </div>
         </div>
     </div>
+    {% block resources_nav %}{% endblock %}
     <div class="content">
         {% block main %}{% endblock %}
     </div>

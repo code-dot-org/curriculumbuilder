@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a></div>
 
     <div class="lessons">
     {% if chapter %}
@@ -67,7 +67,7 @@
 
 {% block main %}
     <div class="together" id="unit{{ unit.number }}chapter{{ chapter.number }}">
-        <h1>Unit {{ unit.number }} - {{ unit.title }}</h1>
+        <h1>{{ unit.long_name }}</h1>
         <div class="chapter_overviews">
             <div class="chapter">
             <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>

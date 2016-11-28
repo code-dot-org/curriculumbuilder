@@ -142,8 +142,12 @@ if ON_PAAS and DEBUG:
 TEMPLATE_DEBUG = DEBUG
 
 if ON_PAAS:
+<<<<<<< HEAD
+  ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com', '.codecurricula.com']
+=======
     ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
                      '.codecurricula.com']
+>>>>>>> fall2016sprint
 else:
     ALLOWED_HOSTS = ['*']
 
@@ -234,9 +238,15 @@ CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_APP
 STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi', 'static')
 
 STATICFILES_FINDERS = (
+<<<<<<< HEAD
+  'django.contrib.staticfiles.finders.FileSystemFinder',
+  'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+  'compressor.finders.CompressorFinder',
+=======
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
+>>>>>>> fall2016sprint
 )
 
 STATICFILES_DIRS = (
@@ -384,11 +394,19 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
+<<<<<<< HEAD
+  "debug_toolbar",
+  "django_extensions",
+  "compressor",
+  PACKAGE_NAME_FILEBROWSER,
+  PACKAGE_NAME_GRAPPELLI,
+=======
     "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
+>>>>>>> fall2016sprint
 )
 
 #####################

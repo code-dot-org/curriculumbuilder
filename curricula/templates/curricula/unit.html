@@ -34,6 +34,11 @@
         </div>
         <div class="drawer-contents">
             <div class="drawer-body">
+                <h2>Add to Changelog</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
                 <h2>Publishing</h2>
                 {% if unit.jackfrost_can_build %}
                     <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
@@ -50,7 +55,7 @@
 
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}"><span class="h2">Unit</span><span class="h1">{{ unit.number }}</span></a></div>
+    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a></div>
 
     <div class="lessons">
     {% if unit.chapters %}
@@ -84,9 +89,13 @@
 {% block header_title %}
 {% endblock %}
 
+{% block resources_nav %}
+    {% include "curricula/partials/unit_pills.html" with unit=unit %}
+{% endblock %}
+
 {% block main %}
     <div class="together" id="unit{{ unit.number }}">
-        <h1>Unit {{ unit.number }} - {{ unit.title }}</h1>
+        <h1>{{ unit.long_name }}</h1>
         {% editable unit.content %}
         {{ unit.content|richtext_filters|safe }}
         {% endeditable %}

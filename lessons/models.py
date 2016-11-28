@@ -8,7 +8,7 @@ from urlparse import urlparse
 # from copy import copy, deepcopy
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -23,7 +23,10 @@ from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
 
+from curriculumBuilder import settings
+
 import reversion
+from reversion.models import Version
 
 import curricula.models
 
@@ -47,9 +50,9 @@ class Vocab(models.Model):
 
     def __unicode__(self):
         if self.mathy:
-            return self.word + ' (math)' + ': ' + self.simpleDef
+            return "%s (math): %s" % (self.word, self.simpleDef)
         else:
-            return self.word + ': ' + self.simpleDef
+            return "%s: %s" % (self.word, self.simpleDef)
 
     def save(self, *args, **kwargs):
         if not self.detailDef:
@@ -86,7 +89,7 @@ class Resource(Orderable):
         elif self.gd:
           formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
         '''
-        if (self.type):
+        if self.type:
             return "%s - %s" % (self.name, self.type)
         else:
             return self.name
@@ -138,16 +141,18 @@ class Resource(Orderable):
 
     def gd_pdf(self):
         try:
-            pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = '%sexport?format=pdf' % pdf
+            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            doc_id = re.search(re_doc, self.url).group('doc_id')
+            pdf = 'https://docs.google.com/document/d/%s/export?format=pdf' % doc_id
             return pdf
         except:
             return self.url
 
     def gd_doc(self):
         try:
-            pdf = re.search(r'^(.*[/])', self.url).group()
-            pdf = '%sexport?format=doc' % pdf
+            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            doc_id = re.search(re_doc, self.url).group('doc_id')
+            pdf = 'https://docs.google.com/document/d/%s/export?format=doc' % doc_id
             return pdf
         except:
             return self.url
@@ -179,7 +184,8 @@ class Lesson(Page, RichText):
     unplugged = models.BooleanField(default=False)
     resources = SortedManyToManyField(Resource, blank=True)
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
-    questions = RichTextField('Open Questions', help_text='Open Questions About this Lesson', blank=True, null=True)
+    questions = RichTextField('Support Details', help_text='Open questions or comments about this lesson',
+                              blank=True, null=True)
     cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',
                                blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True)
@@ -243,7 +249,6 @@ class Lesson(Page, RichText):
                     order += chapter.lessons.count()
                 except AttributeError:
                     chapter = None
-                    print "Reached final chapter"
 
         if self._order is not None:
             order += int(self._order)
@@ -252,6 +257,29 @@ class Lesson(Page, RichText):
 
     def get_curriculum(self):
         return self.unit.curriculum
+
+    def get_levels(self):
+        if self.stage:
+            raw_levels = self.stage.get('levels')
+
+            levels = []  # To store levels organized by logical chunk
+            counter = 0
+            last_type = raw_levels[0].get('named_level')
+            levels.insert(counter, {'named': last_type, 'levels': []})
+
+            for level in raw_levels:
+
+                current_type = level.get('named_level')
+                if last_type != current_type:
+                    last_type = current_type
+                    counter += 1
+                    levels.insert(counter, {'named': last_type, 'levels': []})
+
+                levels[counter]['levels'].append(level)
+
+            return levels
+        else:
+            return
 
     def jackfrost_can_build(self):
         try:
@@ -283,7 +311,7 @@ class Lesson(Page, RichText):
         try:
             self.number = self.get_number()
         except:
-            print "Coun't get number"
+            print "Couldn't get number"
 
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
@@ -339,6 +367,10 @@ class Lesson(Page, RichText):
         str(self.curriculum), self.unit.number, self.number, self.get_absolute_url())
         url = "https://support.code.org/hc/en-us/requests/new?description=%s" % urllib2.quote(message)
         return url
+
+    @property
+    def changelog(self):
+        return Version.objects.get_for_object(self).filter(revision__user__username=settings.CHANGELOG_USER)
 
 
 """
@@ -465,6 +497,12 @@ Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will
 
 reversion.register(Activity, follow=('lesson', ))
 reversion.register(Objective, follow=('lesson', ))
+
+
+@receiver(post_delete, sender=Lesson)
+def reorder_peers(sender, instance, **kwargs):
+    for lesson in instance.curriculum.lesson_set.all():
+        Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
 
 
 """

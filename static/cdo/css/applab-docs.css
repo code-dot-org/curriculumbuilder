@@ -1,4 +1,117 @@
 .CodeMirror {
     /* Makes e.g. single line comments not take up the whole height */
-    height: auto;
+    height: auto !important;
+}
+
+#doc_header h1 {
+    color: #00adbc;
+}
+
+#doc_category {
+    margin-bottom: 20px;
+}
+
+#doc_category .category_label {
+    font-weight: bold;
+}
+
+#doc_category .category_name {
+    padding: 5px 10px;
+    margin-left: 10px;
+    color: #000;
+}
+
+#categories {
+    border-right: 1px solid #949ca2;
+}
+
+#categories ul.category_list {
+    padding: 0;
+    list-style: none;
+}
+
+#categories ul.category_list li.category_name {
+    margin: 5px 0;
+    color: #696970;
+    border-left: 10px solid;
+    font-family: 'Gotham 4r', sans-serif;
+    padding: 0;
+}
+
+#categories ul.category_list li.category_name > span {
+    padding: 5px 10px;
+    display: block;
+    cursor: pointer;
+}
+
+#categories ul.category_list li.category_name.active {
+    color: #000;
+}
+
+#categories ul.category_blocks {
+    list-style: none;
+    padding: 5px 10px;
+    background: white;
+}
+
+#categories ul.category_blocks li {
+    font-size: .9em;
+}
+
+#categories ul.category_blocks li a {
+    font-family: 'Gotham 4r', sans-serif;
+}
+
+.introduced_in .introduced_lesson {
+    width: 100%;
+    padding: 10px;
+    background: #ebe8f1;
+    margin-bottom: 15px;
+    clear: right;
+}
+
+.introduced_in .introduced_lesson h3 {
+    margin: 0 0 15px 0;
+}
+
+.introduced_in .introduced_lesson ul {
+    list-style: none;
+}
+
+.content {
+    margin-top: 0;
+    padding: 0 15px;
+}
+
+.content h2 {
+    margin: 20px 0;
+}
+
+.parameters table {
+    width: 100%;
+}
+
+.parameters .required_param_True:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.5em;
+    content: "\f00c";
+    text-align: center;
+    display: block;
+}
+
+.parameters .required_param_False:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.5em;
+    content: "\f00d";
+    text-align: center;
+    display: block;
+}
+
+
+@media (min-width: 768px) {
+
+    .introduced_in {
+        float: right;
+        width: 300px;
+    }
 }

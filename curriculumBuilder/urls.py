@@ -77,7 +77,7 @@ urlpatterns += patterns('',
     url("^edit/$", views.reversion_edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
-    url("^None/$", views.index), # Dealing with JackFrost bug
+    url("^None/$", views.index),  # Dealing with JackFrost bug
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
     url(r'^', include('curricula.urls', namespace="curriculum")),

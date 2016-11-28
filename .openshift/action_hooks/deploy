@@ -16,5 +16,8 @@ python "$OPENSHIFT_REPO_DIR"/manage.py migrate --noinput
 echo "Executing 'python $OPENSHIFT_REPO_DIR/manage.py collectstatic --noinput'"
 python "$OPENSHIFT_REPO_DIR"/manage.py collectstatic --noinput
 
+echo "Executing 'python $OPENSHIFT_REPO_DIR/manage.py createinitialrevisions'"
+python "$OPENSHIFT_REPO_DIR"/manage.py createinitialrevisions
+
 #HOME = $HOME/app-root/data/
 #export $HOME

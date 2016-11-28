@@ -182,6 +182,7 @@ class VocabResource(resources.ModelResource):
     class Meta:
         model = Vocab
 
+
 class ActivityAdmin(VersionAdmin):
     class Meta:
         model = Activity

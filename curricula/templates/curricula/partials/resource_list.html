@@ -1,0 +1,26 @@
+
+<div class="together resource_list">
+    <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
+    <div>
+    {% for lesson in unit.lessons %}
+        {% if lesson.resources.count > 0 %}
+            <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+            <div>
+            {% with lesson.resources.all as resources %}
+                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h4>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h4>
+                    <ul>
+                        {% for resource in audience.list %}
+                            <li>
+                                {{ resource.formatted|safe }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
