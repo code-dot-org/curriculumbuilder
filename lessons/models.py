@@ -184,7 +184,8 @@ class Lesson(Page, RichText):
     unplugged = models.BooleanField(default=False)
     resources = SortedManyToManyField(Resource, blank=True)
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
-    questions = RichTextField('Open Questions', help_text='Open Questions About this Lesson', blank=True, null=True)
+    questions = RichTextField('Support Details', help_text='Open questions or comments about this lesson',
+                              blank=True, null=True)
     cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',
                                blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True)
