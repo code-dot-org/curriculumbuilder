@@ -45,13 +45,23 @@ class Curriculum(Page, RichText):
     def get_standards_url(self):
         return '/%s/standards/' % self.slug
 
+    def get_resources_url(self):
+        return '%s/resources/' % (self.get_absolute_url())
+
+    def get_blocks_url(self):
+        return '%s/code/' % (self.get_absolute_url())
+
+    def get_vocab_url(self):
+        return '%s/vocab/' % (self.get_absolute_url())
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_standards_url()]
+        urls = [self.get_absolute_url(), self.get_standards_url(), self.get_resources_url(),
+                self.get_blocks_url(), self.get_vocab_url()]
         return urls
 
     def jackfrost_can_build(self):
-        return self.status == 2 and not self.login_required
+        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     def publish(self, children=False):
         response = {}
@@ -95,8 +105,20 @@ class Unit(Page, RichText):
     def get_pdf_url(self):
         return '%s%s.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
-    def get_resources_url(self):
+    def get_resources_pdf_url(self):
         return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)
+
+    def get_resources_url(self):
+        return '%s/resources/' % (self.get_absolute_url())
+
+    def get_blocks_url(self):
+        return '%s/code/' % (self.get_absolute_url())
+
+    def get_vocab_url(self):
+        return '%s/vocab/' % (self.get_absolute_url())
+
+    def get_standards_url(self):
+        return '%s/standards/' % (self.get_absolute_url())
 
     def get_number(self):
         return int(self._order) + 1
@@ -109,11 +131,12 @@ class Unit(Page, RichText):
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_pdf_url(), self.get_resources_url()]
+        urls = [self.get_absolute_url(), self.get_pdf_url(), self.get_resources_pdf_url(),
+                self.get_resources_url(), self.get_blocks_url(), self.get_vocab_url(), self.get_standards_url()]
         return urls
 
     def jackfrost_can_build(self):
-        return self.status == 2 and not self.login_required and not self.curriculum.login_required
+        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
 
     def publish(self, children=False):
         response = {}
@@ -211,7 +234,7 @@ class Chapter(Page, RichText):
         return int(self._order) + 1
 
     def jackfrost_can_build(self):
-        return self.status == 2 and not self.login_required
+        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     @property
     def unit(self):

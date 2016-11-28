@@ -533,7 +533,9 @@ JACKFROST_RENDERERS = (
     # 'curricula.renderers.PDFRenderer',
 )
 
-AUTO_PUBLISH = True  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"
+AUTO_PUBLISH = False  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"
+
+ENABLE_PUBLISH = False
 
 ######################
 # REVERSION SETTINGS #

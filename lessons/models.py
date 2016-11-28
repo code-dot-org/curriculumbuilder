@@ -283,7 +283,7 @@ class Lesson(Page, RichText):
 
     def jackfrost_can_build(self):
         try:
-            can_build = self.status == 2 and not self.login_required and \
+            can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and \
                         not self.unit.login_required and not self.curriculum.login_required
         except:
             can_build = False
