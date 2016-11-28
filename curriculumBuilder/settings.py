@@ -448,7 +448,7 @@ PAGEDOWN_SERVER_SIDE_PREVIEW = False
 # SMUGGLER SETTINGS #
 #####################
 
-SMUGGLER_EXCLUDE_LIST = ['sites.Site']
+SMUGGLER_EXCLUDE_LIST = ['sites.site']
 
 #######################
 # AJAXSELECT SETTINGS #

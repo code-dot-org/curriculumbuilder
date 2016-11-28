@@ -587,6 +587,10 @@ th a:link, th a:visited, th a:hover, th a:active {
     display: none;
 }
 
+.stage_guide {
+    clear: both;
+}
+
 .stage-chunk {
     padding: 0;
     margin-top: 15px;
