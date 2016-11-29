@@ -42,15 +42,15 @@
     {% for example in code_block.example_set.all %}
         {% if example.app %}
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <h3>{{ example.name }}</h3>
                     <p>{{ example.description|richtext_filters|safe }}</p>
 <pre>
 {{ example.code }}
 </pre>
                 </div>
-                    <div class="col-sm-3">
-                        <iframe width="352" height="620" style="border: 0px;" src="{{ example.get_embed_app }}"></iframe>
+                    <div class="col-sm-2">
+                        <iframe class="{{ code_block.IDE.slug }}-exemplar" src="{{ example.get_embed_app }}"></iframe>
                     </div>
             </div>
         {% else %}
