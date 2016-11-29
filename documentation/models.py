@@ -40,6 +40,10 @@ class Category(Orderable):
     def __unicode__(self):
         return "%s: %s" % (self.IDE.title, self.name)
 
+    @property
+    def blocks(self):
+        return self.block_set.order_by('_order')
+
 
 """
 Individual Code Elements

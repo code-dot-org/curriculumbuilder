@@ -12,3 +12,9 @@ def block_view(request, slug, ide_slug):
     ide = get_object_or_404(IDE, slug=ide_slug)
     block = get_object_or_404(Block, slug=slug, IDE=ide)
     return render(request, 'documentation/block.html', {'code_block': block, 'ide': ide})
+
+
+def embed_view(request, slug, ide_slug):
+    ide = get_object_or_404(IDE, slug=ide_slug)
+    block = get_object_or_404(Block, slug=slug, IDE=ide)
+    return render(request, 'documentation/embed.html', {'code_block': block, 'ide': ide})

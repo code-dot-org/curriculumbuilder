@@ -43,7 +43,8 @@
         {% block header %}<h1>{{ ide }}Documentation</h1>{% endblock %}
     </div>
     <div class="row">
-        <div id="categories" class="col-sm-2">
+    {% block sidebar %}
+        <div id="categories" class="col-md-2">
             {% block categories %}
                 {% if ide.category_set.count > 0 %}
                     <ul class="category_list">
@@ -53,7 +54,7 @@
                             data-color="{{ category.color }}"><span>{{ category.name }}</span>
                         {% if category.block_set.count > 0 %}
                             <ul class="category_blocks" {% if category != code_block.category %}style="display: none;"{% endif %}>
-                            {% for block in category.block_set.all %}
+                            {% for block in category.blocks %}
                                 <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
                             {% endfor %}
                             </ul>
@@ -64,7 +65,8 @@
                 {% endif %}
             {% endblock %}
         </div>
-        <div class="content col-sm-10">
+    {% endblock %}
+        <div class="content col-md-10">
             {% block main %}{% endblock %}
         </div>
     </div>
