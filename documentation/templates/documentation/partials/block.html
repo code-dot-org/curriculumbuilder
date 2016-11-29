@@ -1,6 +1,7 @@
 {% load mezzanine_tags %}
 {% load staticfiles %}
 
+{% if embed == None %}
 {% with code_block.lessons_introduced as lessons %}
     {% if lessons.count > 0%}
         <div class="introduced_in">
@@ -19,6 +20,7 @@
         </div>
     {% endif %}
 {% endwith %}
+{% endif %}
 
 {% if code_block.category %}
     <div id="doc_category">
