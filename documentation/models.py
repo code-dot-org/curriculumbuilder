@@ -107,6 +107,7 @@ class Block(Page, RichText):
         self.save()
 
     def save(self, *args, **kwargs):
+        self.parent = Page.objects.get(pk=self.parent_id)
         self.IDE = self.get_IDE()
         if not self.slug:
             self.slug = slugify(self.title)
