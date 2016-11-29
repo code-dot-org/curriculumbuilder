@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block main %}
-    <div class="together">
+    <div class="content col-md-10">
         <p>{{ ide.content|richtext_filters|safe }}</p>
         <h2><a href="{{ ide.url }}">Try it out</a></h2>
         {% for category in ide.category_set.all %}

@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block main %}
+    <div class="content col-md-10">
     {% if code_block.proxy %}
         {% include "documentation/partials/block.html" with code_block=code_block.proxy %}
     {% else %}
@@ -28,7 +29,7 @@
     {% endif %}
 
     <p>Found a bug in the documentation? Let us know at <a href="mailto:documentation@code.org">documentation@code.org</a></p>
-
+    </div>
 {% endblock %}
 
 {% block footer_scripts %}

@@ -66,9 +66,9 @@
             {% endblock %}
         </div>
     {% endblock %}
-        <div class="content col-md-10">
-            {% block main %}{% endblock %}
-        </div>
+        {% block main %}
+            <div class="content col-md-10"></div>
+        {% endblock %}
     </div>
 </div>
 {% block footer %}
