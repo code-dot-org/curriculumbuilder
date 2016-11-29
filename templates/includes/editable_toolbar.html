@@ -5,7 +5,17 @@
     {% url "logout" as accounts_logout_url %}
     <a id="editable-toolbar-toggle" href="#"></a>
     <a href="{{ editable_obj.get_admin_url|default:admin_index_url }}">{% trans "Admin" %}</a>
-    {% if lesson %}<a href="{{ lesson.get_admin_url }}">{% trans "Lesson Admin" %}</a>{% endif %}
+    {% if lesson %}
+        <a href="{{ lesson.get_admin_url }}">{% trans "Lesson Admin" %}</a>
+    {% elif unit %}
+        <a href="{{ unit.get_admin_url }}">{% trans "Unit Admin" %}</a>
+    {% elif curriculum %}
+        <a href="{{ curriculum.get_admin_url }}">{% trans "Curriculum Admin" %}</a>
+    {% elif code_block %}
+        <a href="{{ code_block.get_admin_url }}">{% trans "Code Block Admin" %}</a>
+    {% elif ide %}
+        <a href="{{ ide.get_admin_url }}">{% trans "IDE Admin" %}</a>
+    {% endif %}
     <a href="{{ accounts_logout_url|default:admin_logout_url }}?{{ REDIRECT_FIELD_NAME }}={{ request.path }}">{% trans "Log out" %}</a>
 </div>
 
