@@ -141,7 +141,7 @@ class Resource(Orderable):
 
     def gd_pdf(self):
         try:
-            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
             doc_id = re.search(re_doc, self.url).group('doc_id')
             pdf = 'https://docs.google.com/document/d/%s/export?format=pdf' % doc_id
             return pdf

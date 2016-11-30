@@ -1,12 +1,12 @@
  <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Unit Resources">
     <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
         <a href="{{ unit.curriculum.get_absolute_url }}" class="btn" role="button">Curriculum Overview</a>
-        <a href="{{ unit.get_absolute_url }}standards/" class="btn" role="button">Standards</a>
-        <a href="{{ unit.get_absolute_url }}vocab/" class="btn" role="button">Vocab</a>
-        <a href="{{ unit.get_absolute_url }}code/" class="btn" role="button">Code Documentation</a>
-        <a href="{{ unit.get_absolute_url }}resources/" class="btn" role="button">Other Resources</a>
+        <a href="{{ unit.get_standards_url }}" class="btn" role="button">Standards</a>
+        {% if unit.vocab_count > 0 %}<a href="{{ unit.get_vocab_url }}" class="btn" role="button">Vocab</a>{% endif %}
+        {% if unit.blocks_count > 0 %}<a href="{{ unit.get_blocks_url }}" class="btn" role="button">Code Documentation</a>{% endif %}
+        <a href="{{ unit.get_resources_url }}" class="btn" role="button">Other Resources</a>
         <a href="{{ unit.get_pdf_url }}" class="btn" role="button">Lessons PDF</a>
-        <a href="{{ unit.get_resources_url }}" class="btn" role="button">Handouts PDF</a>
+        <a href="{{ unit.get_resources_pdf_url }}" class="btn" role="button">Handouts PDF</a>
         {% if changelog.count > 0 %}
 
             <div class="btn-group" role="group">

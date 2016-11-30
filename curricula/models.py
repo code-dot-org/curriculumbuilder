@@ -2,6 +2,7 @@ import re
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Count
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -109,16 +110,16 @@ class Unit(Page, RichText):
         return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
     def get_resources_url(self):
-        return '%s/resources/' % (self.get_absolute_url())
+        return '%sresources/' % (self.get_absolute_url())
 
     def get_blocks_url(self):
-        return '%s/code/' % (self.get_absolute_url())
+        return '%scode/' % (self.get_absolute_url())
 
     def get_vocab_url(self):
-        return '%s/vocab/' % (self.get_absolute_url())
+        return '%svocab/' % (self.get_absolute_url())
 
     def get_standards_url(self):
-        return '%s/standards/' % (self.get_absolute_url())
+        return '%sstandards/' % (self.get_absolute_url())
 
     def get_number(self):
         return int(self._order) + 1
@@ -172,6 +173,16 @@ class Unit(Page, RichText):
             re_title = "(\w+) (\w+)"
             re_match = re.search(re_title, self.title)
             return "<span class='h2'>%s</span><span class='h1'>%s</span>" % (re_match.group(1), re_match.group(2))
+
+    @property
+    def block_count(self):
+        num_blocks = self.lessons.aggregate(Count('blocks'))
+        return num_blocks.get('blocks__count')
+
+    @property
+    def vocab_count(self):
+        num_blocks = self.lessons.aggregate(Count('vocab'))
+        return num_blocks.get('vocab__count')
 
     @property
     def lessons(self):
