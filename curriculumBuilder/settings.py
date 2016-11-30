@@ -603,6 +603,7 @@ if ON_PAAS:
 
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
 SLACK_CHANNEL = "#curriculumbuilder"
+SLACK_USERNAME = "curricbot"
 
 ###########
 # LOGGING #
