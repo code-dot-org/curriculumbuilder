@@ -30,6 +30,8 @@ from curricula.models import *
 from curricula.serializers import *
 from curricula.forms import ChangelogForm
 
+logger = logging.getLogger('curricula.views')
+
 
 def index(request):
     if request.user.is_staff:
@@ -320,7 +322,7 @@ def unit_resources_pdf(request, slug, unit_slug):
                     localPDF = PdfFileReader(memoryPDF)
                     merger.append(localPDF)
                 except:
-                    logging.error(
+                    logger.error(
                         'Failed to open resource: %s - %s (pk %s)' % (resource.name, resource.type, resource.pk))
     response = HttpResponse(content_type='application/pdf')
     merger.write(response)

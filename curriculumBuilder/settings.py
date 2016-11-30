@@ -602,8 +602,8 @@ if ON_PAAS:
 ##################
 
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
-SLACK_CHANNEL = "#curriculumbuilder"
-SLACK_USERNAME = "curricbot"
+SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', "#curriculumbuilder")
+SLACK_USERNAME = os.environ.get('SLACK_USER', 'curricbot')
 
 ###########
 # LOGGING #
@@ -630,7 +630,7 @@ LOGGING = {
             'include_html': False,
         },
         'slack_admins': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'django_slack.log.SlackExceptionHandler',
         }
     },
@@ -644,14 +644,31 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'django.security': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
         'jackfrost.models': {
             'handlers': ['console', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
         },
         'lessons.models': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': 'DEBUG',
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
         },
+        'curricula.views': {
+            'handlers': ['slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+        },
+        'pdfkit': {
+            'handlers': ['slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+        },
+        'PyPDF2': {
+            'handlers': ['slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+        }
     },
 }
 
