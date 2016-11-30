@@ -55,34 +55,36 @@
 
 
 {% block lessonnumber %}
-    <div class="unitnumber"><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a></div>
+    <div class="unitnumber">{{ unit.header_corner|safe }}</div>
 
     <div class="lessons">
-    {% if unit.chapters %}
-        {% for chap in unit.chapters %}
-            <div class="lesson chapter">
-                {% comment %}<a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">{% endcomment %}
-                Ch. {{ chap.number }}
-                {% comment %}</a>{% endcomment %}
-            </div>
-            {% for stage in chap.lessons %}
-                <div class="lesson unfinished">
-                <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                {{ stage.number }}
-            </a>
-            </div>
+        {% if unit.chapters %}
+            {% for chap in unit.chapters %}
+                <div class="lesson chapter">
+                    {% comment %}<a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">{% endcomment %}
+                    Ch. {{ chap.number }}
+                    {% comment %}</a>{% endcomment %}
+                </div>
+                {% for stage in chap.lessons %}
+                    <div class="lesson unfinished">
+                        <a href="#U{{ unit.number }}L{{ stage.number }}"
+                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                            {{ stage.number }}
+                        </a>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    {% else %}
-        {% for stage in unit.lessons %}
-            <div class="lesson unfinished">
-            <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}" data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-            {{ stage.number }}
-        </a>
-        </div>
-        {% endfor %}
-    {% endif %}
-</div>
+        {% else %}
+            {% for stage in unit.lessons %}
+                <div class="lesson unfinished">
+                    <a href="#U{{ unit.number }}L{{ stage.number }}"
+                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                        {{ stage.number }}
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
 {% endblock %}
 

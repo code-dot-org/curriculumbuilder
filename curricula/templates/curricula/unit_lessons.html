@@ -60,6 +60,10 @@
 {% block header_title %}
 {% endblock %}
 
+{% block resources_nav %}
+    {% include "curricula/partials/unit_pills.html" with unit=unit %}
+{% endblock %}
+
 {% block main %}
     <div class="together pagebreak" id="unit{{ unit.number }}">
         <h1>{{ unit.long_name }}</h1>
@@ -141,11 +145,6 @@
             {% endfor %}
         </div>
     </div>
-    {% for lesson in unit.lessons %}
-        <div class="pagebreak" id="unit{{ unit.number }}lesson{{ lesson.number }}">
-            {% include "curricula/partials/lesson.html" with lesson=lesson %}
-        </div>
-    {% endfor %}
 
     <script type="text/javascript">
 
@@ -158,4 +157,12 @@
         });
     </script>
 
+{% endblock %}
+
+{% block append_pages %}
+    {% for lesson in unit.lessons %}
+        <div class="pagebreak" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+            {% include "curricula/partials/lesson.html" with lesson=lesson %}
+        </div>
+    {% endfor %}
 {% endblock %}
