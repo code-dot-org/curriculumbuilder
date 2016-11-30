@@ -313,6 +313,7 @@ INSTALLED_APPS = (
     "smuggler",
     "sortedm2m",
     "reversion",
+    "django_slack",
     # Custom apps for Code.org curriculum
     "standards",
     "lessons",
@@ -596,6 +597,13 @@ if ON_PAAS:
     COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
     COMPRESS_URL = STATIC_URL
 
+##################
+# SLACK SETTINGS #
+##################
+
+SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
+SLACK_CHANNEL = "#curriculumbuilder"
+
 ###########
 # LOGGING #
 ###########
@@ -619,11 +627,16 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': False,
+        },
+        'slack_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django_slack.log.SlackExceptionHandler',
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'ERROR',
         },
         'django.request': {
@@ -632,11 +645,11 @@ LOGGING = {
             'propagate': True,
         },
         'jackfrost.models': {
-            'handlers': ['console'],
+            'handlers': ['console', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'lessons.models': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'slack_admins'],
             'level': 'DEBUG',
         },
     },
