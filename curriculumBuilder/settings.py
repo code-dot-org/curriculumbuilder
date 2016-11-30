@@ -604,6 +604,7 @@ if ON_PAAS:
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', "#curriculumbuilder")
 SLACK_USERNAME = os.environ.get('SLACK_USER', 'curricbot')
+SLACK_ENDPOINT_URL = 'https://hooks.slack.com/services/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'
 
 ###########
 # LOGGING #
