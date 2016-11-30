@@ -630,7 +630,6 @@ LOGGING = {
         },
         'slack_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
             'class': 'django_slack.log.SlackExceptionHandler',
         }
     },
