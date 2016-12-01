@@ -67,7 +67,7 @@
                 </div>
                 {% for stage in chap.lessons %}
                     <div class="lesson unfinished">
-                        <a href="#U{{ unit.number }}L{{ stage.number }}"
+                        <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
                            data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                             {{ stage.number }}
                         </a>
@@ -77,7 +77,7 @@
         {% else %}
             {% for stage in unit.lessons %}
                 <div class="lesson unfinished">
-                    <a href="#U{{ unit.number }}L{{ stage.number }}"
+                    <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
                        data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                         {{ stage.number }}
                     </a>
