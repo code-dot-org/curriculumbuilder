@@ -30,7 +30,7 @@ from curricula.models import *
 from curricula.serializers import *
 from curricula.forms import ChangelogForm
 
-logger = logging.getLogger('curricula.views')
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -323,7 +323,9 @@ def unit_resources_pdf(request, slug, unit_slug):
                     merger.append(localPDF)
                 except:
                     logger.error(
-                        'Failed to open resource: %s - %s (pk %s)' % (resource.name, resource.type, resource.pk))
+                        'Failed to open resource: %s - %s (pk %s).'
+                        'Check to make sure it is a publicly accessible Google Doc'
+                        % (resource.name, resource.type, resource.pk))
     response = HttpResponse(content_type='application/pdf')
     merger.write(response)
     response['Content-Disposition'] = 'inline;filename=unit%s_resources.pdf' % unit.number

@@ -536,7 +536,7 @@ JACKFROST_RENDERERS = (
 
 AUTO_PUBLISH = False  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"
 
-ENABLE_PUBLISH = False
+ENABLE_PUBLISH = True
 
 ######################
 # REVERSION SETTINGS #
@@ -652,23 +652,27 @@ LOGGING = {
         },
         'jackfrost.models': {
             'handlers': ['console', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'lessons.models': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'curricula.views': {
             'handlers': ['slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
+        },
+        'curricula.models': {
+            'handlers': ['slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
         'pdfkit': {
             'handlers': ['slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
         'PyPDF2': {
             'handlers': ['slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         }
     },
 }

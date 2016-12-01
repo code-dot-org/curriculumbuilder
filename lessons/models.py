@@ -30,7 +30,7 @@ from reversion.models import Version
 
 import curricula.models
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 """
 Vocabulary
@@ -295,6 +295,7 @@ class Lesson(Page, RichText):
         if self.jackfrost_can_build():
             read, written = build_page_for_obj(Lesson, self)
             for result in written:
+                logger.info("Publishing %s" % result)
                 response[result.name] = result
         return response
 

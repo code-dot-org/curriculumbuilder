@@ -1,4 +1,5 @@
 import re
+import logging
 
 from django.conf import settings
 from django.db import models
@@ -12,6 +13,8 @@ from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
 from standards.models import Standard, GradeBand, Category, Framework
 import lessons.models
+
+logger = logging.getLogger(__name__)
 
 """
 Curriculum
@@ -72,6 +75,7 @@ class Curriculum(Page, RichText):
         if self.jackfrost_can_build():
             read, written = build_page_for_obj(Curriculum, self)
             for result in written:
+                logger.info("Publishing %s" % result)
                 response[result.name] = result
         return response
 
@@ -147,6 +151,7 @@ class Unit(Page, RichText):
         if self.jackfrost_can_build():
             read, written = build_page_for_obj(Unit, self)
             for result in written:
+                logger.info("Publishing %s" % result)
                 response[result.name] = result
         return response
 
