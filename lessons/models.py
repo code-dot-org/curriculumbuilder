@@ -294,8 +294,9 @@ class Lesson(Page, RichText):
         response = {}
         if self.jackfrost_can_build():
             read, written = build_page_for_obj(Lesson, self)
+            logger.debug("Jackfrost Read: %s" % read)
             for result in written:
-                logger.info("Publishing %s" % result)
+                logger.debug("Publishing %s" % result)
                 response[result.name] = result
         return response
 
@@ -304,15 +305,15 @@ class Lesson(Page, RichText):
         try:
             self.unit = self.get_unit()
         except:
-            print "Couldn't get unit"
+            logger.error("Couldn't get unit for %s" % self)
         try:
             self.curriculum = self.get_curriculum()
         except:
-            print "Couldn't get curriculum"
+            logger.error("Couldn't get curriculum for %s" % self)
         try:
             self.number = self.get_number()
         except:
-            print "Couldn't get number"
+            logger.error("Couldn't get number for %s" % self)
 
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
@@ -321,7 +322,7 @@ class Lesson(Page, RichText):
             data = json.loads(response.read())
             self.stage = data
         except:
-            print "Couldn't get the stage details"
+            logger.warning("Couldn't get stage details for %s" % self)
 
         super(Lesson, self).save(*args, **kwargs)
 

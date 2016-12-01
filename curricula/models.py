@@ -150,8 +150,9 @@ class Unit(Page, RichText):
                 response[lesson.title] = lesson.publish()
         if self.jackfrost_can_build():
             read, written = build_page_for_obj(Unit, self)
+            logger.debug("Jackfrost Read: %s" % read)
             for result in written:
-                logger.info("Publishing %s" % result)
+                logger.debug("Publishing %s" % result)
                 response[result.name] = result
         return response
 

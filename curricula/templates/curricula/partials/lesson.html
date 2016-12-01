@@ -29,7 +29,7 @@
                         {% else %}
                             <div class="lesson unfinished">
                         {% endif %}
-                    <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+                    <a href="#U{{ unit.number }}L{{ stage.number }}"
                        data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                         {{ stage.number }}
                     </a>
@@ -49,7 +49,7 @@
                     {% else %}
                         <div class="lesson unfinished">
                     {% endif %}
-                <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
+                <a href="#U{{ unit.number }}L{{ stage.number }}"
                    data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
                     {{ stage.number }}
                 </a>

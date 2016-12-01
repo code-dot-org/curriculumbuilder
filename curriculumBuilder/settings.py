@@ -651,7 +651,7 @@ LOGGING = {
             'propagate': False,
         },
         'jackfrost.models': {
-            'handlers': ['console', 'slack_admins'],
+            'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'lessons.models': {
@@ -667,11 +667,11 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
         'pdfkit': {
-            'handlers': ['slack_admins'],
+            'handlers': ['mail_admins', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
         'PyPDF2': {
-            'handlers': ['slack_admins'],
+            'handlers': ['mail_admins', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         }
     },
