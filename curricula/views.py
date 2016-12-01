@@ -397,7 +397,8 @@ def publish(request):
 
         payload = object.publish(children)
         logger.debug("Publish payload: %s" % payload)
-    except:
+    except Exception:
+        logger.exception('Publishing failed')
         payload = {'error': 'failed'}
 
     return HttpResponse(json.dumps(payload), content_type='application/json')

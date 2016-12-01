@@ -147,13 +147,19 @@ class Unit(Page, RichText):
         response = {}
         if children:
             for lesson in self.lesson_set.all():
-                response[lesson.title] = lesson.publish()
+                try:
+                    response[lesson.title] = lesson.publish()
+                except Exception:
+                    logger.exception('Failed to publish %s' % lesson)
         if self.jackfrost_can_build():
-            read, written = build_page_for_obj(Unit, self)
-            logger.debug("Jackfrost Read: %s" % read)
-            for result in written:
-                logger.debug("Publishing %s" % result)
-                response[result.name] = result
+            try:
+                read, written = build_page_for_obj(Unit, self)
+                logger.debug("Jackfrost Read: %s" % read)
+                for result in written:
+                    logger.debug("Publishing %s" % result)
+                    response[result.name] = result
+            except Exception:
+                logger.exception('Failed to publish %s' % self)
         return response
 
     # Eventually this will need to address naming differences between CSF and CSD/CSP

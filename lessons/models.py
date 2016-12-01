@@ -293,27 +293,31 @@ class Lesson(Page, RichText):
     def publish(self, children=False):
         response = {}
         if self.jackfrost_can_build():
-            read, written = build_page_for_obj(Lesson, self)
-            logger.debug("Jackfrost Read: %s" % read)
-            for result in written:
-                logger.debug("Publishing %s" % result)
-                response[result.name] = result
+            try:
+                read, written = build_page_for_obj(Lesson, self)
+                logger.debug("Jackfrost Read: %s" % read)
+                logger.debug("Jackfrost Written: %s" % written)
+                for result in written:
+                    logger.debug("Publishing %s" % result)
+                    response[result.name] = result
+            except Exception:
+                logger.exception('Failed to publish %s' % self)
         return response
 
     def save(self, *args, **kwargs):
         self.parent = Page.objects.get(pk=self.parent_id)
         try:
             self.unit = self.get_unit()
-        except:
-            logger.error("Couldn't get unit for %s" % self)
+        except Exception:
+            logger.exception("Couldn't get unit for %s" % self)
         try:
             self.curriculum = self.get_curriculum()
-        except:
-            logger.error("Couldn't get curriculum for %s" % self)
+        except Exception:
+            logger.exception("Couldn't get curriculum for %s" % self)
         try:
             self.number = self.get_number()
-        except:
-            logger.error("Couldn't get number for %s" % self)
+        except Exception:
+            logger.exception("Couldn't get number for %s" % self)
 
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
@@ -321,7 +325,7 @@ class Lesson(Page, RichText):
             response = urllib2.urlopen(url)
             data = json.loads(response.read())
             self.stage = data
-        except:
+        except Exception:
             logger.warning("Couldn't get stage details for %s" % self)
 
         super(Lesson, self).save(*args, **kwargs)
