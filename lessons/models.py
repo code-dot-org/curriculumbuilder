@@ -295,9 +295,7 @@ class Lesson(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Lesson, self)
-                response['name'] = written.name
-                response['created'] = written.created
-                response['modified'] = written.modified
+                response['result'] = written
             except Exception, e:
                 response['status'] = 500
                 response['exception'] = e.message

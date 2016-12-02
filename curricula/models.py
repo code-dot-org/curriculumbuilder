@@ -75,9 +75,7 @@ class Curriculum(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Curriculum, self)
-                response['name'] = written.name
-                response['created'] = written.created
-                response['modified'] = written.modified
+                response['result'] = written
             except Exception, e:
                 response['status'] = 500
                 response['exception'] = e.message
@@ -163,9 +161,7 @@ class Unit(Page, RichText):
             try:
                 read, written = build_page_for_obj(Unit, self)
                 logger.debug("Jackfrost Read: %s" % read)
-                response['name'] = written.name
-                response['created'] = written.created
-                response['modified'] = written.modified
+                response['result'] = written
             except Exception, e:
                 response['status'] = 500
                 response['exception'] = e.message
