@@ -295,12 +295,12 @@ class Lesson(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Lesson, self)
-                logger.debug("Jackfrost Read: %s" % read)
-                logger.debug("Jackfrost Written: %s" % written)
-                for result in written:
-                    logger.debug("Publishing %s" % result)
-                    response[result.name] = result
-            except Exception:
+                response['name'] = written.name
+                response['created'] = written.created
+                response['modified'] = written.modified
+            except Exception, e:
+                response['status'] = 500
+                response['exception'] = e.message
                 logger.exception('Failed to publish %s' % self)
         return response
 

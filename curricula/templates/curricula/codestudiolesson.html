@@ -394,27 +394,6 @@
 
 <!-- Code Studio Levels -->
 
-<div id="{{ unit.slug }}-stage-{{ lesson.number }}" class="stage_guide_hidden">
-
-    {% for level in lesson.stage.levels %}
-
-        <div id="{{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}"
-             class="stage-level named-{{ level.named_level }} type-{{ level.type }} teacher-markdown-{% if level.teacher_markdown %}true{% else %}false{% endif %}"
-             data-level="{{ level.position }}">
-            <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                <span class="level-icon"></span>
-                {% if level.named_level %}{{ level.name }}{% else %}{{ level.position }}{% endif %}
-            </a>
-
-            {% if level.teacher_markdown %}
-                <div class="teacher-markdown">{{ level.teacher_markdown|richtext_filters|safe }}</div>
-            {% endif %}
-        </div>
-
-    {% endfor %}
-
-</div>
-
 <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
 
     {% with lesson.get_levels as stage %}
@@ -646,6 +625,9 @@
                 hide: { effect: "fade", duration: 500 },*/
                 activate: toggleCollapse
             });
+
+            // Strip answer key links
+            $('.key').html("<p><em>View on Code Studio to access answer key(s)</em></p>")
 
             function toggleCollapse(event, ui) {
                 if ($(ui.newPanel).length === 0) {

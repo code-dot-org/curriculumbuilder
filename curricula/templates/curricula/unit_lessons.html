@@ -154,6 +154,38 @@
             $(".prep ul li:visible").each(function (li) {
                 $(this).prepend('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
             });
+
+            $(".always-on-False").tabs({
+                collapsible: true,
+                active: false,
+                classes: { "ui-tabs-panel": "ui-corner-all"},
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            }).each(function() {
+                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
+            });
+
+            $(".always-on-True").tabs({
+                collapsible: true,
+                classes: { "ui-tabs-panel": "ui-corner-all" },
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            });
+
+            // Strip answer key links
+            $('.key').html("<p><em>View on Code Studio to access answer key(s)</em></p>")
+
+            function toggleCollapse(event, ui) {
+                if ($(ui.newPanel).length === 0) {
+                    $(ui.oldPanel).addClass("collapsed");
+                    $(ui.oldPanel).siblings().removeClass("collapsed");
+                } else {
+                    $(ui.newPanel).removeClass("collapsed");
+                    $(ui.newPanel).siblings().removeClass("collapsed");
+                }
+            }
         });
     </script>
 
@@ -162,7 +194,7 @@
 {% block append_pages %}
     {% for lesson in unit.lessons %}
         <div class="pagebreak" id="unit{{ unit.number }}lesson{{ lesson.number }}">
-            {% include "curricula/partials/lesson.html" with lesson=lesson %}
+            {% include "curricula/partials/lesson.html" with lesson=lesson unit=unit %}
         </div>
     {% endfor %}
 {% endblock %}

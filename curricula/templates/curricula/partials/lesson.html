@@ -12,7 +12,7 @@
 
         {% with lesson=parent|default_if_none:lesson %}
             <div class="lessons">
-            {% if chapter %}
+            {% if unit.chapters %}
                 {% for chap in unit.chapters %}
                     <div class="lesson chapter">
                         Ch. {{ chap.number }}
@@ -160,7 +160,7 @@
                 </div>
             </div>
 
-            <div id="{{ lesson.title|slugify }}content">
+            <div id="{{ lesson.title|slugify }}-content">
 
                 <h1>Teaching Guide</h1>
 
@@ -170,6 +170,114 @@
                         {{ activity.content|richtext_filters|safe }}
                     </div>
                 {% endfor %}
+
+                <!-- Code Studio Levels -->
+
+                <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
+
+                    {% with lesson.get_levels as stage %}
+                        {% for chunk in stage %}
+
+                            <!-- Named Levels get their own row -->
+                            {% if chunk.named %}
+                                {% for level in chunk.levels %}
+
+                                <div class="stage-chunk named-{{ chunk.named }} always-on-{% if level.teacher_markdown %}True{% else %}False{% endif %}">
+
+                                    <!-- Header tabs -->
+                                    <ul>
+                                        <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
+                                            <span class="level-icon"></span> {{ level.name }}
+                                        </li>
+                                        {% if level.teacher_markdown %}
+                                        <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
+                                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                                                Teacher Overview
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li class="level-bubble {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
+                                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                                                Student Overview
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Body panels -->
+                                    {% if level.teacher_markdown %}
+                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+
+                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                                            View on Code Studio
+                                        </a>
+
+                                        <div class="teacher-markdown">
+                                            {{ level.teacher_markdown|richtext_filters|safe }}
+                                        </div>
+
+                                    </div>
+                                    {% endif %}
+
+                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}">
+
+                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                                            View on Code Studio
+                                        </a>
+
+                                        <div class="instructions-markdown">
+                                            {{ level.markdown|richtext_filters|safe }}
+                                            {{ level.markdown_instructions|richtext_filters|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            <!-- Unnamed Levels are grouped in a row together -->
+                            {% else %}
+                                <div class="stage-chunk named-{{ chunk.named }} always-on-False">
+
+                                    <!-- Header tabs -->
+                                    <ul>
+                                        <li class="chunk-header">
+                                            Levels
+                                        </li>
+                                        {% for level in chunk.levels %}
+                                            <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
+                                                <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                                                    <span class="level-icon"></span> {{ level.position }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                        <li class="level-expando-tip">(click tabs to see student view)</li>
+                                    </ul>
+
+                                    <!-- Body panels -->
+                                    {% for level in chunk.levels %}
+                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+
+                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                                            View on Code Studio
+                                        </a>
+
+                                        {% if level.teacher_markdown %}
+                                            <div class="teacher-markdown admonition tip">
+                                            <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+                                                {{ level.teacher_markdown|richtext_filters|safe }}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="instructions-markdown">
+                                            <h3>Student Instructions</h3>
+                                            {{ level.markdown|richtext_filters|safe }}
+                                            {{ level.markdown_instructions|richtext_filters|safe }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
             </div>
 
             <div class="standards">
@@ -193,6 +301,8 @@
 
 
         <script type="text/javascript">
+
+        $(document).ready(function () {
             $('#toc{{ lesson.title|slugify }}').toc({
                 'selectors': 'h2,h3', //elements to use as headings
                 'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
@@ -212,4 +322,33 @@
                     return $heading[0].tagName.toLowerCase();
                 }
             });
+
+
+            // New Code Studio Integration
+            $('#{{ lesson.title|slugify }}-content .stage_guide').each(function () {
+                var start = parseInt($(this).attr('data-start'));
+                var end = parseInt($(this).attr('data-end'));
+
+
+                if ($('#{{ lesson.title|slugify }}-content .stage_guide_hidden').children().length > 0) {
+                    if (start) {
+                        $(this).append('<div class="stage-chunk named-False always-on-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
+                        var chunk = $(this).find('.stage-chunk');
+                        var tabs = $(chunk).find('ul');
+                        if (end) {
+                            for (var i = start; i <= end; i++) {
+                                $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk li[data-level=' + i + ']').appendTo(tabs);
+                                $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']').appendTo(chunk);
+                            }
+                        } else {
+                            $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk li[data-level=' + start + ']').appendTo(tabs);
+                            $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']').appendTo(chunk);
+                        }
+                    } else {
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                        $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk').appendTo(this);
+                    }
+                }
+            });
+        });
         </script>

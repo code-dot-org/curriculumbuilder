@@ -390,18 +390,17 @@ def publish(request):
         else:
             children = False
         klass = globals()[type]
-        logger.debug("Publish class: %s" % klass)
 
         object = klass.objects.get(pk=pk)
-        logger.debug("Publish object: %s" % object)
 
         payload = object.publish(children)
-        logger.debug("Publish payload: %s" % payload)
-    except Exception:
+    except Exception, e:
+        payload = {'status': 500, 'error': 'failed', 'exception': e.message}
         logger.exception('Publishing failed')
-        payload = {'error': 'failed'}
 
-    return HttpResponse(json.dumps(payload), content_type='application/json')
+    logger.info('Publishing Status: %s' % payload)
+
+    return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
 
 
 @staff_member_required
