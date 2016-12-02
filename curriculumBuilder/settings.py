@@ -633,12 +633,14 @@ LOGGING = {
         'slack_admins': {
             'level': 'DEBUG',
             'class': 'django_slack.log.SlackExceptionHandler',
+            'formatter': 'simple'
         }
     },
     'loggers': {
         'django': {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'ERROR',
+            'propagate': True
         },
         'django.request': {
             'handlers': ['mail_admins'],
@@ -650,29 +652,30 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
-        'jackfrost.models': {
+        'jackfrost': {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
         },
-        'lessons.models': {
-            'handlers': ['mail_admins', 'slack_admins'],
+        'lessons': {
+            'handlers': ['slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
         },
-        'curricula.views': {
+        'curricula': {
             'handlers': ['slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
-        },
-        'curricula.models': {
-            'handlers': ['slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
         },
         'pdfkit': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
         },
         'PyPDF2': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
         }
     },
 }

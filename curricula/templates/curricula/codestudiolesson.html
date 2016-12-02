@@ -67,10 +67,8 @@
 
 
 <!-- Admin Toolbox -->
-
-{% if user.is_staff %}
 {% block admin_link %}
-
+{% if user.is_staff %}
     <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
         <div class="drawer-controls">
             <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit"
@@ -146,8 +144,8 @@
             </ul>
         </div>
     </div>
-{% endblock %}
 {% endif %}
+{% endblock %}
 
 <!-- Header Bubbles -->
 

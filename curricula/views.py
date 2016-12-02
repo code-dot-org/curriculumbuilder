@@ -323,7 +323,7 @@ def unit_resources_pdf(request, slug, unit_slug):
                     merger.append(localPDF)
                 except:
                     logger.error(
-                        'Failed to open resource: %s - %s (pk %s).'
+                        'Failed to open resource: %s - %s (pk %s). '
                         'Check to make sure it is a publicly accessible Google Doc'
                         % (resource.name, resource.type, resource.pk))
     response = HttpResponse(content_type='application/pdf')
