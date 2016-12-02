@@ -160,7 +160,6 @@ class Unit(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Unit, self)
-                logger.debug("Jackfrost Read: %s" % read)
                 response['result'] = written
             except Exception, e:
                 response['status'] = 500

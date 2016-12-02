@@ -1,0 +1,7 @@
+{% extends django_slack %}
+
+{% load django_slack %}
+
+{% block text %}
+{{ user.get_username|escapeslack }} {% if message %}{{ message }}{% else %}did a thing{% endif %}
+{% endblock %}

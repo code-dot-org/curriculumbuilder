@@ -26,6 +26,8 @@ import reversion
 from reversion.views import create_revision
 from reversion.models import Version
 
+from django_slack import slack_message
+
 from curricula.models import *
 from curricula.serializers import *
 from curricula.forms import ChangelogForm
@@ -265,21 +267,30 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
     lesson = get_object_or_404(Lesson, unit__slug=unit_slug, unit__curriculum__slug=slug, number=lesson_num,
                                parent__lesson__isnull=True)
 
-    c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()) + "?pdf=true")
-    print "ready to perform"
-    c.perform()
-    print 'done'
-    c.close()
-    print 'closed'
+    try:
+        c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()) + "?pdf=true")
+        c.perform()
+        c.close()
 
-    compiled = buffer.getvalue()
+        compiled = buffer.getvalue()
+    except Exception, e:
+        logger.exception('PDF Curling Failed')
 
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
     else:
-        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        try:
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        except Exception:
+            logger.expection('PDF Generation Failed')
+
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=lesson.pdf'
+
+        slack_message('slack/message.slack', {
+            'message': 'created a PDF from %s %s lesson %s' % (slug, unit_slug, lesson_num),
+        })
+
     return response
 
 
@@ -290,18 +301,30 @@ def unit_pdf(request, slug, unit_slug):
 
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
 
-    c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
-    c.perform()
+    try:
+        c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
+        c.perform()
 
-    c.close()
-    compiled = buffer.getvalue()
+        c.close()
+        compiled = buffer.getvalue()
+    except Exception:
+        logger.exception('PDF Curling Failed')
 
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
     else:
-        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        try:
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        except Exception:
+            logger.exception('PDF Generation Failed')
+
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
+
+        slack_message('slack/message.slack', {
+            'message': 'created a PDF from %s %s' % (slug, unit_slug),
+        })
+
     return response
 
 
@@ -321,11 +344,27 @@ def unit_resources_pdf(request, slug, unit_slug):
                     memoryPDF = StringIO(remotePDF)
                     localPDF = PdfFileReader(memoryPDF)
                     merger.append(localPDF)
-                except:
-                    logger.error(
-                        'Failed to open resource: %s - %s (pk %s). '
-                        'Check to make sure it is a publicly accessible Google Doc'
-                        % (resource.name, resource.type, resource.pk))
+                except Exception:
+
+                    attachments = [
+                        {
+                            'color': 'danger',
+                            'title': 'URL',
+                            'text': resource.url,
+                        },
+                        {
+                            'color': 'danger',
+                            'title': 'Related Lesson',
+                            'text': lesson.get_absolute_url(),
+                        },
+                    ]
+
+                    slack_message('slack/message.slack', {
+                        'message': "tried and failed to publish resource %s - %s (pk %s). "
+                                   "Check to ensure that it's a publicly accessible Google Doc"
+                                   % (resource.name, resource.type, resource.pk),
+                    }, attachments)
+                    
     response = HttpResponse(content_type='application/pdf')
     merger.write(response)
     response['Content-Disposition'] = 'inline;filename=unit%s_resources.pdf' % unit.number
@@ -394,11 +433,25 @@ def publish(request):
         object = klass.objects.get(pk=pk)
 
         payload = object.publish(children)
+
+        attachments = [
+            {
+                'title': 'URL',
+                'text': object.get_absolute_url(),
+            },
+            {
+                'title': 'Publishing Details',
+                'text': payload,
+            },
+        ]
+
+        slack_message('slack/message.slack', {
+            'message': 'published %s %s' % (type, object.title),
+        }, attachments)
+
     except Exception, e:
         payload = {'status': 500, 'error': 'failed', 'exception': e.message}
         logger.exception('Publishing failed')
-
-    logger.info('Publishing Status: %s' % payload)
 
     return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
 
