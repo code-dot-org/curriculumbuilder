@@ -256,7 +256,7 @@ class Lesson(Page, RichText):
         return order
 
     def get_curriculum(self):
-        return self.unit.curriculum
+        return self.get_unit().curriculum
 
     def get_levels(self):
         if self.stage:
