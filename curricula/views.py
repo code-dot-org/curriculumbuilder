@@ -324,7 +324,7 @@ def unit_pdf(request, slug, unit_slug):
 
         slack_message('slack/message.slack', {
             'message': 'created a PDF from %s %s' % (slug, unit_slug),
-            'user': request.user.get_username(),
+            'user': request.user,
         })
 
     return response
@@ -365,12 +365,18 @@ def unit_resources_pdf(request, slug, unit_slug):
                         'message': "tried and failed to publish resource %s - %s (pk %s). "
                                    "Check to ensure that it's a publicly accessible Google Doc"
                                    % (resource.name, resource.type, resource.pk),
-                        'user': request.user.get_username(),
+                        'user': request.user,
                     }, attachments)
 
     response = HttpResponse(content_type='application/pdf')
     merger.write(response)
     response['Content-Disposition'] = 'inline;filename=unit%s_resources.pdf' % unit.number
+
+    slack_message('slack/message.slack', {
+        'message': 'created a resource PDF from %s %s' % (slug, unit_slug),
+        'user': request.user,
+    })
+
     return response
 
 
@@ -452,7 +458,7 @@ def publish(request):
 
         slack_message('slack/message.slack', {
             'message': 'published %s %s' % (type, object.title),
-            'user': request.user.get_username(),
+            'user': request.user,
         }, attachments)
 
     except Exception, e:
