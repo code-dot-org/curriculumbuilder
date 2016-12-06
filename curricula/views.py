@@ -1,5 +1,5 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -275,6 +275,7 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
         compiled = buffer.getvalue()
     except Exception, e:
         logger.exception('PDF Curling Failed')
+        return HttpResponse('PDF Curling Failed', status=500)
 
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
@@ -283,6 +284,7 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
             pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
         except Exception:
             logger.expection('PDF Generation Failed')
+            return HttpResponse('PDF Generation Failed', status=500)
 
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=lesson.pdf'
@@ -310,6 +312,7 @@ def unit_pdf(request, slug, unit_slug):
         compiled = buffer.getvalue()
     except Exception:
         logger.exception('PDF Curling Failed')
+        return HttpResponse('PDF Curling Failed', status=500)
 
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
@@ -318,6 +321,7 @@ def unit_pdf(request, slug, unit_slug):
             pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
         except Exception:
             logger.exception('PDF Generation Failed')
+            return HttpResponse('PDF Generation Failed', status=500)
 
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
@@ -367,6 +371,7 @@ def unit_resources_pdf(request, slug, unit_slug):
                                    % (resource.name, resource.type, resource.pk),
                         'user': request.user,
                     }, attachments)
+                    return HttpResponse('PDF Generation Failed', status=500)
 
     response = HttpResponse(content_type='application/pdf')
     merger.write(response)
@@ -472,17 +477,16 @@ def publish(request):
 def get_stage_details(request):
     try:
         pk = int(request.POST.get('pk'))
-        lesson = Lesson.objects.get(pk=pk)
-        print lesson
+        lesson = get_object_or_404(Lesson, pk=pk)
         if not hasattr(lesson.unit, 'stage_name'):
-            payload = {'error': 'No stage name for unit'}
+            payload = {'error': 'No stage name for unit', 'status': 404}
         else:
             lesson.save()
             payload = {'success': 'true'}
-    except:
-        payload = {'error': 'failed'}
+    except Exception, e:
+        payload = {'status': 500, 'error': 'failed', 'exception': e.message}
     print payload
-    return HttpResponse(json.dumps(payload), content_type='application/json')
+    return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
 
 
 '''

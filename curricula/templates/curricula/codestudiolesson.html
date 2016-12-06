@@ -593,11 +593,19 @@
                                 tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + i + ']');
                                 panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']');
                                 current_named = $(tab).data('named');
+
+                                // If this is a named level, or the first in an unnamed chunk, start a new chunk
                                 if (last_named == 'True' || last_named != current_named) {
                                     $(this).append('<div class="stage-chunk named-False always-on-False"><ul></ul></div>');
                                     chunk = $(chunk).next('.stage-chunk');
                                     tabs = $(chunk).find('ul');
                                 }
+
+                                // If this is the first in an unnamed chunk, add "Levels" header
+                                if (last_named != current_named && current_named == 'False') {
+                                    $(tabs).append('<li class="chunk-header">Levels</li>');
+                                }
+
                                 $(tab).appendTo(tabs);
                                 $(panel).appendTo(chunk);
                                 if (current_named == 'True') {
@@ -607,14 +615,18 @@
                                 last_named = current_named;
                             }
                         } else {
-                            tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + i + ']');
-                            panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']');
-                            $(tab).appendTo(tabs);
-                            $(panel).appendTo(chunk);
+                            tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + start + ']');
+                            panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']');
+
                             if ($(tab).data('named') == 'True') {
                                 $(chunk).removeClass("named-False always-on-False");
                                 $(chunk).addClass("named-True always-on-True");
+                            } else {
+                                $(tabs).append('<li class="chunk-header">Levels</li>');
                             }
+
+                            $(tab).appendTo(tabs);
+                            $(panel).appendTo(chunk);
                         }
                     } else {
                         $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
