@@ -457,7 +457,7 @@ def publish(request):
             {
                 'color': '#00adbc',
                 'title': 'Publishing Details',
-                'text': payload,
+                'text': json.dumps(payload),
             },
         ]
 

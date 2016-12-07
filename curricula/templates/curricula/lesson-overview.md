@@ -9,7 +9,7 @@
 {% endfor %}{% endif %}
 {% if lesson.blocks.count > 0 %}# New Blocks
 
-{% for block in lesson.blocks.all %}* **{{ block.title }}** - `{{ block.code|safe }}`
+{% for block in lesson.blocks.all %}*  **[{{ block.title }}](//curriculum.code.org{{ block.get_absolute_url }})** - `{{ block.code|safe }}`
 {% endfor %}{% endif %}
 {% if lesson.resources.count > 0 %}# Resources
 
