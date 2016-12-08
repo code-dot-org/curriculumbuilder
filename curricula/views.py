@@ -498,16 +498,18 @@ API views
 
 @api_view(['POST', ])
 def gong(request, format=None):
-    user = request.POST.get("user_name", "Somebody")
+    user = "@%s" % request.POST.get("user_name", "Somebody")
     reason = request.POST.get("text", "Gonged stuff!")
     attachments = [
         {
             'author_name': user,
             'title': reason,
-            'image_url': 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Friffsy.com%2Fimage%2F70d59a6f6cab5b332ac5b1bb6a55f5f4.gif'
+            'image_url': 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Friffsy.com%2Fimage%2F70d59a6f6cab5b332ac5b1bb6a55f5f4.gif',
+            'color': '#00adbc'
         }
     ]
     payload = {
+        "response_type": "in_channel",
         "attachments": attachments,
     }
 
