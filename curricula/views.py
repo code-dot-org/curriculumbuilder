@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
+from django.views.decorators.cache import never_cache
 from mezzanine.core.views import edit
 
 # from wkhtmltopdf import WKHtmlToPdf
@@ -515,6 +516,7 @@ def gong(request, format=None):
     return Response(payload, content_type='application/json')
 
 
+@never_cache
 @api_view(['GET', ])
 def get_gongs(request, format=None):
 
