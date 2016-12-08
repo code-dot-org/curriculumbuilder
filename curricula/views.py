@@ -495,6 +495,35 @@ API views
 '''
 
 
+@api_view(['POST', ])
+def gong(request, format=None):
+    user = request.POST.get("user_name", "Somebody")
+    reason = request.POST.get("text", "Gonged stuff!")
+    attachments = [
+        {'image_url': 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Friffsy.com%2Fimage%2F70d59a6f6cab5b332ac5b1bb6a55f5f4.gif'}
+    ]
+    payload = {
+        "response_type": "in_channel",
+        "text": "%s %s" % (user, reason),
+        "attachments": attachments,
+    }
+
+    dweet_url = "https://dweet.io/dweet/for/cdo-gong"
+    dweet_response = urlopen(Request(dweet_url))
+    logger.debug(dweet_response.read())
+
+    return Response(payload, content_type='application/json')
+
+
+@api_view(['GET', ])
+def get_gongs(request, format=None):
+
+    dweet_url = "https://dweet.io/get/latest/dweet/for/cdo-gong"
+    dweet_response = urlopen(Request(dweet_url)).read()
+
+    return Response(json.loads(dweet_response), content_type='application/json')
+
+
 @api_view(['GET', ])
 def curriculum_list(request, format=None):
     curricula = Curriculum.objects.all()

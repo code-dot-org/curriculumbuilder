@@ -96,6 +96,8 @@ urlpatterns += patterns('',
 
     # Curriculum URLs
     url(r'^api/v1/$', views.api_root),
+    url(r'^api/v1/gong/$', views.gong),
+    url(r'^api/v1/gong/get/$', views.get_gongs),
     url(r'^api/v1/curriculum/$', views.curriculum_list, name="curriculum_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/$', standard_list, name="standard_list"),
     # url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', standard_list, name="standard_list"),
