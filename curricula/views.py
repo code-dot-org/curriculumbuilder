@@ -33,6 +33,8 @@ from curricula.models import *
 from curricula.serializers import *
 from curricula.forms import ChangelogForm
 
+from documentation.models import IDE, Block
+
 logger = logging.getLogger(__name__)
 
 

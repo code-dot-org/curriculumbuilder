@@ -47,16 +47,16 @@ class Curriculum(Page, RichText):
         return '/%s/' % self.slug
 
     def get_standards_url(self):
-        return '/%s/standards/' % self.slug
+        return '%sstandards/' % self.get_absolute_url()
 
     def get_resources_url(self):
-        return '%s/resources/' % (self.get_absolute_url())
+        return '%sresources/' % (self.get_absolute_url())
 
     def get_blocks_url(self):
-        return '%s/code/' % (self.get_absolute_url())
+        return '%scode/' % (self.get_absolute_url())
 
     def get_vocab_url(self):
-        return '%s/vocab/' % (self.get_absolute_url())
+        return '%svocab/' % (self.get_absolute_url())
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
