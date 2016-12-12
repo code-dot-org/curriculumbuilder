@@ -31,7 +31,7 @@ class IDE(Page, RichText):
         return '//docs.code.org/%s/' % self.slug
 
     def jackfrost_urls(self):
-        urls = ["/documentation/%s" % self.get_absolute_url()]
+        urls = ["/documentation%s" % self.get_absolute_url()]
         return urls
 
     def jackfrost_can_build(self):
@@ -128,7 +128,7 @@ class Block(Page, RichText):
         return '//docs.code.org/%s/%s/' % (self.IDE.slug, self.slug)
 
     def jackfrost_urls(self):
-        urls = ["/documentation/%s" % self.get_absolute_url()]
+        urls = ["/documentation%s" % self.get_absolute_url()]
         return urls
 
     def jackfrost_can_build(self):
