@@ -57,7 +57,7 @@
             <h3 style="background: {{ category.color }}; color: #696970">{{ category.name }}</h3>
             <ul>
             {% for block in category.blocks %}
-                <li><a href="{% url 'documentation:block_view' ide.slug block.slug %}">{{ block.title }}</a></li>
+                <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
             {% endfor %}
             </ul>
         {% endfor %}

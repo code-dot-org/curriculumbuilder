@@ -10,11 +10,12 @@ urlpatterns = patterns('curricula.views',
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
 
                        # Documentation URLS
-                       url(r'^(?P<slug>[-\w]+)/$',
+
+                       url(r'^(?P<slug>[-\w]+lab)/$',
                            documentation_views.ide_view, name='ide_view'),
-                       url(r'^(?P<ide_slug>[-\w]+)/(?P<slug>[-\w.]+)/$',
+                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/$',
                            documentation_views.block_view, name='block_view'),
-                       url(r'^(?P<ide_slug>[-\w]+)/(?P<slug>[-\w.]+)/embed/$',
+                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
                            documentation_views.embed_view, name='embed_view'),
 
                        # Curriculum URLS
