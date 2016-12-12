@@ -60,8 +60,8 @@
                         <button type="submit" class="save btn btn-primary">Save</button>
                     </form>
                 <h2>Publishing</h2>
-                {% if ide.jackfrost_can_build %}
-                    <button class="btn btn-primary" id="publish_this" data-pk="{{ block.pk }}" data-type="Block">Publish</button><i id="progress_spinner"></i><br/>
+                {% if code_block.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ code_block.pk }}" data-type="Block">Publish</button><i id="progress_spinner"></i><br/>
                     <pre id="publish_results"></pre>
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
