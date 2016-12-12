@@ -106,12 +106,17 @@
             $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
             var pk = $(this).attr('data-pk');
             var type = $(this).attr('data-type');
-            $('#progress_spinner').addClass('fa fa-cog fa-spin');
-            $.ajax({
-                type: "POST",
-                url: "/publish/",
-                data: {pk: pk, type: type},
-                timeout: 9999999
+            var lesson_check = $('#include_lessons');
+            var lessons = false;
+            if (lesson_check) {
+                lessons = $(lesson_check).prop('checked');
+            }
+             $('#progress_spinner').addClass('fa fa-cog fa-spin');
+             $.ajax({
+                 type: "POST",
+                 url: "/publish/",
+                 data: {pk: pk, type: type, lessons: lessons},
+                 timeout: 9999999
             }).done(function (response) {
                 $("#publish_this").addClass('btn-success').text("Success");
                 $("#publish_results").text(JSON.stringify(response, undefined, 2));
