@@ -20,6 +20,30 @@
     <h1>{{ ide }} Documentation: {{ code_block.title }}</h1>
 {% endblock %}
 
+{% block sidebar %}
+    <div id="categories" class="col-md-2">
+        {% block categories %}
+            {% if ide.category_set.count > 0 %}
+                <ul class="category_list">
+                {% for category in ide.category_set.all %}
+                    <li class="category_name{% if category == code_block.category %} active{% endif %}"
+                        style="background: {{ category.color }}; border-left-color: {{ category.color }}"
+                        data-color="{{ category.color }}"><span>{{ category.name }}</span>
+                    {% if category.block_set.count > 0 %}
+                        <ul class="category_blocks" {% if category != code_block.category %}style="display: none;"{% endif %}>
+                        {% for block in category.blocks %}
+                            <li><a href="{{ block.slug }}/">{{ block.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
 {% block main %}
 
 
@@ -50,6 +74,8 @@
 {% endblock %}
 {% endif %}
 
+
+
     <div class="content col-md-10">
         <p>{{ ide.content|richtext_filters|safe }}</p>
         <h2><a href="{{ ide.url }}">Try it out</a></h2>
@@ -57,7 +83,7 @@
             <h3 style="background: {{ category.color }}; color: #696970">{{ category.name }}</h3>
             <ul>
             {% for block in category.blocks %}
-                <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
+                <li><a href="{{ block.slug }}/">{{ block.title }}</a></li>
             {% endfor %}
             </ul>
         {% endfor %}
