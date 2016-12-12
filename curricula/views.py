@@ -500,6 +500,11 @@ API views
 def gong(request, format=None):
     user = "@%s" % request.POST.get("user_name", "Somebody")
     reason = request.POST.get("text", "Gonged stuff!")
+
+    slack_message('slack/gonged.slack', {
+        'user': user
+    })
+
     attachments = [
         {
             'author_name': user,

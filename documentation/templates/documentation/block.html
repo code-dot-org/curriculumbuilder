@@ -21,6 +21,33 @@
 {% endblock %}
 
 {% block main %}
+
+{% if user.is_staff %}
+{% block admin_link %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-body">
+                <h2>Add to Changelog</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
+                <h2>Publishing</h2>
+                {% if ide.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ block.pk }}" data-type="Block">Publish</button><i id="progress_spinner"></i><br/>
+                    <pre id="publish_results"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% endif %}
+
     <div class="content col-md-10">
     {% if code_block.proxy %}
         {% if user.is_staff %}

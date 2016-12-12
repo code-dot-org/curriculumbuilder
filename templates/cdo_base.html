@@ -22,12 +22,16 @@
         <link href="{% static "cdo/css/applab-docs.css" %}" rel="stylesheet" type="text/css">
     {% endcompress %}
 
-    {% block extra_css %}{% endblock %}
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+    {% endblock %}
 
     <script src="//code.org/js/jquery.min.js"></script>
     <script src="{% static "js/bootstrap.js" %}"></script>
     <script src="{% static "js/bootstrap-extras.js" %}"></script>
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
+        <script src="{% static "js/drawer.min.js" %}"></script>
+    {% endblock %}
 
     <!--[if lt IE 9]>
     <script src="{% static "js/html5shiv.js" %}"></script>
@@ -39,6 +43,8 @@
 
 <body id="{% block body_id %}body{% endblock %}">
 <div class="container">
+
+
     <div id="doc_header">
         {% block header %}<h1>{{ ide }}Documentation</h1>{% endblock %}
     </div>
@@ -92,7 +98,30 @@
                 $(this).parent().toggleClass("active");
                 $(this).parent().siblings().removeClass("active");
             })
-        })
+        });
+
+
+        // Publish button
+        $("#publish_this").click(function () {
+            $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            var type = $(this).attr('data-type');
+            $('#progress_spinner').addClass('fa fa-cog fa-spin');
+            $.ajax({
+                type: "POST",
+                url: "/publish/",
+                data: {pk: pk, type: type},
+                timeout: 9999999
+            }).done(function (response) {
+                $("#publish_this").addClass('btn-success').text("Success");
+                $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+            }).fail(function (response) {
+                $("#publish_this").addClass('btn-warning').text("Failed");
+                $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+            });
+        });
     })
 </script>
 </body>

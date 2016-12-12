@@ -1,0 +1,8 @@
+{% extends django_slack %}
+
+{% load django_slack %}
+{% block username %}gongtracker{% endblock %}
+{% block channel %}#gongtracker{% endblock %}
+{% block text %}
+{{ user }} banged the gong.
+{% endblock %}
