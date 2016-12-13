@@ -22,6 +22,7 @@ from jackfrost.tasks import build_single
 from jsonfield import JSONField
 from standards.models import Standard
 from documentation.models import Block
+from django_slack import slack_message
 
 from curriculumBuilder import settings
 
@@ -300,6 +301,12 @@ class Lesson(Page, RichText):
                 response['status'] = 500
                 response['exception'] = e.message
                 logger.exception('Failed to publish %s' % self)
+        else:
+            slack_message('slack/message.slack', {
+                'message': 'Attempted to publish %s %s lesson %s,'
+                           'but it is not publishable.' % (self.curriculum.slug, self.unit.slug, self.number),
+            })
+
         return response
 
     def save(self, *args, **kwargs):

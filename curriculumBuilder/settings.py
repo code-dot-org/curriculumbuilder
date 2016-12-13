@@ -633,7 +633,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'mail_admins': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': False,
         },
