@@ -487,7 +487,7 @@ def publish(request):
             children = True
         else:
             children = False
-            
+
         klass = globals()[page_type]
 
         obj = klass.objects.get(pk=pk)

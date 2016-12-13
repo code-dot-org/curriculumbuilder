@@ -86,7 +86,7 @@ class BlockAdmin(PageAdmin):
 class MultiBlockForm(ModelForm):
     class Meta:
         model = Block
-        fields = ['IDE', 'title', 'category', 'ext_doc', 'proxy']
+        fields = ['IDE', 'title', 'syntax', 'category', 'ext_doc', 'proxy']
 
 
 class MultiBlock(Block):
@@ -95,8 +95,8 @@ class MultiBlock(Block):
 
 
 class MultiBlockAdmin(admin.ModelAdmin):
-    list_display = ('IDE', 'title', 'category', 'ext_doc')
-    list_editable = ('title', 'category', 'ext_doc')
+    list_display = ('IDE', 'title', 'syntax', 'category', 'ext_doc')
+    list_editable = ('title', 'syntax', 'category', 'ext_doc')
     list_filter = ('IDE',)
 
     def get_changelist_form(self, request, **kwargs):

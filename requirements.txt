@@ -49,6 +49,7 @@ jsonfield==1.0.3
 # Markdown==2.6.2
 -e git://github.com/mrjoshida/Python-Markdown.git@master#egg=Markdown
 markdown-newtab
+lxml==3.4.4
 messytables==0.14.5
 mezzanine-pagedown==0.8
 oauthlib==1.0.3
