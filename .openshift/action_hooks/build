@@ -8,7 +8,4 @@
 
 echo "--> ACTION HOOK: build <--"
 
-# if [ ! -f ${OPENSHIFT_REPO_DIR}/wkhtmltopdf/wkhtmltopdf ]; then
 cp ${OPENSHIFT_REPO_DIR}/wkhtmltopdf/wkhtmltopdf ${OPENSHIFT_PYTHON_DIR}/virtenv/bin
-    # cp ${OPENSHIFT_REPO_DIR}/wkhtmltopdf/lib/* ${OPENSHIFT_PYTHON_DIR}/virtenv/bin
-# fi

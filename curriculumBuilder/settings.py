@@ -474,6 +474,12 @@ WKHTMLTOPDF_CMD_OPTIONS = {
     'no-stop-slow-scripts': '',
 }
 
+############################
+# PHANTOMJS CLOUD SETTINGS #
+############################
+
+PHANTOMJS_KEY = os.environ.get('PHANTOMJS_KEY')
+
 ###################
 # S3 STATIC FILES #
 ###################
@@ -671,12 +677,12 @@ LOGGING = {
         },
         'pdfkit': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': 'DEBUG',
             'propagate': True
         },
         'PyPDF2': {
             'handlers': ['mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': 'DEBUG',
             'propagate': True
         }
     },

@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
@@ -5,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import never_cache
+from django.conf import settings
 from mezzanine.core.views import edit
 
 # from wkhtmltopdf import WKHtmlToPdf
@@ -13,7 +16,7 @@ import pdfkit
 import pycurl
 import logging
 import json
-from PyPDF2 import PdfFileReader, PdfFileMerger
+from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 from urllib2 import Request, urlopen
 # import dryscrape
 
@@ -335,6 +338,43 @@ def unit_pdf(request, slug, unit_slug):
         })
 
     return response
+
+
+def unit_pjspdf(request, slug, unit_slug):
+
+    output = PdfFileWriter()
+    unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
+
+    data = {
+        "url": get_url_for_pdf(request, unit.get_absolute_url(), True),
+        "renderType": "pdf"
+    }
+
+    url = 'http://PhantomJScloud.com/api/browser/v2/%s/' % settings.PHANTOMJS_KEY
+    headers = {'content-type': 'application/json'}
+
+    req = Request(url, json.dumps(data), headers)
+    response = urlopen(req)
+    results = response.read()
+    print '\nresponse status code'
+    print response.code
+    print '\nresponse headers (pay attention to pjsc-* headers)'
+    print response.headers
+
+    memoryPDF = StringIO(results)
+    localPDF = PdfFileReader(memoryPDF)
+    output.appendPagesFromReader(localPDF)
+
+    pdfresponse = HttpResponse(content_type='application/pdf')
+    output.write(pdfresponse)
+    pdfresponse['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
+
+    slack_message('slack/message.slack', {
+        'message': 'created a PDF from %s %s' % (slug, unit_slug),
+        'user': request.user,
+    })
+
+    return pdfresponse
 
 
 def unit_resources_pdf(request, slug, unit_slug):
