@@ -424,6 +424,13 @@ CODEMIRROR_ADDON_CSS = {
 RICHTEXT_WIDGET_CLASS = 'codemirror.CodeMirrorTextarea'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
+RICHTEXT_ALLOWED_TAGS = ('a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'b', 'bdo', 'big',
+                         'blockquote', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd',
+                         'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'fieldset', 'figure', 'font', 'footer', 'form',
+                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'img', 'input', 'ins', 'kbd', 'label',
+                         'legend', 'li', 'map', 'men', 'nav', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp',
+                         'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'tbody', 'td',
+                         'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr', 'summary', 'details')
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
                            'data-pdf-link', 'data-lightbox', 'data-title')
@@ -433,10 +440,10 @@ RICHTEXT_ALLOWED_ATTRIBUTES = (
     'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
     'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
     'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
-    'nohref', 'noshade', 'nowrap', 'prompt', 'readonly', 'rel', 'rev', 'rows', 'rowspan',
+    'nohref', 'noshade', 'nowrap', 'open', 'prompt', 'readonly', 'rel', 'rev', 'role','rows', 'rowspan',
     'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
     'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
-    'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end')
+    'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end', 'aria-expanded')
 PAGEDOWN_MARKDOWN_EXTENSIONS = (
     'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
     # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
