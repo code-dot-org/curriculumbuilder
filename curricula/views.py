@@ -480,22 +480,28 @@ Publishing views
 def publish(request):
     try:
         pk = int(request.POST.get('pk'))
-        type = request.POST.get('type')
+
+        page_type = request.POST.get('type')
+
         if request.POST.get('lessons') == 'true':
             children = True
         else:
             children = False
-        klass = globals()[type]
+            
+        klass = globals()[page_type]
 
-        object = klass.objects.get(pk=pk)
+        obj = klass.objects.get(pk=pk)
 
-        payload = object.publish(children)
+        if request.POST.get('pdf') == 'true':
+            payload = obj.publish_pdfs()
+        else:
+            payload = obj.publish(children)
 
         attachments = [
             {
                 'color': '#00adbc',
                 'title': 'URL',
-                'text': object.get_absolute_url(),
+                'text': obj.get_absolute_url(),
             },
             {
                 'color': '#00adbc',
@@ -505,7 +511,7 @@ def publish(request):
         ]
 
         slack_message('slack/message.slack', {
-            'message': 'published %s %s' % (type, object.title),
+            'message': 'published %s %s' % (page_type, obj.title),
             'user': request.user,
         }, attachments)
 

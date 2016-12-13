@@ -44,6 +44,8 @@
                     <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
                     <input type="checkbox" name="lessons" id="include_lessons"> Include Lessons</input>
                     <pre id="publish_results"></pre>
+                    <button class="btn btn-primary" id="publish_pdfs" data-pk="{{ unit.pk }}" data-type="Unit">Publish PDFs</button><i id="progress_spinner_pdf" style="margin: 5px;"></i><br/>
+                    <pre id="publish_results_pdf"></pre>
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
                 {% endif %}
@@ -263,6 +265,26 @@
                     $("#publish_this").addClass('btn-warning').text("Failed");
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                });
+            });
+            $("#publish_pdfs").click(function () {
+                $('#publish_pdfs').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                $('#progress_spinner_pdf').addClass('fa fa-cog fa-spin');
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, pdf: true},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_pdfs").addClass('btn-success').text("Success");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
+                }).fail(function(response) {
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
                 });
             });
         });

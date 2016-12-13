@@ -41,12 +41,13 @@ future==0.15.2
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
 -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
-#-e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
+# -e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
 grappelli-safe==0.4.2
 gunicorn==19.3.0
 html5lib==0.999999
 jsonfield==1.0.3
-Markdown==2.6.2
+# Markdown==2.6.2
+-e git://github.com/mrjoshida/Python-Markdown.git@master#egg=Markdown
 markdown-newtab
 messytables==0.14.5
 mezzanine-pagedown==0.8

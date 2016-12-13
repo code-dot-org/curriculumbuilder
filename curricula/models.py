@@ -46,6 +46,9 @@ class Curriculum(Page, RichText):
     def get_absolute_url(self):
         return '/%s/' % self.slug
 
+    def get_pdf_url(self):
+        return '/%s.pdf' % self.slug
+
     def get_standards_url(self):
         return '%sstandards/' % self.get_absolute_url()
 
@@ -81,6 +84,18 @@ class Curriculum(Page, RichText):
                 response['exception'] = e.message
                 logger.exception('Failed to publish %s' % self)
 
+        return response
+
+    def publish_pdfs(self):
+        response = {}
+        if self.jackfrost_can_build():
+            try:
+                read, written = build_single(self.get_pdf_url())
+                response['curriculum_result'] = written
+            except Exception, e:
+                response['status'] = 500
+                response['exception'] = e.message
+                logger.exception('Failed to publish %s' % self)
         return response
 
     @property
@@ -163,6 +178,20 @@ class Unit(Page, RichText):
             try:
                 read, written = build_page_for_obj(Unit, self)
                 response['result'] = written
+            except Exception, e:
+                response['status'] = 500
+                response['exception'] = e.message
+                logger.exception('Failed to publish %s' % self)
+        return response
+
+    def publish_pdfs(self):
+        response = {}
+        if self.jackfrost_can_build():
+            try:
+                read, written = build_single(self.get_pdf_url())
+                response['unit_result'] = written
+                read, written = build_single(self.get_resources_pdf_url())
+                response['resources_result'] = written
             except Exception, e:
                 response['status'] = 500
                 response['exception'] = e.message

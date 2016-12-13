@@ -15,6 +15,7 @@ from copy import copy
 GROUP_RE = r'(^(@\{(?P<lightbox>.+)\})(?P<description>.*))'
 HIDDEN_RE = r'(^(!)(?P<description>.*))'
 
+
 class LightboxImagesTreeprocessor(Treeprocessor):
     """ Lightbox Images Treeprocessor """
     def __init__(self, md, group = True):
@@ -22,6 +23,7 @@ class LightboxImagesTreeprocessor(Treeprocessor):
         self.group_re = re.compile(GROUP_RE)
         self.hidden_re = re.compile(HIDDEN_RE)
         self.group = group
+
     def run(self, root):
         parent_map = {c:p for p in root.iter() for c in p}
         i = 0
