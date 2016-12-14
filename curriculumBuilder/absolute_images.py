@@ -9,6 +9,7 @@ from markdown.treeprocessors import Treeprocessor
 BASE_URL = "https://code.org/curriculum/docs/"
 STAGING_URL = "https://staging.code.org/curriculum/docs/"
 
+
 class AbsoluteImagesExtension(Extension):
     """ Absolute Images Extension """
 
@@ -38,6 +39,8 @@ class AbsoluteImagesTreeprocessor(Treeprocessor):
 
     def is_relative(self, link):
         if link.startswith('http'):
+            return False
+        if link == '':
             return False
         return True
 

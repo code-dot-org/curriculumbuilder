@@ -303,7 +303,7 @@ class Lesson(Page, RichText):
                 logger.exception('Failed to publish %s' % self)
         else:
             slack_message('slack/message.slack', {
-                'message': 'Attempted to publish %s %s lesson %s,'
+                'message': 'Attempted to publish %s %s lesson %s, '
                            'but it is not publishable.' % (self.curriculum.slug, self.unit.slug, self.number),
             })
 

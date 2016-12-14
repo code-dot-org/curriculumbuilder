@@ -303,6 +303,14 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
     return response
 
 
+def unit_compiled(request, slug, unit_slug):
+
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+
+    return render(request, 'curricula/unit_lessons.html', {'curriculum': curriculum, 'unit': unit})
+
+
 def unit_pdf(request, slug, unit_slug):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -311,7 +319,7 @@ def unit_pdf(request, slug, unit_slug):
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
 
     try:
-        c.setopt(c.URL, get_url_for_pdf(request, unit.get_absolute_url(), True))
+        c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
         c.perform()
 
         c.close()
@@ -460,14 +468,12 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
     # On production we should pull the pages locally to ensure the most recent copy,
     # This causes a crash on local dev, so in that case pull pages from S3
-    '''
-    if False: #aws or not settings.ON_PAAS:
-      print abs_url
-      return settings.AWS_BASE_URL + abs_url + '?pdf=true'
+
+    if aws:  #aws or not settings.ON_PAAS:
+        print abs_url
+        return settings.AWS_BASE_URL + abs_url
     else:
-      return 'http://' + get_current_site(request).domain + abs_url + '?pdf=true'
-    '''
-    return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
+        return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
 
 
 '''
@@ -546,7 +552,7 @@ API views
 
 @api_view(['POST', ])
 def gong(request, format=None):
-    user = "@%s" % request.POST.get("user_name", "Somebody")
+    user = "@%s" % request.POST.get("user_name", "somebody")
     reason = request.POST.get("text", "Gonged stuff!")
 
     slack_message('slack/gonged.slack', {
@@ -557,7 +563,7 @@ def gong(request, format=None):
         {
             'author_name': user,
             'title': reason,
-            'image_url': 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Friffsy.com%2Fimage%2F70d59a6f6cab5b332ac5b1bb6a55f5f4.gif',
+            'image_url': 'https://curriculum.code.org/images/gong.gif',
             'color': '#00adbc'
         }
     ]
