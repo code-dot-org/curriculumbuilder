@@ -84,22 +84,9 @@ class Curriculum(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Curriculum, self)
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_absolute_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
-
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
+                })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
@@ -110,23 +97,9 @@ class Curriculum(Page, RichText):
     def publish_pdfs(self, *args):
         if self.jackfrost_can_build():
             try:
-                read, written = build_single(self.get_pdf_url())
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_pdf_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'PDF Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
-
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
+                })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
@@ -215,22 +188,9 @@ class Unit(Page, RichText):
             for url in self.jackfrost_urls():
                 try:
                     read, written = build_single(url)
-                    attachments = [
-                        {
-                            'color': '#00adbc',
-                            'title': 'URL',
-                            'text': url,
-                        },
-                        {
-                            'color': '#00adbc',
-                            'title': 'Publishing Details',
-                            'text': json.dumps(written),
-                        },
-                    ]
-
                     slack_message('slack/message.slack', {
                         'message': 'published %s %s' % (self.content_model, self.title),
-                    }, attachments)
+                    })
                     yield json.dumps(written)
                     yield '\n'
                 except Exception, e:
@@ -243,22 +203,9 @@ class Unit(Page, RichText):
             for url in self.pdf_urls():
                 try:
                     read, written = build_single(url)
-                    attachments = [
-                        {
-                            'color': '#00adbc',
-                            'title': 'URL',
-                            'text': url,
-                        },
-                        {
-                            'color': '#00adbc',
-                            'title': 'PDF Publishing Details',
-                            'text': json.dumps(written),
-                        },
-                    ]
-
                     slack_message('slack/message.slack', {
                         'message': 'published PDF for %s %s' % (self.content_model, self.title),
-                    }, attachments)
+                    })
                     yield json.dumps(written)
                     yield '\n'
                 except Exception, e:

@@ -295,22 +295,9 @@ class Lesson(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Lesson, self)
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_absolute_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
-
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
+                })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:

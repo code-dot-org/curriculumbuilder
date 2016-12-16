@@ -50,22 +50,9 @@ class IDE(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(IDE, self)
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_absolute_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'IDE Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
-
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
+                })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
@@ -154,22 +141,9 @@ class Block(Page, RichText):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Block, self)
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_absolute_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'IDE Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
-
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
+                })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
