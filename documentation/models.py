@@ -46,7 +46,8 @@ class IDE(Page, RichText):
         if children:
             for block in self.block_set.all():
                 try:
-                    yield block.publish()
+                    for result in block.publish():
+                        yield result
                 except Exception, e:
                     yield 'ERROR\n%s\n' % e.message
                     logger.exception('Failed to publish %s' % block)

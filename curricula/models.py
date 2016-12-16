@@ -79,7 +79,8 @@ class Curriculum(Page, RichText):
     def publish(self, children=False):
         if children:
             for unit in self.units:
-                yield unit.publish(True)
+                for result in unit.publish(True):
+                    yield result
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Curriculum, self)
@@ -205,7 +206,8 @@ class Unit(Page, RichText):
         if children:
             for lesson in self.lesson_set.all():
                 try:
-                    yield lesson.publish()
+                    for result in lesson.publish():
+                        yield result
                 except Exception, e:
                     yield 'ERROR\n%s\n' % e.message
                     logger.exception('Failed to publish %s' % lesson)
