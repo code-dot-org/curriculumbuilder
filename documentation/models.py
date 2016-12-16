@@ -45,12 +45,8 @@ class IDE(Page, RichText):
     def publish(self, children=False):
         if children:
             for block in self.block_set.all():
-                try:
-                    for result in block.publish():
-                        yield result
-                except Exception, e:
-                    yield 'ERROR\n%s\n' % e.message
-                    logger.exception('Failed to publish %s' % block)
+                for result in block.publish():
+                    yield result
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(IDE, self)
@@ -70,9 +66,12 @@ class IDE(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield '%s\n' % written
+                yield written
+                yield '\n'
             except Exception, e:
-                yield 'ERROR\n%s\n' % e.message
+                yield 'ERROR\n'
+                yield e.message
+                yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
 
@@ -172,9 +171,12 @@ class Block(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield '%s\n' % written
+                yield written
+                yield '\n'
             except Exception, e:
-                yield 'ERROR\n%s\n' % e.message
+                yield 'ERROR\n'
+                yield e.message
+                yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
     def get_IDE(self):
