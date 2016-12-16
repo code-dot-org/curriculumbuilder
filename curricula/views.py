@@ -482,6 +482,13 @@ Publishing views
 '''
 
 
+def iter_test(*args):
+    for num in range(0,10):
+        yield json.dumps({'number': num})
+        yield '\n'
+        time.sleep(1)
+
+
 @staff_member_required
 def publish(request):
     try:
