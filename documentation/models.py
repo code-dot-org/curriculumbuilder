@@ -66,11 +66,10 @@ class IDE(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield written
+                yield json.dumps(written)
                 yield '\n'
             except Exception, e:
-                yield 'ERROR\n'
-                yield e.message
+                yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
@@ -171,11 +170,10 @@ class Block(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield written
+                yield json.dumps(written)
                 yield '\n'
             except Exception, e:
-                yield 'ERROR\n'
-                yield e.message
+                yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 

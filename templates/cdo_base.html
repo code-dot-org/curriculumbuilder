@@ -100,6 +100,17 @@
             })
         });
 
+        // Convert streaming responses to formattable JSON
+        function parseResponse(responseText) {
+            var responses = responseText.split("\n");
+            var response = [];
+            for (var i in responses) {
+                if (responses[i] != "") {
+                    response.push(JSON.parse(responses[i]));
+                }
+            }
+            return response
+        }
 
         // Publish button
         $("#publish_this").click(function () {
@@ -112,6 +123,45 @@
                 lessons = $(lesson_check).prop('checked');
             }
              $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+            // Switch to streaming results
+            var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+            var client = new XMLHttpRequest();
+            client.open('GET', '/publish/?' + params, true);
+            client.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            client.onprogress = function(){
+                var response = parseResponse(this.responseText);
+                $("#publish_results").text(JSON.stringify(response, null, 2));
+                console.log(this.responseText);
+            };
+            client.upload.addEventListener('error', function(event){
+                var response = parseResponse(this.responseText);
+                $("#publish_this").addClass('btn-warning').text("Failed");
+                $("#publish_results").text(JSON.stringify(response, null, 2));
+                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+            });
+
+            client.addEventListener('readystatechange', function(e) {
+                if (this.readyState == 4) {
+                    console.log(this.status);
+                    var response = parseResponse(this.responseText);
+                    if (this.status == 200) {
+                        $("#publish_this").addClass('btn-success').text("Success");
+                        $("#publish_results").text(JSON.stringify(response, null, 2));
+                        $("#publish_results").append('\nFinished');
+                        $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    } else {
+                        $("#publish_this").addClass('btn-warning').text("Failed");
+                        $("#publish_results").text(JSON.stringify(response, null, 2));
+                        $("#publish_results").append('\nFailed');
+                        $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    }
+                }
+            });
+            client.send();
+
+
+            /*
              $.ajax({
                  type: "POST",
                  url: "/publish/",
@@ -126,6 +176,7 @@
                 $("#publish_results").text(JSON.stringify(response, undefined, 2));
                 $('#progress_spinner').removeClass('fa fa-cog fa-spin');
             });
+            */
         });
     })
 </script>

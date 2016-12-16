@@ -100,11 +100,10 @@ class Curriculum(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield written
+                yield json.dumps(written)
                 yield '\n'
             except Exception, e:
-                yield 'ERROR\n'
-                yield e.message
+                yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
@@ -128,11 +127,10 @@ class Curriculum(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield written
+                yield json.dumps(written)
                 yield '\n'
             except Exception, e:
-                yield 'ERROR\n'
-                yield e.message
+                yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish PDF for %s' % self)
 
@@ -214,31 +212,31 @@ class Unit(Page, RichText):
                 for result in lesson.publish():
                     yield result
         if self.jackfrost_can_build():
-            try:
-                read, written = build_page_for_obj(Unit, self)
-                attachments = [
-                    {
-                        'color': '#00adbc',
-                        'title': 'URL',
-                        'text': self.get_absolute_url(),
-                    },
-                    {
-                        'color': '#00adbc',
-                        'title': 'Publishing Details',
-                        'text': json.dumps(written),
-                    },
-                ]
+            for url in self.jackfrost_urls():
+                try:
+                    read, written = build_single(url)
+                    attachments = [
+                        {
+                            'color': '#00adbc',
+                            'title': 'URL',
+                            'text': url,
+                        },
+                        {
+                            'color': '#00adbc',
+                            'title': 'Publishing Details',
+                            'text': json.dumps(written),
+                        },
+                    ]
 
-                slack_message('slack/message.slack', {
-                    'message': 'published %s %s' % (self.content_model, self.title),
-                }, attachments)
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield 'ERROR\n'
-                yield e.message
-                yield '\n'
-                logger.exception('Failed to publish %s' % self)
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s' % (self.content_model, self.title),
+                    }, attachments)
+                    yield json.dumps(written)
+                    yield '\n'
+                except Exception, e:
+                    yield json.dumps(e.message)
+                    yield '\n'
+                    logger.exception('Failed to publish %s' % self)
 
     def publish_pdfs(self, *args):
         if self.jackfrost_can_build():
@@ -261,11 +259,10 @@ class Unit(Page, RichText):
                     slack_message('slack/message.slack', {
                         'message': 'published PDF for %s %s' % (self.content_model, self.title),
                     }, attachments)
-                    yield written
+                    yield json.dumps(written)
                     yield '\n'
                 except Exception, e:
-                    yield 'ERROR\n'
-                    yield e.message
+                    yield json.dumps(e.message)
                     yield '\n'
                     logger.exception('Failed to publish PDF %s' % self)
 
