@@ -734,12 +734,12 @@
                 client.open('GET', '/publish/?' + params, true);
                 client.setRequestHeader("Content-type", "application/json; charset=utf-8");
                 client.onprogress = function(){
-                    $("#publish_results").text(this.responseText);
+                    $("#publish_results").text(JSON.stringify(this.responseText, null, 2));
                     console.log(this.responseText);
                 };
                 client.upload.addEventListener('error', function(event){
                     $("#publish_this").addClass('btn-warning').text("Failed");
-                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                 });
 
@@ -748,10 +748,11 @@
                         console.log(this.status);
                         if (this.status == 200) {
                             $("#publish_this").addClass('btn-success').text("Success");
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
                             $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                         } else {
                             $("#publish_this").addClass('btn-warning').text("Failed");
-                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
                             $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                         }
                     }
@@ -789,7 +790,6 @@
                     timeout: 9999999
                 }).done(function (response) {
                     $("#get_stage_details").addClass('btn-success').text("Success");
-                    $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
                     $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
                     location.reload();
                 }).fail(function (response) {
