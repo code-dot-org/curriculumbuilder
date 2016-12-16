@@ -311,7 +311,6 @@
                 var pdf_client = new XMLHttpRequest();
                 pdf_client.open('GET', '/publish/?' + params, true);
                 pdf_client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                pdf_client.send(JSON.stringify({pk: pk, type: type, pdf: true}));
                 pdf_client.onprogress = function(){
                     $("#publish_results_pdf").text(this.responseText);
                     console.log(this.responseText);

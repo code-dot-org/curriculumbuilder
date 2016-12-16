@@ -232,7 +232,7 @@ class Unit(Page, RichText):
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
                 }, attachments)
-                yield written
+                yield json.dumps(written)
                 yield '\n'
             except Exception, e:
                 yield 'ERROR\n'
