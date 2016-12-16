@@ -1,11 +1,16 @@
 import re
 import logging
+import json
 
 from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
+
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
+
+from django_slack import slack_message
+
 from jackfrost.utils import build_page_for_obj
 
 logger = logging.getLogger(__name__)
@@ -38,24 +43,36 @@ class IDE(Page, RichText):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     def publish(self, children=False):
-        response = {}
         if children:
             for block in self.block_set.all():
                 try:
-                    response[block.title] = block.publish()
+                    yield block.publish()
                 except Exception, e:
-                    response['status'] = 500
-                    response['exception'] = e.message
+                    yield 'ERROR\n%s\n' % e.message
                     logger.exception('Failed to publish %s' % block)
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(IDE, self)
-                response['result'] = written
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_absolute_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'IDE Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
+
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
+                yield 'ERROR\n%s\n' % e.message
                 logger.exception('Failed to publish %s' % self)
-        return response
 
 
 """
@@ -135,16 +152,29 @@ class Block(Page, RichText):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     def publish(self, children=False):
-        response = {}
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Block, self)
-                response['result'] = written
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_absolute_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'IDE Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
+
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
+                yield 'ERROR\n%s\n' % e.message
                 logger.exception('Failed to publish %s' % self)
-        return response
 
     def get_IDE(self):
         parent = self.parent

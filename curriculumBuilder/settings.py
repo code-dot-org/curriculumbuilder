@@ -543,9 +543,10 @@ if ON_PAAS: JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 JACKFROST_RENDERERS = (
     'curricula.jackfrost_renderers.CurriculumRenderer',
     'curricula.jackfrost_renderers.UnitRenderer',
-    'curricula.jackfrost_renderers.ChapterRenderer',
     'curricula.jackfrost_renderers.LessonRenderer',
-    # 'curricula.renderers.PDFRenderer',
+    'curricula.jackfrost_renderers.IDERenderer',
+    'curricula.jackfrost_renderers.BlockRenderer',
+    'curricula.jackfrost_renderers.UnitPDFRenderer',
 )
 
 AUTO_PUBLISH = False  # os.getenv("AUTO_PUBLISH", "False").lower() == "true"

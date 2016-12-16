@@ -1,35 +1,52 @@
 from django.core.urlresolvers import reverse
 from jackfrost.models import ModelRenderer
+
 from curricula.models import *
 from lessons.models import *
+from documentation.models import *
+
 
 def homeRenderer():
     return [reverse('curriculum:home')]
 
-class CurriculumRenderer(ModelRenderer):
-  def get_model(self):
-    return Curriculum
 
-  def get_queryset(self):
-    return self.get_model().objects.filter(status=2, login_required=False)
+class CurriculumRenderer(ModelRenderer):
+    def get_model(self):
+        return Curriculum
+
 
 class UnitRenderer(ModelRenderer):
-  def get_model(self):
-    return Unit
+    def get_model(self):
+        return Unit
 
-  def get_queryset(self):
-    return self.get_model().objects.filter(status=2, login_required=False, curriculum__login_required=False)
 
-class ChapterRenderer(ModelRenderer):
-  def get_model(self):
-    return Chapter
+class UnitPDFRenderer(ModelRenderer):
+    def get_model(self):
+        return Unit
 
-  def get_queryset(self):
-    return self.get_model().objects.filter(status=2, login_required=False, parent__login_required=False, parent__parent__login_required=False)
+    def get_urls(self):
+        for obj in self.get_paginated_queryset():
+
+            if hasattr(obj, 'jackfrost_can_build'):
+                if obj.jackfrost_can_build() is False:
+                    continue
+
+            if hasattr(obj, 'pdf_urls'):
+                for url in obj.pdf_urls():
+                    yield url
+
 
 class LessonRenderer(ModelRenderer):
-  def get_model(self):
-    return Lesson
+    def get_model(self):
+        return Lesson
 
-  def get_queryset(self):
-    return self.get_model().objects.filter(status=2, login_required=False, unit__login_required=False, curriculum__login_required=False)
+
+class IDERenderer(ModelRenderer):
+    def get_model(self):
+        return IDE
+
+
+class BlockRenderer(ModelRenderer):
+    def get_model(self):
+        return Block
+

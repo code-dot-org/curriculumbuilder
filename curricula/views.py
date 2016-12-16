@@ -1,9 +1,9 @@
-import os
+import os, time
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import never_cache
@@ -499,6 +499,43 @@ def publish(request):
         obj = klass.objects.get(pk=pk)
 
         if request.POST.get('pdf') == 'true':
+            as_pdf = True
+            pub_func = obj.publish_pdfs
+        else:
+            as_pdf = False
+            pub_func = obj.publish(children)
+
+        slack_message('slack/message.slack', {
+            'message': 'kicked off a publish of %s %s \n With children: %s\n As pdf: %s'
+                       % (page_type, obj.title, children, as_pdf),
+            'user': request.user,
+        })
+
+    except Exception, e:
+        logger.exception('Publishing failed')
+
+        return HttpResponse(e.message, content_type='application/json', status=500)
+
+    return StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+
+
+@staff_member_required
+def old_publish(request):
+    try:
+        pk = int(request.POST.get('pk'))
+
+        page_type = request.POST.get('type')
+
+        if request.POST.get('lessons') == 'true':
+            children = True
+        else:
+            children = False
+
+        klass = globals()[page_type]
+
+        obj = klass.objects.get(pk=pk)
+
+        if request.POST.get('pdf') == 'true':
             payload = obj.publish_pdfs()
         else:
             payload = obj.publish(children)
@@ -556,7 +593,8 @@ def gong(request, format=None):
     reason = request.POST.get("text", "Gonged stuff!")
 
     slack_message('slack/gonged.slack', {
-        'user': user
+        'user': user,
+        'reason': reason
     })
 
     attachments = [

@@ -4,5 +4,5 @@
 {% block username %}gongtracker{% endblock %}
 {% block channel %}#gongtracker{% endblock %}
 {% block text %}
-{{ user }} banged the gong.
+{{ user }} banged the gong because {{ reason }}.
 {% endblock %}

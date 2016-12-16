@@ -1,5 +1,6 @@
 import re
 import logging
+import json
 
 from django.conf import settings
 from django.db import models
@@ -7,10 +8,15 @@ from django.db.models import Count
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
+
 from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
+
+from django_slack import slack_message
+
 from standards.models import Standard, GradeBand, Category, Framework
 import lessons.models
 
@@ -71,32 +77,57 @@ class Curriculum(Page, RichText):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     def publish(self, children=False):
-        response = {}
         if children:
             for unit in self.units:
-                response[unit.title] = unit.publish(True)
+                yield unit.publish(True)
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Curriculum, self)
-                response['result'] = written
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_absolute_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
+
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
+                yield 'ERROR\n%s\n' % e.message
                 logger.exception('Failed to publish %s' % self)
 
-        return response
-
-    def publish_pdfs(self):
-        response = {}
+    def publish_pdfs(self, *args):
         if self.jackfrost_can_build():
             try:
                 read, written = build_single(self.get_pdf_url())
-                response['curriculum_result'] = written
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_pdf_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'PDF Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
+
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
-                logger.exception('Failed to publish %s' % self)
-        return response
+                yield 'ERROR\n%s\n' % e.message
+                logger.exception('Failed to publish PDF for %s' % self)
 
     @property
     def units(self):
@@ -164,42 +195,69 @@ class Unit(Page, RichText):
         # urls.append(self.get_resources_pdf_url())
         return urls
 
+    def pdf_urls(self):
+        return [self.get_pdf_url(), self.get_resources_pdf_url()]
+
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
 
     def publish(self, children=False):
-        response = {}
         if children:
             for lesson in self.lesson_set.all():
                 try:
-                    response[lesson.title] = lesson.publish()
+                    yield lesson.publish()
                 except Exception, e:
-                    response['status'] = 500
-                    response['exception'] = e.message
+                    yield 'ERROR\n%s\n' % e.message
                     logger.exception('Failed to publish %s' % lesson)
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Unit, self)
-                response['result'] = written
-            except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
-                logger.exception('Failed to publish %s' % self)
-        return response
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_absolute_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
 
-    def publish_pdfs(self):
-        response = {}
-        if self.jackfrost_can_build():
-            try:
-                read, written = build_single(self.get_pdf_url())
-                response['unit_result'] = written
-                read, written = build_single(self.get_resources_pdf_url())
-                response['resources_result'] = written
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
+                yield 'ERROR\n%s\n' % e.message
                 logger.exception('Failed to publish %s' % self)
-        return response
+
+    def publish_pdfs(self, *args):
+        if self.jackfrost_can_build():
+            for url in self.pdf_urls():
+                try:
+                    read, written = build_single(url)
+                    attachments = [
+                        {
+                            'color': '#00adbc',
+                            'title': 'URL',
+                            'text': url,
+                        },
+                        {
+                            'color': '#00adbc',
+                            'title': 'PDF Publishing Details',
+                            'text': json.dumps(written),
+                        },
+                    ]
+
+                    slack_message('slack/message.slack', {
+                        'message': 'published PDF for %s %s' % (self.content_model, self.title),
+                    }, attachments)
+                    yield '%s\n' % written
+                except Exception, e:
+                    yield 'ERROR\n%s\n' % e.message
+                    logger.exception('Failed to publish PDF %s' % self)
 
     # Eventually this will need to address naming differences between CSF and CSD/CSP
     @property

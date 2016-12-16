@@ -292,22 +292,36 @@ class Lesson(Page, RichText):
         return can_build
 
     def publish(self, children=False):
-        response = {}
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Lesson, self)
-                response['result'] = written
+                attachments = [
+                    {
+                        'color': '#00adbc',
+                        'title': 'URL',
+                        'text': self.get_absolute_url(),
+                    },
+                    {
+                        'color': '#00adbc',
+                        'title': 'Publishing Details',
+                        'text': json.dumps(written),
+                    },
+                ]
+
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                }, attachments)
+                yield '%s\n' % written
             except Exception, e:
-                response['status'] = 500
-                response['exception'] = e.message
+                yield 'ERROR\n%s\n' % e.message
                 logger.exception('Failed to publish %s' % self)
         else:
+            fail_msg = 'Attempted to publish %s %s lesson %s, ' \
+                       'but it is not publishable.' % (self.curriculum.slug, self.unit.slug, self.number)
             slack_message('slack/message.slack', {
-                'message': 'Attempted to publish %s %s lesson %s, '
-                           'but it is not publishable.' % (self.curriculum.slug, self.unit.slug, self.number),
+                'message': fail_msg
             })
-
-        return response
+            yield '%s\n' % fail_msg
 
     def save(self, *args, **kwargs):
         self.parent = Page.objects.get(pk=self.parent_id)

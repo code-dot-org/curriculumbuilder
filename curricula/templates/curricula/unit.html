@@ -252,6 +252,36 @@
                 var type = $(this).attr('data-type');
                 var lessons = $('#include_lessons').prop('checked');
                 $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var client = new XMLHttpRequest();
+                client.open('POST', '/publish/');
+                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                client.send(JSON.stringify({pk: pk, type: type, lessons: lessons}));
+                client.onprogress = function(){
+                    $("#publish_results").text(this.responseText);
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                /*
                 $.ajax({
                     type: "POST",
                     url: "/publish/",
@@ -266,12 +296,44 @@
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
                 });
+                */
             });
+
             $("#publish_pdfs").click(function () {
                 $('#publish_pdfs').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
                 var pk = $(this).attr('data-pk');
                 var type = $(this).attr('data-type');
                 $('#progress_spinner_pdf').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var pdf_client = new XMLHttpRequest();
+                pdf_client.open('POST', '/publish/');
+                pdf_client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                pdf_client.send(JSON.stringify({pk: pk, type: type, pdf: true}));
+                pdf_client.onprogress = function(){
+                    $("#publish_results_pdf").text(this.responseText);
+                    console.log(this.responseText);
+                };
+                pdf_client.upload.addEventListener('error', function(event){
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                });
+
+                pdf_client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_pdfs").addClass('btn-success').text("Success");
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                            $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                            $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                /*
                 $.ajax({
                     type: "POST",
                     url: "/publish/",
@@ -286,6 +348,7 @@
                     $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
                 });
+                */
             });
         });
     </script>
