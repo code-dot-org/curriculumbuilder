@@ -52,6 +52,7 @@ class IDE(Page, RichText):
                 read, written = build_page_for_obj(IDE, self)
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
                 })
                 yield json.dumps(written)
                 yield '\n'
@@ -143,6 +144,7 @@ class Block(Page, RichText):
                 read, written = build_page_for_obj(Block, self)
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
                 })
                 yield json.dumps(written)
                 yield '\n'

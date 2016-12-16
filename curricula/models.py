@@ -86,6 +86,7 @@ class Curriculum(Page, RichText):
                 read, written = build_page_for_obj(Curriculum, self)
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
                 })
                 yield json.dumps(written)
                 yield '\n'
@@ -97,8 +98,10 @@ class Curriculum(Page, RichText):
     def publish_pdfs(self, *args):
         if self.jackfrost_can_build():
             try:
+                read, written = build_single(self.get_pdf_url())
                 slack_message('slack/message.slack', {
                     'message': 'published %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
                 })
                 yield json.dumps(written)
                 yield '\n'
@@ -189,7 +192,8 @@ class Unit(Page, RichText):
                 try:
                     read, written = build_single(url)
                     slack_message('slack/message.slack', {
-                        'message': 'published %s %s' % (self.content_model, self.title),
+                        'message': 'published %s %s %s' % (self.content_model, self.title, url),
+                        'color': '#00adbc'
                     })
                     yield json.dumps(written)
                     yield '\n'
@@ -205,6 +209,7 @@ class Unit(Page, RichText):
                     read, written = build_single(url)
                     slack_message('slack/message.slack', {
                         'message': 'published PDF for %s %s' % (self.content_model, self.title),
+                        'color': '#00adbc'
                     })
                     yield json.dumps(written)
                     yield '\n'
