@@ -123,6 +123,37 @@
                 var type = $(this).attr('data-type');
                 var lessons = $('#include_lessons').prop('checked');
                 $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+                var client = new XMLHttpRequest();
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                client.onprogress = function(){
+                    $("#publish_results").text(this.responseText);
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                client.send();
+                /*
                 $.ajax({
                     type: "POST",
                     url: "/publish/",
@@ -137,6 +168,7 @@
                     $("#publish_results").text(JSON.stringify(response, undefined, 2));
                     $('#progress_spinner').removeClass('fa fa-cog fa-spin');
                 });
+                */
             });
         });
     </script>
