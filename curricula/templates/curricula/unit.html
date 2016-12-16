@@ -254,10 +254,10 @@
                 $('#progress_spinner').addClass('fa fa-cog fa-spin');
 
                 // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
                 var client = new XMLHttpRequest();
-                client.open('POST', '/publish/');
+                client.open('GET', '/publish/?' + params, true);
                 client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                client.send(JSON.stringify({pk: pk, type: type, lessons: lessons}));
                 client.onprogress = function(){
                     $("#publish_results").text(this.responseText);
                     console.log(this.responseText);
@@ -306,8 +306,9 @@
                 $('#progress_spinner_pdf').addClass('fa fa-cog fa-spin');
 
                 // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&pdf=true";
                 var pdf_client = new XMLHttpRequest();
-                pdf_client.open('POST', '/publish/');
+                pdf_client.open('GET', '/publish/?' + params, true);
                 pdf_client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 pdf_client.send(JSON.stringify({pk: pk, type: type, pdf: true}));
                 pdf_client.onprogress = function(){

@@ -485,11 +485,11 @@ Publishing views
 @staff_member_required
 def publish(request):
     try:
-        pk = int(request.POST.get('pk'))
+        pk = int(request.GET.get('pk'))
 
-        page_type = request.POST.get('type')
+        page_type = request.GET.get('type')
 
-        if request.POST.get('lessons') == 'true':
+        if request.GET.get('lessons') == 'true':
             children = True
         else:
             children = False
@@ -498,12 +498,12 @@ def publish(request):
 
         obj = klass.objects.get(pk=pk)
 
-        if request.POST.get('pdf') == 'true':
+        if request.GET.get('pdf') == 'true':
             as_pdf = True
             pub_func = obj.publish_pdfs
         else:
             as_pdf = False
-            pub_func = obj.publish(children)
+            pub_func = obj.publish
 
         slack_message('slack/message.slack', {
             'message': 'kicked off a publish of %s %s \n With children: %s\n As pdf: %s'

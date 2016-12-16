@@ -729,10 +729,10 @@
                 $('#progress_spinner').addClass('fa fa-cog fa-spin');
 
                 // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type;
                 var client = new XMLHttpRequest();
-                client.open('POST', '/publish/');
-                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                client.send(JSON.stringify({pk: pk, type: type}));
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-type", "application/json; charset=utf-8");
                 client.onprogress = function(){
                     $("#publish_results").text(this.responseText);
                     console.log(this.responseText);
