@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import Textarea, ModelForm
+from django.forms import Textarea, ModelForm, TextInput
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
@@ -83,10 +83,50 @@ class BlockAdmin(PageAdmin):
     }
 
 
-class MultiBlockForm(ModelForm):
+class BlockDocForm(ModelForm):
     class Meta:
         model = Block
         fields = ['IDE', 'title', 'syntax', 'category', 'ext_doc', 'proxy']
+        ordering = ('IDE', '_order')
+        widgets = {
+            'syntax': Textarea(attrs={'cols': '10'}),
+            'ext_doc': TextInput(attrs={'size': '10'})
+        }
+
+
+class BlockDoc(Block):
+    class Meta:
+        proxy = True
+
+
+class BlockDocAdmin(admin.ModelAdmin):
+    list_display = ('title', 'IDE', 'category')
+    list_filter = ('IDE', 'category')
+    ordering = ('IDE', '_order')
+    form = BlockForm
+
+    inlines = [ParameterInline, ExampleInline]
+
+    fieldsets = (
+        (None, {
+            'fields': ['title', 'slug', 'keywords', 'video', ('description', 'gen_description')],
+        }),
+        ('Documentation', {
+            'fields': ['proxy', 'ext_doc', 'category', 'content'],
+        }),
+        ('Details', {
+            'fields': ['syntax', 'return_value'],
+            'classes': ['collapse-closed'],
+        }),
+        ('Tips', {
+            'fields': ['tips', ],
+            'classes': ['collapse-closed'],
+        }),
+    )
+
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 2})},
+    }
 
 
 class MultiBlock(Block):
@@ -96,13 +136,14 @@ class MultiBlock(Block):
 
 class MultiBlockAdmin(admin.ModelAdmin):
     list_display = ('IDE', 'title', 'syntax', 'category', 'ext_doc')
-    list_editable = ('title', 'syntax', 'category', 'ext_doc')
+    list_editable = ('syntax', 'category', 'ext_doc')
     list_filter = ('IDE',)
+    ordering = ('IDE', '_order')
 
     def get_changelist_form(self, request, **kwargs):
-        return MultiBlockForm
-
+        return BlockDocForm
 
 admin.site.register(Block, BlockAdmin)
 admin.site.register(IDE, IDEAdmin)
+admin.site.register(BlockDoc, BlockDocAdmin)
 admin.site.register(MultiBlock, MultiBlockAdmin)

@@ -505,15 +505,9 @@ if ON_PAAS:
 
     AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
-    if os.environ.get('ENV') == 'staging':
-        STATICFILES_LOCATION = 'static_staging'
-        STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticStagingS3BotoStorage'
-        STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-
-    else:
-        STATICFILES_LOCATION = 'static'
-        STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
-        STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
     MEDIAFILES_LOCATION = 'media'
     DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'

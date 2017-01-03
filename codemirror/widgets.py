@@ -19,7 +19,7 @@ if CODEMIRROR_PATH.endswith('/'):
     CODEMIRROR_PATH = CODEMIRROR_PATH[:-1]
 CODEMIRROR_MODE = getattr(settings, 'CODEMIRROR_MODE', 'javascript')
 CODEMIRROR_THEME = getattr(settings, 'CODEMIRROR_THEME', 'default')
-CODEMIRROR_CONFIG = getattr(settings, 'CODEMIRROR_CONFIG', { 'lineNumbers': True })
+CODEMIRROR_CONFIG = getattr(settings, 'CODEMIRROR_CONFIG', {'lineNumbers': True})
 CODEMIRROR_ADDON_JS = getattr(settings, 'CODEMIRROR_ADDON_JS', '')
 CODEMIRROR_ADDON_CSS = getattr(settings, 'CODEMIRROR_ADDON_CSS', '')
 CODEMIRROR_JS_VAR_FORMAT = getattr(settings, 'CODEMIRROR_JS_VAR_FORMAT', None)
