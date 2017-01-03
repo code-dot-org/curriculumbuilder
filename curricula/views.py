@@ -622,6 +622,7 @@ def gong(request, format=None):
 
     return Response(payload, content_type='application/json')
 
+
 @api_view(['POST', 'GET'])
 def arduino(request, command, format=None):
     arduino_url = "http://caldwell.ddns.net/arduino/%s" % command
