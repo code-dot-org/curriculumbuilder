@@ -33,6 +33,7 @@ class Curriculum(Page, RichText):
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
     unit_numbering = models.BooleanField(default=True)
     auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
+    support_script = models.BooleanField(default=False, help_text='Link to support script in Code Studio?')
     display_questions = models.BooleanField(default=False, help_text='Display open questions and feedback form?')
     feedback_url = models.URLField(blank=True, null=True, help_text='URL to feedback form, using % operators')
     feedback_vars = models.CharField(max_length=255, blank=True, null=True,
@@ -218,7 +219,6 @@ class Unit(Page, RichText):
                     yield '\n'
                     logger.exception('Failed to publish PDF %s' % self)
 
-    # Eventually this will need to address naming differences between CSF and CSD/CSP
     @property
     def short_name(self):
         if self.curriculum.unit_numbering:
@@ -232,6 +232,10 @@ class Unit(Page, RichText):
             return "%s - %s" % (self.get_unit_numbering(), self.title)
         else:
             return self.title
+
+    @property
+    def support_script(self):
+        return "https://studio.code.org/s/%s-support" % getattr(self, 'stage_name', self.slug)
 
     @property
     def header_corner(self):

@@ -358,7 +358,12 @@
                 <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
             {% endif %}
 
-            <p><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></p>
+            {% if curriculum.support_script %}
+                <h3><a href="{{ unit.support_script }}" target="_blank">{{ unit.short_name }} Instructional Supports</a></h3>
+            {% endif %}
+
+
+            <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
 
             {% editable lesson.questions %}
                 {% if lesson.questions %}{{ lesson.questions|richtext_filters|safe }}{% endif %}
