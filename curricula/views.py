@@ -17,6 +17,7 @@ import pycurl
 import logging
 import json
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
+from urllib import urlencode
 from urllib2 import Request, urlopen
 # import dryscrape
 
@@ -629,6 +630,45 @@ def arduino(request, command, format=None):
     arduino_response = urlopen(Request(arduino_url)).read()
 
     return Response(arduino_response)
+
+
+@never_cache
+@api_view(['GET', ])
+def proxy_api(request, api_type, api_args, format=None):
+    if api_type == 'weather':
+        baseurl = "https://query.yahooapis.com/v1/public/yql?"
+        yql_query = "select item.condition from weather.forecast where woeid in " \
+                    "(select woeid from geo.places(1) where text = %s)" % api_args
+        yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+        result = urlopen(yql_url).read()
+        print result
+
+        try:
+            data = json.loads(result)
+            data = data['query']['results']['channel']['item']['condition']
+            print data
+        except:
+            data = {'error': 'failed'}
+            print data
+
+        return Response(json.dumps(data))
+    if api_type == 'temperature':
+        baseurl = "https://query.yahooapis.com/v1/public/yql?"
+        yql_query = "select item.condition from weather.forecast where woeid in " \
+                    "(select woeid from geo.places(1) where text = %s)" % api_args
+        yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+        result = urlopen(yql_url).read()
+        print result
+
+        try:
+            data = json.loads(result)
+            data = data['query']['results']['channel']['item']['condition']['temp']
+            data = "%sF" % data
+        except:
+            data = {'error': 'failed'}
+            print data
+
+        return Response(json.dumps(data))
 
 
 @never_cache

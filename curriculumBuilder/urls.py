@@ -96,6 +96,7 @@ urlpatterns += patterns('',
 
     # Curriculum URLs
     url(r'^api/v1/$', views.api_root),
+    url(r'^api/v1/proxy/(?P<api_type>[-\w]+)/(?P<api_args>.+)', views.proxy_api),
     url(r'^api/v1/gong/$', views.gong),
     url(r'^api/v1/arduino/(?P<command>[0-9a-zA-Z/]+)/$', views.arduino),
     url(r'^api/v1/gong/get/$', views.get_gongs),
