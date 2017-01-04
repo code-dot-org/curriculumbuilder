@@ -364,10 +364,11 @@
 
 
             <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
-
-            {% editable lesson.questions %}
-                {% if lesson.questions %}{{ lesson.questions|richtext_filters|safe }}{% endif %}
-            {% endeditable %}
+            {% if lesson.questions %}
+                {% editable lesson.questions %}
+                    {{ lesson.questions|richtext_filters|safe }}
+                {% endeditable %}
+            {% endif %}
             {% if curriculum.feedback_url %}
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
                     Give us feedback!
