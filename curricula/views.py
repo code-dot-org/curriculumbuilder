@@ -633,14 +633,14 @@ def arduino(request, command, format=None):
 
 
 @never_cache
-@api_view(['GET', ])
-def proxy_api(request, api_type, api_args, format=None):
+def proxy_api(request, api_type, api_args):
     print api_type
     print api_args
     if api_type == 'weather':
+        content_type = 'application/json'
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
         yql_query = "select item.condition from weather.forecast where woeid in " \
-                    "(select woeid from geo.places(1) where text = %s)" % api_args
+                    "(select woeid from geo.places(1) where text = '%s')" % api_args
         yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
         result = urlopen(yql_url).read()
         print result
@@ -653,8 +653,9 @@ def proxy_api(request, api_type, api_args, format=None):
             data = {'error': 'failed'}
             print data
 
-        return Response(json.dumps(data))
+        data = json.dumps(data)
     if api_type == 'temperature':
+        content_type = 'text/plain'
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
         yql_query = "select item.condition from weather.forecast where woeid in " \
                     "(select woeid from geo.places(1) where text = '%s')" % api_args
@@ -670,7 +671,7 @@ def proxy_api(request, api_type, api_args, format=None):
             data = 'error'
             print data
 
-        return Response(data)
+    return HttpResponse(data, content_type=content_type)
 
 
 @never_cache
