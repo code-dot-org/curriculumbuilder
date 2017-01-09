@@ -5,6 +5,9 @@ from django.views.decorators.cache import never_cache
 from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
 
+from rest_framework.decorators import api_view
+from rest_framework.views import Response
+
 from django_slack import slack_message
 
 from models import Record
@@ -12,6 +15,7 @@ from models import Record
 logger = logging.getLogger(__name__)
 
 
+@api_view(['POST', ])
 def gong(request):
     user = "@%s" % request.POST.get("user_name", "somebody")
     reason = request.POST.get("text", "Gonged stuff!")
@@ -37,7 +41,7 @@ def gong(request):
     record = Record(user=user, reason=reason)
     record.save()
 
-    return HttpResponse(payload, content_type='application/json')
+    return Response(payload, content_type='application/json')
 
 
 @never_cache
