@@ -318,7 +318,8 @@ INSTALLED_APPS = (
     "standards",
     "lessons",
     "curricula",
-    "documentation"
+    "documentation",
+    "gong"
 )
 
 # List of processors used by RequestContext to populate the context.

@@ -15,6 +15,7 @@ import freeze.urls
 
 from curricula import views
 from standards.views import *
+from gong import views as gong_views
 
 admin.autodiscover()
 
@@ -97,9 +98,9 @@ urlpatterns += patterns('',
     # Curriculum URLs
     url(r'^api/v1/$', views.api_root),
     url(r'^api/v1/proxy/(?P<api_type>[-\w]+)/(?P<api_args>.+)', views.proxy_api),
-    url(r'^api/v1/gong/$', views.gong),
+    url(r'^api/v1/gong/$', gong_views.gong),
     url(r'^api/v1/arduino/(?P<command>[0-9a-zA-Z/]+)/$', views.arduino),
-    url(r'^api/v1/gong/get/$', views.get_gongs),
+    url(r'^api/v1/gong/get/$', gong_views.get_gongs),
     url(r'^api/v1/curriculum/$', views.curriculum_list, name="curriculum_list"),
     url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/$', standard_list, name="standard_list"),
     # url(r'^api/v1/curriculum/(?P<curriculum_slug>[-\w]+)/standards/(?P<framework_slug>[-\w]+)/$', standard_list, name="standard_list"),

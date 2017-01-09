@@ -595,35 +595,6 @@ API views
 '''
 
 
-@api_view(['POST', ])
-def gong(request, format=None):
-    user = "@%s" % request.POST.get("user_name", "somebody")
-    reason = request.POST.get("text", "Gonged stuff!")
-
-    slack_message('slack/gonged.slack', {
-        'user': user,
-        'reason': reason
-    })
-
-    attachments = [
-        {
-            'author_name': user,
-            'title': reason,
-            'image_url': 'https://curriculum.code.org/images/gong.gif',
-            'color': '#00adbc'
-        }
-    ]
-    payload = {
-        "response_type": "in_channel",
-        "attachments": attachments,
-    }
-
-    dweet_url = "https://dweet.io/dweet/for/cdo-gong"
-    dweet_response = urlopen(Request(dweet_url))
-
-    return Response(payload, content_type='application/json')
-
-
 @api_view(['POST', 'GET'])
 def arduino(request, command, format=None):
     arduino_url = "http://caldwell.ddns.net/arduino/%s" % command
