@@ -6,6 +6,7 @@ from documentation import views as documentation_views
 
 urlpatterns = patterns('curricula.views',
                        url(r'^$', views.index, name='home'),
+                       url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
                        url(r'^publish/$', views.publish, name='publish'),
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
 

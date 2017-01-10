@@ -142,7 +142,6 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
     optional = False
-    form = ChangelogForm
 
     if optional_num:
         optional = True
@@ -178,8 +177,15 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
         form = ChangelogForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
+            print "trying it"
             with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
+                if form.cleaned_data['teacher_facing']:
+                    changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
+                else:
+                    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+                    print 'not teacher facing'
+
+                print changelog_user
 
                 lesson.save()
 
@@ -590,6 +596,20 @@ def get_stage_details(request):
 
 
 '''
+Supplemental Admin Views
+
+'''
+
+
+@staff_member_required
+def page_history(request, page_id):
+    page = get_object_or_404(Page, pk=page_id)
+    history = Version.objects.get_for_object(page).filter(revision__user__username__in=(settings.CHANGELOG_USER,
+                                                                                        settings.FEEDBACK_USER))
+
+    return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
+
+'''
 API views
 
 '''
@@ -643,16 +663,6 @@ def proxy_api(request, api_type, api_args):
             print data
 
     return HttpResponse(data, content_type=content_type)
-
-
-@never_cache
-@api_view(['GET', ])
-def get_gongs(request, format=None):
-
-    dweet_url = "https://dweet.io/get/latest/dweet/for/cdo-gong"
-    dweet_response = urlopen(Request(dweet_url)).read()
-
-    return Response(json.loads(dweet_response), content_type='application/json')
 
 
 @api_view(['GET', ])

@@ -559,6 +559,7 @@ ENABLE_PUBLISH = True
 ######################
 
 CHANGELOG_USER = "changelog"
+FEEDBACK_USER = "feedback"
 
 #################
 # CORS SETTINGS #

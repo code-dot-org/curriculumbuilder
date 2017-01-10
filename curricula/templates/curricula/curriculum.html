@@ -38,10 +38,10 @@
         </div>
         <div class="drawer-contents">
             <div class="drawer-body">
-                <h2>Add to Changelog</h2>
+                <h2>Logging</h2>
                     <form method="POST" action="." class="post-form">{% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="save btn btn-primary">Save</button>
+                        <button type="submit" class="save btn btn-primary">Save Changelog or Feedback</button>
                     </form>
                 <h2>Publishing</h2>
                 {% if curriculum.jackfrost_can_build %}

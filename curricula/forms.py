@@ -9,3 +9,4 @@ class ChangelogForm(forms.Form):
     # richtext_widget = import_dotted_path(settings.RICHTEXT_WIDGET_CLASS)
 
     comment = forms.CharField(label='Comment', widget=forms.Textarea(attrs={'rows': 5, 'cols': 35}))
+    teacher_facing = forms.BooleanField(label='Teacher Facing', initial=True, required=False)

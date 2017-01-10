@@ -1,0 +1,65 @@
+{% extends "cdo_base.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ page.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+{% endblock %}
+
+{% block admin_link %}
+{% endblock %}
+
+{% block header %}
+    {% if page.content_model == 'unit' %}
+        <h1>{{ page.unit.curriculum.slug|upper }} {{ page.unit.short_name }} History</h1>
+        <h4><a href="{{ page.unit.get_absolute_url }}">Return to unit</a></h4>
+    {% elif page.content_model == 'lesson' %}
+        <h1>{{ page.lesson.curriculum.slug|upper }} {{ page.lesson.unit.short_name }} Lesson {{ page.lesson.number }} History</h1>
+        <h4><a href="{{ page.lesson.get_absolute_url }}">Return to lesson</a></h4>
+    {% endif %}
+{% endblock %}
+
+{% block resources_nav %}
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Comment</th>
+    </tr>
+    </thead>
+    {% for version in history %}
+        <tr>
+        <td>{{ version.revision.user }}</td>
+        <td>{{ version.revision.date_created }}</td>
+        <td>{{ version.revision.comment }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
+
+{% block footer_js %}
+{% endblock %}

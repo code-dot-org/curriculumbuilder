@@ -105,11 +105,12 @@
                 </div>
             </div>
                 <div class="drawer-body">
-                    <h2>Add to Changelog</h2>
+                    <h2>Add to Log</h2>
                         <form method="POST" action="." class="post-form">{% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="save btn btn-primary">Save</button>
                         </form>
+                    <h3><a href="/page_history/{{ lesson.pk }}/">View history</a></h3>
                     <h2>Publishing</h2>
                     {% if lesson.jackfrost_can_build %}
                         <button class="btn btn-primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">
@@ -781,24 +782,6 @@
                     }
                 });
                 client.send();
-
-
-                /*
-                $.ajax({
-                    type: "POST",
-                    url: "/publish/",
-                    data: {pk: pk, type: type},
-                    timeout: 9999999
-                }).done(function (response) {
-                    $("#publish_this").addClass('btn-success').text("Success");
-                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                }).fail(function (response) {
-                    $("#publish_this").addClass('btn-warning').text("Failed");
-                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                });
-                */
             });
 
             // Get Stage Details Button
