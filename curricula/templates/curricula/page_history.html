@@ -55,7 +55,7 @@
         <tr>
         <td>{{ version.revision.user }}</td>
         <td>{{ version.revision.date_created }}</td>
-        <td>{{ version.revision.comment }}</td>
+        <td>{{ version.revision.comment|richtext_filters|safe }}</td>
         </tr>
     {% endfor %}
     </table>

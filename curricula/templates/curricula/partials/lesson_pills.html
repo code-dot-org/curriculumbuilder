@@ -13,7 +13,7 @@
             </button>
             <ul class="dropdown-menu">
                 {% for version in changelog%}
-                <li><strong>{{ version.revision.date_created|date:"n/j/y" }}</strong><span style="display:block">{{ version.revision.comment }}</span></li>
+                <li><strong>{{ version.revision.date_created|date:"n/j/y" }}</strong><span style="display:block">{{ version.revision.comment|richtext_filters|safe }}</span></li>
                 {% endfor %}
             </ul>
             </div>
