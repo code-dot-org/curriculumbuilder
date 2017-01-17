@@ -650,15 +650,11 @@ def feedback(request):
         message = "Unable to find matching lesson."
         title = "Failure :/"
 
-    slack_message('slack/feedback.slack', {
-        'message': message
-    })
-
     attachments = [
         {
             'title': title,
             'color': '#00adbc',
-            'text': details
+            'text': message
         }
     ]
     payload = {
