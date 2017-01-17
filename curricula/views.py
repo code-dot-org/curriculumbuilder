@@ -625,7 +625,7 @@ def feedback(request):
 
     match = re.match(RE_FEEDBACK, text)
     if match:
-        curric_slug = str.lower(match.group('curric'))
+        curric_slug = match.group('curric').lower()
         unit_num = int(match.group('unit'))
         lesson_num = int(match.group('lesson'))
         details = match.group('msg')
