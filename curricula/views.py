@@ -1,4 +1,4 @@
-import os, time
+import os, time, re
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
@@ -613,6 +613,60 @@ def page_history(request, page_id):
 API views
 
 '''
+
+
+@api_view(['POST', ])
+def feedback(request):
+    RE_FEEDBACK = "^(?P<curric>\S+)\s{1}(u|U)(?P<unit>\d+)(l|L)(?P<lesson>\d+)\s{1}(?P<msg>.*)"
+
+    user = "@%s" % request.POST.get("user_name", "somebody")
+    text = request.POST.get("text")
+    details = text
+
+    match = re.match(RE_FEEDBACK, text)
+    if match:
+        curric_slug = str.lower(match.group('curric'))
+        unit_num = int(match.group('unit'))
+        lesson_num = int(match.group('lesson'))
+        details = match.group('msg')
+        lesson = Lesson.objects.filter(curriculum__slug=curric_slug, unit__number=unit_num, number=lesson_num).first()
+
+        if lesson:
+
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+
+                lesson.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(details)
+            message = "Feedback recorded for %s %s %s %s." % (lesson.curriculum, lesson.unit, lesson.number, lesson)
+            title = "Success!"
+        else:
+            message = "Unable to find matching lesson."
+            title = "Failure :/"
+    else:
+        message = "Unable to find matching lesson."
+        title = "Failure :/"
+
+    slack_message('slack/feedback.slack', {
+        'message': message
+    })
+
+    attachments = [
+        {
+            'title': title,
+            'color': '#00adbc',
+            'text': details
+        }
+    ]
+    payload = {
+        "response_type": "in_channel",
+        "attachments": attachments,
+    }
+
+    return Response(payload, content_type='application/json')
 
 
 @api_view(['POST', 'GET'])

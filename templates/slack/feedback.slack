@@ -1,0 +1,6 @@
+{% extends django_slack %}
+
+{% load django_slack %}
+{% block username %}FeedbackBot{% endblock %}
+{% block message %}
+{% endblock %}

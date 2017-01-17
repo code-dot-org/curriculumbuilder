@@ -59,6 +59,29 @@
         </tr>
     {% endfor %}
     </table>
+    {% comment "WiP to show lesson feedback alongside unit" %}
+    {% if page.content_model == 'unit' %}
+        {% for child in page.children.all %}
+            <h2>{{ child.lesson.curriculum.slug|upper }} {{ child.lesson.unit.short_name }} Lesson {{ child.lesson.number }}</h2>
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            {% for version in history %}
+                <tr>
+                <td>{{ version.revision.user }}</td>
+                <td>{{ version.revision.date_created }}</td>
+                <td>{{ version.revision.comment|richtext_filters|safe }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endfor %}
+    {% endif %}
+    {% endcomment %}
 {% endblock %}
 
 {% block footer_js %}
