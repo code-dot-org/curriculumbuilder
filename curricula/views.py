@@ -641,7 +641,7 @@ def feedback(request):
                 # Store some meta-information.
                 reversion.set_user(changelog_user)
                 reversion.set_comment(details)
-            message = "Feedback recorded for %s %s %s %s." % (lesson.curriculum, lesson.unit, lesson.number, lesson)
+            message = "Feedback recorded for %s: %s: %s." % (lesson.curriculum, lesson.unit, lesson)
             title = "Success!"
         else:
             message = "Unable to find matching lesson."
