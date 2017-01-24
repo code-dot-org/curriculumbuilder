@@ -237,6 +237,17 @@ footer {
     page-break-after: always;
 }
 
+/* Block rendering */
+
+code.block a {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: #000;
+}
+
+code.block a:visited {
+    color: #000;
+}
+
 @media print {
 
     #print_trigger {

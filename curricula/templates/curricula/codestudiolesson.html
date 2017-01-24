@@ -345,7 +345,9 @@
             <h2>Introduced Code</h2>
             <ul>
                 {% for block in lesson.blocks.all %}
-                    <li><a href="{{ block.get_published_url }}"><code>{{ block.code }}</code></a></li>
+                    <li><code class="block" style="background-color: {{ block.category.color }}">
+                        <a href="{{ block.get_published_url }}">{{ block.code }}</a>
+                    </code></li>
                 {% endfor %}
             </ul>
         {% endif %}

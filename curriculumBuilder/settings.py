@@ -434,7 +434,7 @@ RICHTEXT_ALLOWED_TAGS = ('a', 'abbr', 'acronym', 'address', 'area', 'article', '
                          'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr', 'summary', 'details')
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
                            'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
-                           'data-pdf-link', 'data-lightbox', 'data-title')
+                           'data-pdf-link', 'data-lightbox', 'data-title', 'color', 'background', 'background-color')
 RICHTEXT_ALLOWED_ATTRIBUTES = (
     'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
     'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
@@ -446,6 +446,7 @@ RICHTEXT_ALLOWED_ATTRIBUTES = (
     'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
     'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end', 'aria-expanded')
 PAGEDOWN_MARKDOWN_EXTENSIONS = (
+    'curriculumBuilder.doclinks',
     'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
     # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
     'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
