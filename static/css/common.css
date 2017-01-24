@@ -239,6 +239,10 @@ footer {
 
 /* Block rendering */
 
+code.block {
+    box-shadow: inset -1px -1px 1px rgba(0,0,0,0.5), inset 1px 1px 1px 0 rgba(255,255,255,0.8);
+}
+
 code.block a {
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     color: #000;

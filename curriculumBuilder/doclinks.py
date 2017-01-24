@@ -54,7 +54,7 @@ class AttrTagPattern(Pattern):
 
 class DocLinksExtensions(Extension):
     def extendMarkdown(self, md, md_globals):
-        doc_tag = AttrTagPattern(DOC_RE, 'code', {'class': 'block'})
+        doc_tag = AttrTagPattern(DOC_RE, 'code', {})
         md.inlinePatterns.add('block', doc_tag, '_begin')
 
 
