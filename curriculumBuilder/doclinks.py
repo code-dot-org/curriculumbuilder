@@ -27,19 +27,18 @@ class AttrTagPattern(Pattern):
         print("Block:")
         print(m.group('block'))
 
-        if m.group('ide'):
+        try:
+            block = Block.objects.get(IDE__slug=m.group('ide'), slug=m.group('block'))
+        except Block.DoesNotExist:
             try:
-                block = Block.objects.get(IDE__slug=m.group('ide'), slug=m.group('block'))
+                print "Block with IDE not found, trying by title"
+                block = Block.objects.get(IDE__slug=m.group('ide'), title__icontains=m.group('block'))
             except Block.DoesNotExist:
-                try:
-                    print "Block not found, trying by title"
-                    block = Block.objects.get(IDE__slug=m.group('ide'), title__icontains=m.group('block'))
-                except Block.DoesNotExist:
-                    print "Block not found"
-        else:
-            block = Block.objects.filter(slug=m.group('block')).first()
-            if not block:
-                block = Block.objects.filter(title__icontains=m.group('block')).first()
+                print "Block with IDE not found, trying without"
+                block = Block.objects.filter(slug=m.group('block')).first()
+                if not block:
+                    "Block without IDE not found, trying by title"
+                    block = Block.objects.filter(title__icontains=m.group('block')).first()
         if block:
             el.set('class', 'block')
             el.set('style', 'background-color: %s;' % block.category.color)
