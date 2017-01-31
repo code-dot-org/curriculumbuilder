@@ -1,3 +1,7 @@
+from django.db.models import Q
+
+import re
+
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import etree
@@ -22,29 +26,34 @@ class AttrTagPattern(Pattern):
     def handleMatch(self, m):
         el = etree.Element(self.tag)
         el.text = m.group(3)
-        print("IDE:")
-        print(m.group('ide'))
-        print("Block:")
-        print(m.group('block'))
 
-        try:
-            block = Block.objects.get(IDE__slug=m.group('ide'), slug=m.group('block'))
-        except Block.DoesNotExist:
+        block = None
+        block_full = m.group('block')
+        block_alphanum = re.sub(r'[^\w\.]', '', m.group('block'))
+
+        if m.group('ide'):
             try:
-                print "Block with IDE not found, trying by title"
-                block = Block.objects.get(IDE__slug=m.group('ide'), title__icontains=m.group('block'))
+                block = Block.objects.get(IDE__slug=m.group('ide'), slug=block_full)
             except Block.DoesNotExist:
-                print "Block with IDE not found, trying without"
-                block = Block.objects.filter(slug=m.group('block')).first()
-                if not block:
-                    "Block without IDE not found, trying by title"
-                    block = Block.objects.filter(title__icontains=m.group('block')).first()
+                try:
+                    print "Block with IDE not found, trying by title"
+                    block = Block.objects.get(IDE__slug=m.group('ide'), title=block_full)
+                except Block.DoesNotExist:
+                    print "Block with IDE not found, trying with alphanum only"
+                    block = Block.objects.filter(Q(IDE__slug=m.group('ide'), slug=block_alphanum) |
+                                                 Q(IDE__slug=m.group('ide'), title=block_alphanum)).first()
+
+        if not block:
+            block = Block.objects.filter(Q(slug=block_full) | Q(title=block_full)).first()
+            if not block:
+                block = Block.objects.filter(Q(slug=block_alphanum) | Q(title=block_alphanum)).first()
+
         if block:
             el.set('class', 'block')
             el.set('style', 'background-color: %s;' % block.category.color)
             el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), block.title)
         else:
-            el.text = m.group('block')
+            el.text = "%s%s" % (m.group('ide') or '', m.group('block') or '')
 
         for (key, val) in self.attrs.items():
             el.set(key, val)
