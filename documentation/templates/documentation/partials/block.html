@@ -12,7 +12,7 @@
                     <h3>{{ curriculum.grouper.title }}</h3>
                     <ul>
                         {% for lesson in curriculum.list %}
-                          <li><a href="{{ lesson.get_absolute_url }}">{{ lesson.unit.short_name }}: {{ lesson.title }}</a></li>
+                          <li><a href="{{ lesson.code_studio_link }}" target="_blank">{{ lesson.unit.short_name }}: {{ lesson.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>

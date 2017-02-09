@@ -384,6 +384,11 @@ class Lesson(Page, RichText):
         return url
 
     @property
+    def code_studio_link(self):
+        return "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
+            self.unit.stage_name, self.number)
+
+    @property
     def changelog(self):
         return Version.objects.get_for_object(self).filter(revision__user__username=settings.CHANGELOG_USER)
 
