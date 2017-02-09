@@ -23,6 +23,7 @@
 
 #categories {
     border-right: 1px solid #e7e8ea;
+    z-index: 999;
 }
 
 #categories ul.category_list {
@@ -67,6 +68,12 @@
 
 #categories ul.category_blocks li a {
     font-family: 'Gotham 4r', sans-serif;
+    background: white;
+    padding: 5px 0;
+}
+
+#categories ul.category_blocks li:hover a {
+    padding-right: 5px;
 }
 
 .introduced_in .introduced_lesson {
