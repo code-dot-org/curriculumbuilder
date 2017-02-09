@@ -1,0 +1,289 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load static %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ unit.curriculum }} | {{ unit.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for unit as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ unit.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+{% block extra_js %}
+{% endblock %}
+
+{% block admin_link %}
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+
+{% block resources_nav %}
+{% endblock %}
+
+{% block main %}
+    <div class="together" id="unit{{ unit.number }}">
+        <h1>{{ unit.long_name }}</h1>
+        {% editable unit.description unit.gen_description %}
+        {{ unit.description|richtext_filters|safe }}
+        {% endeditable %}
+
+        <div class="chapter_overviews">
+            {% for chapter in unit.chapters %}
+
+                <div class="chapter">
+                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
+
+                {% if chapter.questions %}
+                    <div class="big_questions">
+                    <h3>Big Questions</h3>
+                    {% editable chapter.questions %}
+                    {{ chapter.questions|richtext_filters|safe }}
+                    {% endeditable %}
+                </div>
+                {% endif %}
+
+                {% if chapter.understandings.count > 0 %}
+                    <div class="enduring_understandings">
+                    <h3>Enduring Understandings</h3>
+                        <ul>
+                            {% for understanding in chapter.understandings.all %}
+                                <li>{{ understanding.shortcode }} {{ understanding.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% regroup chapter.lessons by duration as lessons_by_week %}
+                {% for week in lessons_by_week %}
+                    {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
+                    {% for lesson in week.list %}
+                        {% keywords_for lesson as keywords %}
+                        <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
+                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h4>
+                            {% for keyword in keywords %}
+                                {% if not forloop.first %}| {% endif %}
+                                {{ keyword }}
+                            {% endfor %}
+                            </h4>
+                            {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image}}">{% endif %}
+                            {% editable lesson.description lesson.gen_description %}
+                            <span class="lesson_desc">{{ lesson.description }}</span>
+                            {% endeditable %}
+                        </div>
+                        {% if lesson.optional_lessons.count > 0 %}
+                            {% for optional in lesson.optional_lessons %}
+                                <div class="lesson_overview optional">
+                                    <h3><a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional Lesson: {{ optional.title }}</a></h3>
+                                    <h4>
+                                    {% keywords_for optional as keywords %}
+                                    {% for keyword in keywords %}
+                                        {% if not forloop.first %}| {% endif %}
+                                        {{ keyword }}
+                                    {% endfor %}
+                                    </h4>
+                                    {% if optional.image %}<img src="{% get_media_prefix %}{{ optional.image}}">{% endif %}
+                                    {% editable optional.description %}
+                                    <span class="lesson_desc">{{ optional.description }}</span>
+                                    {% endeditable %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                </div>
+                {% if not forloop.last %}<hr/>{% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block footer_js %}
+
+{% if user.is_staff %}
+    <script type="text/javascript">
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $(document).ready(function () {
+
+            // Convert streaming responses to formattable JSON
+            function parseResponse(responseText) {
+                var responses = responseText.split("\n");
+                var response = [];
+                for (var i in responses) {
+                    if (responses[i] != "") {
+                        response.push(JSON.parse(responses[i]));
+                    }
+                }
+                return response
+            }
+
+            // Publish button
+            $("#publish_this").click(function () {
+                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                var lessons = $('#include_lessons').prop('checked');
+                $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+                var client = new XMLHttpRequest();
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        var response = parseResponse(this.responseText);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results").append('\nFinished');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results").append('\nFailed');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                client.send();
+                /*
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, lessons: lessons},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_this").addClass('btn-success').text("Success");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                }).fail(function(response) {
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                });
+                */
+            });
+
+            $("#publish_pdfs").click(function () {
+                $('#publish_pdfs').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                $('#progress_spinner_pdf').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&pdf=true";
+                var pdf_client = new XMLHttpRequest();
+                pdf_client.open('GET', '/publish/?' + params, true);
+                pdf_client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                pdf_client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results_pdf").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                pdf_client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                });
+
+                pdf_client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        var response = parseResponse(this.responseText);
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_pdfs").addClass('btn-success').text("Success");
+                            $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results_pdf").append('\nFinished');
+                            $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                            $("#publish_results_pdf").text(JSON.stringify(response, null, 2));
+                            $("#publish_results_pdf").append('\nFailed');
+                            $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                pdf_client.send();
+                /*
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, pdf: true},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_pdfs").addClass('btn-success').text("Success");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
+                }).fail(function(response) {
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
+                });
+                */
+            });
+        });
+    </script>
+{% endif %}
+{% endblock %}

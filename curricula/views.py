@@ -128,6 +128,16 @@ def unit_view(request, slug, unit_slug):
                                       'form': form, 'changelog': changelog})
 
 
+def unit_at_a_glance(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    if request.user.is_staff:
+        unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    else:
+        unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug, login_required=request.user.is_staff)
+
+    return render(request, 'curricula/unit_glance.html', {'curriculum': curriculum, 'unit': unit})
+
+
 def chapter_view(request, slug, unit_slug, chapter_num):
     pdf = request.GET.get('pdf', False)
     curriculum = get_object_or_404(Curriculum, slug=slug)

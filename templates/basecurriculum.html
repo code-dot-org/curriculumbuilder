@@ -64,6 +64,7 @@
 {% endblock %}
 
 <div class="container">
+    {% block header %}
     <div class="header printbackground">
         <div class="logo">
             <img src="{% static "images/logo.png" %}">
@@ -83,6 +84,7 @@
             </div>
         </div>
     </div>
+    {% endblock %}
     {% block resources_nav %}{% endblock %}
     <div class="content">
         {% block main %}{% endblock %}
