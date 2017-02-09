@@ -23,9 +23,11 @@
 {% endif %}
 
 {% if code_block.category %}
+    {% editable code_block.category %}
     <div id="doc_category">
         <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.category.name }}</span>
     </div>
+    {% endeditable %}
 {% endif %}
 
 {% if code_block.video %}
@@ -33,13 +35,16 @@
     <p><a href="{{ code_block.video.dl_url }}">Download Video</a></p>
 {% endif %}
 
+{% editable code_block.content %}
 {{ code_block.content|richtext_filters|safe }}
+{% endeditable %}
 
 {% if code_block.example_set.count > 0 %}
 
     <h2>Examples</h2>
 
     {% for example in code_block.example_set.all %}
+        {% editable example.name example.description example.app example.code %}
         {% if example.app %}
             <div class="row">
                 <div class="col-sm-8">
@@ -60,15 +65,18 @@
 {{ example.code }}
 </pre>
         {% endif %}
+        {% endeditable %}
     {% endfor %}
 
 {% endif %}
 
 {% if code_block.syntax %}
     <h2>Syntax</h2>
+    {% editable code_block.syntax %}
 <pre>
 {{ code_block.syntax }}
 </pre>
+    {% endeditable %}
 {% endif %}
 
 {% if code_block.parameter_set.count > 0 %}
@@ -96,12 +104,16 @@
 
 {% if code_block.return_value %}
     <h2>Returns</h2>
+    {% editable code_block.return_value %}
     {{ code_block.return_value|richtext_filters|safe }}
+    {% endeditable %}
 {% endif %}
 
 {% if code_block.tips %}
     <h2>Tips</h2>
+    {% editable code_block.tips %}
     {{ code_block.tips|richtext_filters|safe }}
+    {% endeditable %}
 {% endif %}
 
 {% if code_block.ext_doc %}

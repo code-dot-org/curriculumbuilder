@@ -22,7 +22,7 @@
 }
 
 #categories {
-    border-right: 1px solid #949ca2;
+    border-right: 1px solid #e7e8ea;
 }
 
 #categories ul.category_list {
@@ -52,10 +52,17 @@
     list-style: none;
     padding: 5px 10px;
     background: white;
+    max-width: 200px;
 }
 
 #categories ul.category_blocks li {
     font-size: .9em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#categories ul.category_blocks li:hover {
+    overflow: visible;
 }
 
 #categories ul.category_blocks li a {
