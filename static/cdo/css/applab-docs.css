@@ -158,6 +158,11 @@
     transform-origin: 0 0;
 }
 
+/* Content copy/pasted from old docs includes duplicate but report line, this removes */
+.bug {
+    display: none;
+}
+
 @media (min-width: 768px) {
 
     .introduced_in {
