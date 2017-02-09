@@ -116,7 +116,7 @@ class Block(Page, RichText):
 
     @property
     def lessons_introduced(self):
-        return self.lesson_set.filter(unit__login_required=False, curriculum__login_required=False)
+        return self.lesson_set.filter(unit__login_required=False, curriculum__login_required=False).order_by('curriculum', 'unit', 'number')
 
     @property
     def code(self):

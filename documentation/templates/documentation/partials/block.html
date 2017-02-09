@@ -4,7 +4,7 @@
 {% if embed == None %}
 {% with code_block.lessons_introduced as lessons %}
     {% if lessons.count > 0%}
-        <div class="introduced_in">
+        <div class="introduced_in hidden-xs">
             {% regroup lessons by curriculum as lessons_by_curriculum %}
             <h2>Introduced In...</h2>
             {% for curriculum in lessons_by_curriculum %}
