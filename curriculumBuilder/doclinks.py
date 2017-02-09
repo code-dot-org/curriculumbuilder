@@ -29,7 +29,7 @@ class AttrTagPattern(Pattern):
 
         block = None
         block_full = m.group('block')
-        block_alphanum = re.sub(r'[^\w\.]', '', m.group('block'))
+        block_alphanum = re.sub(r'[\(|\{].*[\)|\}\;]', '', m.group('block'))
 
         if m.group('ide'):
             try:
@@ -51,7 +51,7 @@ class AttrTagPattern(Pattern):
         if block:
             el.set('class', 'block')
             el.set('style', 'background-color: %s;' % block.category.color)
-            el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), block.title)
+            el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), m.group('block'))
         else:
             el.text = "%s%s" % (m.group('ide') or '', m.group('block') or '')
 
