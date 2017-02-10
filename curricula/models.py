@@ -145,6 +145,9 @@ class Unit(Page, RichText):
     def get_pdf_url(self):
         return '%s%s.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
+    def get_json_url(self):
+        return '%s%s.json' % (self.curriculum.get_absolute_url(), self.slug)
+
     def get_resources_pdf_url(self):
         return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
@@ -172,9 +175,8 @@ class Unit(Page, RichText):
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
-                self.get_vocab_url(), self.get_standards_url(), self.get_compiled_url()]
-        # urls.append(self.get_pdf_url())
-        # urls.append(self.get_resources_pdf_url())
+                self.get_vocab_url(), self.get_standards_url(), self.get_compiled_url(),
+                self.get_json_url()]
         return urls
 
     def pdf_urls(self):
