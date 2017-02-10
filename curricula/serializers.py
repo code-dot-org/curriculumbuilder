@@ -29,6 +29,8 @@ class BlockSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    teacher_desc = serializers.SerializerMethodField()
+    student_desc = serializers.SerializerMethodField()
     teacher_resources = serializers.SerializerMethodField()
     student_resources = serializers.SerializerMethodField()
     vocab = serializers.SerializerMethodField()
@@ -36,9 +38,14 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        # depth = 1
-        fields = ('title', 'number', 'overview', 'description',
+        fields = ('title', 'number', 'student_desc', 'teacher_desc',
                   'student_resources', 'teacher_resources', 'vocab', 'blocks')
+
+    def get_teacher_desc(self, obj):
+        return obj.overview
+
+    def get_student_desc(self, obj):
+        return obj.description
 
     def get_teacher_resources(self, obj):
         resources = obj.resources.filter(student=False)
@@ -62,12 +69,19 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class UnitSerializer(serializers.ModelSerializer):
+    teacher_desc = serializers.SerializerMethodField()
+    student_desc = serializers.SerializerMethodField()
     lessons = serializers.SerializerMethodField()
 
     class Meta:
         model = Unit
-        # depth = 1
-        fields = ('title', 'number', 'slug', 'stage_name', 'content', 'description', 'lessons')
+        fields = ('title', 'number', 'slug', 'stage_name', 'student_desc', 'teacher_desc', 'lessons')
+
+    def get_teacher_desc(self, obj):
+        return obj.content
+
+    def get_student_desc(self, obj):
+        return obj.description
 
     def get_lessons(self, obj):
         lessons = obj.lessons
@@ -80,7 +94,6 @@ class CurriculumSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Curriculum
-        # depth = 2
         fields = ('title', 'slug', 'description', 'units')
 
     def get_units(self, obj):

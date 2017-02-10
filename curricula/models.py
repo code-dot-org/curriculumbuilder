@@ -205,7 +205,7 @@ class Unit(Page, RichText):
                     yield '\n'
                     logger.exception('Failed to publish %s' % self)
 
-    def publish_pdfs(self, *args):
+    def publish_pdfs(self):
         if self.jackfrost_can_build():
             for url in self.pdf_urls():
                 try:
@@ -220,6 +220,22 @@ class Unit(Page, RichText):
                     yield json.dumps(e.message)
                     yield '\n'
                     logger.exception('Failed to publish PDF %s' % self)
+
+    def publish_json(self):
+        if self.jackfrost_can_build():
+            url = self.get_json_url()
+            try:
+                read, written = build_single(url)
+                slack_message('slack/message.slack', {
+                    'message': 'published JSON for %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
+                })
+                yield json.dumps(written)
+                yield '\n'
+            except Exception, e:
+                yield json.dumps(e.message)
+                yield '\n'
+                logger.exception('Failed to publish JSON %s' % self)
 
     @property
     def short_name(self):
