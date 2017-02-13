@@ -113,7 +113,7 @@ class Curriculum(Page, RichText):
 
     @property
     def units(self):
-        return Unit.objects.filter(parent=self)
+        return Unit.objects.filter(parent=self, login_required=False)
 
 
 """

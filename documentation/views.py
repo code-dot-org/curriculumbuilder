@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-
+from mezzanine.pages.models import RichTextPage
 from models import IDE, Block
 
 
@@ -18,3 +18,8 @@ def embed_view(request, slug, ide_slug):
     ide = get_object_or_404(IDE, slug=ide_slug)
     block = get_object_or_404(Block, slug=slug, IDE=ide)
     return render(request, 'documentation/embed.html', {'code_block': block, 'ide': ide})
+
+
+def page_view(request, slug, curric_slug):
+    page = get_object_or_404(RichTextPage, slug=slug, parent__slug=curric_slug)
+    return render(request, 'curricula/page.html', {'page': page})
