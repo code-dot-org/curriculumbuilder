@@ -102,6 +102,29 @@ summary {
     color: white !important;
 }
 
+.diagram_nums ol {
+    counter-reset: item;
+    list-style: none;
+}
+
+.diagram_nums ol li {
+    counter-increment: item;
+    margin-left: 1.5em;
+    margin-bottom: .5em;
+}
+
+.diagram_nums ol li:before {
+    content: counter(item)".";
+    font-family: "Gotham 4r", sans-serif;
+    margin-left: -1.5em;
+    font-weight: bold;
+    color: #00adbc;
+    font-size: 200%;
+    width: 1.5em;
+    text-align: center;
+    display: inline-block;
+}
+
 .content {
     padding-left: 40px;
 }
