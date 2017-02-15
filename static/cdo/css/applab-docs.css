@@ -23,7 +23,7 @@
 
 #categories {
     border-right: 1px solid #e7e8ea;
-    z-index: 999;
+    z-index: 5; /* long names appear on top of code areas, but underneath edit buttons */
 }
 
 #categories ul.category_list {

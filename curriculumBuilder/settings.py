@@ -438,7 +438,7 @@ RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin
 RICHTEXT_ALLOWED_ATTRIBUTES = (
     'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
     'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
+    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled', 'display',
     'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
     'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
     'nohref', 'noshade', 'nowrap', 'open', 'prompt', 'readonly', 'rel', 'rev', 'role','rows', 'rowspan',
