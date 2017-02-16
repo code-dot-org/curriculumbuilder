@@ -8,7 +8,6 @@ import mezzanine.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pages', '0005_auto_20161026_2025'),
         ('documentation', '0009_blockdoc'),
     ]
 
