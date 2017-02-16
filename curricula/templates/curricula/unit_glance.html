@@ -151,6 +151,12 @@
         });
 
         $(document).ready(function () {
+            // Uncheck the "gen_description" checkbox if the description was edited
+            $('textarea[name="description"]').each(function() {
+                $(this).change(function () {
+                    $('#gen_' + this.id).prop('checked', false);
+                })
+            });
 
             // Convert streaming responses to formattable JSON
             function parseResponse(responseText) {
