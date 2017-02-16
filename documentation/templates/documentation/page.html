@@ -1,0 +1,141 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load static %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ page.parent.title }} | {{ page.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+{% endblock %}
+
+{% if user.is_staff %}
+{% block admin_link %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-body">
+                <h2>Add to Changelog</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
+                <h2>Publishing</h2>
+                {% if page.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ page.pk }}" data-type="Map">Publish</button><i id="progress_spinner"></i><br/>
+                    <pre id="publish_results"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% endif %}
+
+{% block header %}
+{% endblock %}
+
+{% block resources_nav %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="together">
+
+        {% editable page.title page.content %}
+        <h1>{{ page.title }}</h1>
+        {{ page.content|richtext_filters|safe }}
+        {% endeditable %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block footer_js %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Convert streaming responses to formattable JSON
+        function parseResponse(responseText) {
+            var responses = responseText.split("\n");
+            var response = [];
+            for (var i in responses) {
+                if (responses[i] != "") {
+                    response.push(JSON.parse(responses[i]));
+                }
+            }
+            return response
+        }
+
+        // Publish button
+        $("#publish_this").click(function () {
+            $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            var type = $(this).attr('data-type');
+            var lesson_check = $('#include_lessons');
+            var lessons = false;
+            if (lesson_check) {
+                lessons = $(lesson_check).prop('checked');
+            }
+             $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+            // Switch to streaming results
+            var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+            var client = new XMLHttpRequest();
+            client.open('GET', '/publish/?' + params, true);
+            client.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            client.onprogress = function(){
+                var response = parseResponse(this.responseText);
+                $("#publish_results").text(JSON.stringify(response, null, 2));
+                console.log(this.responseText);
+            };
+            client.upload.addEventListener('error', function(event){
+                var response = parseResponse(this.responseText);
+                $("#publish_this").addClass('btn-warning').text("Failed");
+                $("#publish_results").text(JSON.stringify(response, null, 2));
+                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+            });
+
+            client.addEventListener('readystatechange', function(e) {
+                if (this.readyState == 4) {
+                    console.log(this.status);
+                    var response = parseResponse(this.responseText);
+                    if (this.status == 200) {
+                        $("#publish_this").addClass('btn-success').text("Success");
+                        $("#publish_results").text(JSON.stringify(response, null, 2));
+                        $("#publish_results").append('\nFinished');
+                        $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    } else {
+                        $("#publish_this").addClass('btn-warning').text("Failed");
+                        $("#publish_results").text(JSON.stringify(response, null, 2));
+                        $("#publish_results").append('\nFailed');
+                        $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                    }
+                }
+            });
+            client.send();
+        });
+    })
+</script>
+{% endblock %}

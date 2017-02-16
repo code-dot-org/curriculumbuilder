@@ -35,9 +35,9 @@
                     {% set_model_permissions model %}
                     {% if model.perms.add %}
                         {% if page.content_model == 'curriculum' %}
-                            {% if model.meta_verbose_name == 'unit' %}
+                            {% if model.meta_verbose_name == 'unit' or model.meta_verbose_name == 'map' %}
                                 <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }}
+                                    {{ model.meta_verbose_name|capfirst }} blargh
                                 </option>
                             {% endif %}
                         {% elif page.content_model == 'unit' %}
@@ -58,6 +58,7 @@
                                     {{ model.meta_verbose_name|capfirst }}
                                 </option>
                             {% endif %}
+                        {% elif page.content_model == 'map' %}
                         {% else %}
                             <option value="{{ model.add_url }}?parent={{ page.id }}">
                                 {{ model.meta_verbose_name|capfirst }}

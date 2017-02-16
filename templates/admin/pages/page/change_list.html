@@ -27,7 +27,7 @@
             {% for model in page_models %}
 			    {% set_model_permissions model %}
 			    {% if model.perms.add %}
-                    {% if model.meta_verbose_name == "unit" or model.meta_verbose_name == "chapter" or model.meta_verbose_name == "lesson" or model.meta_verbose_name == "block" %}{% else %}
+                    {% if model.meta_verbose_name == "unit" or model.meta_verbose_name == "chapter" or model.meta_verbose_name == "lesson" or model.meta_verbose_name == "block" or model.meta_verbose_name == "map" %}{% else %}
                         <option value="{{ model.add_url }}">{{ model.meta_verbose_name|capfirst }}</option>
                     {% endif %}
                 {% endif %}

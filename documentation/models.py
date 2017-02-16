@@ -227,5 +227,53 @@ class Example(Orderable):
             return
 
 
+"""
+Content Maps
+
+"""
+
+
+class Map(Page, RichText):
+
+    def __unicode__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return '/%s/%s/' % (self.parent.slug, self.slug)
+
+    def get_published_url(self):
+        return '//docs.code.org/%s/%s/' % (self.parent.slug, self.slug)
+
+    def jackfrost_urls(self):
+        urls = ["/documentation%s" % self.get_absolute_url()]
+        return urls
+
+    def jackfrost_can_build(self):
+        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+
+    def publish(self, children=False):
+        if self.jackfrost_can_build():
+            try:
+                read, written = build_page_for_obj(Map, self)
+                slack_message('slack/message.slack', {
+                    'message': 'published %s %s' % (self.content_model, self.title),
+                    'color': '#00adbc'
+                })
+                yield json.dumps(written)
+                yield '\n'
+            except Exception, e:
+                yield json.dumps(e.message)
+                yield '\n'
+                logger.exception('Failed to publish %s' % self)
+
+    def save(self, *args, **kwargs):
+
+        if not self.slug:
+            self.slug = slugify(self.title)[:255]
+
+        super(Map, self).save(*args, **kwargs)
+
+
 IDE._meta.get_field('slug').verbose_name = 'Slug'
 Block._meta.get_field('slug').verbose_name = 'Slug'
+Map._meta.get_field('slug').verbose_name = 'Slug'

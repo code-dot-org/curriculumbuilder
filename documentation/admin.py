@@ -6,7 +6,7 @@ from mezzanine.pages.admin import PageAdmin
 
 from lessons.models import Resource
 
-from documentation.models import Block, IDE, Category, Parameter, Example
+from documentation.models import Block, IDE, Category, Parameter, Example, Map
 
 
 class CategoryInline(TabularDynamicInlineAdmin):
@@ -83,6 +83,16 @@ class BlockAdmin(PageAdmin):
     }
 
 
+class MapAdmin(PageAdmin):
+    model = Map
+
+    fieldsets = (
+        (None, {
+            'fields': ['title', 'slug', 'keywords', 'content'],
+        }),
+    )
+
+
 class BlockDocForm(ModelForm):
     class Meta:
         model = Block
@@ -147,3 +157,4 @@ admin.site.register(Block, BlockAdmin)
 admin.site.register(IDE, IDEAdmin)
 admin.site.register(BlockDoc, BlockDocAdmin)
 admin.site.register(MultiBlock, MultiBlockAdmin)
+admin.site.register(Map, MapAdmin)
