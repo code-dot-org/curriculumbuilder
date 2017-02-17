@@ -626,8 +626,9 @@ def image_upload(request):
         status = 200
         newFile = request.FILES['file']
         try:
-            newFileName = default_storage.save(newFile.name, newFile)
-            payload['filename'] = "%suploads/%s" % (settings.MEDIA_URL, newFileName)
+            fileLocation = os.path.join('uploads', newFile.name)
+            newFileName = default_storage.save(fileLocation, newFile)
+            payload['filename'] = "%s%s" % (settings.MEDIA_URL, newFileName)
             print newFileName
         except Exception:
             logger.exception('Image upload failed')
