@@ -3,7 +3,7 @@ import os, time, re
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import never_cache
@@ -623,14 +623,14 @@ def image_upload(request):
     if request.method == 'POST' and request.FILES['file']:
         payload = {}
         newFile = request.FILES['file']
-        fileStorage = FileSystemStorage()
+        fileStorage = FileSystemStorage(location='media/uploads')
         try:
             newFileName = fileStorage.save(newFile.name, newFile)
-            payload['filename'] = newFileName
+            payload['filename'] = "%suplaods/%s" % (settings.MEDIA_URL, newFileName)
             print newFileName
         except Exception:
             payload['error'] = "Failed to upload file"
-        return Response(payload, content_type='application/json')
+        return JsonResponse(payload)
 
 
 '''
