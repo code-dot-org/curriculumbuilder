@@ -629,11 +629,10 @@ def image_upload(request):
             fileLocation = os.path.join('uploads', newFile.name)
             newFileName = default_storage.save(fileLocation, newFile)
             payload['filename'] = "%s%s" % (settings.MEDIA_URL, newFileName)
-            print newFileName
         except Exception:
             logger.exception('Image upload failed')
             payload['error'] = "Failed to upload image"
-            status = 500
+            status = 400
         return JsonResponse(payload, status=status)
 
 
