@@ -4,6 +4,8 @@ from django.forms import Textarea, ModelForm, TextInput
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 
+from reversion.admin import VersionAdmin
+
 from lessons.models import Resource
 
 from documentation.models import Block, IDE, Category, Parameter, Example, Map
@@ -26,7 +28,7 @@ class ExampleInline(StackedDynamicInlineAdmin):
     extra = 3
 
 
-class IDEAdmin(PageAdmin):
+class IDEAdmin(PageAdmin, VersionAdmin):
     model = IDE
 
     inlines = [CategoryInline, ]
@@ -56,7 +58,7 @@ class BlockForm(ModelForm):
         self.fields['video'].queryset = videos_queryset
 
 
-class BlockAdmin(PageAdmin):
+class BlockAdmin(PageAdmin, VersionAdmin):
     form = BlockForm
 
     inlines = [ParameterInline, ExampleInline]
@@ -83,7 +85,7 @@ class BlockAdmin(PageAdmin):
     }
 
 
-class MapAdmin(PageAdmin):
+class MapAdmin(PageAdmin, VersionAdmin):
     model = Map
 
     fieldsets = (

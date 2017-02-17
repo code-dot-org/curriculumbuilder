@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from mezzanine.core.views import edit
 
-from django.core.files.storage import get_storage_class, FileSystemStorage
+from django.core.files.storage import get_storage_class, FileSystemStorage, default_storage
 from django.core.files.base import ContentFile
 
 # from wkhtmltopdf import WKHtmlToPdf
@@ -45,7 +45,6 @@ from documentation.models import IDE, Block, Map
 
 logger = logging.getLogger(__name__)
 
-storage =  get_storage_class(settings.DEFAULT_FILE_STORAGE)
 
 
 def index(request):
@@ -626,9 +625,8 @@ def image_upload(request):
         payload = {}
         status = 200
         newFile = request.FILES['file']
-        fileStorage = storage(location='media/uploads')
         try:
-            newFileName = fileStorage.save(newFile.name, newFile)
+            newFileName = default_storage.save(newFile.name, newFile)
             payload['filename'] = "%suploads/%s" % (settings.MEDIA_URL, newFileName)
             print newFileName
         except Exception:
