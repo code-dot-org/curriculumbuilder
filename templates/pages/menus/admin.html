@@ -37,7 +37,7 @@
                         {% if page.content_model == 'curriculum' %}
                             {% if model.meta_verbose_name == 'unit' or model.meta_verbose_name == 'map' %}
                                 <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }} blargh
+                                    {{ model.meta_verbose_name|capfirst }}
                                 </option>
                             {% endif %}
                         {% elif page.content_model == 'unit' %}

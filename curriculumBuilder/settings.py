@@ -414,6 +414,8 @@ CODEMIRROR_ADDON_JS = (
     "edit/continuelist",
     "display/panel",
     "display/buttons",
+    "attach/inline-attachment",
+    "attach/codemirror-4.inline-attachment"
 )
 CODEMIRROR_ADDON_CSS = {
     "display/buttons"

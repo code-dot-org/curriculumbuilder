@@ -10,6 +10,8 @@ from django.views.decorators.cache import never_cache
 from django.conf import settings
 from mezzanine.core.views import edit
 
+from django.core.files.storage import default_storage
+
 # from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import pdfkit
@@ -499,13 +501,6 @@ Publishing views
 '''
 
 
-def iter_test(*args):
-    for num in range(0,10):
-        yield json.dumps({'number': num})
-        yield '\n'
-        time.sleep(1)
-
-
 @staff_member_required
 def publish(request):
     try:
@@ -618,6 +613,19 @@ def page_history(request, page_id):
                                                                                         settings.FEEDBACK_USER))
 
     return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
+
+
+@staff_member_required
+def image_upload(request):
+    if request.method == 'POST' and request.FILES['file']:
+        newfile = request.FILES['file']
+        location = '/media/upload/%s' % newfile.name
+        destination = default_storage.open(location, 'w')
+        destination.write(newfile)
+        destination.close()
+        url = '%supload/%s' % (settings.MEDIA_URL, newfile.name)
+        return Response({'filename': url}, content_type='application/json')
+
 
 '''
 API views
