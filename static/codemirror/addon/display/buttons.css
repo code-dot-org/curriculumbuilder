@@ -1,0 +1,13 @@
+.CodeMirror-buttonsPanel {
+    margin-bottom: .5em;
+}
+
+.CodeMirror-buttonsPanel button {
+    padding: .25em;
+    min-width: 2em;
+    margin-right: .5em;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+
+}

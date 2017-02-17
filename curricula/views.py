@@ -622,15 +622,18 @@ def page_history(request, page_id):
 def image_upload(request):
     if request.method == 'POST' and request.FILES['file']:
         payload = {}
+        status = 200
         newFile = request.FILES['file']
         fileStorage = FileSystemStorage(location='media/uploads')
         try:
             newFileName = fileStorage.save(newFile.name, newFile)
-            payload['filename'] = "%suplaods/%s" % (settings.MEDIA_URL, newFileName)
+            payload['filename'] = "%suploads/%s" % (settings.MEDIA_URL, newFileName)
             print newFileName
         except Exception:
-            payload['error'] = "Failed to upload file"
-        return JsonResponse(payload)
+            logger.exception('Image upload failed')
+            payload['error'] = "Failed to upload image"
+            status = 500
+        return JsonResponse(payload, status=status)
 
 
 '''
