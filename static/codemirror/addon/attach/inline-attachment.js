@@ -240,7 +240,7 @@
     }
 
     var remoteFilename = "image-" + Date.now() + "." + extension;
-    if (typeof settings.remoteFilename === 'function') {
+    if (typeof settings.remoteFilename === 'function' && file.name) {
       remoteFilename = settings.remoteFilename(file);
     }
 
