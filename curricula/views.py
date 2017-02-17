@@ -7,10 +7,12 @@ from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpRespons
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from mezzanine.core.views import edit
 
-from django.core.files.storage import default_storage
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
 
 # from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
@@ -615,16 +617,20 @@ def page_history(request, page_id):
     return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
 
 
+@csrf_exempt
 @staff_member_required
 def image_upload(request):
     if request.method == 'POST' and request.FILES['file']:
-        newfile = request.FILES['file']
-        location = '/media/upload/%s' % newfile.name
-        destination = default_storage.open(location, 'w')
-        destination.write(newfile)
-        destination.close()
-        url = '%supload/%s' % (settings.MEDIA_URL, newfile.name)
-        return Response({'filename': url}, content_type='application/json')
+        payload = {}
+        newFile = request.FILES['file']
+        fileStorage = FileSystemStorage()
+        try:
+            newFileName = fileStorage.save(newFile.name, newFile)
+            payload['filename'] = newFileName
+            print newFileName
+        except Exception:
+            payload['error'] = "Failed to upload file"
+        return Response(payload, content_type='application/json')
 
 
 '''
