@@ -12,3 +12,5 @@ staticfiles
 wsgi/static
 _output
 backups
+media
+uploads

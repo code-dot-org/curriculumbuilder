@@ -449,8 +449,8 @@ RICHTEXT_ALLOWED_ATTRIBUTES = (
     'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end', 'aria-expanded')
 PAGEDOWN_MARKDOWN_EXTENSIONS = (
     'curriculumBuilder.doclinks',
-    'extra', 'codehilite', 'toc', 'smarty', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
-    # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks',
+    'extra', 'codehilite', 'toc', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
+    # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks', 'smarty',
     'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
     'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
     'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
