@@ -430,8 +430,8 @@ RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
 RICHTEXT_ALLOWED_TAGS = ('a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'b', 'bdo', 'big',
                          'blockquote', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd',
                          'del', 'dfn', 'dir', 'div', 'display', 'dl', 'dt', 'em', 'fieldset', 'figure', 'font', 'footer', 'form',
-                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'img', 'input', 'ins', 'kbd', 'label',
-                         'legend', 'li', 'map', 'men', 'nav', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp',
+                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label',
+                         'legend', 'li', 'map', 'men', 'nav', 'object', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp',
                          'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'tbody', 'td',
                          'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr', 'summary', 'details')
 RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
@@ -440,7 +440,7 @@ RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin
 RICHTEXT_ALLOWED_ATTRIBUTES = (
     'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
     'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'datetime', 'dir', 'disabled',
+    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'data', 'datetime', 'dir', 'disabled',
     'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
     'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
     'nohref', 'noshade', 'nowrap', 'open', 'prompt', 'readonly', 'rel', 'rev', 'role','rows', 'rowspan',
