@@ -96,7 +96,7 @@ class Curriculum(Page, RichText):
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
-    def publish_pdfs(self, *args):
+    def publish_pdfs(self, *args, **kwargs):
         if self.jackfrost_can_build():
             try:
                 read, written = build_single(self.get_pdf_url())
@@ -205,7 +205,7 @@ class Unit(Page, RichText):
                     yield '\n'
                     logger.exception('Failed to publish %s' % self)
 
-    def publish_pdfs(self):
+    def publish_pdfs(self, *args, **kwargs):
         if self.jackfrost_can_build():
             for url in self.pdf_urls():
                 try:
@@ -221,7 +221,7 @@ class Unit(Page, RichText):
                     yield '\n'
                     logger.exception('Failed to publish PDF %s' % self)
 
-    def publish_json(self):
+    def publish_json(self, *args, **kwargs):
         if self.jackfrost_can_build():
             url = self.get_json_url()
             try:

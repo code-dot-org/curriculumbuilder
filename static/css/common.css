@@ -275,6 +275,11 @@ code.block a:visited {
     color: #000;
 }
 
+code {
+    color: #7665a0;
+    background-color: #f7f7f9;
+}
+
 @media print {
 
     #print_trigger {
