@@ -3,6 +3,7 @@ import os, time, re
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
+from django.core.exceptions import MultipleObjectsReturned
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
@@ -771,6 +772,18 @@ def unit_element(request, slug, unit_slug, format=None):
     curriculum = get_object_or_404(Curriculum, slug=slug)
 
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+
+    serializer = UnitSerializer(unit)
+    return Response(serializer.data)
+
+
+@api_view(['GET', ])
+def stage_element(request, stage, format=None):
+    try:
+        unit = Unit.objects.get(login_required=False, status=2, stage_name=stage)
+    except MultipleObjectsReturned:
+        logger.exception("Warning - found multiple units referencing the stage %s" % stage)
+        unit = Unit.objects.get(login_required=False, status=2, stage_name=stage).first()
 
     serializer = UnitSerializer(unit)
     return Response(serializer.data)

@@ -146,7 +146,7 @@ class Unit(Page, RichText):
         return '%s%s.pdf' % (self.curriculum.get_absolute_url(), self.slug)
 
     def get_json_url(self):
-        return '%s%s.json' % (self.curriculum.get_absolute_url(), self.slug)
+        return '/metadata/%s.json' % self.stage_name
 
     def get_resources_pdf_url(self):
         return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)

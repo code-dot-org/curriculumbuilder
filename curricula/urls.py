@@ -10,6 +10,7 @@ urlpatterns = patterns('curricula.views',
                        url(r'^publish/$', views.publish, name='publish'),
                        url(r'^upload/$', views.image_upload, name='image_upload'),
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
+                       url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
 
                        # Documentation URLS
 

@@ -15,6 +15,7 @@ html, body{
     /*line-height: 72px;*/
     height: 100px;
     color: white!important;
+    font-family: 'Gotham 7r', sans-serif;
 }
 
 .unitnumber a:hover {
@@ -723,6 +724,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .type-External .level-icon:before {                 content: "\f0f6"; }
+.type-Map .level-icon:before {                      content: "\f278"; }
 .type-StandaloneVideo .level-icon:before {          content: "\f03d"; }
 .type-FreeResponse .level-icon:before {             content: "\f040"; }
 .type-Multi .level-icon:before {                    content: "\f0ca"; }
