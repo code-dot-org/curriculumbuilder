@@ -105,6 +105,8 @@
         {{ unit.content|richtext_filters|safe }}
         {% endeditable %}
 
+        {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+
         <div class="chapter_overviews">
             {% for chapter in unit.chapters %}
 

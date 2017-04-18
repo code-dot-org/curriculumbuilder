@@ -35,11 +35,15 @@
 {% endblock %}
 
 {% block main %}
+
+
     <div class="together" id="unit{{ unit.number }}">
         <h1>{{ unit.long_name }}</h1>
         {% editable unit.description unit.gen_description %}
         {{ unit.description|richtext_filters|safe }}
         {% endeditable %}
+
+        {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
 
         <div class="chapter_overviews">
             {% for chapter in unit.chapters %}
@@ -66,6 +70,7 @@
                         </ul>
                     </div>
                 {% endif %}
+
 
                 {% regroup chapter.lessons by duration as lessons_by_week %}
                 {% for week in lessons_by_week %}

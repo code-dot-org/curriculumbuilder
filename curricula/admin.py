@@ -1,9 +1,27 @@
 from django.contrib import admin
 from mezzanine.pages.admin import PageAdmin
+from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
+from mezzanine.generic.fields import KeywordsField
 
 from reversion.admin import VersionAdmin
 
+from lessons.models import Lesson
+
 from curricula.models import Curriculum, Unit, Chapter
+
+
+class LessonInline(TabularDynamicInlineAdmin):
+    model = Lesson
+    fk_name = 'unit'
+    fields = ['title', 'duration', 'pacing_weight', 'unplugged', 'keywords']
+
+    keywords = KeywordsField()
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class CurriculumAdmin(PageAdmin, VersionAdmin):
@@ -14,6 +32,7 @@ class CurriculumAdmin(PageAdmin, VersionAdmin):
 
 class UnitAdmin(PageAdmin, VersionAdmin):
     model = Unit
+    inlines = [LessonInline,]
 
 
 class ChapterAdmin(PageAdmin):

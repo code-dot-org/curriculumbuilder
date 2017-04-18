@@ -14,3 +14,8 @@
 textarea {
     height: 50px;
 }
+
+.inline-tabular .keywords-field {
+    display: none;
+    visibility: hidden;
+}

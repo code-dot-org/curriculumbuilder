@@ -126,6 +126,7 @@ class Unit(Page, RichText):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True, help_text='Name of Code Studio script')
+    show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
 
     def __unicode__(self):
         return self.title

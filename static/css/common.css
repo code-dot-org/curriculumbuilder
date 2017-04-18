@@ -203,6 +203,81 @@ footer {
     padding: 0;
 }
 
+/* Pacing Guide */
+
+.pacing-calendar {
+
+}
+
+.pacing-calendar .week-label {
+    font-weight: bold;
+    font-size: .9em;
+    float: left;
+    margin-top: 25px;
+    color: #949ca2;
+}
+
+.pacing-week {
+    display: flex;
+    flex-direction: row;
+    margin-left: 60px;
+}
+
+.pacing-lesson {
+    border: 2px solid #00adbc;
+    background: #f5fcff;
+    border-radius: 2px;
+    padding: 0;
+    flex-grow: 1;
+    flex-basis: 20%;
+    margin: 5px;
+    min-height: 70px;
+    position: relative;
+}
+
+.pacing-lesson.project {
+    border-color: #7665a0;
+    background: #ebe8f1;
+}
+
+.pacing-lesson .lesson-number {
+    font-size: .8em;
+    line-height: .8em;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 3px 4px 4px 2px;
+    background: #00adbc;
+    border-bottom-right-radius: 2px;
+}
+
+.pacing-lesson.project .lesson-number {
+    background: #7665a0;
+}
+
+.pacing-lesson .lesson-title {
+    font-size: .8em;
+    text-align: center;
+    clear: left;
+    margin: 20px;
+    display: block;
+    line-height: 1em;
+    color: #4d575f;
+}
+
+.pacing-lesson .lesson-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.pacing-lesson.game-lab .lesson-icon:before, .pacing-lesson.app-lab .lesson-icon:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    content: "\f108";
+}
+
 /* Alignment classes */
 .center {
     display: block;
