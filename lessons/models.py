@@ -248,13 +248,18 @@ class Lesson(Page, RichText):
             chapter = self.parent.chapter
             while chapter is not None:
                 try:
-                    chapter = chapter.get_previous_by_order().chapter
-                    order += chapter.lessons.count()
-                except AttributeError:
+                    chapter = chapter.get_previous_by_order()
+                    if hasattr(chapter, "chapter"):
+                        chapter = chapter.chapter
+                        order += chapter.lessons.count()
+                except AttributeError as e:
                     chapter = None
 
         if self._order is not None:
-            order += int(self._order)
+            try:
+                order += int(self._order)
+            except Exception as e:
+                print(e)
 
         return order
 
@@ -326,8 +331,11 @@ class Lesson(Page, RichText):
         except Exception:
             logger.exception("Couldn't get curriculum for %s" % self)
         try:
-            self.number = self.get_number()
-        except Exception:
+            if self.number is None :
+                self.number = self.get_number()
+        except Exception as e:
+            print(e)
+            print("couldn't get number")
             logger.exception("Couldn't get number for %s" % self)
 
         '''
