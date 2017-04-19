@@ -100,12 +100,20 @@
 
 {% block main %}
     <div class="together" id="unit{{ unit.number }}">
-        <h1>{{ unit.long_name }}</h1>
-        {% editable unit.content %}
-        {{ unit.content|richtext_filters|safe }}
-        {% endeditable %}
 
-        {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+        <div class="unit-overview">
+
+            <h1>{{ unit.long_name }}</h1>
+
+            {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+
+            {% editable unit.content %}
+            {{ unit.content|richtext_filters|safe }}
+            {% endeditable %}
+
+        </div>
+
+        <div class="clear"></div>
 
         <div class="chapter_overviews">
             {% for chapter in unit.chapters %}

@@ -330,6 +330,8 @@ class Lesson(Page, RichText):
         except Exception:
             logger.exception("Couldn't get number for %s" % self)
 
+        '''
+        # Don't try to get stage data on every save.
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
             self.unit.stage_name, self.number)
@@ -338,6 +340,7 @@ class Lesson(Page, RichText):
             self.stage = data
         except Exception:
             logger.warning("Couldn't get stage details for %s" % self)
+        '''
 
         super(Lesson, self).save(*args, **kwargs)
 

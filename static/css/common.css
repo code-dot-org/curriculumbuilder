@@ -206,7 +206,10 @@ footer {
 /* Pacing Guide */
 
 .pacing-calendar {
-
+    font-size: 0.9em;
+    float: right;
+    max-width: 650px;
+    margin-left: 25px;
 }
 
 .pacing-calendar .week-label {
@@ -231,7 +234,7 @@ footer {
     flex-grow: 1;
     flex-basis: 20%;
     margin: 5px;
-    min-height: 70px;
+    min-height: 50px;
     position: relative;
 }
 
@@ -260,7 +263,7 @@ footer {
     font-size: .8em;
     text-align: center;
     clear: left;
-    margin: 20px;
+    margin: 10px 25px;
     display: block;
     line-height: 1em;
     color: #4d575f;
