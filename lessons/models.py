@@ -234,6 +234,9 @@ class Lesson(Page, RichText):
         except AttributeError:
             return "%s%s/" % (self.get_unit().get_absolute_url(), str(self.number))
 
+    def get_overview_url(self):
+        return '%soverview/' % self.get_absolute_url()
+
     def get_unit(self):
         parent = self.parent
         while not parent.content_model == 'unit':
@@ -289,6 +292,11 @@ class Lesson(Page, RichText):
         else:
             return
 
+    # Return publishable urls for JackFrost
+    def jackfrost_urls(self):
+        urls = [self.get_absolute_url(), self.get_overview_url()]
+        return urls
+
     def jackfrost_can_build(self):
         try:
             can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and \
@@ -300,18 +308,19 @@ class Lesson(Page, RichText):
 
     def publish(self, children=False):
         if self.jackfrost_can_build():
-            try:
-                read, written = build_page_for_obj(Lesson, self)
-                slack_message('slack/message.slack', {
-                    'message': 'published %s %s' % (self.content_model, self.title),
-                    'color': '#00adbc'
-                })
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield json.dumps(e.message)
-                yield '\n'
-                logger.exception('Failed to publish %s' % self)
+            for url in self.jackfrost_urls():
+                try:
+                    read, written = build_single(url)
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s' % (self.content_model, self.title),
+                        'color': '#00adbc'
+                    })
+                    yield json.dumps(written)
+                    yield '\n'
+                except Exception, e:
+                    yield json.dumps(e.message)
+                    yield '\n'
+                    logger.exception('Failed to publish %s' % url)
         else:
             fail_msg = 'Attempted to publish %s %s lesson %s, ' \
                        'but it is not publishable.' % (self.curriculum.slug, self.unit.slug, self.number)

@@ -60,6 +60,8 @@ urlpatterns = patterns('curricula.views',
                            views.lesson_pdf, name='lesson_pdf'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/md/$',
                            views.lesson_markdown, name='lesson_markdown'),
+                       url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/overview/$',
+                           views.lesson_overview, name='lesson_overview'),
                        url(
                            r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/$',
                            views.lesson_view, name='lesson_optional'),
