@@ -1,0 +1,805 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n no_autoplay %}
+
+{% block meta_title %}{{ lesson.meta_title }}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ lesson.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable lesson.title %}{{ title }}{% endeditable %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+    <script src="{% static "js/toc.js" %}"></script>
+    <script src="{% static "js/jquery.details.min.js" %}"></script>
+    <script type="text/javascript">
+    </script>
+
+    {% if user.is_staff %}
+        <script src="{% static "js/annotator-full.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "css/annotator.min.css" %}">
+        <script src="{% static "js/jquery.slimscroll.js" %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.8/tinymce.min.js"></script>
+        <script src="{% static "js/richText-annotator.js" %}"></script>
+        <link rel="stylesheet" href="{% static "css/richText-annotator.css" %}">
+
+        <script>
+            jQuery(function ($) {
+                var annotator = $('body').annotator()
+                        .annotator('addPlugin', 'Store', {
+                            prefix: '/api/v1/comments',
+                            annotationData: {
+                                'lesson': {{ lesson.pk }},
+                                'uri': '{{ request.path|urlencode }}'
+                            },
+                            loadFromSearch: {
+                                'lesson': {{ lesson.pk }}
+                            }
+                        })
+                        .annotator('addPlugin', 'Permissions', {
+                            user: '{{ user.username }}',
+                            showViewPermissionsCheckbox: true,
+                            showEditPermissionsCheckbox: false
+                        })
+                        .annotator('addPlugin', 'RichText', {
+                            tinymce: {
+                                selector: "li.annotator-item textarea",
+                                plugins: "media image insertdatetime link code",
+                                menubar: false,
+                                toolbar_items_size: 'small',
+                                extended_valid_elements: "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
+                                toolbar: "bold italic | bullist numlist outdent indent ",
+                            }
+                        });
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}
+
+
+<!-- Admin Toolbox -->
+{% block admin_link %}
+{% if user.is_staff %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit"
+               class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-heading">
+                <h2 class="drawer-title">Settings</h2>
+            </div>
+            <div class="drawer-body">
+                <div class="checkbox settings">
+                    <label>
+                        <input type="checkbox" name="say">
+                        Show "Say" Prompts
+                    </label>
+                </div>
+                <div class="checkbox settings">
+                    <label>
+                        <input type="checkbox" name="tip">
+                        Show Teaching Tips
+                    </label>
+                </div>
+                <div class="checkbox settings">
+                    <label>
+                        <input type="checkbox" name="discussion">
+                        Show Discussion Goals
+                    </label>
+                </div>
+                <div class="checkbox settings">
+                    <label>
+                        <input type="checkbox" name="content">
+                        Show Content Corners
+                    </label>
+                </div>
+            </div>
+                <div class="drawer-body">
+                    <h2>Add to Log</h2>
+                        <form method="POST" action="." class="post-form">{% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-primary">Save</button>
+                        </form>
+                    <h3><a href="/page_history/{{ lesson.pk }}/">View history</a></h3>
+                    <h2>Publishing</h2>
+                    {% if lesson.jackfrost_can_build %}
+                        <button class="btn btn-primary" id="publish_this" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                            Publish
+                        </button><i id="progress_spinner"></i>
+                        <pre id="publish_results"></pre>
+                    {% else %}
+                        <em>Can't publish, check settings in admin</em>
+                    {% endif %}
+                    <h2>Code Studio</h2>
+                    <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                        Get Code Studio Stage Deatils
+                    </button>
+                    <i id="stage_progress_spinner"></i>
+                    <pre id="stage_details_results"></pre>
+                    <h2>Resources</h2>
+                    <ul>
+                        {% for resource in lesson.resources.all %}
+                            <li>{{ resource }}</li>
+                            <kbd draggable="true"
+                                 ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
+                        {% endfor %}
+                    </ul>
+                    <h2>Vocab</h2>
+                    {% for vocab in lesson.vocab.all %}
+                        <li>{{ vocab.word }}</li>
+                        <kbd draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
+                    {% endfor %}
+                </div>
+            <ul class="drawer-nav">
+            </ul>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+<!-- Header Bubbles -->
+
+{% block lessonnumber %}
+{% endblock %}
+
+{% block header_title %}
+{% endblock %}
+
+<!-- Nav Pills -->
+
+{% block resources_nav %}
+    {% comment %}{% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}{% endcomment %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="pacing-calendar">
+        {% for chapter in unit.chapters %}
+
+            {% regroup chapter.lessons by duration as lessons_by_week %}
+            <div style="display:none;"> <!-- hack to deal with the way week numbering works -->
+            {% for week in lessons_by_week %}
+                {% if week.grouper != None %}</div><span class="week-label">Day {{ week.grouper }}</span><div class="pacing-week">{% endif %}
+                {% for lesson in week.list %}
+                    {% keywords_for lesson as keywords %}
+                    <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}" {% if lesson.pacing_weight != None %}style="flex-grow: {{ lesson.pacing_weight }}"{% endif %}>
+                        <span class="lesson-number">{{ lesson.number|stringformat:"02d" }}</span>
+                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson.title }}</a>
+                        <span class="lesson-icon"></span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+<!-- One Pager -->
+
+<div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+    {% editable lesson.title %}
+        {% if optional %}
+            <h1>Optional Lesson: {{ lesson.title }}</h1>
+        {% else %}
+            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+        {% endif %}
+    {% endeditable %}
+
+    <div class="keywords">
+        <h4>
+            {% for keyword in lesson.keywords.all %}
+                {% if not forloop.first %}| {% endif %}
+                {{ keyword }}
+            {% endfor %}
+        </h4>
+    </div>
+</div>
+
+<div class="together overview-page row">
+
+    <div class="col-sm-7 left-col">
+    {% comment %}
+        <h2>Overview</h2>
+        {% editable lesson.overview %}
+            {{ lesson.overview|richtext_filters|safe }}
+        {% endeditable %}
+    {% endcomment %}
+
+        {% if lesson.cs_content %}
+            <h2>Purpose</h2>
+            {% editable lesson.cs_content %}
+                {{ lesson.cs_content|richtext_filters|safe }}
+            {% endeditable %}
+        {% endif %}
+
+        <h2>Agenda</h2>
+        <div class="toc" id="toc{{ lesson|slugify }}">
+            {% for activity in lesson.activity_set.all %}
+                <h3>{{ activity }}</h3>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="col-sm-5 right-col">
+
+<!-- Sidebar -->
+
+<!-- Anchor Standards -->
+
+        {% if lesson.anchor_standards.all.count > 0 %}
+            <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+            {% with lesson.anchor_standards.all as standards %}
+                {% regroup standards by framework as standards_by_framework %}
+                {% for framework in standards_by_framework %}
+                    <h3>{{ framework.grouper }}</h3>
+                    <ul>
+                        {% for standard in framework.list %}
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+
+<!-- Objectives -->
+
+        {% if lesson.objective_set.count > 0 %}
+            <h2>Objectives</h2>
+            <h3>Students will be able to:</h3>
+            <ul>
+                {% for objective in lesson.objective_set.all %}
+                    <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+<!-- Prep -->
+
+        {% if lesson.prep %}
+            <h2>Preparation</h2>
+            <div class="prep">
+                {% editable lesson.prep %}
+                    {{ lesson.prep|richtext_filters|safe }}
+                {% endeditable %}
+            </div>
+        {% endif %}
+
+<!-- Resources -->
+
+        {% if lesson.resources.count > 0 %}
+            <h2>Links</h2>
+            {% with lesson.resources.all as resources %}
+                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <ul>
+                        {% for resource in audience.list %}
+                            <li>
+                                {% editable resource.name resource.type resource.url %}
+                                    {{ resource.formatted|safe }}
+                                {% endeditable %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+        {% if user.is_staff %}
+            <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
+                resource</a>{% endif %}
+
+<!-- Vocab -->
+{% comment %}
+        {% if lesson.vocab.count > 0 %}
+            <h2>Vocabulary</h2>
+            <ul>
+                {% for word in lesson.vocab.all %}
+                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+<!-- Introduced Code -->
+
+        {% if lesson.blocks.count > 0 %}
+            <h2>Introduced Code</h2>
+            <ul>
+                {% for block in lesson.blocks.all %}
+                    <li><code class="block" style="background-color: {{ block.category.color }}">
+                        <a href="{{ block.get_published_url }}">{{ block.code }}</a>
+                    </code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+<!-- Support -->
+
+        <div class="open_questions no_print">
+            <h2>Support</h2>
+
+            {% if curriculum.auto_forum %}
+                <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
+            {% endif %}
+
+            {% if curriculum.support_script %}
+                <h3><a href="{{ unit.support_script }}" target="_blank">{{ unit.short_name }} Online Professional Learning Course</a></h3>
+            {% endif %}
+
+
+            <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
+            {% if lesson.questions %}
+                {% editable lesson.questions %}
+                    {{ lesson.questions|richtext_filters|safe }}
+                {% endeditable %}
+            {% endif %}
+            {% if curriculum.feedback_url %}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
+                    Give us feedback!
+                </button>
+            {% endif %}
+        </div>
+{% endcomment %}
+
+    </div>
+</div>
+
+<!-- Lesson Content -->
+
+<div id="{{ lesson.title|slugify }}content">
+
+    <h1>Facilitation Guide</h1>
+
+    {% for activity in lesson.activity_set.all %}
+        <div class="activity">
+            {% editable activity.name activity.time activity.content %}
+                <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                {{ activity.content|richtext_filters|safe }}
+            {% endeditable %}
+        </div>
+    {% endfor %}
+
+</div>
+
+<!-- Code Studio Levels -->
+
+<div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
+
+    {% with lesson.get_levels as stage %}
+        {% for chunk in stage %}
+
+            <!-- Named Levels get their own row -->
+            {% if chunk.named %}
+                {% for level in chunk.levels %}
+
+                <div class="stage-chunk named-{{ chunk.named }} always-on-{% if level.teacher_markdown %}True{% else %}False{% endif %}">
+
+                    <!-- Header tabs -->
+                    <ul>
+                        <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                            <span class="level-icon"></span> {{ level.name }}
+                        </li>
+                        {% if level.teacher_markdown %}
+                        <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                                Teacher Overview
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="level-bubble {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                                Student Overview
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Body panels -->
+                    {% if level.teacher_markdown %}
+                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+
+                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                            View on Code Studio
+                        </a>
+
+                        <div class="teacher-markdown">
+                            {{ level.teacher_markdown|richtext_filters|safe }}
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}">
+
+                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                            View on Code Studio
+                        </a>
+
+                        <div class="instructions-markdown">
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            <!-- Unnamed Levels are grouped in a row together -->
+            {% else %}
+                <div class="stage-chunk named-{{ chunk.named }} always-on-False">
+
+                    <!-- Header tabs -->
+                    <ul>
+                        <li class="chunk-header">
+                            Levels
+                        </li>
+                        {% for level in chunk.levels %}
+                            <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                                <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                                    <span class="level-icon"></span> {{ level.position }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="level-expando-tip">(click tabs to see student view)</li>
+                    </ul>
+
+                    <!-- Body panels -->
+                    {% for level in chunk.levels %}
+                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+
+                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                            View on Code Studio
+                        </a>
+
+                        {% if level.teacher_markdown %}
+                            <div class="teacher-markdown admonition tip">
+                            <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+                                {{ level.teacher_markdown|richtext_filters|safe }}
+                            </div>
+                        {% endif %}
+
+                        <div class="instructions-markdown">
+                            <h3>Student Instructions</h3>
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+</div>
+
+<!-- Standards Alignment -->
+
+<div class="standards">
+    <h2>Standards Alignment</h2>
+    <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
+    {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+</div>
+
+<!-- Feedback Modal -->
+
+{% if curriculum.feedback_url %}
+    <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="feedbackTitle">Lesson Feedback</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe id="feedbackFrame" width="568" height="1800" frameborder="0" marginheight="0"
+                            marginwidth="0">
+                        <i class='fa fa-cog fa-spin' style="font-size: 100px; text-align: center"></i>
+                    </iframe>
+                </div>
+                <div class="modal-footer" style="text-align: left">
+                    <button type="button" class="btn btn-default" style="float:right" data-dismiss="modal">Close
+                    </button>
+                    {% if lesson.questions %}
+                        <h4>Open Questions</h4>
+                        {{ lesson.questions|richtext_filters|safe }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+{% block footer_js %}
+
+    {% if user.is_staff %}
+        <script src="{% static "js/lesson_admin.js" %}"></script>
+    {% endif %}
+
+    <!--<script src="{% static "js/lesson.js" %}"></script>-->
+
+    <script defer type="text/javascript">
+
+        // Table of Contents generation
+
+        $(window).on('load', function () {
+            $('#toc{{ lesson.title|slugify }}').toc({
+                'selectors': 'h2,h3', //elements to use as headings
+                'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
+                'exclude': '.stage_guide h2, .stage_guide h3', //selectors to exclude
+                'smoothScrolling': false, //enable or disable smooth scrolling on click
+                'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
+                'onHighlight': function (el) {
+                }, //called when a new section is highlighted
+                'highlightOnScroll': true, //add class to heading that is currently in focus
+                'highlightOffset': 100, //offset to trigger the next headline
+                'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                    return prefix + i;
+                },
+                'headerText': function (i, heading, $heading) { //custom function building the header-item text
+                    return $heading.text();
+                },
+                'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
+                    return $heading[0].tagName.toLowerCase();
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+
+
+            // New Code Studio Integration
+            $('.stage_guide').each(function () {
+                var start = parseInt($(this).attr('data-start'));
+                var end = parseInt($(this).attr('data-end'));
+
+
+                if ($('.stage_guide_hidden').children().length > 0) {
+                    if (start) {
+                        var tab, tabs, chunk, panel, current_named, last_named;
+                        $(this).append('<div class="stage-chunk named-False always-on-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
+                        chunk = $(this).find('.stage-chunk');
+                        tabs = $(chunk).find('ul');
+                        if (end) {
+                            for (var i = start; i <= end; i++) {
+                                tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + i + ']');
+                                panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']');
+                                current_named = $(tab).data('named');
+
+                                // If this is a named level, or the first in an unnamed chunk, start a new chunk
+                                if (last_named == 'True' || last_named != current_named) {
+                                    $(this).append('<div class="stage-chunk named-False always-on-False"><ul></ul></div>');
+                                    chunk = $(chunk).next('.stage-chunk');
+                                    tabs = $(chunk).find('ul');
+                                }
+
+                                // If this is the first in an unnamed chunk, add "Levels" header
+                                if (last_named != current_named && current_named == 'False') {
+                                    $(tabs).append('<li class="chunk-header">Levels</li>');
+                                }
+
+                                $(tab).appendTo(tabs);
+                                $(panel).appendTo(chunk);
+                                if (current_named == 'True') {
+                                    $(chunk).removeClass("named-False always-on-False");
+                                    $(chunk).addClass("named-True always-on-True");
+                                }
+                                last_named = current_named;
+                            }
+                        } else {
+                            tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + start + ']');
+                            panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']');
+
+                            if ($(tab).data('named') == 'True') {
+                                $(chunk).removeClass("named-False always-on-False");
+                                $(chunk).addClass("named-True always-on-True");
+                            } else {
+                                $(tabs).append('<li class="chunk-header">Levels</li>');
+                            }
+
+                            $(tab).appendTo(tabs);
+                            $(panel).appendTo(chunk);
+                        }
+                    } else {
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                        $('.stage_guide_hidden .stage-chunk').appendTo(this);
+                    }
+                }
+            });
+
+            $('.stage_guide_hidden').remove();
+
+            $(".always-on-False").tabs({
+                collapsible: true,
+                active: false,
+                classes: { "ui-tabs-panel": "ui-corner-all"},
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            }).each(function() {
+                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
+            });
+
+            $(".always-on-True").tabs({
+                collapsible: true,
+                classes: { "ui-tabs-panel": "ui-corner-all" },
+                /*show: { effect: "blind", duration: 500 },
+                hide: { effect: "fade", duration: 500 },*/
+                activate: toggleCollapse
+            });
+
+            // Strip answer key links
+            $('.key').html("<p><em>View on Code Studio to access answer key(s)</em></p>")
+
+            function toggleCollapse(event, ui) {
+                if ($(ui.newPanel).length === 0) {
+                    $(ui.oldPanel).addClass("collapsed");
+                    $(ui.oldPanel).siblings().removeClass("collapsed");
+                } else {
+                    $(ui.newPanel).removeClass("collapsed");
+                    $(ui.newPanel).siblings().removeClass("collapsed");
+                }
+
+            }
+
+            // add checkboxes to lists in the prep section
+            var count = 1;
+            $(".prep ul li:visible").each(function (li) {
+                $(this).before('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
+            });
+
+            // read the current/previous setting
+            var $todos = $(".todo");
+            $todos.each(function () {
+                var todo = localStorage.getItem($(this).attr('name') + window.location.pathname);
+                if (todo && todo == "true") {
+                    $(this).prop('checked', todo);
+                }
+            });
+            $todos.change(function () {
+                localStorage.setItem($(this).attr("name") + window.location.pathname, $(this).prop('checked'));
+            });
+
+            // Settings toggles
+
+            // read the current/previous setting
+            $settings = $('.settings input');
+            $settings.each(function () {
+                var setting = localStorage.getItem($(this).attr('name'));
+                if (setting == undefined) {
+                    $(this).prop('checked', true);
+                } else if (setting == "true") {
+                    $(this).prop('checked', setting);
+                } else {
+                    $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
+                }
+            });
+            $settings.change(function () {
+                $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
+                localStorage.setItem($(this).attr("name"), $(this).prop('checked'));
+            });
+
+            $('.tiplink i').click(function () {
+                var $the_tip = $($(this).parent().attr('href'));
+                $the_tip.parent().toggle(true);
+            });
+
+            // Add tooltip toggles to vocab
+            $('.vocab').each(function () {
+                $(this).attr('data-toggle', 'tooltip');
+                $(this).attr('data-placement', 'bottom');
+            });
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+
+            // Convert streaming responses to formattable JSON
+            function parseResponse(responseText) {
+                var responses = responseText.split("\n");
+                var response = [];
+                for (var i in responses) {
+                    if (responses[i] != "") {
+                        response.push(JSON.parse(responses[i]));
+                    }
+                }
+                return response
+            }
+
+            // Publish button
+            $("#publish_this").click(function () {
+                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type;
+                var client = new XMLHttpRequest();
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-type", "application/json; charset=utf-8");
+                client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        var response = parseResponse(this.responseText);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
+                            $("#publish_results").append('\nFinished');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
+                            $("#publish_results").append('\nFailed');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                client.send();
+            });
+
+            // Get Stage Details Button
+            $("#get_stage_details").click(function () {
+                $('#get_stage_details').html("Getting Stage Details...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                $('#stage_progress_spinner').addClass('fa fa-cog fa-spin');
+                $.ajax({
+                    type: "POST",
+                    url: "/get_stage_details/",
+                    data: {pk: pk},
+                    timeout: 9999999
+                }).done(function (response) {
+                    $("#get_stage_details").addClass('btn-success').text("Success");
+                    $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
+                    location.reload();
+                }).fail(function (response) {
+                    $("#get_stage_details").addClass('btn-warning').text("Failed");
+                    $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
+                    $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+            });
+
+            var isFeedbackActive = false;
+
+            $('#feedbackFrame').load(function () {
+                if ($(this).attr('src')) {
+                    isFeedbackActive = !isFeedbackActive;
+                    if (!isFeedbackActive) {
+                        $('#feedbackModal').modal('toggle');
+                    }
+                }
+            });
+
+
+            $('#feedbackModal').on('shown.bs.modal', function () {
+                if (!isFeedbackActive) {
+                    $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
+                }
+
+                //$(this).find('.modal-body').css({
+                //    'max-height':'100%'
+                //});
+            });
+        });
+    </script>
+
+{% endblock %}

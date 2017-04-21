@@ -603,7 +603,7 @@ def get_stage_details(request):
         if not hasattr(lesson.unit, 'stage_name'):
             payload = {'error': 'No stage name for unit', 'status': 404}
         else:
-            lesson.save()
+            lesson.get_levels_from_levelbuilder()
             payload = {'success': 'true'}
     except Exception, e:
         payload = {'status': 500, 'error': 'failed', 'exception': e.message}

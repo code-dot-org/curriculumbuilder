@@ -207,7 +207,9 @@ footer {
 
 .pacing-calendar {
     font-size: 0.9em;
-    float: right;
+}
+
+.pacing-calendar.right {
     max-width: 650px;
     margin-left: 25px;
 }

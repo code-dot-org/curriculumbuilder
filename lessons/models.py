@@ -292,6 +292,17 @@ class Lesson(Page, RichText):
         else:
             return
 
+    def get_levels_from_levelbuilder(self):
+        try:
+            url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
+            self.unit.stage_name, self.number)
+            response = urllib2.urlopen(url)
+            data = json.loads(response.read())
+            self.stage = data
+            self.save()
+        except Exception:
+            logger.warning("Couldn't get stage details for %s" % self)
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_overview_url()]
