@@ -98,10 +98,6 @@ def curriculum_view(request, slug):
 
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
-    if pdf:
-        template = 'curricula/unit_lessons.html'
-    else:
-        template = 'curricula/unit.html'
 
     curriculum = get_object_or_404(Curriculum, slug=slug)
     if request.user.is_staff:
@@ -129,6 +125,14 @@ def unit_view(request, slug, unit_slug):
     form = ChangelogForm()
 
     changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
+
+    if pdf:
+        template = 'curricula/unit_lessons.html'
+    else:
+        if curriculum.unit_template_override is not None:
+            template = unit.curriculum.unit_template_override
+        else:
+            template = 'curricula/unit.html'
 
     return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf,
                                       'form': form, 'changelog': changelog})
@@ -215,7 +219,10 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
     changelog = Version.objects.get_for_object(lesson).filter(revision__user__username=settings.CHANGELOG_USER)
 
-    template = 'curricula/codestudiolesson.html'
+    if lesson.unit.lesson_template_override is not None:
+        template = lesson.unit.lesson_template_override
+    else:
+        template = 'curricula/codestudiolesson.html'
 
     return render(request, template,
                   {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,

@@ -1,0 +1,384 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load static %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ unit.curriculum }} | {{ unit.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for unit as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ unit.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+{% endblock %}
+
+{% block admin_link %}
+{% if user.is_staff %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-body">
+                <h2>Add to Log</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
+                    <h3><a href="/page_history/{{ unit.pk }}/">View history</a></h3>
+                <h2>Publishing</h2>
+                {% if unit.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ unit.pk }}" data-type="Unit">Publish</button><i id="progress_spinner" style="margin: 5px;"></i><br/>
+                    <input type="checkbox" name="lessons" id="include_lessons"> Include Lessons</input>
+                    <pre id="publish_results"></pre>
+                    <button class="btn btn-primary" id="publish_pdfs" data-pk="{{ unit.pk }}" data-type="Unit">Publish PDFs</button><i id="progress_spinner_pdf" style="margin: 5px;"></i><br/>
+                    <pre id="publish_results_pdf"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+
+{% block lessonnumber %}
+
+{% endblock %}
+
+{% block header_title %}
+{% endblock %}
+
+{% block resources_nav %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="pacing-calendar">
+        {% for chapter in unit.chapters %}
+
+            {% regroup chapter.lessons by duration as lessons_by_week %}
+            <div style="display:none;"> <!-- hack to deal with the way week numbering works -->
+            {% for week in lessons_by_week %}
+                {% if week.grouper != None %}</div><span class="week-label">Day {{ week.grouper }}</span><div class="pacing-week">{% endif %}
+                {% for lesson in week.list %}
+                    {% keywords_for lesson as keywords %}
+                    <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}" {% if lesson.pacing_weight != None %}style="flex-grow: {{ lesson.pacing_weight }}"{% endif %}>
+                        <span class="lesson-number">{{ lesson.number|stringformat:"02d" }}</span>
+                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson.title }}</a>
+                        <span class="lesson-icon"></span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="together" id="unit{{ unit.number }}">
+
+        <div class="unit-overview">
+
+            <h1>{{ unit.long_name }}</h1>
+
+            {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+
+            {% editable unit.content %}
+            {{ unit.content|richtext_filters|safe }}
+            {% endeditable %}
+
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="chapter_overviews">
+            {% for chapter in unit.chapters %}
+
+                <div class="chapter">
+                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Week {{ chapter.number }}: {{ chapter.title }}</a></h1>
+
+                {% if chapter.questions %}
+                    <div class="big_questions">
+                    <h3>Big Questions</h3>
+                    {{ chapter.questions|richtext_filters|safe }}
+                </div>
+                {% endif %}
+
+                {% if chapter.understandings.count > 0 %}
+                    <div class="enduring_understandings">
+                    <h3>Enduring Understandings</h3>
+                        <ul>
+                            {% for understanding in chapter.understandings.all %}
+                                <li>{{ understanding.shortcode }} {{ understanding.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% regroup chapter.lessons by duration as lessons_by_week %}
+                {% for week in lessons_by_week %}
+                    {% comment %}{% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}{% endcomment %}
+                    {% for lesson in week.list %}
+                        {% keywords_for lesson as keywords %}
+                        <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
+                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Session {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h4>
+                            {% for keyword in keywords %}
+                                {% if not forloop.first %}| {% endif %}
+                                {{ keyword }}
+                            {% endfor %}
+                            </h4>
+                            {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image}}">{% endif %}
+                            <span class="lesson_desc">{{ lesson.description }}</span>
+                            {% if lesson.resources.count > 0 %}
+                                <h4>
+                                    {% with lesson.resources.all as resources %}
+                                        {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                        {% for audience in resources_by_audience %}
+                                            {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                {% for resource in audience.list %}
+                                                    {% if not forloop.first %} | {% endif %}
+                                                    <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                {% endfor %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                </h4>
+                            {% endif %}
+                        </div>
+                        {% if lesson.optional_lessons.count > 0 %}
+                            {% for optional in lesson.optional_lessons %}
+                                <div class="lesson_overview optional">
+                                    <h3><a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional Session: {{ optional.title }}</a></h3>
+                                    <h4>
+                                    {% keywords_for optional as keywords %}
+                                    {% for keyword in keywords %}
+                                        {% if not forloop.first %}| {% endif %}
+                                        {{ keyword }}
+                                    {% endfor %}
+                                    </h4>
+                                    {% if optional.image %}<img src="{% get_media_prefix %}{{ optional.image}}">{% endif %}
+                                    <span class="lesson_desc">{{ optional.description }}</span>
+                                    {% if lesson.resources.count > 0 %}
+                                        <h4>
+                                            {% with optional.resources.all as resources %}
+                                                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                                                {% for audience in resources_by_audience %}
+                                                    {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                        {% for resource in audience.list %}
+                                                            {% if not forloop.first %} | {% endif %}
+                                                            <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </h4>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                </div>
+
+
+                <details>
+                    <summary>Day Commentary</summary>
+
+                    {% editable chapter.content %}
+                    {{ chapter.content|richtext_filters|safe }}
+                    {% endeditable %}
+                </details>
+                {% if not forloop.last %}<hr/>{% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block footer_js %}
+
+{% if user.is_staff %}
+    <script type="text/javascript">
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $(document).ready(function () {
+
+            // Convert streaming responses to formattable JSON
+            function parseResponse(responseText) {
+                var responses = responseText.split("\n");
+                var response = [];
+                for (var i in responses) {
+                    if (responses[i] != "") {
+                        response.push(JSON.parse(responses[i]));
+                    }
+                }
+                return response
+            }
+
+            // Publish button
+            $("#publish_this").click(function () {
+                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                var lessons = $('#include_lessons').prop('checked');
+                $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+                var client = new XMLHttpRequest();
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        console.log(this.status);
+                        var response = parseResponse(this.responseText);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results").append('\nFinished');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results").append('\nFailed');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                client.send();
+                /*
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, lessons: lessons},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_this").addClass('btn-success').text("Success");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                }).fail(function(response) {
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-circle-o-notch fa-spin');
+                });
+                */
+            });
+
+            $("#publish_pdfs").click(function () {
+                $('#publish_pdfs').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                $('#progress_spinner_pdf').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&pdf=true";
+                var pdf_client = new XMLHttpRequest();
+                pdf_client.open('GET', '/publish/?' + params, true);
+                pdf_client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                pdf_client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results_pdf").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                pdf_client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                });
+
+                pdf_client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        var response = parseResponse(this.responseText);
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_pdfs").addClass('btn-success').text("Success");
+                            $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                            $("#publish_results_pdf").append('\nFinished');
+                            $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                            $("#publish_results_pdf").text(JSON.stringify(response, null, 2));
+                            $("#publish_results_pdf").append('\nFailed');
+                            $('#progress_spinner_pdf').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                pdf_client.send();
+                /*
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, pdf: true},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_pdfs").addClass('btn-success').text("Success");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
+                }).fail(function(response) {
+                    $("#publish_pdfs").addClass('btn-warning').text("Failed");
+                    $("#publish_results_pdf").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner_pdf').removeClass('fa fa-circle-o-notch fa-spin');
+                });
+                */
+            });
+        });
+    </script>
+{% endif %}
+{% endblock %}

@@ -38,6 +38,8 @@ class Curriculum(Page, RichText):
     feedback_url = models.URLField(blank=True, null=True, help_text='URL to feedback form, using % operators')
     feedback_vars = models.CharField(max_length=255, blank=True, null=True,
                                      help_text='Tuple of properties to use in feedback url')
+    unit_template_override = models.CharField(max_length=255, blank=True, null=True,
+                                              help_text='Override default unit template, eg "curricula/pl_unit.html')
 
     class Meta:
         verbose_name_plural = "curricula"
@@ -127,6 +129,8 @@ class Unit(Page, RichText):
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True, help_text='Name of Code Studio script')
     show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
+    lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
+                                                help_text='Override default lesson template, eg "curricula/pl_lesson.html')
 
     def __unicode__(self):
         return self.title
