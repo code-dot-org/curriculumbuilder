@@ -129,7 +129,7 @@ def unit_view(request, slug, unit_slug):
     if pdf:
         template = 'curricula/unit_lessons.html'
     else:
-        if curriculum.unit_template_override is not None:
+        if curriculum.unit_template_override:
             template = unit.curriculum.unit_template_override
         else:
             template = 'curricula/unit.html'
@@ -219,7 +219,7 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
     changelog = Version.objects.get_for_object(lesson).filter(revision__user__username=settings.CHANGELOG_USER)
 
-    if lesson.unit.lesson_template_override is not None:
+    if lesson.unit.lesson_template_override:
         template = lesson.unit.lesson_template_override
     else:
         template = 'curricula/codestudiolesson.html'
