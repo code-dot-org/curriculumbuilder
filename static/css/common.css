@@ -226,6 +226,7 @@ footer {
     display: flex;
     flex-direction: row;
     margin-left: 60px;
+   /* width: 100%;*/
 }
 
 .pacing-lesson {
@@ -233,16 +234,47 @@ footer {
     background: #f5fcff;
     border-radius: 2px;
     padding: 0;
-    flex-grow: 1;
-    flex-basis: 20%;
-    margin: 5px;
-    min-height: 50px;
+    flex-grow: 0;
+    flex-basis: 19%;
+    margin: 0.5%;
+    height: 50px;
     position: relative;
+    overflow: hidden;
 }
 
 .pacing-lesson.project {
     border-color: #7665a0;
     background: #ebe8f1;
+}
+
+.pacing-lesson.general-session {
+    border-color: #ffb81d;
+    background: #fff7df;
+}
+
+.pacing-lesson.tlo-room-session {
+    border-color: #b9bf15;
+    background: #f5f5dc;
+}
+
+.pacing-lesson.lesson-session {
+    border-color: #0094ca;
+    background: #d9eff7;
+}
+
+.pacing-lesson.breakout-session {
+    border-color: #7665a0;
+    background: #ebe8f1;
+}
+
+.pacing-lesson.lesson-planning-session {
+    border-color: #ffa400;
+    background: #fff2d9;
+}
+
+.pacing-lesson.community-session {
+    border-color: #c00;
+    background: #fcc;
 }
 
 .pacing-lesson .lesson-number {
@@ -265,7 +297,7 @@ footer {
     font-size: .8em;
     text-align: center;
     clear: left;
-    margin: 10px 25px;
+    margin: 5px 25px;
     display: block;
     line-height: 1em;
     color: #4d575f;
@@ -273,8 +305,9 @@ footer {
 
 .pacing-lesson .lesson-icon {
     position: absolute;
-    bottom: 5px;
+    bottom: 0;
     right: 5px;
+    font-size: .8em;
 }
 
 .pacing-lesson.game-lab .lesson-icon:before,

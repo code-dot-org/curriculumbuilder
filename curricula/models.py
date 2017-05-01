@@ -127,10 +127,14 @@ Curricular Unit
 class Unit(Page, RichText):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     number = models.IntegerField('Number', blank=True, null=True)
-    stage_name = models.CharField('Script', max_length=255, blank=True, null=True, help_text='Name of Code Studio script')
+    stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
+                                  help_text='Name of Code Studio script')
     show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
+    week_length = models.IntegerField('Days in a Week', default=5, blank=True, null=True,
+                                      help_text='Controls the minimum lesson size in the pacing calendar.')
     lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
-                                                help_text='Override default lesson template, eg "curricula/pl_lesson.html')
+                                                help_text='Override default lesson template,'
+                                                          'eg curricula/pl_lesson.html')
 
     def __unicode__(self):
         return self.title
@@ -278,6 +282,10 @@ class Unit(Page, RichText):
     def vocab_count(self):
         num_blocks = self.lessons.aggregate(Count('vocab'))
         return num_blocks.get('vocab__count')
+
+    @property
+    def lesson_width(self):
+        return (100 / self.week_length) - 1
 
     @property
     def lessons(self):

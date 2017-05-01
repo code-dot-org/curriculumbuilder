@@ -71,7 +71,8 @@
                 {% for stage in chap.lessons %}
                     <div class="lesson unfinished">
                         <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
-                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}"
+                           data-toggle="tooltip" data-placement="bottom" title="{{ stage.title }}">
                             {{ stage.number }}
                         </a>
                     </div>
@@ -81,7 +82,8 @@
             {% for stage in unit.lessons %}
                 <div class="lesson unfinished">
                     <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
-                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}"
+                       data-toggle="tooltip" data-placement="bottom" title="{{ stage.title }}">
                         {{ stage.number }}
                     </a>
                 </div>
@@ -107,7 +109,7 @@
 
             {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
 
-            {% editable unit.content %}
+            {% editable unit.content unit.week_length %}
             {{ unit.content|richtext_filters|safe }}
             {% endeditable %}
 

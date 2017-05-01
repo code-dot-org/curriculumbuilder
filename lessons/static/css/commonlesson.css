@@ -548,6 +548,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 .lesson_overview {
     display: inline-block;
     clear:both;
+    width: 100%;
 }
 
 .lesson_overview img {

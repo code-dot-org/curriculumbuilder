@@ -173,7 +173,8 @@
                         <div class="lesson unfinished">
                     {% endif %}
                 <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
-                   data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                   data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}"
+                    data-toggle="tooltip" data-placement="bottom" title="{{ stage.title }}">
                     {{ stage.number }}
                 </a>
                 </div>
@@ -193,7 +194,8 @@
                     <div class="lesson unfinished">
                 {% endif %}
             <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug stage.number %}"
-               data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}"
+                data-toggle="tooltip" data-placement="bottom" title="{{ stage.title }}">
                 {{ stage.number }}
             </a>
             </div>
