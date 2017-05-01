@@ -259,7 +259,7 @@ footer {
 
 .pacing-lesson.lesson-session {
     border-color: #0094ca;
-    background: #d9eff7;
+    background: #f5fcff;
 }
 
 .pacing-lesson.breakout-session {
@@ -291,6 +291,31 @@ footer {
 
 .pacing-lesson.project .lesson-number {
     background: #7665a0;
+}
+
+.pacing-lesson.general-session .lesson-number {
+    background: #ffb81d;
+}
+
+.pacing-lesson.tlo-room-session .lesson-number {
+    background: #b9bf15;
+}
+
+.pacing-lesson.lesson-session .lesson-number {
+    background: #0094ca;
+}
+
+.pacing-lesson.breakout-session .lesson-number {
+    background: #7665a0;
+}
+
+.pacing-lesson.lesson-planning-session .lesson-number {
+    background: #ffa400;
+}
+
+.pacing-lesson.community-session .lesson-number {
+    border-color: #c00;
+    background: #fcc;
 }
 
 .pacing-lesson .lesson-title {

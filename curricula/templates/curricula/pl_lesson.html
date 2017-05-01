@@ -174,7 +174,7 @@
                     {% keywords_for lesson as keywords %}
                     <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}"
                          style="{% if lesson.pacing_weight != None %}flex-grow: {{ lesson.pacing_weight }}; {% endif %}
-                                 width: {{ unit.lesson_width }}%">
+                                 flex-basis: {{ unit.lesson_width }}%">
                         <span class="lesson-number">{{ lesson.number|stringformat:"02d" }}</span>
                         <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson.title }}</a>
                         <span class="lesson-icon"></span>
