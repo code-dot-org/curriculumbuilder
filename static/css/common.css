@@ -218,14 +218,14 @@ footer {
     font-weight: bold;
     font-size: .9em;
     float: left;
-    margin-top: 25px;
+    margin-top: 20px;
     color: #949ca2;
 }
 
 .pacing-week {
     display: flex;
     flex-direction: row;
-    margin-left: 60px;
+    margin-left: 50px;
    /* width: 100%;*/
 }
 
@@ -238,6 +238,8 @@ footer {
     flex-basis: 19%;
     margin: 0.5%;
     height: 50px;
+    line-height: 46px;
+    text-align: center;
     position: relative;
     overflow: hidden;
 }
@@ -289,6 +291,10 @@ footer {
     border-bottom-right-radius: 2px;
 }
 
+.pl .pacing-lesson .lesson-number {
+    display: none;
+}
+
 .pacing-lesson.project .lesson-number {
     background: #7665a0;
 }
@@ -314,25 +320,26 @@ footer {
 }
 
 .pacing-lesson.community-session .lesson-number {
-    border-color: #c00;
-    background: #fcc;
+    background: #c00;
 }
 
 .pacing-lesson .lesson-title {
     font-size: .8em;
     text-align: center;
     clear: left;
-    margin: 5px 25px;
-    display: block;
-    line-height: 1em;
+    margin: 0 20px;
+    display: inline-block;
     color: #4d575f;
+    vertical-align: middle;
+    line-height: normal;
 }
 
 .pacing-lesson .lesson-icon {
     position: absolute;
-    bottom: 0;
-    right: 5px;
+    bottom: 2px;
+    right: 2px;
     font-size: .8em;
+    line-height: 1em;
 }
 
 .pacing-lesson.game-lab .lesson-icon:before,
