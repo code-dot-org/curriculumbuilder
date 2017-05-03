@@ -150,19 +150,7 @@
 
 <!-- Header Bubbles -->
 
-{% block lessonnumber %}
-{% endblock %}
-
-{% block header_title %}
-{% endblock %}
-
-<!-- Nav Pills -->
-
-{% block resources_nav %}
-    {% comment %}{% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}{% endcomment %}
-{% endblock %}
-
-{% block main %}
+{% block header %}
 
     <div class="pacing-calendar pl">
 
@@ -183,6 +171,16 @@
             {% endfor %}
             </div>
     </div>
+
+{% endblock %}
+
+<!-- Nav Pills -->
+
+{% block resources_nav %}
+    {% comment %}{% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}{% endcomment %}
+{% endblock %}
+
+{% block main %}
 
 <!-- One Pager -->
 
@@ -256,7 +254,7 @@
 
         {% if lesson.objective_set.count > 0 %}
             <h2>Objectives</h2>
-            <h3>Students will be able to:</h3>
+            <h3>Participants will be able to:</h3>
             <ul>
                 {% for objective in lesson.objective_set.all %}
                     <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
@@ -282,7 +280,7 @@
             {% with lesson.resources.all as resources %}
                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                 {% for audience in resources_by_audience %}
-                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <h3>For the {{ audience.grouper|yesno:"Participants,Facilitator" }}</h3>
                     <ul>
                         {% for resource in audience.list %}
                             <li>

@@ -334,6 +334,10 @@ footer {
     line-height: normal;
 }
 
+.pl .pacing-lesson .lesson-title {
+    margin: 0;
+}
+
 .pacing-lesson .lesson-icon {
     position: absolute;
     bottom: 2px;

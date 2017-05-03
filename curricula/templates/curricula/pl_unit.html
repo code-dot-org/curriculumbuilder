@@ -57,17 +57,7 @@
 {% endblock %}
 
 
-{% block lessonnumber %}
-
-{% endblock %}
-
-{% block header_title %}
-{% endblock %}
-
-{% block resources_nav %}
-{% endblock %}
-
-{% block main %}
+{% block header %}
 
     <div class="pacing-calendar pl">
 
@@ -88,6 +78,10 @@
             {% endfor %}
             </div>
     </div>
+
+{% endblock %}
+
+{% block main %}
 
     <div class="together" id="unit{{ unit.number }}">
 
