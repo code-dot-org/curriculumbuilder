@@ -476,6 +476,7 @@
     {% endwith %}
 </div>
 
+{% comment %}
 <!-- Standards Alignment -->
 
 <div class="standards">
@@ -483,6 +484,7 @@
     <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
+{% endcomment %}
 
 <!-- Feedback Modal -->
 

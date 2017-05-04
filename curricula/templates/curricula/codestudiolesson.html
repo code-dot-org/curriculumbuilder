@@ -511,11 +511,13 @@
 
 <!-- Standards Alignment -->
 
+{% if lesson.standards.count > 0 %}
 <div class="standards">
     <h2>Standards Alignment</h2>
     <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
+{% endif %}
 
 <!-- Feedback Modal -->
 
