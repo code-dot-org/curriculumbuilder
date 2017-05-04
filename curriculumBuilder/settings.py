@@ -502,10 +502,9 @@ if ON_PAAS:
     AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
     AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
-    # AWS_HEADERS = {
-    #  'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
-    #  'Cache-Control': 'max-age=3600',
-    # }
+    AWS_HEADERS = {
+     'Cache-Control': 'max-age=0',
+    }
 
     AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
