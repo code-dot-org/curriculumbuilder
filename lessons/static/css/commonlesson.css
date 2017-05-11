@@ -657,6 +657,25 @@ th a:link, th a:visited, th a:hover, th a:active {
     padding: 1em 0 0 .5em;
 }
 
+.level-panel .answer p {
+    padding: 0;
+    margin: 0;
+}
+
+.level-panel .answer {
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+}
+
+.level-panel .answer-False {
+    border: 5px solid red;
+}
+
+.level-panel .answer-True {
+    border: 5px solid green;
+}
+
 /*
 .stage-level{
     float: left;

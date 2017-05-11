@@ -51,13 +51,20 @@ class AttrTagPattern(Pattern):
         if block:
             el.set('class', 'block')
             el.set('style', 'background-color: %s;' % block.category.color)
-            el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), m.group('block'))
+            el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), self.escape(m.group('block')))
         else:
-            el.text = "%s%s" % (m.group('ide') or '', m.group('block') or '')
+            el.text = "%s%s" % (m.group('ide') or '', self.escape(m.group('block')) or '')
 
         for (key, val) in self.attrs.items():
             el.set(key, val)
         return el
+
+    def escape(self, html):
+        """ Basic html escaping """
+        html = html.replace('&', '&amp;')
+        html = html.replace('<', '&lt;')
+        html = html.replace('>', '&gt;')
+        return html.replace('"', '&quot;')
 
 
 class DocLinksExtensions(Extension):
