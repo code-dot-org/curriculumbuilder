@@ -91,15 +91,23 @@ class UnitSerializer(serializers.ModelSerializer):
 
 class CurriculumSerializer(serializers.ModelSerializer):
     units = serializers.SerializerMethodField()
+    teacher_desc = serializers.SerializerMethodField()
+    student_desc = serializers.SerializerMethodField()
 
     class Meta:
         model = Curriculum
-        fields = ('title', 'slug', 'description', 'units')
+        fields = ('title', 'slug', 'student_desc', 'teacher_desc', 'units')
 
     def get_units(self, obj):
         units = obj.units
         serializer = UnitSerializer(units, many=True)
         return serializer.data
+
+    def get_teacher_desc(self, obj):
+        return obj.content
+
+    def get_student_desc(self, obj):
+        return obj.description
 
 
 class Range():

@@ -58,6 +58,9 @@ class Curriculum(Page, RichText):
     def get_pdf_url(self):
         return '/%s.pdf' % self.slug
 
+    def get_json_url(self):
+        return '/metadata/course/%s.json' % self.slug
+
     def get_standards_url(self):
         return '%sstandards/' % self.get_absolute_url()
 
@@ -73,7 +76,7 @@ class Curriculum(Page, RichText):
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_standards_url(), self.get_resources_url(),
-                self.get_blocks_url(), self.get_vocab_url()]
+                self.get_blocks_url(), self.get_vocab_url(), self.get_json_url()]
         return urls
 
     def jackfrost_can_build(self):

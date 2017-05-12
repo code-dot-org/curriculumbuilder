@@ -6,20 +6,26 @@ from documentation import views as documentation_views
 
 urlpatterns = patterns('curricula.views',
                        url(r'^$', views.index, name='home'),
+
+                       # Ajax endpoints
                        url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
                        url(r'^publish/$', views.publish, name='publish'),
                        url(r'^upload/$', views.image_upload, name='image_upload'),
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
+
+                       # JSON Metadata
                        url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
+                       url(r'^metadata/course/(?P<slug>[-\w]+).json$', views.curriculum_element, name="curriculum_element"),
 
                        # Documentation URLS
-
                        url(r'^(?P<slug>[-\w]+lab)/$',
                            documentation_views.ide_view, name='ide_view'),
                        url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/$',
                            documentation_views.block_view, name='block_view'),
                        url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
                            documentation_views.embed_view, name='embed_view'),
+                       url(r'^(?P<curric_slug>[-\w]+)/(?P<slug>[-\w.]+)/$',
+                           documentation_views.page_view, name='page_view'),
 
                        # Curriculum URLS
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/$', views.curriculum_view, name='curriculum_view'),

@@ -55,7 +55,18 @@
 
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}
+
                         </div>
+
+                        <!-- Embed video if present -->
+                        {% if level.video_youtube %}
+                        <div class="level-video">
+                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube }}" width="853"></iframe>
+                            <p><a href="{{ level.video_download }}">Download Video</a></p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Include contained levels for predictions -->
                         {% if level.reference %}
                         <div class="curriculum-reference">
                             <iframe frameborder="0" class="map-embed" src="https://docs.code.org{{ level.reference }}" width="100%" height="500"></iframe>
@@ -119,6 +130,15 @@
                             {{ level.markdown_instructions|richtext_filters|safe }}
                         </div>
 
+                        <!-- Embed video if present -->
+                        {% if level.video_youtube %}
+                        <div class="level-video">
+                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube }}" width="853"></iframe>
+                            <p><a href="{{ level.video_download }}">Download Video</a></p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Include contained levels for predictions -->
                         {% if level.reference %}
                         <div class="curriculum-reference">
                             <iframe frameborder="0" class="map-embed" src="https://docs.code.org{{ level.reference }}" width="100%" height="500"></iframe>
