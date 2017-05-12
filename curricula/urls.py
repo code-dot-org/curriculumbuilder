@@ -24,8 +24,6 @@ urlpatterns = patterns('curricula.views',
                            documentation_views.block_view, name='block_view'),
                        url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
                            documentation_views.embed_view, name='embed_view'),
-                       url(r'^(?P<curric_slug>[-\w]+)/(?P<slug>[-\w.]+)/$',
-                           documentation_views.page_view, name='page_view'),
 
                        # Curriculum URLS
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/$', views.curriculum_view, name='curriculum_view'),
