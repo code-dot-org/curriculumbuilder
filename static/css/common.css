@@ -259,13 +259,13 @@ footer {
 }
 
 .pacing-lesson.tlo-room-session {
-    border-color: #b9bf15;
-    background: #f5f5dc;
+    border-color: #0094ca;
+    background: #d9eff7;
 }
 
 .pacing-lesson.lesson-session {
-    border-color: #0094ca;
-    background: #f5fcff;
+    border-color: #00adbc;
+    background: #a6e3e8;
 }
 
 .pacing-lesson.breakout-session {
@@ -274,14 +274,53 @@ footer {
 }
 
 .pacing-lesson.lesson-planning-session {
-    border-color: #ffa400;
-    background: #fff2d9;
+    border-color: #b9bf15;
+    background: #f5f5dc;
 }
 
 .pacing-lesson.community-session {
     border-color: #c00;
     background: #fcc;
 }
+
+.pacing-lesson.active {
+    color: #fff;
+    background: #00adbc;
+}
+
+.pacing-lesson.active .lesson-title {
+    color: #fff;
+}
+
+.pacing-lesson.project.active {
+    background: #7665a0;
+}
+
+.pacing-lesson.general-session.active {
+    background: #ffb81d;
+}
+
+.pacing-lesson.tlo-room-session.active {
+    background: #0094ca;
+}
+
+.pacing-lesson.lesson-session.active {
+    background: #00adbc;
+}
+
+.pacing-lesson.breakout-session.active {
+    background: #7665a0;
+}
+
+.pacing-lesson.lesson-planning-session.active {
+    background: #b9bf15;
+}
+
+.pacing-lesson.community-session.active {
+    background: #c00;
+}
+
+
 
 .pacing-lesson .lesson-number {
     font-size: .8em;
@@ -308,11 +347,11 @@ footer {
 }
 
 .pacing-lesson.tlo-room-session .lesson-number {
-    background: #b9bf15;
+    background: #0094ca;
 }
 
 .pacing-lesson.lesson-session .lesson-number {
-    background: #0094ca;
+    background: #00adbc;
 }
 
 .pacing-lesson.breakout-session .lesson-number {
@@ -320,7 +359,7 @@ footer {
 }
 
 .pacing-lesson.lesson-planning-session .lesson-number {
-    background: #ffa400;
+    background: #b9bf15;
 }
 
 .pacing-lesson.community-session .lesson-number {

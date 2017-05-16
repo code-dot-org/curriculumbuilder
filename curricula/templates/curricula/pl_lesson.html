@@ -158,13 +158,13 @@
             <div style="display:none;"> <!-- hack to deal with the way week numbering works -->
             {% for week in lessons_by_week %}
                 {% if week.grouper != None %}</div><span class="week-label">Day {{ week.grouper }}</span><div class="pacing-week">{% endif %}
-                {% for lesson in week.list %}
-                    {% keywords_for lesson as keywords %}
-                    <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}"
-                         style="{% if lesson.pacing_weight != None %}flex-grow: {{ lesson.pacing_weight }}; {% endif %}
+                {% for session in week.list %}
+                    {% keywords_for session as keywords %}
+                    <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %} {% if session.number == lesson.number %}active{% endif %}"
+                         style="{% if session.pacing_weight != None %}flex-grow: {{ session.pacing_weight }}; {% endif %}
                                  flex-basis: {{ unit.lesson_width }}%">
-                        <span class="lesson-number">{{ lesson.number|stringformat:"02d" }}</span>
-                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson.title }}</a>
+                        <span class="lesson-number">{{ session.number|stringformat:"02d" }}</span>
+                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug session.number %}">{{ session.title }}</a>
                         <span class="lesson-icon"></span>
                     </div>
                 {% endfor %}
