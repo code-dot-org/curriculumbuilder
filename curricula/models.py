@@ -120,6 +120,11 @@ class Curriculum(Page, RichText):
     def units(self):
         return Unit.objects.filter(parent=self, login_required=False)
 
+    # Hijacking the Mezzanine top menu to control which curricula show on the home page
+    @property
+    def in_main_menu(self):
+        return '1' in self.in_menus
+
 
 """
 Curricular Unit

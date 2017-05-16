@@ -44,11 +44,11 @@ ADMIN_MENU_COLLAPSED = False
 # menus a page should appear in. Note that if a menu template is used
 # that doesn't appear in this setting, all pages will appear in it.
 
-# PAGE_MENU_TEMPLATES = (
-#     (1, _("Top navigation bar"), "pages/menus/dropdown.html"),
-#     (2, _("Left-hand tree"), "pages/menus/tree.html"),
-#     (3, _("Footer"), "pages/menus/footer.html"),
-# )
+PAGE_MENU_TEMPLATES = (
+    (1, _("Main Curriculum Listing"), "pages/menus/dropdown.html"),
+    (2, _("Unused"), "pages/menus/tree.html"),
+    (3, _("Unused"), "pages/menus/footer.html"),
+)
 
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.

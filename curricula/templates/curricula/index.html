@@ -30,10 +30,12 @@
 
 {% block main %}
     {% for curriculum in curricula.all %}
-    <div class="together">
-        <h2><a href="{% url 'curriculum:curriculum_view' curriculum.slug %}">{{ curriculum.title }}</a></h2>
-        <p>{{ curriculum.description }}</p>
-    </div>
+        {% if curriculum.in_main_menu %}
+            <div class="together">
+                <h2><a href="{% url 'curriculum:curriculum_view' curriculum.slug %}">{{ curriculum.title }}</a></h2>
+                <p>{{ curriculum.description }}</p>
+            </div>
+        {% endif %}
     {% endfor %}
 
 {% endblock %}

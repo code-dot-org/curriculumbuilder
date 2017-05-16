@@ -209,6 +209,10 @@ footer {
     font-size: 0.9em;
 }
 
+.pacing-calendar.pl {
+    margin-top: 20px;
+}
+
 .pacing-calendar.right {
     max-width: 650px;
     margin-left: 25px;
