@@ -280,10 +280,12 @@
                 </div>
             </div>
 
+        {% if lesson.standards.count > 0 %}
             <div class="standards">
                 <h2>Standards Alignment</h2>
                 {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
             </div>
+        {% endif %}
 
         </div>
         </div>

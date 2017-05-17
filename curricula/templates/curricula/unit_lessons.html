@@ -60,13 +60,12 @@
 {% block header_title %}
 {% endblock %}
 
-{% block resources_nav %}
-    {% include "curricula/partials/unit_pills.html" with unit=unit %}
-{% endblock %}
-
 {% block main %}
     <div class="together pagebreak" id="unit{{ unit.number }}">
         <h1>{{ unit.long_name }}</h1>
+
+        {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+
         {{ unit.content|richtext_filters|safe }}
 
         <div class="chapter_overviews">
