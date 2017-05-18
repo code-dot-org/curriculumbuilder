@@ -326,7 +326,7 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
         try:
             pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
         except Exception:
-            logger.expection('PDF Generation Failed')
+            logger.exception('PDF Generation Failed')
             return HttpResponse('PDF Generation Failed', status=500)
 
         response = HttpResponse(pdf, content_type='application/pdf')
