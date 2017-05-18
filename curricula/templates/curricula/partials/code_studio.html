@@ -1,4 +1,4 @@
-{% load mezzanine_tags %}
+{% load mezzanine_tags no_autoplay %}
 
 <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
 
@@ -14,7 +14,7 @@
                     <!-- Header tabs -->
                     <ul>
                         <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
-                            <span class="level-icon"></span> {{ level.name }}
+                            {{ level.display_name|default:level.name }} <span class="level-icon"></span>
                         </li>
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
@@ -61,7 +61,7 @@
                         <!-- Embed video if present -->
                         {% if level.video_youtube %}
                         <div class="level-video">
-                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube }}&autoplay=0" width="853"></iframe>
+                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
                             <p><a href="{{ level.video_download }}">Download Video</a></p>
                         </div>
                         {% endif %}
@@ -97,7 +97,7 @@
                     <!-- Header tabs -->
                     <ul>
                         <li class="chunk-header">
-                            Levels
+                            {{ chunk.progression|default:"Levels" }}
                         </li>
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
@@ -133,7 +133,7 @@
                         <!-- Embed video if present -->
                         {% if level.video_youtube %}
                         <div class="level-video">
-                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube }}&autoplay=0" width="853"></iframe>
+                            <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
                             <p><a href="{{ level.video_download }}">Download Video</a></p>
                         </div>
                         {% endif %}

@@ -6,159 +6,18 @@
         <div class="logo">
             <img src="{% static "images/logo.png" %}">
         </div>
-        <div class="unitnumber"><a
-                href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
+        <div class="unitnumber">
+            <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
         </div>
 
         {% with lesson=parent|default_if_none:lesson %}
-            <div class="lessons">
-            {% if unit.chapters %}
-                {% for chap in unit.chapters %}
-                    <div class="lesson chapter">
-                        Ch. {{ chap.number }}
-                    </div>
-                    {% for stage in chap.lessons %}
-                        {% if stage.number < lesson.number %}
-                            <div class="lesson finished">
-                        {% elif stage.number == lesson.number %}
-                            {% if optional %}
-                                <div class="lesson finished">
-                            {% else %}
-                                <div class="lesson current">
-                            {% endif %}
-                        {% else %}
-                            <div class="lesson unfinished">
-                        {% endif %}
-                    <a href="#U{{ unit.number }}L{{ stage.number }}"
-                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                        {{ stage.number }}
-                    </a>
-                    </div>
-                    {% endfor %}
-                {% endfor %}
-            {% else %}
-                {% for stage in unit.lessons %}
-                    {% if stage.number < lesson.number %}
-                        <div class="lesson finished">
-                    {% elif stage.number == lesson.number %}
-                        {% if optional %}
-                            <div class="lesson finished">
-                        {% else %}
-                            <div class="lesson current">
-                        {% endif %}
-                    {% else %}
-                        <div class="lesson unfinished">
-                    {% endif %}
-                <a href="#U{{ unit.number }}L{{ stage.number }}"
-                   data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                    {{ stage.number }}
-                </a>
-                </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+            {% include "curricula/partials/bubbles_header_pdf.html" with unit=unit lesson=lesson %}
         {% endwith %}
         </div>
         <div class="content">
-            <div class="together" id="U{{ unit.number }}L{{ lesson.number }}">
-                {% if optional %}
-                    <h1>Optional Lesson: {{ lesson.title }}</h1>
-                {% else %}
-                    <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
-                {% endif %}
 
-                <div class="keywords">
-                    <h4>
-                        {% for keyword in lesson.keywords.all %}
-                            {% if not forloop.first %}| {% endif %}
-                            {{ keyword }}
-                        {% endfor %}
-                </div>
-            </div>
+        {% include "curricula/partials/lesson_front.html" with unit=unit lesson=lesson %}
 
-            <div class="together overview-page row">
-
-                <div class="col-sm-7 left-col">
-                    <h2>Overview</h2>
-                    {{ lesson.overview|richtext_filters|safe }}
-
-                    {% if lesson.cs_content %}
-                        <h2>Purpose</h2>
-                        {{ lesson.cs_content|richtext_filters|safe }}
-                    {% endif %}
-
-                    <h2>Agenda</h2>
-                    <div class="toc" id="toc{{ lesson|slugify }}">
-                        {% for activity in lesson.activity_set.all %}
-                            <h3>{{ activity }}</h3>
-                        {% endfor %}
-                    </div>
-
-                </div>
-
-                <div class="col-sm-5 right-col">
-
-                    {% if lesson.anchor_standards.all.count > 0 %}
-                        <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
-                        {% with lesson.anchor_standards.all as standards %}
-                            {% regroup standards by framework as standards_by_framework %}
-                            {% for framework in standards_by_framework %}
-                                <h3>{{ framework.grouper }}</h3>
-                                <ul>
-                                    {% for standard in framework.list %}
-                                        <li><strong>{{ standard.shortcode }}</strong>
-                                            - {{ standard.description }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endfor %}
-                        {% endwith %}
-                    {% endif %}
-
-                    {% if lesson.objective_set.count > 0 %}
-                        <h2>Objectives</h2>
-                        <h3>Students will be able to:</h3>
-                        <ul>
-                            {% for objective in lesson.objective_set.all %}
-                                <li>{{ objective.name }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    {% if lesson.prep %}
-                        <h2>Preparation</h2>
-                        <div class="prep">
-                            {{ lesson.prep|richtext_filters|safe }}
-                        </div>
-                    {% endif %}
-
-                    {% if lesson.resources.count > 0 %}
-                        <h2>Links</h2>
-                        {% with lesson.resources.all as resources %}
-                            {% regroup resources|dictsort:"student" by student as resources_by_audience %}
-                            {% for audience in resources_by_audience %}
-                                <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
-                                <ul>
-                                    {% for resource in audience.list %}
-                                        <li>
-                                            {{ resource.formatted|safe }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endfor %}
-                        {% endwith %}
-                    {% endif %}
-
-                    {% if lesson.vocab.count > 0 %}
-                        <h2>Vocabulary</h2>
-                        <ul>
-                            {% for word in lesson.vocab.all %}
-                                <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                </div>
-            </div>
 
             <div id="{{ lesson.title|slugify }}-content">
 
@@ -173,111 +32,8 @@
 
                 <!-- Code Studio Levels -->
 
-                <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
+                {% include "curricula/partials/code_studio.html" with unit=unit lesson=lesson %}
 
-                    {% with lesson.get_levels as stage %}
-                        {% for chunk in stage %}
-
-                            <!-- Named Levels get their own row -->
-                            {% if chunk.named %}
-                                {% for level in chunk.levels %}
-
-                                <div class="stage-chunk named-{{ chunk.named }} always-on-{% if level.teacher_markdown %}True{% else %}False{% endif %}">
-
-                                    <!-- Header tabs -->
-                                    <ul>
-                                        <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
-                                            <span class="level-icon"></span> {{ level.name }}
-                                        </li>
-                                        {% if level.teacher_markdown %}
-                                        <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
-                                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                                Teacher Overview
-                                            </a>
-                                        </li>
-                                        {% endif %}
-                                        <li class="level-bubble {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
-                                            <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
-                                                Student Overview
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <!-- Body panels -->
-                                    {% if level.teacher_markdown %}
-                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
-
-                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                                            View on Code Studio
-                                        </a>
-
-                                        <div class="teacher-markdown">
-                                            {{ level.teacher_markdown|richtext_filters|safe }}
-                                        </div>
-
-                                    </div>
-                                    {% endif %}
-
-                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}">
-
-                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                                            View on Code Studio
-                                        </a>
-
-                                        <div class="instructions-markdown">
-                                            {{ level.markdown|richtext_filters|safe }}
-                                            {{ level.markdown_instructions|richtext_filters|safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-
-                            <!-- Unnamed Levels are grouped in a row together -->
-                            {% else %}
-                                <div class="stage-chunk named-{{ chunk.named }} always-on-False">
-
-                                    <!-- Header tabs -->
-                                    <ul>
-                                        <li class="chunk-header">
-                                            Levels
-                                        </li>
-                                        {% for level in chunk.levels %}
-                                            <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}">
-                                                <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                                    <span class="level-icon"></span> {{ level.position }}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                        <li class="level-expando-tip">(click tabs to see student view)</li>
-                                    </ul>
-
-                                    <!-- Body panels -->
-                                    {% for level in chunk.levels %}
-                                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
-
-                                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
-                                            View on Code Studio
-                                        </a>
-
-                                        {% if level.teacher_markdown %}
-                                            <div class="teacher-markdown admonition tip">
-                                            <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
-                                                {{ level.teacher_markdown|richtext_filters|safe }}
-                                            </div>
-                                        {% endif %}
-
-                                        <div class="instructions-markdown">
-                                            <h3>Student Instructions</h3>
-                                            {{ level.markdown|richtext_filters|safe }}
-                                            {{ level.markdown_instructions|richtext_filters|safe }}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}
-                </div>
             </div>
 
         {% if lesson.standards.count > 0 %}
@@ -307,7 +63,7 @@
         $(document).ready(function () {
             $('#toc{{ lesson.title|slugify }}').toc({
                 'selectors': 'h2,h3', //elements to use as headings
-                'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
+                'container': '#{{ lesson.title|slugify }}-content', //element to find all selectors in
                 'smoothScrolling': false, //enable or disable smooth scrolling on click
                 'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
                 'onHighlight': function (el) {

@@ -1,0 +1,46 @@
+<div class="lessons">
+    {% if unit.chapters %}
+        {% for chap in unit.chapters %}
+            <div class="lesson chapter">
+                Ch. {{ chap.number }}
+            </div>
+            {% for stage in chap.lessons %}
+                {% if stage.number < lesson.number %}
+                    <div class="lesson finished">
+                {% elif stage.number == lesson.number %}
+                    {% if optional %}
+                        <div class="lesson finished">
+                    {% else %}
+                        <div class="lesson current">
+                    {% endif %}
+                {% else %}
+                    <div class="lesson unfinished">
+                {% endif %}
+            <a href="#U{{ unit.number }}L{{ stage.number }}"
+               data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+                {{ stage.number }}
+            </a>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        {% for stage in unit.lessons %}
+            {% if stage.number < lesson.number %}
+                <div class="lesson finished">
+            {% elif stage.number == lesson.number %}
+                {% if optional %}
+                    <div class="lesson finished">
+                {% else %}
+                    <div class="lesson current">
+                {% endif %}
+            {% else %}
+                <div class="lesson unfinished">
+            {% endif %}
+        <a href="#U{{ unit.number }}L{{ stage.number }}"
+           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
+            {{ stage.number }}
+        </a>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>

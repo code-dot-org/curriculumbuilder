@@ -24,36 +24,10 @@
     <script src="{% static "js/jquery.details.min.js" %}"></script>
 {% endblock %}
 {% block lessonnumber %}
+
     <div class="unitnumber">{{ unit.header_corner|safe }}</div>
 
-    <div class="lessons">
-        {% if unit.chapters %}
-            {% for chap in unit.chapters %}
-                <div class="lesson chapter">
-                    {% comment %}<a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chap.number %}" data-pdf-link="#unit{{ unit.number }}chapter{{ chap.number }}">{% endcomment %}
-                    Ch. {{ chap.number }}
-                    {% comment %}</a>{% endcomment %}
-                </div>
-                {% for stage in chap.lessons %}
-                    <div class="lesson unfinished">
-                        <a href="#U{{ unit.number }}L{{ stage.number }}"
-                           data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                            {{ stage.number }}
-                        </a>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% else %}
-            {% for stage in unit.lessons %}
-                <div class="lesson unfinished">
-                    <a href="#U{{ unit.number }}L{{ stage.number }}"
-                       data-pdf-link="#unit{{ unit.number }}lesson{{ stage.number }}">
-                        {{ stage.number }}
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+    {% include "curricula/partials/bubbles_header_pdf.html" with unit=unit %}
 
 {% endblock %}
 
@@ -192,7 +166,7 @@
 
 {% block append_pages %}
     {% for lesson in unit.lessons %}
-        <div class="pagebreak" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+        <div class="pagebreak" id="U{{ unit.number }}L{{ lesson.number }}">
             {% include "curricula/partials/lesson.html" with lesson=lesson unit=unit %}
         </div>
     {% endfor %}

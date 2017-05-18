@@ -763,7 +763,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-Playlab .level-icon:before {                  content: "\f135"; }
 .type-Calc .level-icon:before {                     content: "\f1ec"; }
 .type-Eval .level-icon:before {                     content: "\f040"; }
-.level-icon:before {                                content: "\f085"; }
+.level-icon:before {                                content: "\f108"; }
 
 
 ul.multi {

@@ -276,15 +276,18 @@ class Lesson(Page, RichText):
             levels = []  # To store levels organized by logical chunk
             counter = 0
             last_type = raw_levels[0].get('named_level')
-            levels.insert(counter, {'named': last_type, 'levels': []})
+            last_progression = raw_levels[0].get('progression')
+            levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
             for level in raw_levels:
 
                 current_type = level.get('named_level')
-                if last_type != current_type:
+                current_progression = level.get('progression')
+                if last_type != current_type or last_progression != current_progression:
                     last_type = current_type
+                    last_progression = current_progression
                     counter += 1
-                    levels.insert(counter, {'named': last_type, 'levels': []})
+                    levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
                 levels[counter]['levels'].append(level)
 
