@@ -518,9 +518,11 @@ code {
         content: none !important;
     }
 
+    /* Display full url for links
     .print_link[href]:after {
         content: " (" attr(href) ")" !important;
     }
+    */
 
     .lessons .finished a, .lessons .current a {
         color: #7665a0 !important;
