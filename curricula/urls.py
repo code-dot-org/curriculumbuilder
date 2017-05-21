@@ -74,6 +74,6 @@ urlpatterns = patterns('curricula.views',
                        # Option Lessons (I hates them)
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/$',
                            views.lesson_view, name='lesson_optional'),
-                       url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/overiew/$',
+                       url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/overview/$',
                            views.lesson_view, name='lesson_overview'),
                        )
