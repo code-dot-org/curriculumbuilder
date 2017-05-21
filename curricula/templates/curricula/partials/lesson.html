@@ -61,25 +61,6 @@
         <script type="text/javascript">
 
         $(document).ready(function () {
-            $('#toc{{ lesson.title|slugify }}').toc({
-                'selectors': 'h2,h3', //elements to use as headings
-                'container': '#{{ lesson.title|slugify }}-content', //element to find all selectors in
-                'smoothScrolling': false, //enable or disable smooth scrolling on click
-                'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
-                'onHighlight': function (el) {
-                }, //called when a new section is highlighted
-                'highlightOnScroll': true, //add class to heading that is currently in focus
-                'highlightOffset': 100, //offset to trigger the next headline
-                'anchorName': function (i, heading, prefix) { //custom function for anchor name
-                    return prefix + i;
-                },
-                'headerText': function (i, heading, $heading) { //custom function building the header-item text
-                    return $heading.text();
-                },
-                'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
-                    return $heading[0].tagName.toLowerCase();
-                }
-            });
 
 
             // New Code Studio Integration
@@ -142,5 +123,27 @@
             });
 
             $('#{{ lesson.title|slugify }}-content .stage_guide_hidden').remove();
+
+
+            $('#toc{{ lesson.title|slugify }}').toc({
+                'selectors': 'h2,h3', //elements to use as headings
+                'container': '#{{ lesson.title|slugify }}-content', //element to find all selectors in
+                'exclude': '.stage_guide h2, .stage_guide h3', //selectors to exclude
+                'smoothScrolling': false, //enable or disable smooth scrolling on click
+                'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
+                'onHighlight': function (el) {
+                }, //called when a new section is highlighted
+                'highlightOnScroll': true, //add class to heading that is currently in focus
+                'highlightOffset': 100, //offset to trigger the next headline
+                'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                    return prefix + i;
+                },
+                'headerText': function (i, heading, $heading) { //custom function building the header-item text
+                    return $heading.text();
+                },
+                'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
+                    return $heading[0].tagName.toLowerCase();
+                }
+            });
         });
         </script>
