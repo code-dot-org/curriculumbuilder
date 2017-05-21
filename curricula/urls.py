@@ -25,7 +25,7 @@ urlpatterns = patterns('curricula.views',
                        url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
                            documentation_views.embed_view, name='embed_view'),
 
-                       # Curriculum URLS
+                       # Curriculum URLs
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/$', views.curriculum_view, name='curriculum_view'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/pdf$', views.curriculum_pdf, name='curriculum_pdf'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/code/$', views.curriculum_code, name='curriculum_code'),
@@ -36,6 +36,8 @@ urlpatterns = patterns('curricula.views',
                            standards_views.by_curriculum, name='by_curriculum'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/standards/(?P<unit_slug>[a-zA-Z]+)/$',
                            standards_views.by_unit, name='by_unit'),
+
+                       # Unit URLs
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/$',
                            views.unit_view, name='unit_view'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/compiled/$',
@@ -58,6 +60,8 @@ urlpatterns = patterns('curricula.views',
                            standards_views.by_unit, name='by_unit_2'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/ch(?P<chapter_num>\d+)/$',
                            views.chapter_view, name='chapter_view'),
+
+                       # Lesson URLs
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/$',
                            views.lesson_view, name='lesson_view'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/pdf/$',
@@ -66,8 +70,10 @@ urlpatterns = patterns('curricula.views',
                            views.lesson_markdown, name='lesson_markdown'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/overview/$',
                            views.lesson_overview, name='lesson_overview'),
-                       url(
-                           r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/$',
-                           views.lesson_view, name='lesson_optional'),
 
+                       # Option Lessons (I hates them)
+                       url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/$',
+                           views.lesson_view, name='lesson_optional'),
+                       url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/overiew/$',
+                           views.lesson_view, name='lesson_overview'),
                        )
