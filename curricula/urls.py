@@ -17,14 +17,6 @@ urlpatterns = patterns('curricula.views',
                        url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
                        url(r'^metadata/course/(?P<slug>[-\w]+).json$', views.curriculum_element, name="curriculum_element"),
 
-                       # Documentation URLS
-                       url(r'^(?P<slug>[-\w]+lab)/$',
-                           documentation_views.ide_view, name='ide_view'),
-                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/$',
-                           documentation_views.block_view, name='block_view'),
-                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
-                           documentation_views.embed_view, name='embed_view'),
-
                        # Curriculum URLs
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/$', views.curriculum_view, name='curriculum_view'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/pdf$', views.curriculum_pdf, name='curriculum_pdf'),
@@ -76,4 +68,14 @@ urlpatterns = patterns('curricula.views',
                            views.lesson_view, name='lesson_optional'),
                        url(r'^(?P<slug>[0-9a-zA-Z]+)/(?P<unit_slug>[0-9a-zA-Z]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/overview/$',
                            views.lesson_view, name='lesson_overview'),
+
+                       # Documentation URLS
+                       url(r'^(?P<slug>[-\w]+lab)/$',
+                           documentation_views.ide_view, name='ide_view'),
+                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/$',
+                           documentation_views.block_view, name='block_view'),
+                       url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$',
+                           documentation_views.embed_view, name='embed_view'),
+                       url(r'^(?P<curric_slug>[-\w]+)/(?P<slug>[-\w.]+)/$',
+                           documentation_views.page_view, name='page_view'),
                        )
