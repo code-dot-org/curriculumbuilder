@@ -284,40 +284,40 @@ footer {
 }
 
 .pacing-lesson.active {
-    color: #fff;
-    background: #00adbc;
+    color: #fff !important;
+    background: #00adbc !important;
 }
 
 .pacing-lesson.active .lesson-title {
-    color: #fff;
+    color: #fff !important;
 }
 
 .pacing-lesson.project.active {
-    background: #7665a0;
+    background: #7665a0 !important;
 }
 
 .pacing-lesson.general-session.active {
-    background: #ffb81d;
+    background: #ffb81d !important;
 }
 
 .pacing-lesson.tlo-room-session.active {
-    background: #0094ca;
+    background: #0094ca !important;
 }
 
 .pacing-lesson.lesson-session.active {
-    background: #00adbc;
+    background: #00adbc !important;
 }
 
 .pacing-lesson.breakout-session.active {
-    background: #7665a0;
+    background: #7665a0 !important;
 }
 
 .pacing-lesson.lesson-planning-session.active {
-    background: #b9bf15;
+    background: #b9bf15 !important;
 }
 
 .pacing-lesson.community-session.active {
-    background: #c00;
+    background: #c00 !important;
 }
 
 
@@ -535,6 +535,8 @@ code {
     .admonition.tip i:before, .admonition.discussion i:before, .admonition.content i:before {
         color: white !important;
     }
+
+
 
     /* Make Bootstrap columns more print friendly */
     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {

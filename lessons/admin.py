@@ -69,7 +69,7 @@ class ResourceInline(TabularDynamicInlineAdmin):
 class LessonInline(TabularDynamicInlineAdmin):
     model = Lesson
     sortable_field_name = "number"
-    fields = ['title', 'duration', 'number', 'pacing_weight', 'unplugged', 'keywords']
+    fields = ['title', 'week', 'number', 'pacing_weight', 'unplugged', 'keywords']
 
     keywords = KeywordsField()
 
@@ -117,7 +117,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, VersionAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', ('status', 'login_required', 'duration', 'pacing_weight', 'unplugged'), 'image',
+            'fields': ['title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
                        'overview', 'keywords', ('description', 'gen_description')],
         }),
         ('Purpose, Prep, & Questions', {
@@ -143,7 +143,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, VersionAdmin):
 class MultiLessonForm(ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'duration', 'number', 'pacing_weight', 'unplugged', 'keywords']
+        fields = ['title', 'week', 'number', 'pacing_weight', 'unplugged', 'keywords']
 
     keywords = KeywordsField()
 
@@ -154,8 +154,8 @@ class MultiLesson(Lesson):
 
 
 class MultiLessonAdmin(admin.ModelAdmin):
-    list_display = ('curriculum', 'unit', 'number', 'title', 'duration', 'pacing_weight', 'unplugged')
-    list_editable = ('title', 'duration', 'pacing_weight', 'unplugged')
+    list_display = ('curriculum', 'unit', 'number', 'title', 'week', 'pacing_weight', 'unplugged')
+    list_editable = ('title', 'week', 'pacing_weight', 'unplugged')
     list_filter = ('curriculum', 'unit', 'keywords__keyword')
     actions = [publish]
 

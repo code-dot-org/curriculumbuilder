@@ -154,10 +154,10 @@
 
     <div class="pacing-calendar pl">
 
-            {% regroup unit.lessons by duration as lessons_by_week %}
+            {% regroup unit.lessons by week as lessons_by_week %}
             <div style="display:none;"> <!-- hack to deal with the way week numbering works -->
             {% for week in lessons_by_week %}
-                {% if week.grouper != None %}</div><span class="week-label">Day {{ week.grouper }}</span><div class="pacing-week">{% endif %}
+                {% if week.grouper != None %}</div><span class="week-label no_print">Day {{ week.grouper }}</span><div class="pacing-week no_print">{% endif %}
                 {% for session in week.list %}
                     {% keywords_for session as keywords %}
                     <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %} {% if session.number == lesson.number %}active{% endif %}"
@@ -185,7 +185,7 @@
 <!-- One Pager -->
 
 <div id="unit{{ unit.number }}lesson{{ lesson.number }}">
-    {% editable lesson.title %}
+    {% editable lesson.title lesson.duration %}
         {% if optional %}
             <h1>Optional Lesson: {{ lesson.title }}</h1>
         {% else %}
@@ -203,9 +203,12 @@
     </div>
 </div>
 
-<div class="overview-page row">
+<div class="overview-page row pl">
 
     <div class="col-sm-7 left-col">
+        {% if lesson.duration %}
+            <h2>{{ lesson.duration }}</h2>
+        {% endif %}
     {% comment %}
         <h2>Overview</h2>
         {% editable lesson.overview %}
@@ -451,6 +454,10 @@
 
         $(document).ready(function () {
 
+            // Only print the current day with title
+            var day = $('.pacing-lesson.active').first().parent();
+            day.removeClass('no_print');
+            day.prev().removeClass('no_print');
 
             // New Code Studio Integration
             $('.stage_guide').each(function () {
@@ -674,27 +681,6 @@
                 });
             });
 
-            var isFeedbackActive = false;
-
-            $('#feedbackFrame').load(function () {
-                if ($(this).attr('src')) {
-                    isFeedbackActive = !isFeedbackActive;
-                    if (!isFeedbackActive) {
-                        $('#feedbackModal').modal('toggle');
-                    }
-                }
-            });
-
-
-            $('#feedbackModal').on('shown.bs.modal', function () {
-                if (!isFeedbackActive) {
-                    $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
-                }
-
-                //$(this).find('.modal-body').css({
-                //    'max-height':'100%'
-                //});
-            });
         });
     </script>
 

@@ -112,7 +112,7 @@
                     </div>
                 {% endif %}
 
-                {% regroup chapter.lessons by duration as lessons_by_week %}
+                {% regroup chapter.lessons by week as lessons_by_week %}
                 {% for week in lessons_by_week %}
                     {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
                     {% for lesson in week.list %}
