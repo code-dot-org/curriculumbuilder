@@ -20,6 +20,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL('SET CONSTRAINTS ALL IMMEDIATE',
+                          reverse_sql=migrations.RunSQL.noop),
         migrations.AddField(
             model_name='lesson',
             name='week',
@@ -32,4 +34,6 @@ class Migration(migrations.Migration):
             name='duration',
             field=models.CharField(help_text=b'Duration of lesson', max_length=255, null=True, verbose_name=b'Duration', blank=True),
         ),
+        migrations.RunSQL(migrations.RunSQL.noop,
+                          reverse_sql='SET CONSTRAINTS ALL IMMEDIATE'),
     ]
