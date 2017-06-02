@@ -318,7 +318,6 @@ TEMPLATES = [{u'APP_DIRS': False,
               u'BACKEND': u'django.template.backends.django.DjangoTemplates',
               u'DIRS': (os.path.join(PROJECT_ROOT, "templates"),),
               u'OPTIONS': {
-                  u'builtins': [u'mezzanine.template.loader_tags'],
                   u'context_processors': (u'django.contrib.auth.context_processors.auth',
                                           u'django.contrib.messages.context_processors.messages',
                                           'django.core.context_processors.csrf',
