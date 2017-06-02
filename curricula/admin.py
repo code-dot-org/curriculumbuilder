@@ -13,7 +13,7 @@ from curricula.models import Curriculum, Unit, Chapter
 class LessonInline(TabularDynamicInlineAdmin):
     model = Lesson
     fk_name = 'unit'
-    fields = ['number', 'title', 'duration', 'pacing_weight', 'unplugged', 'keywords']
+    fields = ['number', 'title', 'week', 'pacing_weight', 'unplugged', 'keywords']
 
     keywords = KeywordsField()
 
