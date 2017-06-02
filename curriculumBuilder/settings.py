@@ -139,8 +139,6 @@ DEBUG = not ON_PAAS
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
 
-TEMPLATE_DEBUG = DEBUG
-
 if ON_PAAS:
     ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
                      '.codecurricula.com']
@@ -265,12 +263,6 @@ if os.environ.get('REDISCLOUD_PASSWORD'):
 # Package/module name to import the root urlpatterns from for the project.
 ROOT_URLCONF = "%s.urls" % PROJECT_APP
 
-# Put strings here, like "/home/html/django_templates"
-# or "C:/www/django/templates".
-# Always use forward slashes, even on Windows.
-# Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
-
 ################
 # APPLICATIONS #
 ################
@@ -322,28 +314,26 @@ INSTALLED_APPS = (
     "gong"
 )
 
-# List of processors used by RequestContext to populate the context.
-# Each one should be a callable that takes the request object as its
-# only parameter and returns a dictionary to add to the context.
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.static",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.tz",
-    "mezzanine.conf.context_processors.settings",
-    "mezzanine.pages.context_processors.page",
-)
-
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
+TEMPLATES = [{u'APP_DIRS': False,
+              u'BACKEND': u'django.template.backends.django.DjangoTemplates',
+              u'DIRS': (os.path.join(PROJECT_ROOT, "templates"),),
+              u'OPTIONS': {
+                  u'builtins': [u'mezzanine.template.loader_tags'],
+                  u'context_processors': (u'django.contrib.auth.context_processors.auth',
+                                          u'django.contrib.messages.context_processors.messages',
+                                          u'django.core.context_processors.debug',
+                                          u'django.core.context_processors.i18n',
+                                          u'django.core.context_processors.static',
+                                          u'django.core.context_processors.media',
+                                          u'django.core.context_processors.request',
+                                          u'django.core.context_processors.tz',
+                                          u'mezzanine.conf.context_processors.settings',
+                                          u'mezzanine.pages.context_processors.page'),
+                  u'loaders': [(u'django.template.loaders.cached.Loader',
+                               (u'django.template.loaders.filesystem.Loader',
+                                u'django.template.loaders.app_directories.Loader'))]}
+              }
+             ]
 
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
