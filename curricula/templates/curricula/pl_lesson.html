@@ -257,7 +257,7 @@
 
         {% if lesson.objective_set.count > 0 %}
             <h2>Objectives</h2>
-            <h3>Participants will be able to:</h3>
+            <!--<h3>Participants will be able to:</h3>-->
             <ul>
                 {% for objective in lesson.objective_set.all %}
                     <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>

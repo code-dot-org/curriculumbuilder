@@ -31,6 +31,16 @@ class ObjectiveInline(TabularDynamicInlineAdmin):
     }
 
 
+class ObjectiveAdmin(admin.ModelAdmin):
+    model = Objective
+    fields = ['name', 'lesson']
+    verbose_name = "Objective"
+    verbose_name_plural = "Objectives"
+    list_display = ('lesson', 'name')
+    list_editable = ('name',)
+    list_filter = ('lesson__curriculum', 'lesson__unit')
+
+
 class PrereqInline(StackedDynamicInlineAdmin):
     model = Prereq
     verbose_name = "Prerequisite"
@@ -204,7 +214,7 @@ admin.site.register(Lesson, LessonAdmin)
 admin.site.register(MultiLesson, MultiLessonAdmin)
 admin.site.register(Lesson.resources.through)
 admin.site.register(Prereq)
-admin.site.register(Objective)
+admin.site.register(Objective, ObjectiveAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(Vocab, VocabAdmin)
 admin.site.register(Resource, ResourceAdmin)
