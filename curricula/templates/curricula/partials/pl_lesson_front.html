@@ -1,0 +1,111 @@
+{% load mezzanine_tags %}
+{% load staticfiles %}
+
+<!-- One Pager -->
+
+<div id="unit{{ unit.number }}lesson{{ lesson.number }}">
+    {% editable lesson.title lesson.duration %}
+        {% if optional %}
+            <h1>Optional Lesson: {{ lesson.title }}</h1>
+        {% else %}
+            <h1>Session {{ lesson.number }}: {{ lesson.title }}</h1>
+        {% endif %}
+    {% endeditable %}
+
+        {% if lesson.duration %}
+            <h2>{{ lesson.duration }}</h2>
+        {% endif %}
+
+    <div class="keywords">
+        <h4>
+            {% for keyword in lesson.keywords.all %}
+                {% if not forloop.first %}| {% endif %}
+                {{ keyword }}
+            {% endfor %}
+        </h4>
+    </div>
+</div>
+
+<div class="overview-page row pl">
+
+    <div class="col-sm-4 left-col">
+    {% comment %}
+        <h2>Overview</h2>
+        {% editable lesson.overview %}
+            {{ lesson.overview|richtext_filters|safe }}
+        {% endeditable %}
+    {% endcomment %}
+
+        {% if lesson.cs_content %}
+            <h2>Purpose</h2>
+            {% editable lesson.cs_content %}
+                {{ lesson.cs_content|richtext_filters|safe }}
+            {% endeditable %}
+        {% endif %}
+
+<!-- Objectives -->
+
+        {% if lesson.objective_set.count > 0 %}
+            <h2>Objectives</h2>
+            <!--<h3>Participants will be able to:</h3>-->
+            <ul>
+                {% for objective in lesson.objective_set.all %}
+                    <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+
+    <div class="col-sm-4 left-col">
+
+<!-- Prep -->
+
+        {% if lesson.prep %}
+            <h2>Supplies & Prep</h2>
+            <div class="prep">
+                {% editable lesson.prep %}
+                    {{ lesson.prep|richtext_filters|safe }}
+                {% endeditable %}
+            </div>
+        {% endif %}
+
+<!-- Resources -->
+    {% comment %}
+
+        {% if lesson.resources.count > 0 %}
+            <h2>Links</h2>
+            {% with lesson.resources.all as resources %}
+                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h3>For the {{ audience.grouper|yesno:"Participants,Facilitator" }}</h3>
+                    <ul>
+                        {% for resource in audience.list %}
+                            <li>
+                                {% editable resource.name resource.type resource.url %}
+                                    {{ resource.formatted|safe }}
+                                {% endeditable %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+    {% endcomment %}
+
+        {% if user.is_staff %}
+            <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
+                resource</a>{% endif %}
+    </div>
+
+
+    <div class="col-sm-4 right-col">
+        <h2>Agenda</h2>
+        <div class="toc" id="toc{{ lesson|slugify }}">
+            {% for activity in lesson.activity_set.all %}
+                <h3>{{ activity }}</h3>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>

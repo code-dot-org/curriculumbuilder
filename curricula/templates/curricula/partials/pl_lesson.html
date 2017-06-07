@@ -1,0 +1,149 @@
+{% load mezzanine_tags %}
+{% load staticfiles %}
+
+<div class="container">
+    <div class="header printbackground">
+        <div class="logo">
+            <img src="{% static "images/logo.png" %}">
+        </div>
+        <div class="unitnumber">
+            <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
+        </div>
+
+        {% with lesson=parent|default_if_none:lesson %}
+            {% include "curricula/partials/bubbles_header_pdf.html" with unit=unit lesson=lesson %}
+        {% endwith %}
+        </div>
+        <div class="content">
+
+        {% include "curricula/partials/lesson_front.html" with unit=unit lesson=lesson %}
+
+
+            <div id="{{ lesson.title|slugify }}-content">
+
+                <h1>Teaching Guide</h1>
+
+                {% for activity in lesson.activity_set.all %}
+                    <div class="activity">
+                        <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                        {{ activity.content|richtext_filters|safe }}
+                    </div>
+                {% endfor %}
+
+                <!-- Code Studio Levels -->
+
+                {% include "curricula/partials/code_studio.html" with unit=unit lesson=lesson pdf=True%}
+
+            </div>
+
+        {% if lesson.standards.count > 0 %}
+            <div class="standards">
+                <h2>Standards Alignment</h2>
+                {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+            </div>
+        {% endif %}
+
+        </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}"
+                                                               border="0"></a><br/>
+                            <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a
+                                    href="//code.org/contact">contact us.</a></span>
+                </div>
+            </div>
+        </footer>
+
+
+        <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            // New Code Studio Integration
+            $('#{{ lesson.title|slugify }}-content .stage_guide').each(function () {
+                var start = parseInt($(this).attr('data-start'));
+                var end = parseInt($(this).attr('data-end'));
+
+
+                if ($('#{{ lesson.title|slugify }}-content .stage_guide_hidden').children().length > 0) {
+                    if (start) {
+                        var tab, tabs, chunk, panel, current_named, last_named;
+                        $(this).append('<div class="stage-chunk named-False always-on-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
+                        chunk = $(this).find('.stage-chunk');
+                        tabs = $(chunk).find('ul');
+                        if (end) {
+                            for (var i = start; i <= end; i++) {
+                                tab = $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk li[data-level=' + i + ']');
+                                panel = $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']');
+                                current_named = $(tab).data('named');
+
+                                // If this is a named level, or the first in an unnamed chunk, start a new chunk
+                                if (last_named == 'True' || last_named != current_named) {
+                                    $(this).append('<div class="stage-chunk named-False always-on-False"><ul></ul></div>');
+                                    chunk = $(chunk).next('.stage-chunk');
+                                    tabs = $(chunk).find('ul');
+                                }
+
+                                // If this is the first in an unnamed chunk, add "Levels" header
+                                if (last_named != current_named && current_named == 'False') {
+                                    $(tabs).append('<li class="chunk-header">Levels</li>');
+                                }
+
+                                $(tab).appendTo(tabs);
+                                $(panel).appendTo(chunk);
+                                if (current_named == 'True') {
+                                    $(chunk).removeClass("named-False always-on-False");
+                                    $(chunk).addClass("named-True always-on-True");
+                                }
+                                last_named = current_named;
+                            }
+                        } else {
+                            tab = $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk li[data-level=' + start + ']');
+                            panel = $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']');
+
+                            if ($(tab).data('named') == 'True') {
+                                $(chunk).removeClass("named-False always-on-False");
+                                $(chunk).addClass("named-True always-on-True");
+                            } else {
+                                $(tabs).append('<li class="chunk-header">Levels</li>');
+                            }
+
+                            $(tab).appendTo(tabs);
+                            $(panel).appendTo(chunk);
+                        }
+                    } else {
+                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
+                        $('#{{ lesson.title|slugify }}-content .stage_guide_hidden .stage-chunk').appendTo(this);
+                    }
+                }
+            });
+
+            $('#{{ lesson.title|slugify }}-content .stage_guide_hidden').remove();
+
+
+            $('#toc{{ lesson.title|slugify }}').toc({
+                'selectors': 'h2,h3', //elements to use as headings
+                'container': '#{{ lesson.title|slugify }}-content', //element to find all selectors in
+                'exclude': '.stage_guide h2, .stage_guide h3', //selectors to exclude
+                'smoothScrolling': false, //enable or disable smooth scrolling on click
+                'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
+                'onHighlight': function (el) {
+                }, //called when a new section is highlighted
+                'highlightOnScroll': true, //add class to heading that is currently in focus
+                'highlightOffset': 100, //offset to trigger the next headline
+                'anchorName': function (i, heading, prefix) { //custom function for anchor name
+                    return prefix + i;
+                },
+                'headerText': function (i, heading, $heading) { //custom function building the header-item text
+                    return $heading.text();
+                },
+                'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
+                    return $heading[0].tagName.toLowerCase();
+                }
+            });
+        });
+        </script>
