@@ -2,21 +2,12 @@
 {% load staticfiles %}
 
 <div class="container">
-    <div class="header printbackground">
-        <div class="logo">
-            <img src="{% static "images/logo.png" %}">
-        </div>
-        <div class="unitnumber">
-            <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
-        </div>
 
-        {% with lesson=parent|default_if_none:lesson %}
-            {% include "curricula/partials/bubbles_header_pdf.html" with unit=unit lesson=lesson %}
-        {% endwith %}
-        </div>
+{% include "curricula/partials/pl_header.html" with unit=unit lesson=lesson printflag="no_print" %}
+
         <div class="content">
 
-        {% include "curricula/partials/lesson_front.html" with unit=unit lesson=lesson %}
+        {% include "curricula/partials/pl_lesson_front.html" with unit=unit lesson=lesson %}
 
 
             <div id="{{ lesson.title|slugify }}-content">
@@ -32,7 +23,7 @@
 
                 <!-- Code Studio Levels -->
 
-                {% include "curricula/partials/code_studio.html" with unit=unit lesson=lesson pdf=True%}
+                {% include "curricula/partials/code_studio.html" with unit=unit lesson=lesson pdf=True %}
 
             </div>
 

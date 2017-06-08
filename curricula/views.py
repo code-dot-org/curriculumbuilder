@@ -127,7 +127,7 @@ def unit_view(request, slug, unit_slug):
     changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
 
     if pdf:
-        template = 'curricula/unit_lessons.html'
+        template = 'curricula/pl_unit_lessons.html'
     else:
         if curriculum.unit_template_override:
             template = unit.curriculum.unit_template_override
@@ -345,7 +345,7 @@ def unit_compiled(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
 
-    return render(request, 'curricula/unit_lessons.html', {'curriculum': curriculum, 'unit': unit})
+    return render(request, 'curricula/pl_unit_lessons.html', {'curriculum': curriculum, 'unit': unit})
 
 
 def unit_pdf(request, slug, unit_slug):
