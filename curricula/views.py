@@ -127,7 +127,10 @@ def unit_view(request, slug, unit_slug):
     changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
 
     if pdf:
-        template = 'curricula/pl_unit_lessons.html'
+        if curriculum.unit_template_override == 'curricula/pl_unit.html':
+            template = 'curricula/pl_unit_lessons.html'
+        else:
+            template = 'curricula/unit_lessons.html'
     else:
         if curriculum.unit_template_override:
             template = unit.curriculum.unit_template_override
@@ -345,7 +348,12 @@ def unit_compiled(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
 
-    return render(request, 'curricula/pl_unit_lessons.html', {'curriculum': curriculum, 'unit': unit})
+    if curriculum.unit_template_override == 'curricula/pl_unit.html':
+        template = 'curricula/pl_unit_lessons.html'
+    else:
+        template = 'curricula/unit_lessons.html'
+
+    return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
 
 def unit_pdf(request, slug, unit_slug):
@@ -379,7 +387,7 @@ def unit_pdf(request, slug, unit_slug):
 
         slack_message('slack/message.slack', {
             'message': 'created a PDF from %s %s' % (slug, unit_slug),
-            'user': request.user,
+            'user': request.user or request.META['HTTP_X_FORWARDED_FOR'],
         })
 
     return response
