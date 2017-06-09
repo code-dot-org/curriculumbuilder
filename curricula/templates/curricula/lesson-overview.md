@@ -5,9 +5,9 @@
 
 {% for word in lesson.vocab.all %}* **{{ word.word }}** - {{ word.detailDef|safe }}
 {% endfor %}{% endif %}
-{% if lesson.blocks.count > 0 %}## New Blocks
+{% if lesson.blocks.count > 0 %}## Introduced Code
 
-{% for block in lesson.blocks.all %}*  **[{{ block.title }}]({{ block.get_published_url }})** - `{{ block.code|safe }}`
+{% for block in lesson.blocks.all %}* [{{ block.title }}]({{ block.get_published_url }})
 {% endfor %}{% endif %}
 {% if lesson.resources.count > 0 %}## Resources
 

@@ -38,7 +38,7 @@
     <div class="together pagebreak" id="unit{{ unit.number }}">
         <h1>{{ unit.long_name }}</h1>
 
-        {% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}
+        {% comment %}{% if unit.show_calendar %}{% include "curricula/partials/unit_calendar.html" with unit=unit %}{% endif %}{% endcomment %}
 
         {{ unit.content|richtext_filters|safe }}
 

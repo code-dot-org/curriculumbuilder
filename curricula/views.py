@@ -26,6 +26,8 @@ from urllib import urlencode
 from urllib2 import Request, urlopen
 # import dryscrape
 
+from ipware.ip import get_real_ip
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -385,9 +387,10 @@ def unit_pdf(request, slug, unit_slug):
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
 
+        ip = get_real_ip(request)
         slack_message('slack/message.slack', {
             'message': 'created a PDF from %s %s' % (slug, unit_slug),
-            'user': request.user or request.META['HTTP_X_FORWARDED_FOR'],
+            'user': request.user or ip,
         })
 
     return response
