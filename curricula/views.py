@@ -26,6 +26,8 @@ from urllib import urlencode
 from urllib2 import Request, urlopen
 # import dryscrape
 
+from multiurl import ContinueResolving
+
 from ipware.ip import get_real_ip
 
 from rest_framework.decorators import api_view
@@ -67,7 +69,11 @@ Core curricula and lesson views
 
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
-    curriculum = get_object_or_404(Curriculum, slug=slug)
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     if request.user.is_staff:
         units = Unit.objects.filter(curriculum=curriculum)
     else:
@@ -101,7 +107,11 @@ def curriculum_view(request, slug):
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
 
-    curriculum = get_object_or_404(Curriculum, slug=slug)
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     if request.user.is_staff:
         unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     else:
@@ -144,7 +154,12 @@ def unit_view(request, slug, unit_slug):
 
 
 def unit_at_a_glance(request, slug, unit_slug):
-    curriculum = get_object_or_404(Curriculum, slug=slug)
+
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     if request.user.is_staff:
         unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     else:
@@ -254,14 +269,24 @@ Unit List Views
 
 
 def curriculum_resources(request, slug):
-    curriculum = Curriculum.objects.get(slug=slug)
+
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
                                                         'list_type': 'Resources',
                                                         'include_template': 'curricula/partials/resource_list.html'})
 
 
 def unit_resources(request, slug, unit_slug):
-    curriculum = Curriculum.objects.get(slug=slug)
+
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
                                                         'unit': unit,
@@ -270,7 +295,12 @@ def unit_resources(request, slug, unit_slug):
 
 
 def curriculum_vocab(request, slug):
-    curriculum = get_object_or_404(Curriculum, slug=slug)
+
+    try:
+        curriculum = get_object_or_404(Curriculum, slug=slug)
+    except Curriculum.DoesNotExist:
+        raise ContinueResolving
+
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
                                                     'list_type': 'Vocab',
                                                     'include_template': 'curricula/partials/vocab_list.html'})

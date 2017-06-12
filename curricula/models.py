@@ -134,6 +134,7 @@ Curricular Unit
 
 class Unit(Page, RichText):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
+    disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
                                   help_text='Name of Code Studio script')
@@ -184,7 +185,7 @@ class Unit(Page, RichText):
         return int(self._order) + 1
 
     def get_unit_numbering(self):
-        if self.curriculum.unit_numbering:
+        if self.curriculum.unit_numbering and not self.disable_numbering:
             return "Unit %d" % self.number
         else:
             return
@@ -256,14 +257,14 @@ class Unit(Page, RichText):
 
     @property
     def short_name(self):
-        if self.curriculum.unit_numbering:
+        if self.curriculum.unit_numbering and not self.disable_numbering:
             return self.get_unit_numbering()
         else:
             return self.title
 
     @property
     def long_name(self):
-        if self.curriculum.unit_numbering:
+        if self.curriculum.unit_numbering and not self.disable_numbering:
             return "%s - %s" % (self.get_unit_numbering(), self.title)
         else:
             return self.title
@@ -274,7 +275,7 @@ class Unit(Page, RichText):
 
     @property
     def header_corner(self):
-        if self.curriculum.unit_numbering:
+        if self.curriculum.unit_numbering and not self.disable_numbering:
             return "<span class='h2'>Unit</span><span class='h1'>%d</span>" % self.number
         else:
             re_title = "(\w+) (\w+)"
