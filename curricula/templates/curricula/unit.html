@@ -93,7 +93,7 @@
             {% for chapter in unit.chapters %}
 
                 <div class="chapter">
-                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Chapter {{ chapter.number }}: {{ chapter.title }}</a></h1>
+                <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
 
                 {% if chapter.questions %}
                     <div class="big_questions">

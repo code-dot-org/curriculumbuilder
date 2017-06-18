@@ -85,7 +85,7 @@
             {% for chapter in unit.chapters %}
 
                 <div class="chapter">
-                <h1><a href="{% url 'curriculum:chapter_view' curriculum.slug unit.slug chapter.number %}">Day {{ chapter.number }}: {{ chapter.title }}</a></h1>
+                <h1>Day {{ chapter.number }}: {{ chapter.title }}</h1>
 
                 {% if chapter.questions %}
                     <div class="big_questions">
