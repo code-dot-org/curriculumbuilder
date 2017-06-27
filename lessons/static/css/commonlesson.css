@@ -1,7 +1,7 @@
 html, body{
     margin: 0 !important;
     font-size: 16px;
-    line-height: 1.35em;
+    line-height: 1.2em;
     height:100%;
     font-family: Helvetica, Arial, sans-serif;
 }
@@ -181,7 +181,7 @@ html, body{
 }
 
 .content p, .content li {
-    font-size: 10pt;
+    font-size: 0.8em;
 }
 
 .overview-page {
@@ -203,13 +203,13 @@ html, body{
 }
 
 .overview-page h3 {
-    font-size: 10pt;
+    font-size: 0.8em;
     font-weight: bold;
 }
 
 .overview-page .h2 {
     color: #5d6770;
-    font-size: 10pt;
+    font-size: 0.8em;
     line-height: 1em;
     margin-top:1em;
     margin-bottom:.5em;
@@ -219,7 +219,7 @@ html, body{
 }
 
 .overview-page .h3 {
-    font-size: 10pt;
+    font-size: 0.8em;
     line-height: 1.25em;
     margin-left: 30px;
 }
@@ -237,7 +237,7 @@ html, body{
 .summary h2 {
   color: rgb(120,101,161);
   text-transform: uppercase;
-  font-size: 15px;
+  font-size: 1em;
   line-height: 1em;
   margin-top: 1em;
   margin-bottom: 1em;
@@ -246,7 +246,7 @@ html, body{
 .summary .h2 {
     color:rgb(120,101,161);
     text-transform:uppercase;
-    font-size: 18px;
+    font-size: 1.2em;
     line-height: 1em;
     margin-top:1em;
     margin-bottom:.5em;
@@ -254,7 +254,7 @@ html, body{
 }
 
 .summary .h3 {
-    font-size: 14px;
+    font-size: 0.9em;
     line-height: 1.25em;
     margin-left: 30px;
 }
@@ -506,13 +506,13 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .chapter_overviews h2 {
-    font-size: 20px;
+    font-size: 1.6em;
     font-weight: 100;
     margin-top: 10px;
 }
 
 .chapter_overviews h3, .chapter_overviews h3 a {
-    font-size: 18px;
+    font-size: 1.2em;
     font-weight: 100;
     font-family: 'Gotham 5r', sans-serif;
     color: rgb(0, 178, 192);
@@ -526,7 +526,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 
 .chapter_overviews .enduring_understandings {
     float: right;
-    width: 49%
+    width: 49%;
 }
 
 .chapter_overviews .enduring_understandings ul, .chapter_overviews .big_questions ul {
@@ -542,7 +542,7 @@ th a:link, th a:visited, th a:hover, th a:active {
 .chapter_overviews summary {
     margin-top: 25px;
     color: #7665a0;
-    font-size: 19pt;
+    font-size: 1.5em;
     font-weight: bold;
     line-height: 1em;
     margin-bottom: 0em;
@@ -835,5 +835,9 @@ a.btn.btn-warning:visited {
     .say .admonition-title, .guide .admonition-title,
     .say h4, .guide h4, .slides h4{
         background: white !important;
+    }
+
+    body {
+        font-size: 20px;
     }
 }
