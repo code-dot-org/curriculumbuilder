@@ -184,6 +184,11 @@ html, body{
     font-size: 0.8em;
 }
 
+/* Don't make each list level smaller */
+.content li li, .content li p {
+    font-size: 1em;
+}
+
 .overview-page {
     page-break-after: always;
     word-wrap: break-word;
