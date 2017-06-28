@@ -36,6 +36,7 @@
         {{ unit.content|richtext_filters|safe }}
 
         <div class="chapter_overviews">
+        {% if unit.chapters %}
             {% for chapter in unit.chapters %}
 
                 <div class="chapter">
@@ -61,13 +62,13 @@
 
                     {% regroup chapter.lessons by week as lessons_by_week %}
                     {% for week in lessons_by_week %}
-                        {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
+                        {% if week.grouper != None %}<h2>Day {{ week.grouper }}</h2>{% endif %}
                         {% for lesson in week.list %}
                             {% keywords_for lesson as keywords %}
                             <div class="lesson_overview
                                     {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
                                 <h3>
-                                    <a href="#U{{ unit.number }}L{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a>
+                                    <a href="#U{{ unit.number }}L{{ lesson.number }}">Session {{ lesson.number }}: {{ lesson.title }}</a>
                                 </h3>
                                 <h4>
                                     {% for keyword in keywords %}
@@ -83,7 +84,7 @@
                                     <div class="lesson_overview optional">
                                         <h3>
                                             <a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional
-                                                Lesson: {{ optional.title }}</a></h3>
+                                                Session: {{ optional.title }}</a></h3>
                                         <h4>
                                             {% keywords_for optional as keywords %}
                                             {% for keyword in keywords %}
@@ -109,6 +110,48 @@
                 {% if not forloop.last %}
                     <hr/>{% endif %}
             {% endfor %}
+        {% else %}
+            {% regroup chapter.lessons by week as lessons_by_week %}
+            {% for week in lessons_by_week %}
+                        {% if week.grouper != None %}<h2>Day {{ week.grouper }}</h2>{% endif %}
+                        {% for lesson in week.list %}
+                            {% keywords_for lesson as keywords %}
+                            <div class="lesson_overview
+                                    {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
+                                <h3>
+                                    <a href="#U{{ unit.number }}L{{ lesson.number }}">Session {{ lesson.number }}: {{ lesson.title }}</a>
+                                </h3>
+                                <h4>
+                                    {% for keyword in keywords %}
+                                        {% if not forloop.first %}| {% endif %}
+                                        {{ keyword }}
+                                    {% endfor %}
+                                </h4>
+                                {% if lesson.image %}<img src="{% get_media_prefix %}{{ lesson.image }}">{% endif %}
+                                <span class="lesson_desc">{{ lesson.description }}</span>
+                            </div>
+                            {% if lesson.optional_lessons.count > 0 %}
+                                {% for optional in lesson.optional_lessons %}
+                                    <div class="lesson_overview optional">
+                                        <h3>
+                                            <a href="{% url 'curriculum:lesson_optional' curriculum.slug unit.slug lesson.number optional.number %}">Optional
+                                                Session: {{ optional.title }}</a></h3>
+                                        <h4>
+                                            {% keywords_for optional as keywords %}
+                                            {% for keyword in keywords %}
+                                                {% if not forloop.first %}| {% endif %}
+                                                {{ keyword }}
+                                            {% endfor %}
+                                        </h4>
+                                        {% if optional.image %}
+                                            <img src="{% get_media_prefix %}{{ optional.image }}">{% endif %}
+                                        <span class="lesson_desc">{{ optional.description }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+        {% endif %}
         </div>
     </div>
 
