@@ -42,7 +42,7 @@
                         <h4>{{ child2.shortcode }} - {{ child2.name }}</h4>
                         <ul>
                         {% for standard in child2.standard_set.all %}
-                            <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
+                            <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.name }}</li>
                             <ul>
                             {% for lesson in standard.lesson_set.all  %}
                                 <li><a href="{{ lesson.url }}">{{ lesson.title }} - {{ lesson.curriculum }}</a></li>
@@ -54,7 +54,7 @@
                 {% else %}
                     <ul>
                     {% for standard in child.standard_set.all %}
-                        <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
+                        <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.name }}</li>
                         <ul>
                         {% for lesson in standard.lesson_set.all  %}
                             <li><a href="{{ lesson.url }}">{{ lesson.title }}</a></li>
@@ -67,7 +67,7 @@
         {% else %}
             <ul>
             {% for standard in top.standard_set.all %}
-                <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.description }}</li>
+                <li><strong><a href="{% url 'standards:single_standard' standard.framework.slug standard.shortcode %}">{{ standard.shortcode }}</a></strong> - {{ standard.name }}</li>
                 <ul>
                 {% for lesson in standard.lesson_set.all  %}
                     <li><a href="{{ lesson.url }}">{{ lesson.curriculum }} - {{ lesson.title }}</a></li>

@@ -25,7 +25,7 @@
 {% block main %}
 
     <h2>{{ standard.shortcode }}</h2>
-    <p>{{ standard.description }}</p>
+    <p>{{ standard.name }}</p>
     {% with standard.lesson_set.all as lessons %}
     {% regroup lessons by curriculum as lessons_by_curriculum %}
     {% for curriculum in lessons_by_curriculum %}
