@@ -57,11 +57,13 @@ class StandardResource(resources.ModelResource):
       i = i + 1
   '''
 
+  '''
   category = fields.Field(column_name='category', attribute='category',
                           widget = ForeignKeyWidget(Category,'name'))
 
   gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
                           widget = ForeignKeyWidget(GradeBand,'name'))
+	'''
 
   class Meta:
     model = Standard
