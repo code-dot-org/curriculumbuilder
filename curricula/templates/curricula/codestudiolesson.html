@@ -332,6 +332,11 @@
                         $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
                         $('.stage_guide_hidden .stage-chunk').appendTo(this);
                     }
+                    // Add base urls to links coming from Code Studio
+
+                    $(this).find('a').not('[href^="http"],[href^="https"],[href^="//"],[href^="#"]').each(function() {
+                        $(this).attr('href', "//studio.code.org" + $(this).attr('href'));
+                    });
                 }
             });
 
