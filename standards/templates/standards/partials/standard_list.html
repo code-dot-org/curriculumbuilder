@@ -13,7 +13,7 @@
                             <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
                             <ul>
                                 {% for standard in category.list %}
-                                    <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                                    <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
                                 {% endfor %}
                             </ul>
                         </details>
@@ -27,7 +27,7 @@
                     <summary><strong>{{ category.grouper.shortcode }}</strong> - {{ category.grouper.name }}</summary>
                     <ul>
                         {% for standard in category.list %}
-                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.name }}</li>
                         {% endfor %}
                     </ul>
                 </details>
