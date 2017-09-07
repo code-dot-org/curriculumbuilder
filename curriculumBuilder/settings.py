@@ -171,16 +171,16 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 
 if ON_PAAS:
     # determine if we are on MySQL or POSTGRESQL
-    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
+    if "POSTGRESQL_USER" in os.environ:
 
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': os.environ['OPENSHIFT_APP_NAME'],
-                'USER': os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
-                'HOST': os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
-                'PORT': os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
+                'NAME': os.environ['POSTGRESQL_DATABASE'],
+                'USER': os.environ['POSTGRESQL_USER'],
+                'PASSWORD': os.environ['POSTGRESQL_USER_PASSWORD'],
+                'HOST': os.environ['postgresql-1-qrq2g_SERVICE_HOST'],
+                'PORT': os.environ['postgresql-1-qrq2g_SERVICE_PORT'],
             }
         }
 
@@ -305,6 +305,7 @@ INSTALLED_APPS = (
     "smuggler",
     "sortedm2m",
     "reversion",
+    "reversion_compare",
     "django_slack",
     # Custom apps for Code.org curriculum
     "standards",
@@ -552,6 +553,7 @@ ENABLE_PUBLISH = True
 
 CHANGELOG_USER = "changelog"
 FEEDBACK_USER = "feedback"
+ADD_REVERSION_ADMIN = True
 
 #################
 # CORS SETTINGS #
