@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+#  nginx:
+#    image: nginx:latest
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - .:/code
+#      - ./config/nginx:/etc/nginx/conf.d
+#    depends_on:
+#      - web
+  db:
+    image: postgres
+  web:
+    build: .
+    # command: python3 manage.py runserver_plus 0.0.0.0:8000
+    command: bash -c "python manage.py migrate && python manage.py runserver_plus 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
