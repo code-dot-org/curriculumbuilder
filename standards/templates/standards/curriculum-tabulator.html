@@ -1,0 +1,175 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ curriculum.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.1.5/css/tabulator.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.1.5/js/tabulator.min.js"></script>
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ curriculum.title }}</h1>
+    <span class="disclaimer">Standards Alignment</span>
+{% endblock %}
+
+{% block resources_nav %}
+    {% if unit %}
+        {% include "curricula/partials/unit_pills.html" with unit=unit %}
+    {% else %}
+        {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="together standards row">
+    <div id="standards-table"></div>
+    <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
+    <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
+    {% if unit %}{# If unit is passed, just grab that unit #}
+        <div class="together">
+            <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
+
+            {% for lesson in unit.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}">
+                Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
+                {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+            {% endfor %}
+        </div>
+    {% else %}
+        {% for unit in curriculum.units %}
+        <div class="together">
+            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+
+            {% for lesson in unit.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}">
+                Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
+                {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block footer_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#expand-all").click(function () {
+                $("details").each(function() {
+                    this.open = true;
+                });
+            });
+            $("#collapse-all").click(function () {
+                $("details").each(function() {
+                    this.open = false;
+                });
+            });
+        });
+        $("#standards-table").tabulator({
+            height:"400px",
+            groupBy:function(data){
+                //data - the data object for the row being grouped
+
+                return "U" + data.unit + "L" + data.lesson; //groups by data and age
+            },
+            groupStartOpen: true,
+            groupHeader:function(value, count, data){
+                //value - the value all members of this group share
+                //count - the number of rows in this group
+                //data - an array of all the row data objects in this group
+
+                return value + "<span style='color:#d00; margin-left:10px;'>(" + count + " item)</span>";
+            },
+            fitColumns:true, //fit columns to width of table (optional)
+            columns:[ //Define Table Columns
+                //{title:"Unit", field:"unit", sorter:"number"},
+                //{title:"Lesson", field:"lesson", sorter:"number"},
+                {title:"Standards Framework", field:"framework", sorter:"string"},
+                {title:"Category", field:"category", sorter:"string"},
+                {title:"Standard", field:"standard", sorter:"string"}
+            ],
+            rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
+                alert("Row " + id + " Clicked!!!!");
+            },
+        });
+        //define some sample data
+        var tabledata = [
+            {% if unit %}
+                {% for lesson in unit.lessons %}
+                    {% regroup lesson.standards.all by framework as standards_by_framework %}
+                    {% for framework in standards_by_framework %}
+                        {% if framework.list.0.category.parent %}
+                            {% regroup framework.list by category.parent as standards_by_parent_cat  %}
+                            {% for parent in standards_by_parent_cat %}
+                                {% regroup parent.list by category as standards_by_category %}
+                                {% for category in standards_by_category %}
+                                    {% for standard in category.list %}
+            {unit:"{{ unit.number|safe }}", lesson:"{{ lesson.number|safe }}", framework:"{{ framework.grouper|safe }}", category:"{{ category.grouper.shortcode|safe }}", standard:"{{ standard.shortcode|safe }}"},
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            {% regroup framework.list by category as standards_by_category %}
+                            {% for category in standards_by_category %}
+                                {% for standard in category.list %}
+            {unit:"{{ unit.number|safe }}", lesson:"{{ lesson.number|safe }}", framework:"{{ framework.grouper|safe }}", category:"{{ category.grouper.shortcode|safe }}", standard:"{{ standard.shortcode|safe }}"},
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                {% for unit in curriculum.units %}
+                    {% for lesson in unit.lessons %}
+                        {% regroup lesson.standards.all by framework as standards_by_framework %}
+                        {% for framework in standards_by_framework %}
+                            {% if framework.list.0.category.parent %}
+                                {% regroup framework.list by category.parent as standards_by_parent_cat  %}
+                                {% for parent in standards_by_parent_cat %}
+                                    {% regroup parent.list by category as standards_by_category %}
+                                    {% for category in standards_by_category %}
+                                        {% for standard in category.list %}
+            {unit:"{{ unit.number|safe }}", lesson:"{{ lesson.number|safe }}", framework:"{{ framework.grouper|safe }}", category:"{{ category.grouper.shortcode|safe }}", standard:"{{ standard.shortcode|safe }}"},
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                {% regroup framework.list by category as standards_by_category %}
+                                {% for category in standards_by_category %}
+                                    {% for standard in category.list %}
+            {unit:"{{ unit.number|safe }}", lesson:"{{ lesson.number|safe }}", framework:"{{ framework.grouper|safe }}", category:"{{ category.grouper.shortcode|safe }}", standard:"{{ standard.shortcode|safe }}"},
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        ];
+
+        //load sample data into the table
+        $("#standards-table").tabulator("setData", tabledata);
+    </script>
+{% endblock %}

@@ -1,0 +1,53 @@
+table{
+    border-collapse: collapse;
+}
+#standards-table{
+    margin-top: 15px;
+}
+#standards-table tr.headerRow,
+#standards-table tr.headerRow td{
+    background: rgba(50,50,50,.6) !important;
+}
+table tr.headerRow > td{
+    color: white !important;
+
+}
+table tr.totalRow{
+    background: rgba(110,140,150,.6);
+}
+table tr.totalRow > td{
+    color: black;
+}
+table > thead > tr > th{
+    text-align: center;
+}
+table > tbody > tr > td{
+    text-align: center;
+    padding: 2px;
+    vertical-align: top;
+    /*font-size: 0.6em;*/
+}
+table > tbody > tr > td:first-child{
+    text-align: left;
+    font-size: 1em;
+}
+
+
+/* Normal cell borders */
+table tr > td,
+table > thead > tr > th{
+    border-left: 1px solid rgba(50, 50, 50, .1);
+}
+
+/* Header row cell borders */
+table > tbody > tr.headerRow > td:nth-child(n+1){
+    border-left: 2px solid rgba(255, 255, 255, .6);
+}
+/* Darken the first cell of each normal row */
+table > tbody > tr > td:first-child{
+    background-color: rgba(150,150,150,.1);
+}
+table > tbody > tr.headerRow > td:nth-child(2),
+table > tbody > tr.totalRow > td:nth-child(2){
+    background-color: transparent;
+}

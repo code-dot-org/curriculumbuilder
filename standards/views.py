@@ -1,4 +1,5 @@
 import operator
+import json
 
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
@@ -24,15 +25,28 @@ def by_framework(request, slug, curriculum_slug=None):
 
 def by_curriculum(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
+    standards_cols, standards_rows = curriculum.get_standards()
     # curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set__unitlesson_set__lesson__standards'), slug = slug)
     # units = Unit.objects.filter(curriculum = curriculum).prefetch_related('unitlesson_set__lesson__standards')
-    return render(request, 'standards/curriculum.html', {'curriculum': curriculum})
+    cols = json.dumps(standards_cols)
+    cols = cols.replace("\"heatCell\"", "heatCell")
+    rows = json.dumps(standards_rows)
+    return render(request, 'standards/curriculum.html', {'curriculum': curriculum,
+                                                         'standards_cols': cols,
+                                                         'standards_rows': rows})
 
 
 def by_unit(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
-    return render(request, 'standards/curriculum.html', {'curriculum': curriculum, 'unit': unit})
+    standards_cols, standards_rows = unit.get_standards()
+    cols = json.dumps(standards_cols)
+    cols = cols.replace("\"heatCell\"", "heatCell")
+    rows = json.dumps(standards_rows)
+    return render(request, 'standards/curriculum.html', {'curriculum': curriculum,
+                                                         'unit': unit,
+                                                         'standards_cols': cols,
+                                                         'standards_rows': rows})
 
 
 def single_standard(request, slug, shortcode):

@@ -9,6 +9,7 @@ from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInline
 from mezzanine.generic.fields import KeywordsField
 from mezzanine.pages.admin import PageAdmin
 from reversion.admin import VersionAdmin
+from reversion_compare.admin import CompareVersionAdmin
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
@@ -116,7 +117,7 @@ class LessonForm(ModelForm):
         self.fields['anchor_standards'].queryset = standards_queryset
 
 
-class LessonAdmin(PageAdmin, AjaxSelectAdmin, VersionAdmin):
+class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
     form = LessonForm
 
     actions = [publish]
@@ -143,6 +144,10 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, VersionAdmin):
             'classes': ['collapse-closed'],
         }),
     )
+
+    def compare_activity(self, obj_compare):
+        """ compare the foo_bar model field """
+        return "%r <-> %r" % (obj_compare.value1, obj_compare.value2)
 
     def get_queryset(self, request):
         return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr') \
@@ -192,7 +197,7 @@ class VocabResource(resources.ModelResource):
         model = Vocab
 
 
-class ActivityAdmin(VersionAdmin):
+class ActivityAdmin(CompareVersionAdmin):
     class Meta:
         model = Activity
 
@@ -209,6 +214,9 @@ class ActivityAdmin(VersionAdmin):
     curriculum.admin_order_field = 'lesson__curriculum'
     unit.admin_order_field = 'lesson__unit'
 
+class AnnotationAdmin(CompareVersionAdmin):
+    pass
+
 
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(MultiLesson, MultiLessonAdmin)
@@ -218,4 +226,4 @@ admin.site.register(Objective, ObjectiveAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(Vocab, VocabAdmin)
 admin.site.register(Resource, ResourceAdmin)
-admin.site.register(Annotation)
+admin.site.register(Annotation, AnnotationAdmin)

@@ -455,6 +455,11 @@ footer {
     page-break-after: always;
 }
 
+/* Standards Table */
+#standards-table.tabulator .tabulator-header .tabulator-col {
+    text-align: center;
+}
+
 /* Block rendering */
 
 code.block {

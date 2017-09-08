@@ -1,4 +1,4 @@
-{% extends "basecurriculum.html" %}
+{% extends "basestandards.html" %}
 
 {% load staticfiles %}
 {% load mezzanine_tags %}
@@ -20,6 +20,11 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.1.5/css/tabulator.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.1.5/js/tabulator.min.js"></script>
 {% endblock %}
 
 {% block header_title %}
@@ -36,6 +41,9 @@
 {% endblock %}
 
 {% block main %}
+    <div class="together standards-map row">
+        <div id="standards-table" style="margin: 20px 0"></div>
+    </div>
     <div class="together standards row">
     <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
@@ -80,5 +88,55 @@
                 });
             });
         });
+
+        function heatCell (cell, formatterParams) {
+            var standards = JSON.parse(cell.getValue());
+            var total = cell.getColumn().getDefinition().total;
+            var percent = standards.length / total;
+            if (percent > 0) {
+                percent = percent * 0.8 + 0.2;
+            }
+            cell.getElement().css({"background-color": "rgba(0, 173, 188," + percent + ")"});
+            return "";
+        }
+
+        $("#standards-table").tabulator({
+            /*
+            groupBy:function(data){
+                //data - the data object for the row being grouped
+
+                return "U" + data.unit + "L" + data.lesson; //groups by data and age
+            },
+            */
+            tooltips: function(cell){
+                //cell - cell component
+
+                //function should return a string for the tooltip of false to hide the tooltip
+                var content;
+                try {
+                    content = JSON.parse(cell.getValue());
+                    content = content.join('\n');
+                    return content;
+                } catch (e) {
+                    content = cell.getValue();
+                    return content;
+                }
+            },
+            groupStartOpen: true,
+            groupHeader: function(value, count, data){
+                //value - the value all members of this group share
+                //count - the number of rows in this group
+                //data - an array of all the row data objects in this group
+
+                return value + "<span style='color:#d00; margin-left:10px;'>(" + count + " item)</span>";
+            },
+            resizableColumns: false,
+            columns: {{ standards_cols | safe }}
+        });
+        //define some sample data
+        var tabledata = {{ standards_rows | safe }};
+
+        //load sample data into the table
+        $("#standards-table").tabulator("setData", tabledata);
     </script>
 {% endblock %}
