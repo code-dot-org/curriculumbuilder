@@ -10,8 +10,10 @@ FROM python:2-onbuild
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        postgresql-client \
+        postgresql-client python-lxml\
     && rm -rf /var/lib/apt/lists/*
+
+# RUN apt-get install -y --no-install-recommends python-lxml
 
  RUN mkdir /code
  WORKDIR /code
@@ -25,6 +27,6 @@ RUN pip install -r requirements.txt
 ADD . /code/
 
 # EXPOSE port 8000 to allow communication to/from server
-EXPOSE 8000
+# EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver_plus", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver_plus", "0.0.0.0:8000"]
