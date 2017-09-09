@@ -122,28 +122,16 @@ LANGUAGES = (
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
 
-# openshift is our PAAS for now.
-ON_PAAS = 'OPENSHIFT_REPO_DIR' in os.environ
-
-if ON_PAAS:
-    SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
-else:
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
+SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
-DEBUG = not ON_PAAS
-# DEBUG = DEBUG or os.getenv("debug", "false").lower() == "true"
+DEBUG =  os.getenv("debug", "false").lower() == "true"
 
-if ON_PAAS and DEBUG:
-    print("*** Warning - Debug mode is on ***")
+# ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
+#                      '.codecurricula.com']
 
-if ON_PAAS:
-    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
-                     '.codecurricula.com']
-else:
-    ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@curriculumbuilder-cdo.rhcloud.com'
@@ -169,41 +157,16 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 # DATABASES #
 #############
 
-if ON_PAAS:
-    # determine if we are on MySQL or POSTGRESQL
-    if "POSTGRESQL_USER" in os.environ:
+if "POSTGRESQL_USER" in os.environ:
 
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': os.environ['POSTGRESQL_DATABASE'],
-                'USER': os.environ['POSTGRESQL_USER'],
-                'PASSWORD': os.environ['POSTGRESQL_USER_PASSWORD'],
-                'HOST': os.environ['postgresql-1-qrq2g_SERVICE_HOST'],
-                'PORT': os.environ['postgresql-1-qrq2g_SERVICE_PORT'],
-            }
-        }
-
-    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
-
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': os.environ['OPENSHIFT_APP_NAME'],
-                'USER': os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
-                'HOST': os.environ['OPENSHIFT_MYSQL_DB_HOST'],
-                'PORT': os.environ['OPENSHIFT_MYSQL_DB_PORT'],
-            }
-        }
-
-
-else:
-    # stock django, local development.
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['POSTGRESQL_DATABASE'],
+            'USER': os.environ['POSTGRESQL_USER'],
+            'PASSWORD': os.environ['POSTGRESQL_USER_PASSWORD'],
+            'HOST': os.environ['postgresql-1-qrq2g_SERVICE_HOST'],
+            'PORT': os.environ['postgresql-1-qrq2g_SERVICE_PORT'],
         }
     }
 
@@ -486,39 +449,37 @@ PHANTOMJS_KEY = os.environ.get('PHANTOMJS_KEY')
 # S3 STATIC FILES #
 ###################
 
-if ON_PAAS:
-    AWS_QUERYSTRING_AUTH = False
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
-    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
-    AWS_HEADERS = {
-     'Cache-Control': 'max-age=0',
-    }
+AWS_QUERYSTRING_AUTH = False
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
+AWS_HEADERS = {
+ 'Cache-Control': 'max-age=0',
+}
 
-    AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
+AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
-    MEDIAFILES_LOCATION = 'media'
-    DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
-    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
-    # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
-    # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
-    # MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
+# STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
+# ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
+# MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
 
 ###################
 # MEDUSA SETTINGS #
 ###################
-if ON_PAAS:
-    MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
-    MEDUSA_MULTITHREAD = False
-    AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
-    MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
+MEDUSA_RENDERER_CLASS = "django_medusa.renderers.S3StaticSiteRenderer"
+MEDUSA_MULTITHREAD = False
+AWS_ACCESS_KEY = AWS_ACCESS_KEY_ID
+MEDUSA_AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # MEDUSA_DEPLOY_DIR = os.path.join(
 #  PROJECT_DIR, '..', "_output"
@@ -527,13 +488,13 @@ if ON_PAAS:
 ###################
 # FREEZE SETTINGS #
 ###################
-if ON_PAAS:
-    FREEZE_INCLUDE_STATIC = False
+
+FREEZE_INCLUDE_STATIC = False
 
 ######################
 # JACKFROST SETTINGS #
 ######################
-if ON_PAAS: JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 JACKFROST_RENDERERS = (
     'curricula.jackfrost_renderers.CurriculumRenderer',
     'curricula.jackfrost_renderers.UnitRenderer',
@@ -604,9 +565,8 @@ CELERY_TIMEZONE = 'America/Los_Angeles'
 # COMPRESS SETTINGS #
 #####################
 
-if ON_PAAS:
-    COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
-    COMPRESS_URL = STATIC_URL
+COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+COMPRESS_URL = STATIC_URL
 
 ##################
 # SLACK SETTINGS #

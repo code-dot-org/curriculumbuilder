@@ -16,3 +16,5 @@ media
 uploads
 
 *.backup
+
+\.env
