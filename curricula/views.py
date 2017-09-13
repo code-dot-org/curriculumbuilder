@@ -53,7 +53,7 @@ from documentation.models import IDE, Block, Map
 
 logger = logging.getLogger(__name__)
 
-
+pdfkit_config = pdfkit.configuration(wkhtmltopdf='/app/wkhtmltopdf/wkhtmltopdf')
 
 def index(request):
     if request.user.is_staff:
@@ -362,7 +362,7 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
         response = HttpResponse(compiled)
     else:
         try:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         except Exception:
             logger.exception('PDF Generation Failed')
             return HttpResponse('PDF Generation Failed', status=500)
@@ -412,7 +412,7 @@ def unit_pdf(request, slug, unit_slug):
         response = HttpResponse(compiled)
     else:
         try:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         except Exception:
             logger.exception('PDF Generation Failed')
             return HttpResponse('PDF Generation Failed', status=500)
@@ -472,7 +472,7 @@ def unit_resources_pdf(request, slug, unit_slug):
     for lesson in unit.lessons.exclude(keywords__keyword__slug="optional"):
         lesson_string = render_to_string("curricula/lesson_title.html", {'unit': unit, 'lesson': lesson},
                                          request=request)
-        lesson_page = pdfkit.from_string(lesson_string, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        lesson_page = pdfkit.from_string(lesson_string, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         lesson_page_pdf = StringIO(lesson_page)
         merger.append(PdfFileReader(lesson_page_pdf))
         for resource in lesson.resources.all():
@@ -540,7 +540,7 @@ def curriculum_pdf(request, slug):
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
     else:
-        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
     return response
