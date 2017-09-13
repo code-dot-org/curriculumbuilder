@@ -3,7 +3,12 @@ from __future__ import absolute_import, unicode_literals
 import socket
 
 import os
+
+import dj_database_url
+
 from django.utils.translation import ugettext_lazy as _
+
+db_from_env = dj_database_url.config(conn_max_age=500)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -157,18 +162,12 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 # DATABASES #
 #############
 
-if "POSTGRESQL_USER" in os.environ:
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['POSTGRESQL_DATABASE'],
-            'USER': os.environ['POSTGRESQL_USER'],
-            'PASSWORD': os.environ['POSTGRESQL_USER_PASSWORD'],
-            'HOST': os.environ['postgresql-1-qrq2g_SERVICE_HOST'],
-            'PORT': os.environ['postgresql-1-qrq2g_SERVICE_PORT'],
-        }
+DATABASES = {
+    'default': {
     }
+}
+
+DATABASES['default'].update(db_from_env)
 
 #########
 # PATHS #
@@ -204,13 +203,19 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-if os.environ.get('REDISCLOUD_PASSWORD'):
+if False:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
                                                  os.environ.get('REDISCLOUD_HOSTNAME'),
                                                  os.environ.get('REDISCLOUD_PORT')),
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
 
@@ -341,7 +346,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    "debug_toolbar",
+    # "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,
