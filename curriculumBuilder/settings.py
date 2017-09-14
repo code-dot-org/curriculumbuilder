@@ -8,8 +8,6 @@ import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ######################
@@ -127,7 +125,7 @@ LANGUAGES = (
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
 
-SECRET_KEY = ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$'
+SECRET_KEY = os.getenv("DJANGO_SECURITY_KEY", ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1@sh9s9t=8$bu@r(z$')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
@@ -136,10 +134,13 @@ DEBUG =  os.getenv("debug", "false").lower() == "true"
 # ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
 #                      '.codecurricula.com']
 
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ALLOWED_HOSTS = ['*']
 
 ADMINS = [('Josh', 'josh@code.org')]
-SERVER_EMAIL = 'root@curriculumbuilder-cdo.rhcloud.com'
+SERVER_EMAIL = 'root@codecurricula.com'
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -163,11 +164,8 @@ WSGI_APPLICATION = 'curriculumBuilder.wsgi.application'
 #############
 
 DATABASES = {
-    'default': {
-    }
+    "default": dj_database_url.config(default='postgres://localhost/curriculumbuilder', conn_max_age=500),
 }
-
-DATABASES['default'].update(db_from_env)
 
 #########
 # PATHS #
@@ -601,6 +599,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
         },
         'mail_admins': {
@@ -622,12 +621,12 @@ LOGGING = {
             'propagate': True
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
         'django.security': {
-            'handlers': ['mail_admins'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'ERROR',
             'propagate': False,
         },
@@ -637,22 +636,22 @@ LOGGING = {
             'propagate': True
         },
         'lessons': {
-            'handlers': ['slack_admins'],
+            'handlers': ['console', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
             'propagate': True
         },
         'curricula': {
-            'handlers': ['slack_admins'],
+            'handlers': ['console', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
             'propagate': True
         },
         'pdfkit': {
-            'handlers': ['mail_admins', 'slack_admins'],
+            'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'DEBUG',
             'propagate': True
         },
         'PyPDF2': {
-            'handlers': ['mail_admins', 'slack_admins'],
+            'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'DEBUG',
             'propagate': True
         }
