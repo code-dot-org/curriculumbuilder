@@ -33,6 +33,7 @@ django-medusa==0.3.0
 django-multiurl==1.1.0
 django-postgrespool==0.3.0
 django-redis==4.2.0
+django-redis-cache==1.7.1
 django-remplacer==0.1.1
 django-reversion==2.0.9
 django-reversion-compare==0.7.5
