@@ -76,6 +76,7 @@ sortedcontainers==1.4.2
 sqlparse==0.1.15
 tablib==0.10.0
 tzlocal==1.2
-WeasyPrint==0.40
+waitress==1.0.2
+# WeasyPrint==0.40
 whitenoise==2.0
 wsgiref==0.1.2
