@@ -4,6 +4,8 @@ import socket
 
 import os
 
+import urlparse
+
 import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
@@ -201,13 +203,16 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-if False:
+if os.environ.get('REDIS_URL', FALSE):
+    redis_url = urlparse.urlparse(os.environ.get('REDIS_URL'))
     CACHES = {
         "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": 'redis://:%s@%s:%s/0' % (os.environ.get('REDISCLOUD_PASSWORD'),
-                                                 os.environ.get('REDISCLOUD_HOSTNAME'),
-                                                 os.environ.get('REDISCLOUD_PORT')),
+            "BACKEND": "redis_cache.RedisCache",
+            "LOCATION": "{0}:{1}".format(redis_url.hostname, redis_url.port),
+            "OPTIONS": {
+                "PASSWORD": redis_url.password,
+                "DB": 0,
+            }
         }
     }
 else:
