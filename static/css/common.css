@@ -482,6 +482,13 @@ code {
 
 @media print {
 
+    /*
+    @page {
+        size: letter portrait;
+        margin: 4.0cm;
+    }
+   */
+
     #print_trigger {
         display: none; /* Trigger used by jQuery to change links when printing */
     }

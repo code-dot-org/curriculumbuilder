@@ -53,7 +53,7 @@ from documentation.models import IDE, Block, Map
 
 logger = logging.getLogger(__name__)
 
-pdfkit_config = pdfkit.configuration(wkhtmltopdf='/app/wkhtmltopdf/wkhtmltopdf')
+pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 
 def index(request):
     if request.user.is_staff:

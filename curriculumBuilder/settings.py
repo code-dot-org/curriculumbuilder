@@ -436,6 +436,8 @@ AJAX_LOOKUP_CHANNELS = {
 # WKHTMLTOPDF SETTINGS #
 ########################
 
+WKHTMLTOPDF_BIN = os.environ.get('WKHTMLTOPDF_BIN')
+
 WKHTMLTOPDF_CMD_OPTIONS = {
     'page-size': 'Letter',
     'print-media-type': '',
