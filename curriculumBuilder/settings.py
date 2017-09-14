@@ -203,7 +203,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-if os.environ.get('REDIS_URL', FALSE):
+if os.environ.get('REDIS_URL', False):
     redis_url = urlparse.urlparse(os.environ.get('REDIS_URL'))
     CACHES = {
         "default": {
