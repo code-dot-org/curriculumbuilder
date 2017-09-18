@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+{% load pages_tags mezzanine_tags i18n future staticfiles %}
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block meta_title %}Code.org CurriculumBuilder{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+        <link rel="stylesheet" href="{% static "css/codeorg.css" %}">
+        <link rel="stylesheet" href="{% static "css/common.css" %}">
+        <link rel="stylesheet" href="{% static "css/commonlesson.css" %}">
+        <link rel="stylesheet" href="{% static "css/lightbox.css" %}">
+    {% endcompress %}
+        {% block extra_css %}{% endblock %}
+
+        <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="{% static "js/bootstrap-extras.js" %}"></script>
+        {% block extra_js %}{% endblock %}
+
+
+
+
+    <!--[if lt IE 9]>
+<script src="{% static "js/html5shiv.js" %}"></script>
+<script src="{% static "js/respond.min.js" %}"></script>
+<![endif]-->
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body id="{% block body_id %}body{% endblock %}" class="has-drawer">
+
+{% block admin_link %}
+{% endblock %}
+
+<div class="container" style="max-width: none">
+    {% block header %}
+    <div class="header printbackground">
+        <div class="logo">
+            <img src="{% static "images/logo.png" %}">
+        </div>
+        {% block lessonnumber %}
+        {% endblock %}
+        <div class="headercontent">
+            <div class="top">
+            {% block header_title %}
+                {% editable page.title %}
+                <h1>{{ page.title }}</h1>
+                {% endeditable %}
+            {% endblock %}
+            </div>
+            <div class="bottom">
+                {% block header_subtitle %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block resources_nav %}{% endblock %}
+    <div class="content">
+        {% block main %}{% endblock %}
+    </div>
+</div>
+{% block footer %}
+<footer>
+    <div class="container">
+        <div class="row">
+            <a href="http://creativecommons.org/"><img src="{% static "img/creativeCommons.png" %}" border="0"></a><br/>
+            <span class="license">If you are interested in licensing Code.org materials for commercial purposes, <a href="//code.org/contact">contact us.</a></span>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+<div id="print_trigger"></div>
+<script type="text/javascript">
+    var vars = [], hash;
+        var q = document.URL.split('?')[1];
+        if(q != undefined){
+            q = q.split('&');
+            for(var i = 0; i < q.length; i++){
+                hash = q[i].split('=');
+                vars.push(hash[1]);
+                vars[hash[0]] = hash[1];
+            }
+    }
+
+    if (vars['pdf']) {
+        jQuery(function () {
+            $('a[data-pdf-link]').each(function () {
+                this.href = $(this).attr('data-pdf-link');
+            });
+        });
+    }
+</script>
+{% block footer_js %}{% endblock %}
+{% comment "this borks pdf gen, look into later" %}<script type="text/javascript" src="{% static "js/lightbox-plus-jquery.min.js" %}"></script>{% endcomment %}
+{% include "includes/footer_scripts.html" with gaid="UA-37745279-8" %}
+
+</body>
+</html>
+
+{% block append_pages %}{% endblock %}

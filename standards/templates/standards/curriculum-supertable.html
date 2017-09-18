@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ curriculum.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/table.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ curriculum.title }}</h1>
+    <span class="disclaimer">Standards Alignment</span>
+{% endblock %}
+
+{% block main %}
+
+<div class="together standards">
+    <div class="row">
+        <div class="column medium-12">
+            <a href="#" data-super-table="standards-table">Expand/Collapse Entire Table</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="column medium-12">
+    <table id="standards-table" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            {% for framework in curriculum.frameworks.all %}
+            <th colspan="{{ framework.top_categories.count|add:"1" }}" data-ST-group="{{ framework.slug }}" data-colspan-min="1" data-colspan-max="{{ framework.top_categories.count|add:"1" }}">{{ framework.slug }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Lesson</th>
+            {% for framework in curriculum.frameworks.all %}
+                <th data-ST-group="{{ framework.slug }}">X</th>
+                {% for cat in framework.top_categories %}
+                    <th data-ST-group="{{ framework.slug }}" class="columnHideable">{{ cat.shortcode }}</th>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for unit in curriculum.units %}
+            <tr data-ST-group="{{ unit.slug }}" class="headerRow">
+                <td colspan="100%">Unit {{ unit.number }} - {{ unit.title }}</td>
+                {% comment %}
+                {% for framework_head in curriculum.frameworks.all %}
+                    <td data-ST-group="{{ framework_head.slug }}" colspan="{{ framework_head.top_categories.count|add:"1" }}" data-colspan-min="1" data-colspan-max="{{ framework_head.top_categories.count|add:"1" }}"></td>
+                {% endfor %}
+                {% endcomment %}
+            </tr>
+            {% for lesson in unit.lessons %}
+                <tr data-ST-group="{{ unit.slug }}" class="rowHideable">
+                    <td>Lesson {{ lesson.number }}</td>
+                    {% for framework_col in curriculum.frameworks.all %}
+                        <th data-ST-group="{{ framework_col.slug }}">X</th>
+                        {% for category_col in framework_col.top_categories %}
+                            <td data-ST-group="{{ framework_col.slug }}" class="columnHideable">
+                                {% regroup lesson.standards.all by top_category as standards_by_category %}
+                                {% for category in standards_by_category %}
+                                    {% if category.grouper == category_col %}
+                                        {{ category.list|length }}
+                                        {% comment %}
+                                        {% for standard in category.list %}
+                                            {{ standard.shortcode }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                        {% endcomment %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+{% endblock %}
+
+{% block footer_js %}
+    <script type="text/javascript" src="{% static "js/jquery.super-table.min.js" %}"></script>
+    <script type="text/javascript">
+    $('#standards-table').superTable({
+        rowCollapse: true,
+        columnCollapse: true,
+        rowCollapsedClass : 'collapsedColumn',
+        rowExpandedClass : 'expandedColumn',
+        columnCollapsedClass : 'collapsedColumn',
+        columnExpandedClass : 'expandedColumn'
+    });
+    </script>
+{% endblock %}

@@ -11,6 +11,7 @@ from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 from mezzanine.core import views as core_views
 from mezzanine.generic import views as generic_views
+from mezzanine.pages import views as page_views
 import mezzanine_pagedown.urls
 import freeze.urls
 
@@ -78,6 +79,7 @@ urlpatterns += patterns('',
 
     url("^edit/$", views.reversion_edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
+    url("admin_page_ordering/$", page_views.admin_page_ordering, name="admin_page_ordering"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url(r'^admin_keywords_submit/$', generic_views.admin_keywords_submit, name='admin_keywords_submit'),
     url("^None/$", views.index),  # Dealing with JackFrost bug

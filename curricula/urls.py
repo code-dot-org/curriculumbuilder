@@ -8,7 +8,9 @@ urlpatterns = patterns('curricula.views',
                        url(r'^$', views.index, name='home'),
 
                        # Ajax endpoints
-                       url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
+                       # url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
+                       url(r'^test_view/(?P<pk>\d+)/$', views.CompareHistoryView.as_view() ),
+                       url(r'^page_history/(?P<pk>\d+)/$', views.CompareHistoryView.as_view()),
                        url(r'^publish/$', views.publish, name='publish'),
                        url(r'^upload/$', views.image_upload, name='image_upload'),
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
