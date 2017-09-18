@@ -18,3 +18,9 @@ uploads
 *.backup
 
 \.env
+
+docker-compose\.dev\.yml
+
+*.tar
+
+*.sql

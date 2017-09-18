@@ -248,37 +248,52 @@ footer {
     overflow: hidden;
 }
 
-.pacing-lesson.project {
+.pacing-lesson.project { /* purple */
     border-color: #7665a0;
     background: #ebe8f1;
 }
 
-.pacing-lesson.general-session {
+.pacing-lesson.general-session { /* yellow */
     border-color: #ffb81d;
     background: #fff7df;
 }
 
-.pacing-lesson.tlo-room-session {
+.pacing-lesson.tlo-room-session { /* cyan */
     border-color: #0094ca;
     background: #d9eff7;
 }
 
-.pacing-lesson.lesson-session {
+.pacing-lesson.lesson-session { /* teal */
     border-color: #00adbc;
     background: #a6e3e8;
 }
 
-.pacing-lesson.breakout-session {
+.pacing-lesson.breakout-session { /* purple */
     border-color: #7665a0;
     background: #ebe8f1;
 }
 
-.pacing-lesson.lesson-planning-session {
+.pacing-lesson.lesson-planning-session { /* green */
     border-color: #b9bf15;
     background: #f5f5dc;
 }
 
-.pacing-lesson.community-session {
+.pacing-lesson.community-session { /* red */
+    border-color: #c00;
+    background: #fcc;
+}
+
+.pacing-lesson.ttl-set { /* purple */
+    border-color: #7665a0;
+    background: #ebe8f1;
+}
+
+.pacing-lesson.facilitator-presentation { /* orange */
+    border-color: #ffa400;
+    background: #fff2d9;
+}
+
+.pacing-lesson.discussion-based { /* red */
     border-color: #c00;
     background: #fcc;
 }
@@ -292,31 +307,43 @@ footer {
     color: #fff !important;
 }
 
-.pacing-lesson.project.active {
+.pacing-lesson.project.active { /* purple */
     background: #7665a0 !important;
 }
 
-.pacing-lesson.general-session.active {
+.pacing-lesson.general-session.active { /* yellow */
     background: #ffb81d !important;
 }
 
-.pacing-lesson.tlo-room-session.active {
+.pacing-lesson.tlo-room-session.active { /* cyan */
     background: #0094ca !important;
 }
 
-.pacing-lesson.lesson-session.active {
+.pacing-lesson.lesson-session.active { /* teal */
     background: #00adbc !important;
 }
 
-.pacing-lesson.breakout-session.active {
+.pacing-lesson.breakout-session.active { /* purple */
     background: #7665a0 !important;
 }
 
-.pacing-lesson.lesson-planning-session.active {
+.pacing-lesson.lesson-planning-session.active { /* green */
     background: #b9bf15 !important;
 }
 
-.pacing-lesson.community-session.active {
+.pacing-lesson.community-session.active { /* red */
+    background: #c00 !important;
+}
+
+.pacing-lesson.ttl-set.active { /* purple */
+    background: #7665a0 !important;
+}
+
+.pacing-lesson.facilitator-presentation.active { /* orange */
+    background: #ffa400 !important;
+}
+
+.pacing-lesson.discussion-based.active { /* red */
     background: #c00 !important;
 }
 
