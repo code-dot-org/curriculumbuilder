@@ -392,6 +392,7 @@ def unit_compiled(request, slug, unit_slug):
 
 
 def unit_pdf(request, slug, unit_slug):
+
     buffer = StringIO()
     c = pycurl.Curl()
     c.setopt(c.WRITEDATA, buffer)
@@ -423,7 +424,7 @@ def unit_pdf(request, slug, unit_slug):
         ip = get_real_ip(request)
         slack_message('slack/message.slack', {
             'message': 'created a PDF from %s %s' % (slug, unit_slug),
-            'user': request.user or ip,
+            'user': request.user.get_username() or ip,
         })
 
     return response
@@ -497,11 +498,13 @@ def unit_resources_pdf(request, slug, unit_slug):
                         },
                     ]
 
+                    ip = get_real_ip(request)
+
                     slack_message('slack/message.slack', {
                         'message': "tried and failed to publish resource %s - %s (pk %s). "
                                    "Check to ensure that it's a publicly accessible Google Doc"
                                    % (resource.name, resource.type, resource.pk),
-                        'user': request.user,
+                        'user': request.user.get_username() or ip,
                     }, attachments)
                     return HttpResponse('PDF Generation Failed', status=500)
 
@@ -509,9 +512,10 @@ def unit_resources_pdf(request, slug, unit_slug):
     merger.write(response)
     response['Content-Disposition'] = 'inline;filename=unit%s_resources.pdf' % unit.number
 
+    ip = get_real_ip(request)
     slack_message('slack/message.slack', {
         'message': 'created a resource PDF from %s %s' % (slug, unit_slug),
-        'user': request.user,
+        'user': request.user.get_username() or ip,
     })
 
     return response

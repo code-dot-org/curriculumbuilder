@@ -335,7 +335,8 @@ MIDDLEWARE_CLASSES = (
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
-    "curriculumBuilder.disable_csrf.DisableCSRF"
+    "curriculumBuilder.disable_csrf.DisableCSRF",
+    "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
 )
 
 # Store these package names here as they may change in the future since
@@ -349,7 +350,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    "debug_toolbar",
+    # "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,
