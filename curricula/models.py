@@ -13,7 +13,7 @@ from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
 
-from jackfrost.utils import build_page_for_obj
+from jackfrost.receivers import build_page_for_obj
 from jackfrost.tasks import build_single
 
 from django_slack import slack_message

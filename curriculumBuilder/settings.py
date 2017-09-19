@@ -133,6 +133,8 @@ SECRET_KEY = os.getenv("DJANGO_SECURITY_KEY", ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
 DEBUG =  os.getenv("debug", "false").lower() == "true"
 
+LOGIN_EXEMPT_URLS = (r'^admin/', )
+
 # ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
 #                      '.codecurricula.com']
 
