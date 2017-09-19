@@ -144,6 +144,9 @@ ALLOWED_HOSTS = ['*']
 ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@codecurricula.com'
 
+LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
+LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
+
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
