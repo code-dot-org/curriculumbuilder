@@ -338,7 +338,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
     "curriculumBuilder.disable_csrf.DisableCSRF",
-    # "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
+    "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
 )
 
 # Store these package names here as they may change in the future since
