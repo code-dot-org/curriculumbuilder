@@ -1,2 +1,2 @@
 release: python manage.py createinitialrevisions
-web: waitress-serve --port=$PORT --send-bytes=1 curriculumBuilder.wsgi:application
+web: bin/start-pgbouncer-stunnel newrelic-admin run-program waitress-serve --port=$PORT --send-bytes=1 curriculumBuilder.wsgi:application

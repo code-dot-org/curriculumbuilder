@@ -313,8 +313,8 @@ TEMPLATES = [{u'APP_DIRS': False,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
+    'django.middleware.gzip.GZipMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     # Uncomment if using internationalisation or localisation
     # 'django.middleware.locale.LocaleMiddleware',
@@ -352,7 +352,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    # "debug_toolbar",
+    "debug_toolbar",
     "django_extensions",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,
