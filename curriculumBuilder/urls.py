@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.http import HttpResponse
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
@@ -32,6 +33,17 @@ urlpatterns = i18n_patterns("",
     (r'^admin/', include('smuggler.urls')),
     (r'^admin/', include(admin.site.urls)),
 )
+
+
+if settings.DEBUG and "debug_toolbar" in settings.INSTALLED_APPS:
+    try:
+        import debug_toolbar
+    except ImportError:
+        pass
+    else:
+        urlpatterns += [
+            url(r'^__debug__/', include(debug_toolbar.urls)),
+        ]
 
 if settings.USE_MODELTRANSLATION:
     urlpatterns += patterns('',
@@ -77,6 +89,7 @@ urlpatterns += patterns('',
 
     # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
 
+    url(r'^robots.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", content_type="text/plain")),
     url("^edit/$", views.reversion_edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
     url("admin_page_ordering/$", page_views.admin_page_ordering, name="admin_page_ordering"),
@@ -140,17 +153,6 @@ urlpatterns += patterns('',
 
 
 )
-
-
-if settings.DEBUG and "debug_toolbar" in settings.INSTALLED_APPS:
-    try:
-        import debug_toolbar
-    except ImportError:
-        pass
-    else:
-        urlpatterns += [
-            url(r'^__debug__/', include(debug_toolbar.urls)),
-        ]
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
 # pages can use JS, CSS and images.
