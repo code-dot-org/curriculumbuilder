@@ -24,3 +24,5 @@ docker-compose\.dev\.yml
 *.tar
 
 *.sql
+
+heroku\.env

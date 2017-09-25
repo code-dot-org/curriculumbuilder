@@ -25,48 +25,39 @@
             <span class="page_type">{{ page.content_model }}{% comment "too sql intensive" %}{% if page.content_model == 'block' %} ({{ page.block.category }}){% endif %}{% endcomment %}</span>
             <span class="ordering"{% if not page.perms.change %}
                 style="visibility:hidden;"{% endif %}>
+                <strong>↕</strong>
+                {% comment %}
                 <img src="{% static settings.MEZZANINE_ADMIN_PREFIX|add:"img/admin/arrow-up.gif" %}">
                 <img src="{% static settings.MEZZANINE_ADMIN_PREFIX|add:"img/admin/arrow-down.gif" %}">
+                {% endcomment %}
             </span>
             {% if page.perms.add and page.content_model != 'block' %}
-            <select class="addlist" id="addlink-{{ page.id }}">
-                <option value="">{% trans "Add" %} ...</option>
-                {% for model in page_models %}
-                    {% set_model_permissions model %}
-                    {% if model.perms.add %}
+                <select class="addlist" id="addlink-{{ page.id }}">
+                    <option value="">{% trans "Add" %} ...</option>
                         {% if page.content_model == 'curriculum' %}
-                            {% if model.meta_verbose_name == 'unit' or model.meta_verbose_name == 'map' %}
-                                <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }}
-                                </option>
-                            {% endif %}
+                            <option value="/admin/documentation/map/add/?parent={{ page.id }}">
+                                Map
+                            </option>
+                            <option value="/admin/curricula/unit/add/?parent={{ page.id }}">
+                                Unit
+                            </option>
                         {% elif page.content_model == 'unit' %}
-                            {% if model.meta_verbose_name == 'chapter' or model.meta_verbose_name == 'lesson' %}
-                                <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }}
-                                </option>
-                            {% endif %}
+                            <option value="/admin/curricula/chapter/add/?parent={{ page.id }}">
+                                Chapter
+                            </option>
+                            <option value="/admin/lessons/lesson/add/?parent={{ page.id }}">
+                                Lesson
+                            </option>
                         {% elif page.content_model == 'chapter' or page.content_model == 'lesson' %}
-                            {% if model.meta_verbose_name == 'lesson' %}
-                                <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }}
-                                </option>
-                            {% endif %}
+                            <option value="/admin/lessons/lesson/add/?parent={{ page.id }}">
+                                Lesson
+                            </option>
                         {% elif page.content_model == 'ide' %}
-                            {% if model.meta_verbose_name == 'block' %}
-                                <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                    {{ model.meta_verbose_name|capfirst }}
-                                </option>
-                            {% endif %}
-                        {% elif page.content_model == 'map' %}
-                        {% else %}
-                            <option value="{{ model.add_url }}?parent={{ page.id }}">
-                                {{ model.meta_verbose_name|capfirst }}
+                            <option value="/admin/documentation/block/add/?parent={{ page.id }}">
+                                Block
                             </option>
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </select>
+                </select>
             {% endif %}
 
         </div>
