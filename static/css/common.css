@@ -492,6 +492,10 @@ footer {
     text-align: center;
 }
 
+#standards-table {
+    background-color: white;
+}
+
 /* Block rendering */
 
 code.block {
