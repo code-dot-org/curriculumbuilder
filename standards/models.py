@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Q
 
 """
 Top level of a standards framework
@@ -17,7 +18,7 @@ class Framework(models.Model):
 
     @property
     def top_categories(self):
-        return self.categories.filter(parent=None)
+        return self.categories.top()
 
 
 """
@@ -50,6 +51,9 @@ class Category(models.Model):
     class Meta:
         ordering = ['framework', 'shortcode']
         verbose_name_plural = "categories"
+
+    def child_standards(self):
+        return Standard.objects.filter(Q(category=self) | Q(category__parent=self))
 
     objects = CategoryQuerySet.as_manager()
 
