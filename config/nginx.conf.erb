@@ -33,7 +33,7 @@ http {
 	server {
 		listen <%= ENV["PORT"] %>;
 		server_name _;
-		keepalive_timeout 5;
+		keepalive_timeout 60;
 
 		location / {
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -45,7 +45,7 @@ http {
         location ^~ /test {
 			default_type 'text/plain';
 			content_by_lua_block {
-				ngx.say('I am listening...')
+				ngx.say('I am still listening...')
 			}
         }
 	}
