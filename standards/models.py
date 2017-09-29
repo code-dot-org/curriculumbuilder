@@ -17,7 +17,7 @@ class Framework(models.Model):
 
     @property
     def top_categories(self):
-        return self.category_set.filter(parent=None)
+        return self.categories.filter(parent=None)
 
 
 """
@@ -31,12 +31,17 @@ Type should be set to the name appropriate for each framework
 """
 
 
+class CategoryQuerySet(models.QuerySet):
+    def top(self):
+        return self.filter(parent=None)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
     type = models.CharField(max_length=50, blank=True, null=True)
-    framework = models.ForeignKey(Framework, blank=True, null=True)
+    framework = models.ForeignKey(Framework, blank=True, null=True, related_name="categories")
     parent = models.ForeignKey('self', blank=True, null=True, related_name="children")
 
     def __unicode__(self):
@@ -45,6 +50,9 @@ class Category(models.Model):
     class Meta:
         ordering = ['framework', 'shortcode']
         verbose_name_plural = "categories"
+
+    objects = CategoryQuerySet.as_manager()
+
 
 
 """
@@ -87,7 +95,7 @@ class Standard(models.Model):
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
     gradeband = models.ForeignKey(GradeBand)
-    category = models.ForeignKey(Category)
+    category = models.ForeignKey(Category, related_name='standards')
     framework = models.ForeignKey(Framework, blank=True, null=True)
     slug = models.CharField(max_length=50, blank=True, null=True)
 

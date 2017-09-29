@@ -305,6 +305,7 @@ class Unit(Page, RichText):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
 
         frameworks = self.curriculum.frameworks.all()
+
         columns = [{"title": "Lesson", "field": "lesson", "frozen": True, "tooltips": False, "headerSort": False, "width": 100}]
         for fw in frameworks:
             group = {
@@ -316,18 +317,18 @@ class Unit(Page, RichText):
                                  "align": "center",
                                  "tooltipHeader": cat.name,
                                  "total": Standard.objects.filter(Q(category=cat) | Q(category__parent=cat)).count()}
-                                for cat in fw.top_categories]
+                                for cat in fw.categories.top()]
             }
             columns.append(group)
 
         rows = []
         keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in
-                            fw.top_categories]
+                            fw.categories.top()]
         for lesson in self.lessons:
             values = ["Lesson %d" % lesson.number] + \
                      [json.dumps(list(lesson.standards.filter(Q(category=cat) | Q(category__parent=cat))
                                       .distinct().values_list("shortcode", flat=True)))
-                      for fw in frameworks for cat in fw.top_categories]
+                      for fw in frameworks for cat in fw.categories.top()]
             row = dict(zip(keys, values))
             rows.append(row)
 
