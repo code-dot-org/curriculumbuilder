@@ -13,6 +13,7 @@ from reversion_compare.admin import CompareVersionAdmin
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from standards.models import Standard
+from documentation.models import Block
 
 
 def publish(modeladmin, request, queryset):
@@ -89,6 +90,9 @@ class LessonForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(LessonForm, self).__init__(*args, **kwargs)
 
+        '''
+        Load standards only once (for both fields) and filter down to curriculum aligned standards, if available
+        '''
         standards_queryset = None
 
         try:
@@ -115,6 +119,12 @@ class LessonForm(ModelForm):
 
         self.fields['standards'].queryset = standards_queryset
         self.fields['anchor_standards'].queryset = standards_queryset
+
+        '''
+        Optimize loading of blocks with related IDEs
+        '''
+        self.fields['blocks'].queryset = Block.objects.all().select_related('IDE')
+
 
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):

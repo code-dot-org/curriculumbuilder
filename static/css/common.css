@@ -462,6 +462,11 @@ footer {
     color: #ffa400;
 }
 
+/* shrink expandable images from Code Studio */
+[data-title="expandable"] img {
+  max-width: 150px;
+}
+
 /* prevent inline editor from squishing paragraphs */
 .editable-form .wmd-preview p {
     line-height: normal !important;
@@ -485,6 +490,10 @@ footer {
 /* Standards Table */
 #standards-table.tabulator .tabulator-header .tabulator-col {
     text-align: center;
+}
+
+#standards-table {
+    background-color: white;
 }
 
 /* Block rendering */

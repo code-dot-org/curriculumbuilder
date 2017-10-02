@@ -19,7 +19,7 @@ def index(request):
 def by_framework(request, slug, curriculum_slug=None):
     framework = get_object_or_404(Framework, slug=slug)
     top_categories = Category.objects.filter(framework=framework, parent__isnull=True) \
-        .prefetch_related('children__standard_set__lesson_set', 'standard_set__lesson_set')
+        .prefetch_related('children__standards__lesson_set', 'standards__lesson_set')
     return render(request, 'standards/framework.html', {'framework': framework, 'top_categories': top_categories})
 
 

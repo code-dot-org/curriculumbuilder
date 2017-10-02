@@ -17,7 +17,6 @@ from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField
 from sortedm2m.fields import SortedManyToManyField
-from jackfrost.utils import build_page_for_obj
 from jackfrost.tasks import build_single
 from jsonfield import JSONField
 from standards.models import Standard

@@ -11,7 +11,7 @@ from mezzanine.core.fields import RichTextField
 
 from django_slack import slack_message
 
-from jackfrost.utils import build_page_for_obj
+from jackfrost.receivers import build_page_for_obj
 
 logger = logging.getLogger(__name__)
 

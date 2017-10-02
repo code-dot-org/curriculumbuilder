@@ -28,7 +28,7 @@ django-cors-headers==1.1.0
 django-freeze==0.5.0
 django-import-export==0.2.7
 django-ipware==1.1.6
-django-jackfrost==0.4.0
+# django-jackfrost==0.4.0
 django-medusa==0.3.0
 django-multiurl==1.1.0
 django-postgrespool==0.3.0
@@ -51,6 +51,7 @@ future==0.15.2
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
 -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
 # -e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
+-e git://github.com/mrjoshida/django-jackfrost.git@master#egg=django-jackfrost
 grappelli-safe==0.4.2
 gunicorn==19.6.0
 html5lib==0.999999
@@ -61,6 +62,7 @@ jsonfield==1.0.3
 markdown-newtab==0.1.0
 messytables==0.14.5
 mezzanine-pagedown==0.8
+newrelic
 oauthlib==1.0.3
 pdfkit==0.5.0
 plotly==1.9.3
