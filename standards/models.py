@@ -36,6 +36,9 @@ class CategoryQuerySet(models.QuerySet):
     def top(self):
         return self.filter(parent=None)
 
+    def bottom(self):
+        return self.filter(standards__isnull=False).distinct()
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -100,7 +103,7 @@ class Standard(models.Model):
     description = models.TextField(blank=True, null=True)
     gradeband = models.ForeignKey(GradeBand)
     category = models.ForeignKey(Category, related_name='standards')
-    framework = models.ForeignKey(Framework, blank=True, null=True)
+    framework = models.ForeignKey(Framework, blank=True, null=True, related_name='standards')
     slug = models.CharField(max_length=50, blank=True, null=True)
 
     def __unicode__(self):
