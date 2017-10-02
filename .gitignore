@@ -14,3 +14,13 @@ _output
 backups
 media
 uploads
+
+*.backup
+
+\.env
+
+docker-compose\.dev\.yml
+
+*.tar
+
+*.sql

@@ -430,6 +430,17 @@ class Lesson(Page, RichText):
     def changelog(self):
         return Version.objects.get_for_object(self).filter(revision__user__username=settings.CHANGELOG_USER)
 
+    @property
+    def standards_by_category(self):
+        results = {}
+        for framework in self.curriculum.frameworks.all():
+            results[framework.slug] = {}
+            for category in framework.top_categories:
+                results[framework.slug][category.shortcode] = []
+
+        for standard in self.standards.all():
+            results[standard.framework.slug][standard.top_category.shortcode].append(standard)
+
 
 """
 Activities that compose a lesson

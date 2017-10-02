@@ -1,10 +1,11 @@
 import re
 import logging
 import json
+import math
 
 from django.conf import settings
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -115,6 +116,51 @@ class Curriculum(Page, RichText):
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish PDF for %s' % self)
+
+    def get_standards(self):
+        # ToDo: run the standards queries once and place all the querysets in a dict for later use
+        if Chapter.objects.filter(parent__unit__curriculum=self).count() > 0:
+            grouper = "Chapter"
+        else:
+            grouper = "Course"
+
+        columns = [{"title": grouper, "field": "chapter", "frozen": True, "tooltips": False, "headerSort": False, "width": 100}]
+        for fw in self.frameworks.all():
+            group = {
+                    "title": fw.slug,
+                    "columns": [{"title": cat.shortcode,
+                                 "field": "%s-%s" % (fw.slug, cat.shortcode),
+                                 "headerSort": False,
+                                 "formatter": "heatCell",
+                                 "align": "center",
+                                 "tooltipHeader": cat.name,
+                                 "total": Standard.objects.filter(Q(category=cat) | Q(category__parent=cat)).count()}
+                                for cat in fw.top_categories]
+            }
+            columns.append(group)
+
+        rows = []
+        keys = ["chapter"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in self.frameworks.all() for cat in
+                              fw.top_categories]
+        for unit in self.units:
+            if unit.chapters:
+                for chapter in unit.chapters:
+                    values = ["U%sCh%s" % (unit.number, chapter.number)] +\
+                             [json.dumps(list(Standard.objects.filter(Q(category=cat) | Q(category__parent=cat), lesson__in=chapter.lessons)
+                                    .distinct().values_list("shortcode", flat=True)))
+                              for fw in self.frameworks.all() for cat in fw.top_categories]
+                    row = dict(zip(keys, values))
+                    rows.append(row)
+            else:
+                values = [unit.title] + \
+                         [json.dumps(list(Standard.objects.filter(Q(category=cat) | Q(category__parent=cat),
+                                                                  lesson__in=unit.lessons)
+                                          .distinct().values_list("shortcode", flat=True)))
+                          for fw in self.frameworks.all() for cat in fw.top_categories]
+                row = dict(zip(keys, values))
+                rows.append(row)
+
+        return columns, rows
 
     @property
     def units(self):
@@ -254,6 +300,38 @@ class Unit(Page, RichText):
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish JSON %s' % self)
+
+    def get_standards(self):
+        # ToDo: run the standards queries once and place all the querysets in a dict for later use
+
+        frameworks = self.curriculum.frameworks.all()
+        columns = [{"title": "Lesson", "field": "lesson", "frozen": True, "tooltips": False, "headerSort": False, "width": 100}]
+        for fw in frameworks:
+            group = {
+                    "title": fw.slug,
+                    "columns": [{"title": cat.shortcode,
+                                 "field": "%s-%s" % (fw.slug, cat.shortcode),
+                                 "headerSort": False,
+                                 "formatter": "heatCell",
+                                 "align": "center",
+                                 "tooltipHeader": cat.name,
+                                 "total": Standard.objects.filter(Q(category=cat) | Q(category__parent=cat)).count()}
+                                for cat in fw.top_categories]
+            }
+            columns.append(group)
+
+        rows = []
+        keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in
+                            fw.top_categories]
+        for lesson in self.lessons:
+            values = ["Lesson %d" % lesson.number] + \
+                     [json.dumps(list(lesson.standards.filter(Q(category=cat) | Q(category__parent=cat))
+                                      .distinct().values_list("shortcode", flat=True)))
+                      for fw in frameworks for cat in fw.top_categories]
+            row = dict(zip(keys, values))
+            rows.append(row)
+
+        return columns, rows
 
     @property
     def short_name(self):

@@ -1,10 +1,11 @@
 import os, time, re
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
 from django.core.exceptions import MultipleObjectsReturned
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import never_cache
@@ -40,6 +41,9 @@ import reversion
 from reversion.views import create_revision
 from reversion.models import Version
 
+from reversion_compare.forms import SelectDiffForm
+from reversion_compare.views import HistoryCompareDetailView
+
 from django_slack import slack_message
 
 from curricula.models import *
@@ -50,8 +54,10 @@ from documentation.models import IDE, Block, Map
 
 logger = logging.getLogger(__name__)
 
+pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 
 
+@login_required
 def index(request):
     if request.user.is_staff:
         curricula = Curriculum.objects.all()
@@ -67,6 +73,7 @@ Core curricula and lesson views
 '''
 
 
+@login_required
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
     try:
@@ -104,6 +111,7 @@ def curriculum_view(request, slug):
                                                          'form': form, 'changelog': changelog})
 
 
+@login_required
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
 
@@ -178,6 +186,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
+@login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
@@ -337,6 +346,7 @@ PDF rendering views
 '''
 
 
+@login_required
 def lesson_pdf(request, slug, unit_slug, lesson_num):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -359,7 +369,7 @@ def lesson_pdf(request, slug, unit_slug, lesson_num):
         response = HttpResponse(compiled)
     else:
         try:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         except Exception:
             logger.exception('PDF Generation Failed')
             return HttpResponse('PDF Generation Failed', status=500)
@@ -388,6 +398,7 @@ def unit_compiled(request, slug, unit_slug):
     return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
 
+@login_required
 def unit_pdf(request, slug, unit_slug):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -409,7 +420,7 @@ def unit_pdf(request, slug, unit_slug):
         response = HttpResponse(compiled)
     else:
         try:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         except Exception:
             logger.exception('PDF Generation Failed')
             return HttpResponse('PDF Generation Failed', status=500)
@@ -463,13 +474,14 @@ def unit_pjspdf(request, slug, unit_slug):
     return pdfresponse
 
 
+@login_required
 def unit_resources_pdf(request, slug, unit_slug):
     merger = PdfFileMerger()
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
     for lesson in unit.lessons.exclude(keywords__keyword__slug="optional"):
         lesson_string = render_to_string("curricula/lesson_title.html", {'unit': unit, 'lesson': lesson},
                                          request=request)
-        lesson_page = pdfkit.from_string(lesson_string, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        lesson_page = pdfkit.from_string(lesson_string, False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         lesson_page_pdf = StringIO(lesson_page)
         merger.append(PdfFileReader(lesson_page_pdf))
         for resource in lesson.resources.all():
@@ -514,6 +526,7 @@ def unit_resources_pdf(request, slug, unit_slug):
     return response
 
 
+@login_required
 def curriculum_pdf(request, slug):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -537,7 +550,7 @@ def curriculum_pdf(request, slug):
     if request.GET.get('html'):  # Allows testing the html output
         response = HttpResponse(compiled)
     else:
-        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=curriculum.pdf'
     return response
@@ -672,6 +685,94 @@ def page_history(request, page_id):
                                                                                         settings.FEEDBACK_USER))
 
     return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
+
+
+class CompareHistoryView(HistoryCompareDetailView):
+    model = Lesson
+    template_name = 'curricula/compare_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HistoryCompareDetailView, self).get_context_data()
+        action_list = self._get_action_list()
+
+        if len(action_list) < 2:
+            # Less than two history items aren't enough to compare ;)
+            comparable = False
+        else:
+            comparable = True
+            # for pre selecting the compare radio buttons depend on the ordering:
+            if self.history_latest_first:
+                action_list[0]["first"] = True
+                action_list[1]["second"] = True
+            else:
+                action_list[-1]["first"] = True
+                action_list[-2]["second"] = True
+
+        if self.request.GET:
+            form = SelectDiffForm(self.request.GET)
+            if not form.is_valid():
+                msg = "Wrong version IDs."
+                raise Http404(msg)
+
+            version_id1 = form.cleaned_data["version_id1"]
+            version_id2 = form.cleaned_data["version_id2"]
+
+            if version_id1 > version_id2:
+                # Compare always the newest one (#2) with the older one (#1)
+                version_id1, version_id2 = version_id2, version_id1
+
+            obj = self.get_object()
+            queryset = Version.objects.get_for_object(obj)
+            version1 = get_object_or_404(queryset, pk=version_id1)
+            version2 = get_object_or_404(queryset, pk=version_id2)
+            related1 = version1.revision.version_set.all()
+            related2 = version2.revision.version_set.all()
+
+            next_version = queryset.filter(pk__gt=version_id2).last()
+            prev_version = queryset.filter(pk__lt=version_id1).first()
+            compare_data = []
+
+            compared, has_unfollowed_fields = self.compare(obj, version1, version2)
+            compare_data.append(compared)
+
+            for activity in obj.activity_set.all():
+                activity_1 = related1.get_for_object(activity).first()
+                activity_2 = related2.get_for_object(activity).first()
+                print "related obj"
+                print activity
+                print "related_v1"
+                print activity_1
+                print "related_v2"
+                print activity_2
+                if activity_1 and activity_2:
+                    compared, fields = self.compare(activity, activity_1, activity_2)
+                    compare_data.append(compared)
+
+            context.update({
+                "compare_data": compare_data,
+                "has_unfollowed_fields": has_unfollowed_fields,
+                "version1": version1,
+                "version2": version2
+            })
+
+            if next_version:
+                next_url = "?version_id1=%i&version_id2=%i" % (
+                    version2.id, next_version.id
+                )
+                context.update({'next_url': next_url})
+            if prev_version:
+                prev_url = "?version_id1=%i&version_id2=%i" % (
+                    prev_version.id, version1.id
+                )
+                context.update({'prev_url': prev_url})
+
+        # Compile the context.
+        context.update({
+            "action_list": action_list,
+            "comparable": comparable,
+            "compare_view": True,
+        })
+        return context
 
 
 @csrf_exempt
