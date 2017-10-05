@@ -134,29 +134,28 @@ class Curriculum(Page, RichText):
                                  "formatter": "heatCell",
                                  "align": "center",
                                  "tooltipHeader": cat.name,
-                                 "total": Standard.objects.filter(Q(category=cat) | Q(category__parent=cat)).count()}
-                                for cat in fw.top_categories]
+                                 "total": cat.standards.count()}
+                                for cat in fw.categories.bottom()]
             }
             columns.append(group)
 
         rows = []
         keys = ["chapter"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in self.frameworks.all() for cat in
-                              fw.top_categories]
+                              fw.categories.bottom()]
         for unit in self.units:
             if unit.chapters:
                 for chapter in unit.chapters:
                     values = ["U%sCh%s" % (unit.number, chapter.number)] +\
-                             [json.dumps(list(Standard.objects.filter(Q(category=cat) | Q(category__parent=cat), lesson__in=chapter.lessons)
-                                    .distinct().values_list("shortcode", flat=True)))
-                              for fw in self.frameworks.all() for cat in fw.top_categories]
+                             [json.dumps(list(cat.standards.filter(lesson__in=chapter.lessons)
+                                              .distinct().values_list("shortcode", flat=True)))
+                              for fw in self.frameworks.all() for cat in fw.categories.bottom()]
                     row = dict(zip(keys, values))
                     rows.append(row)
             else:
                 values = [unit.title] + \
-                         [json.dumps(list(Standard.objects.filter(Q(category=cat) | Q(category__parent=cat),
-                                                                  lesson__in=unit.lessons)
+                         [json.dumps(list(cat.standards.filter(lesson__in=unit.lessons)
                                           .distinct().values_list("shortcode", flat=True)))
-                          for fw in self.frameworks.all() for cat in fw.top_categories]
+                          for fw in self.frameworks.all() for cat in fw.categories.bottom()]
                 row = dict(zip(keys, values))
                 rows.append(row)
 
@@ -304,7 +303,8 @@ class Unit(Page, RichText):
     def get_standards(self):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
 
-        frameworks = self.curriculum.frameworks.all()
+        frameworks = self.curriculum.frameworks.all().prefetch_related('categories', 'categories__standards')
+
         columns = [{"title": "Lesson", "field": "lesson", "frozen": True, "tooltips": False, "headerSort": False, "width": 100}]
         for fw in frameworks:
             group = {
@@ -315,19 +315,18 @@ class Unit(Page, RichText):
                                  "formatter": "heatCell",
                                  "align": "center",
                                  "tooltipHeader": cat.name,
-                                 "total": Standard.objects.filter(Q(category=cat) | Q(category__parent=cat)).count()}
-                                for cat in fw.top_categories]
+                                 "total": cat.standards.count()}
+                                for cat in fw.categories.bottom()]
             }
             columns.append(group)
 
         rows = []
-        keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in
-                            fw.top_categories]
+        keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in fw.categories.bottom()]
         for lesson in self.lessons:
             values = ["Lesson %d" % lesson.number] + \
-                     [json.dumps(list(lesson.standards.filter(Q(category=cat) | Q(category__parent=cat))
+                     [json.dumps(list(lesson.standards.filter(category=cat)
                                       .distinct().values_list("shortcode", flat=True)))
-                      for fw in frameworks for cat in fw.top_categories]
+                      for fw in frameworks for cat in fw.categories.bottom()]
             row = dict(zip(keys, values))
             rows.append(row)
 

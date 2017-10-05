@@ -13,6 +13,7 @@ from mezzanine.conf import settings
 from mezzanine.core import views as core_views
 from mezzanine.generic import views as generic_views
 from mezzanine.pages import views as page_views
+from django.contrib.auth import views as auth_views
 import mezzanine_pagedown.urls
 import freeze.urls
 
@@ -49,6 +50,20 @@ if settings.USE_MODELTRANSLATION:
     urlpatterns += patterns('',
         url('^i18n/$', 'django.views.i18n.set_language', name='set_language'),
     )
+
+
+if "django.contrib.admin" in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url("^password_reset/$", auth_views.password_reset,
+            name="password_reset"),
+        url("^password_reset/done/$", auth_views.password_reset_done,
+            name="password_reset_done"),
+        url("^reset/done/$", auth_views.password_reset_complete,
+            name="password_reset_complete"),
+        url("^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$",
+            auth_views.password_reset_confirm, name="password_reset_confirm"),
+    ]
+
 
 urlpatterns += patterns('',
     # We don't want to presume how your homepage works, so here are a

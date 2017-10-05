@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Q
 
 """
 Top level of a standards framework
@@ -17,7 +18,7 @@ class Framework(models.Model):
 
     @property
     def top_categories(self):
-        return self.category_set.filter(parent=None)
+        return self.categories.top()
 
 
 """
@@ -31,12 +32,20 @@ Type should be set to the name appropriate for each framework
 """
 
 
+class CategoryQuerySet(models.QuerySet):
+    def top(self):
+        return self.filter(parent=None)
+
+    def bottom(self):
+        return self.filter(standards__isnull=False).distinct()
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
     type = models.CharField(max_length=50, blank=True, null=True)
-    framework = models.ForeignKey(Framework, blank=True, null=True)
+    framework = models.ForeignKey(Framework, blank=True, null=True, related_name="categories")
     parent = models.ForeignKey('self', blank=True, null=True, related_name="children")
 
     def __unicode__(self):
@@ -45,6 +54,12 @@ class Category(models.Model):
     class Meta:
         ordering = ['framework', 'shortcode']
         verbose_name_plural = "categories"
+
+    def child_standards(self):
+        return Standard.objects.filter(Q(category=self) | Q(category__parent=self))
+
+    objects = CategoryQuerySet.as_manager()
+
 
 
 """
@@ -87,8 +102,8 @@ class Standard(models.Model):
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
     gradeband = models.ForeignKey(GradeBand)
-    category = models.ForeignKey(Category)
-    framework = models.ForeignKey(Framework, blank=True, null=True)
+    category = models.ForeignKey(Category, related_name='standards')
+    framework = models.ForeignKey(Framework, blank=True, null=True, related_name='standards')
     slug = models.CharField(max_length=50, blank=True, null=True)
 
     def __unicode__(self):
