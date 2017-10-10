@@ -102,6 +102,8 @@ class Block(Page, RichText):
                                     help_text='Description of return value or alternate functionality')
     tips = RichTextField(blank=True, null=True, help_text='List of tips for using this block')
     video = models.ForeignKey('lessons.Resource', blank=True, null=True)
+    # Using FileField instead of ImageField to support SVG blocks. ImageField is raster only :(
+    image = models.FileField(blank=True, null=True, upload_to="blocks/")
     _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
 
     class Meta:
@@ -211,6 +213,7 @@ class Example(Orderable):
     description = models.TextField(blank=True, null=True)
     code = RichTextField()
     app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
+    image = models.ImageField(blank=True, null=True)
 
     def __unicode__(self):
         return self.name

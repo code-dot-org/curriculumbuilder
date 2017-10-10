@@ -372,6 +372,7 @@ class CodeMirrorTextarea(forms.Textarea):
                   'inlineAttachment.editors.codemirror4.attach(editor, { \n'
                   '  uploadUrl: "/upload/",\n'
                   '  uploadFieldName: "file",\n'
+                  '  allowedTypes: [ "image/jpeg", "image/png", "image/jpg", "image/gif", "image/svg+xml"],\n'
                   '  remoteFilename: function(file) { return file.name.toString().replace(/\s+/g, "-") },\n'
                   '  urlText: "![]({filename})",\n'
                   '  extraHeaders: {\n'

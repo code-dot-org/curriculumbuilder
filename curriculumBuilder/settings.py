@@ -133,7 +133,7 @@ SECRET_KEY = os.getenv("DJANGO_SECURITY_KEY", ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
 DEBUG =  os.getenv("debug", "false").lower() == "true"
 
-LOGIN_EXEMPT_URLS = (r'^admin/', r'^robots.txt$', r'^password_reset/', r'^api/')
+LOGIN_EXEMPT_URLS = (r'^admin/', r'^robots.txt$', r'^password_reset/', r'^reset/', r'^api/')
 
 # ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'testserver', '.rhcloud.com',
 #                      '.codecurricula.com']
@@ -145,6 +145,7 @@ ALLOWED_HOSTS = ['*']
 
 ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@codecurricula.com'
+DEFAULT_FROM_EMAIL = 'josh@code.org'
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -557,7 +558,7 @@ COMMENTS_DISQUS_SHORTNAME = 'CurriculumBuilder'
 ##################
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = os.environ.get('SENDGRID_USER')
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
