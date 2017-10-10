@@ -20,6 +20,13 @@
         </div>
     {% endif %}
 {% endwith %}
+
+{% endif %}
+
+{% if code_block.image %}
+    <img src="{{ code_block.image.url }}" class="block_svg" />
+{% else %}
+    <h1>{% editable code_block.title %}{{ code_block.title }}{% endeditable %}</h1>
 {% endif %}
 
 {% if code_block.category %}
@@ -44,7 +51,7 @@
     <h2>Examples</h2>
 
     {% for example in code_block.example_set.all %}
-        {% editable example.name example.description example.app example.code %}
+        {% editable example.name example.description example.code %}
         {% if example.app %}
             <div class="row">
                 <div class="col-sm-8">
@@ -58,6 +65,20 @@
                         <iframe class="{{ code_block.IDE.slug }}-exemplar" src="{{ example.get_embed_app }}"></iframe>
                     </div>
             </div>
+        {% elif example.image %}
+            <div class="row">
+                <div class="col-sm-8">
+                    <h3>{{ example.name }}</h3>
+                    <p>{{ example.description|richtext_filters|safe }}</p>
+<pre>
+{{ example.code }}
+</pre>
+                </div>
+                    <div class="col-sm-4">
+                        <img src="{{ example.image.url }}" />
+                    </div>
+            </div>
+
         {% else %}
             <h3>{{ example.name }}</h3>
             <p>{{ example.description|richtext_filters|safe }}</p>
