@@ -35,7 +35,7 @@ class IDEAdmin(PageAdmin, VersionAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', 'language', ('description', 'gen_description')],
+            'fields': ['title', 'slug', 'language', ('description', 'gen_description')],
         }),
         ('Documentation', {
             'fields': ['url', 'content'],
@@ -65,7 +65,7 @@ class BlockAdmin(PageAdmin, VersionAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', 'video', ('description', 'gen_description')],
+            'fields': ['title', 'slug', 'video', 'image', ('description', 'gen_description')],
         }),
         ('Documentation', {
             'fields': ['proxy', 'ext_doc', 'category', 'content'],
@@ -121,7 +121,7 @@ class BlockDocAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', 'video', ('description', 'gen_description')],
+            'fields': ['title', 'slug', 'video', 'image', ('description', 'gen_description')],
         }),
         ('Documentation', {
             'fields': ['proxy', 'ext_doc', 'category', 'content'],
