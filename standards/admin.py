@@ -6,74 +6,81 @@ from import_export.widgets import ForeignKeyWidget
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from standards.models import Framework, Category, Standard, Grade, GradeBand
 
+
 class StandardInline(TabularDynamicInlineAdmin):
-  model = Standard
+    model = Standard
+
 
 class CategoryInline(TabularDynamicInlineAdmin):
-  model = Category
-  verbose_name_plural = "Categories"
-  inlines = [StandardInline]
+    model = Category
+    verbose_name_plural = "Categories"
+    inlines = [StandardInline]
+
 
 class CategoryAdmin(admin.ModelAdmin):
-  model = Category
-  list_display = ('name', 'framework', 'parent', 'shortcode')
-  list_filter = ('framework', 'parent')
-  inlines = [StandardInline]
+    model = Category
+    list_display = ('name', 'framework', 'parent', 'shortcode')
+    list_filter = ('framework', 'parent')
+    inlines = [StandardInline]
+
 
 class FrameworkAdmin(admin.ModelAdmin):
-  model = Framework
-  inlines = [CategoryInline]
+    model = Framework
+    inlines = [CategoryInline]
+
 
 class StandardResource(resources.ModelResource):
+    # category = fields.Field(column_name='category', attribute='shortcode',
+    #                         widget = ForeignKeyWidget(Category,'shortcode'))
 
-  # category = fields.Field(column_name='category', attribute='shortcode',
-  #                         widget = ForeignKeyWidget(Category,'shortcode'))
+    '''
+    def before_import(self, dataset, dry_run, **kwargs):
+      i = 0
+      last = dataset.height - 1
 
-  '''
-  def before_import(self, dataset, dry_run, **kwargs):
-    i = 0
-    last = dataset.height - 1
+      while i <= last:
 
-    while i <= last:
+        try:
+          gradeband = GradeBand.objects.get(shortcode=dataset.get_col(3)[0])
+        except GradeBand.DoesNotExist:
+          gradeband = GradeBand.objects.all()[0]
 
-      try:
-        gradeband = GradeBand.objects.get(shortcode=dataset.get_col(3)[0])
-      except GradeBand.DoesNotExist:
-        gradeband = GradeBand.objects.all()[0]
+        try:
+          category = Category.objects.get(name=dataset.get_col(4)[0])
+        except Category.DoesNotExist:
+          category = Category.objects.all()[0]
 
-      try:
-        category = Category.objects.get(name=dataset.get_col(4)[0])
-      except Category.DoesNotExist:
-        category = Category.objects.all()[0]
+        dataset.rpush((
+          dataset.get_col(1)[0],
+          dataset.get_col(2)[0],
+          gradeband.pk,
+          category.pk,
+          dataset.get_col(5)[0],
+          dataset.get_col(6)[0],
+        ))
+        i = i + 1
+    '''
 
-      dataset.rpush((
-        dataset.get_col(1)[0],
-        dataset.get_col(2)[0],
-        gradeband.pk,
-        category.pk,
-        dataset.get_col(5)[0],
-        dataset.get_col(6)[0],
-      ))
-      i = i + 1
-  '''
+    '''
+    category = fields.Field(column_name='category', attribute='category',
+                            widget = ForeignKeyWidget(Category,'name'))
+  
+    gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
+                            widget = ForeignKeyWidget(GradeBand,'name'))
+      '''
 
-  '''
-  category = fields.Field(column_name='category', attribute='category',
-                          widget = ForeignKeyWidget(Category,'name'))
+    class Meta:
+        model = Standard
+        fields = ('framework__slug', 'category__name', 'shortcode', 'name')
 
-  gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
-                          widget = ForeignKeyWidget(GradeBand,'name'))
-	'''
-
-  class Meta:
-    model = Standard
-    fields = ('id', 'shortcode', 'name', 'description', 'category', 'gradeband',)
 
 class StandardAdmin(ImportExportModelAdmin):
-  resource_class = StandardResource
-  list_display = ('framework', 'category', 'slug', 'name')
-  list_filter = ('framework', 'category', 'gradeband')
-  pass
+    resource_class = StandardResource
+    list_display = ('framework', 'category', 'shortcode', 'name', 'description')
+    list_filter = ('framework', 'category', 'gradeband')
+    list_editable = ('shortcode', 'name', 'description')
+    pass
+
 
 admin.site.register(Standard, StandardAdmin)
 admin.site.register(Category, CategoryAdmin)
