@@ -3,8 +3,9 @@ from ajax_select.fields import autoselect_fields_check_can_add
 from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, ModelForm
-from import_export import resources
+from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.generic.fields import KeywordsField
 from mezzanine.pages.admin import PageAdmin
@@ -12,6 +13,7 @@ from reversion.admin import VersionAdmin
 from reversion_compare.admin import CompareVersionAdmin
 
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
+from curricula.models import Curriculum, Unit
 from standards.models import Standard
 from documentation.models import Block
 
@@ -78,6 +80,35 @@ class ResourceInline(TabularDynamicInlineAdmin):
         return instance.resource.md_tag()
 
 
+class UnitForeignKeyWidget(ForeignKeyWidget):
+    def get_queryset(self, value, row):
+        return self.model.objects.filter(
+            curriculum__slug=row["curriculum"],
+            slug=row["unit"]
+        )
+
+
+'''
+This import_export resource is optimized for imported standards alignments
+and as such, ignores most other lesson fields
+'''
+
+
+class LessonResource(resources.ModelResource):
+    standards = fields.Field(column_name='standards', attribute='standards',
+                             widget=ManyToManyWidget(Standard, field='slug'))
+
+    curriculum = fields.Field(column_name='curriculum', attribute='curriculum',
+                              widget=ForeignKeyWidget(Curriculum, 'slug'))
+
+    unit = fields.Field(column_name='unit', attribute='unit',
+                        widget=UnitForeignKeyWidget(Unit, 'slug'))
+
+    class Meta:
+        model = Lesson
+        fields = ("id", "title", "curriculum", "number", "standards")
+
+
 class LessonInline(TabularDynamicInlineAdmin):
     model = Lesson
     sortable_field_name = "number"
@@ -124,7 +155,6 @@ class LessonForm(ModelForm):
         Optimize loading of blocks with related IDEs
         '''
         self.fields['blocks'].queryset = Block.objects.all().select_related('IDE')
-
 
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
@@ -178,11 +208,36 @@ class MultiLesson(Lesson):
         proxy = True
 
 
-class MultiLessonAdmin(admin.ModelAdmin):
+class MultiLessonAdmin(ImportExportModelAdmin):
+    resource_class = LessonResource
     list_display = ('curriculum', 'unit', 'number', 'title', 'week', 'pacing_weight', 'unplugged')
     list_editable = ('title', 'week', 'pacing_weight', 'unplugged')
     list_filter = ('curriculum', 'unit', 'keywords__keyword')
     actions = [publish]
+    form = LessonForm
+
+    inlines = [ObjectiveInline, ResourceInline, ActivityInline]
+
+    filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
+
+    fieldsets = (
+        (None, {
+            'fields': ['title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
+                       'overview', 'keywords', ('description', 'gen_description')],
+        }),
+        ('Purpose, Prep, & Questions', {
+            'fields': ['cs_content', 'prep', 'questions'],
+            'classes': ['collapse-closed'],
+        }),
+        ('Vocab & Blocks', {
+            'fields': ['vocab', 'blocks'],
+            'classes': ['collapse-closed'],
+        }),
+        ('Standards', {
+            'fields': ['standards', 'anchor_standards'],
+            'classes': ['collapse-closed'],
+        }),
+    )
 
     def get_changelist_form(self, request, **kwargs):
         return MultiLessonForm
