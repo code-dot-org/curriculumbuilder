@@ -61,17 +61,15 @@ class StandardResource(resources.ModelResource):
         i = i + 1
     '''
 
-    '''
     category = fields.Field(column_name='category', attribute='category',
-                            widget = ForeignKeyWidget(Category,'name'))
+                            widget = ForeignKeyWidget(Category, 'name'))
   
     gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
-                            widget = ForeignKeyWidget(GradeBand,'name'))
-      '''
+                             widget = ForeignKeyWidget(GradeBand, 'name'))
 
     class Meta:
         model = Standard
-        fields = ('framework__slug', 'category__name', 'shortcode', 'name')
+        fields = ('id', 'framework__slug', 'category', 'gradeband', 'shortcode', 'name', 'description')
 
 
 class StandardAdmin(ImportExportModelAdmin):
