@@ -583,6 +583,23 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-top: 10px;
 }
 
+.lesson_overview h4 {
+    clear: both;
+}
+
+.overview_agenda {
+    padding: 0 10px 0 0;
+    margin-right: 10px;
+    border-right: 2px solid #00adbc;
+    float: left;
+    list-style: none;
+    font-size: 0.9em;
+    line-height: 1.2em;
+    font-weight: bold;
+    min-width: 150px;
+    max-width: 200px;
+}
+
 /* Stage Overview */
 
 /*
