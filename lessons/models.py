@@ -106,13 +106,17 @@ class Resource(Orderable):
 
         # Moving this to the template to allow for more formatting
         # elif self.gd:
-        #     formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a> | <a href='%s' class='print_link'>copy Gdoc</a>)" % (
-        #     formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
+        #     formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a> | " \
+        #                 "<a href='%s' class='print_link'>copy Gdoc</a>)" \
+        #                 % (formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
         return formatted
 
     def formatted_md(self):
         if self.url:
-            formatted = "[%s](%s)" % (self.name, self.fallback_url())
+            if self.gd:
+                formatted = "[%s](%s)" % (self.name, self.gd_pdf())
+            else:
+                formatted = "[%s](%s)" % (self.name, self.fallback_url())
         else:
             formatted = self.name
         if self.type:
@@ -120,7 +124,9 @@ class Resource(Orderable):
         if self.dl_url:
             formatted = "%s ([download](%s))" % (formatted, self.dl_url)
         elif self.gd:
-            formatted = "%s ([PDF](%s) | [DOCX](%s) | [copy Gdoc](%s)" % (formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
+            formatted = "%s (copy as [MS Word](%s), [Google Doc](%s))" \
+                        % (formatted, self.gd_doc(), self.gd_copy())
+
         return formatted
 
     # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
