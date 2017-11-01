@@ -103,9 +103,11 @@ class Resource(Orderable):
             formatted = "%s - %s" % (formatted, self.type)
         if self.dl_url:
             formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
-        elif self.gd:
-            formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a>)" % (
-            formatted, self.gd_pdf(), self.gd_doc())
+
+        # Moving this to the template to allow for more formatting
+        # elif self.gd:
+        #     formatted = "%s (<a href='%s' class='print_link'>PDF</a> | <a href='%s' class='print_link'>DOCX</a> | <a href='%s' class='print_link'>copy Gdoc</a>)" % (
+        #     formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
         return formatted
 
     def formatted_md(self):
@@ -118,7 +120,7 @@ class Resource(Orderable):
         if self.dl_url:
             formatted = "%s ([download](%s))" % (formatted, self.dl_url)
         elif self.gd:
-            formatted = "%s ([PDF](%s) | [DOCX](%s))" % (formatted, self.gd_pdf(), self.gd_doc())
+            formatted = "%s ([PDF](%s) | [DOCX](%s) | [copy Gdoc](%s)" % (formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
         return formatted
 
     # If resource lives on pegasus check to see if it's on prod, otherwise fallback to staging
@@ -150,9 +152,18 @@ class Resource(Orderable):
 
     def gd_doc(self):
         try:
-            re_doc = '(drive|docs)\.google\.com\/(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
             doc_id = re.search(re_doc, self.url).group('doc_id')
             pdf = 'https://docs.google.com/document/d/%s/export?format=doc' % doc_id
+            return pdf
+        except:
+            return self.url
+
+    def gd_copy(self):
+        try:
+            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+            doc_id = re.search(re_doc, self.url).group('doc_id')
+            pdf = 'https://docs.google.com/document/d/%s/copy' % doc_id
             return pdf
         except:
             return self.url
