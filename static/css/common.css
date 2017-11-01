@@ -462,6 +462,18 @@ footer {
     color: #ffa400;
 }
 
+/* filetype download button for gd resources */
+.resource-copy button {
+    padding: 0 5px;
+    height: auto;
+    font-size: 1em;
+}
+
+.resource-copy ul li a {
+    font-family: 'Gotham 4r', sans-serif;
+    font-size: 0.8em;
+}
+
 /* shrink expandable images from Code Studio */
 [data-title="expandable"] img {
   max-width: 150px;
