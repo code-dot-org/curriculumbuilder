@@ -95,7 +95,10 @@ class Block(Page, RichText):
     syntax = RichTextField(blank=True, null=True)
     ext_doc = models.URLField('External Documentation', blank=True, null=True,
                               help_text='Link to external documentation')
-    proxy = models.ForeignKey("self",blank=True, null=True, help_text='Existing block to pull documentation from')
+    parent_object = models.ForeignKey("self", related_name='object', blank=True, null=True,
+                                      help_text='Parent object for property or method')
+    proxy = models.ForeignKey("self", related_name="proxied", blank=True, null=True,
+                              help_text='Existing block to pull documentation from')
     signature = models.CharField(max_length=255, blank=True, null=True)
     category = models.ForeignKey(Category, blank=True, null=True)
     return_value = models.CharField(max_length=255, blank=True, null=True,
