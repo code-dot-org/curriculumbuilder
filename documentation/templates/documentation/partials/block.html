@@ -37,6 +37,10 @@
     {% endeditable %}
 {% endif %}
 
+{% if code_block.parent_object %}
+    <div class="alert alert-info" role="alert">The block is a part of the <a href="{{ code_block.parent_object.get_absolute_url }}">{{ code_block.parent_object.title }}</a> object.</div>
+{% endif %}
+
 {% if code_block.video %}
     <iframe allowfullscreen="true" frameborder="0" height="315" src="{{ code_block.video.url }}" width="560"></iframe>
     <p><a href="{{ code_block.video.dl_url }}">Download Video</a></p>

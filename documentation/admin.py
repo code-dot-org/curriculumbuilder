@@ -52,9 +52,17 @@ class BlockForm(ModelForm):
         else:
             categories_queryset = Category.objects.all()
 
+        if self.instance.category:
+            parent_obj_queryset = Block.objects.filter(category=self.instance.category)
+        elif self.instance.IDE:
+            parent_obj_queryset = Block.objects.filter(IDE=self.instance.IDE)
+        else:
+            parent_obj_queryset = Block.objects.all()
+
         videos_queryset = Resource.objects.filter(type__iexact="video")
 
         self.fields['category'].queryset = categories_queryset
+        self.fields['parent_object'].queryset = parent_obj_queryset
         self.fields['video'].queryset = videos_queryset
 
 
@@ -68,7 +76,7 @@ class BlockAdmin(PageAdmin, VersionAdmin):
             'fields': ['title', 'slug', 'video', 'image', ('description', 'gen_description')],
         }),
         ('Documentation', {
-            'fields': ['proxy', 'ext_doc', 'category', 'content'],
+            'fields': ['parent_object', 'proxy', 'ext_doc', 'category', 'content'],
         }),
         ('Details', {
             'fields': ['syntax', 'return_value'],
