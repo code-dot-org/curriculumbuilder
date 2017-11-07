@@ -3,7 +3,7 @@
     <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
         <a href="{{ unit.get_absolute_url }}" class="btn" role="button">Unit Overview</a>
         <a href="{{ unit.get_pdf_url }}" class="btn" role="button">All Lessons PDF</a>
-        <a href="{{ unit.get_resources_url }}" class="btn" role="button">All Handouts PDF</a>
+        <a href="{{ unit.get_resources_pdf_url }}" class="btn" role="button">All Handouts PDF</a>
         {% if changelog.count > 0 %}
 
             <div class="btn-group" role="group">
