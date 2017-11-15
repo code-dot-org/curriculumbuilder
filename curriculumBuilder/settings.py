@@ -473,6 +473,7 @@ AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
 AWS_HEADERS = {
  'Cache-Control': 'max-age=0',
 }
+AWS_S3_FILE_OVERWRITE = False
 
 AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
