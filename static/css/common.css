@@ -133,7 +133,7 @@ summary {
     display: inline-block;
 }
 
-.content {
+div.content {
     padding-left: 40px;
 }
 
