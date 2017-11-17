@@ -260,7 +260,7 @@ class CodeMirrorTextarea(forms.Textarea):
                   '   }\n'
                   ' },\n'
                   '{\n'
-                  ' class: "content",\n'
+                  ' class: "content-corner",\n'
                   ' label: \'<i class="fa fa-mortar-board" aria-hidden="true"></i>\',\n'
                   ' callback: function (cm) {\n'
                   '   if (typeof contentid == "undefined"){\n'
