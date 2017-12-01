@@ -1,0 +1,58 @@
+{% extends "cdo_base.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ unit.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+{% endblock %}
+
+{% block admin_link %}
+{% endblock %}
+
+{% block header %}
+        <h1>{{ unit.curriculum.slug|upper }} {{ unit.short_name }} History</h1>
+        <h4><a href="{{ unit.get_absolute_url }}">Return to unit</a></h4>
+{% endblock %}
+
+{% block resources_nav %}
+{% endblock %}
+
+{% block main %}
+    {% for lesson, versions in history %}
+        <h2>{{ lesson }}</h2>
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            {% for version in versions %}
+                <tr>
+                <td>{{ version.user }}</td>
+                <td>{{ version.date_created|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ version.comment|richtext_filters|safe }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+    {% endfor %}
+{% endblock %}
+
+{% block footer_js %}
+{% endblock %}
