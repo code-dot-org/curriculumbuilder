@@ -113,7 +113,6 @@ urlpatterns += patterns('',
     url("^None/$", views.index),  # Dealing with JackFrost bug
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
-    url(r'^', include('curricula.urls', namespace="curriculum")),
 
     # MEZZANINE'S URLS
     # ----------------
@@ -165,7 +164,7 @@ urlpatterns += patterns('',
     # need to use the ``SITE_PREFIX`` setting as well.
 
     #("^%s/" % settings.SITE_PREFIX, include("mezzanine.urls"))
-
+    url(r'^', include('curricula.urls', namespace="curriculum")),
 
 )
 

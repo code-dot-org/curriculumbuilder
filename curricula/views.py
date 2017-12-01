@@ -682,7 +682,6 @@ Supplemental Admin Views
 '''
 
 
-@staff_member_required
 def page_history(request, page_id):
     page = get_object_or_404(Page, pk=page_id)
     history = Version.objects.get_for_object(page).filter(revision__user__username__in=(settings.CHANGELOG_USER,
@@ -691,7 +690,6 @@ def page_history(request, page_id):
     return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
 
 
-@staff_member_required
 def unit_feedback(request, slug, unit_slug):
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
