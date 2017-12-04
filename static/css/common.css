@@ -541,6 +541,16 @@ code {
     background-color: #f7f7f9;
 }
 
+/* Feedback tracking */
+tr.history_resolved {
+    color: #CCC;
+    text-decoration: line-through;
+}
+
+tr.history_changelog .resolve_feedback {
+    display: none;
+}
+
 @media print {
 
     /*

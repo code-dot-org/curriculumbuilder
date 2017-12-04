@@ -529,6 +529,7 @@ ENABLE_PUBLISH = True
 
 CHANGELOG_USER = "changelog"
 FEEDBACK_USER = "feedback"
+RESOLVED_USER = "resolved"
 ADD_REVERSION_ADMIN = True
 
 #################

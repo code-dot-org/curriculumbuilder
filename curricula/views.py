@@ -38,7 +38,7 @@ from rest_framework import viewsets
 
 import reversion
 from reversion.views import create_revision
-from reversion.models import Version
+from reversion.models import Version, Revision
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.views import HistoryCompareDetailView
@@ -684,7 +684,8 @@ def unit_feedback(request, slug, unit_slug):
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
         .filter(revision__user__username__in=(settings.CHANGELOG_USER,
-                                              settings.FEEDBACK_USER))] for l in unit.lesson_set.all()}
+                                              settings.FEEDBACK_USER,
+                                              settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
 
     return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'history': sorted(history.items())})
 
@@ -849,6 +850,27 @@ def feedback(request):
     }
 
     return Response(payload, content_type='application/json')
+
+
+@api_view(['POST', ])
+def resolve_feedback(request):
+    payload = {}
+    pk = request.POST.get("pk", "unknown")
+    try:
+        revision = Revision.objects.get(pk=pk)
+        if revision.user.username == settings.FEEDBACK_USER:
+            revision.user = User.objects.get(username=settings.RESOLVED_USER)
+        else:
+            revision.user = User.objects.get(username=settings.FEEDBACK_USER)
+        revision.save()
+        status = 200
+        payload['new_user'] = settings.RESOLVED_USER
+    except Exception:
+        status = 500
+        payload['error'] = "Failed to upload image"
+        logger.exception("Failed to mark reversion %s as resolved" % revision_id)
+
+    return JsonResponse(payload, status=status)
 
 
 @api_view(['POST', 'GET'])
