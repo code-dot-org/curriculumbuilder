@@ -267,9 +267,10 @@ class Lesson(Page, RichText):
         order = 1
         if self.parent.content_model == 'chapter':
             chapter = self.parent.chapter
-            while chapter is not None:
+            chapters = chapter.parent.unit.chapters
+            while chapter is not None and chapter._order > 0:
                 try:
-                    chapter = chapter.get_previous_by_order()
+                    chapter = chapters[chapter._order - 1]
                     if hasattr(chapter, "chapter"):
                         chapter = chapter.chapter
                         order += chapter.lessons.count()
@@ -372,8 +373,7 @@ class Lesson(Page, RichText):
         except Exception:
             logger.exception("Couldn't get curriculum for %s" % self)
         try:
-            if self.number is None :
-                self.number = self.get_number()
+            self.number = self.get_number()
         except Exception as e:
             print(e)
             print("couldn't get number")
