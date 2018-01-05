@@ -1,5 +1,6 @@
 import os, time, re
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
@@ -38,7 +39,7 @@ from rest_framework import viewsets
 
 import reversion
 from reversion.views import create_revision
-from reversion.models import Version
+from reversion.models import Version, Revision
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.views import HistoryCompareDetailView
@@ -55,6 +56,8 @@ logger = logging.getLogger(__name__)
 
 pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 
+
+@login_required
 def index(request):
     if request.user.is_staff:
         curricula = Curriculum.objects.all()
@@ -70,6 +73,7 @@ Core curricula and lesson views
 '''
 
 
+@login_required
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
     try:
@@ -107,6 +111,7 @@ def curriculum_view(request, slug):
                                                          'form': form, 'changelog': changelog})
 
 
+@login_required
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
 
@@ -181,6 +186,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
+@login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
@@ -340,6 +346,7 @@ PDF rendering views
 '''
 
 
+@login_required
 def lesson_pdf(request, slug, unit_slug, lesson_num):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -391,6 +398,7 @@ def unit_compiled(request, slug, unit_slug):
     return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
 
+@login_required
 def unit_pdf(request, slug, unit_slug):
 
     buffer = StringIO()
@@ -467,6 +475,7 @@ def unit_pjspdf(request, slug, unit_slug):
     return pdfresponse
 
 
+@login_required
 def unit_resources_pdf(request, slug, unit_slug):
     merger = PdfFileMerger()
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
@@ -521,6 +530,7 @@ def unit_resources_pdf(request, slug, unit_slug):
     return response
 
 
+@login_required
 def curriculum_pdf(request, slug):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -672,13 +682,22 @@ Supplemental Admin Views
 '''
 
 
-@staff_member_required
 def page_history(request, page_id):
     page = get_object_or_404(Page, pk=page_id)
     history = Version.objects.get_for_object(page).filter(revision__user__username__in=(settings.CHANGELOG_USER,
                                                                                         settings.FEEDBACK_USER))
 
     return render(request, 'curricula/page_history.html', {'page': page, 'history': history})
+
+
+def unit_feedback(request, slug, unit_slug):
+    unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
+    history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
+        .filter(revision__user__username__in=(settings.CHANGELOG_USER,
+                                              settings.FEEDBACK_USER,
+                                              settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
+
+    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'history': sorted(history.items())})
 
 
 class CompareHistoryView(HistoryCompareDetailView):
@@ -841,6 +860,27 @@ def feedback(request):
     }
 
     return Response(payload, content_type='application/json')
+
+
+@api_view(['POST', ])
+def resolve_feedback(request):
+    payload = {}
+    pk = request.POST.get("pk", "unknown")
+    try:
+        revision = Revision.objects.get(pk=pk)
+        if revision.user.username == settings.FEEDBACK_USER:
+            revision.user = User.objects.get(username=settings.RESOLVED_USER)
+        else:
+            revision.user = User.objects.get(username=settings.FEEDBACK_USER)
+        revision.save()
+        status = 200
+        payload['new_user'] = settings.RESOLVED_USER
+    except Exception:
+        status = 500
+        payload['error'] = "Failed to upload image"
+        logger.exception("Failed to mark reversion %s as resolved" % revision_id)
+
+    return JsonResponse(payload, status=status)
 
 
 @api_view(['POST', 'GET'])

@@ -62,6 +62,14 @@ summary {
     z-index: 10000;
 }
 
+#admin_edit .drawer-controls {
+    margin: 0;
+    width: auto;
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    right: 0;
+}
 .content ul {
     margin-top: 0px;
 }
@@ -125,7 +133,7 @@ summary {
     display: inline-block;
 }
 
-.content {
+div.content {
     padding-left: 40px;
 }
 
@@ -531,6 +539,16 @@ code.block a:visited {
 code {
     color: #7665a0;
     background-color: #f7f7f9;
+}
+
+/* Feedback tracking */
+tr.history_resolved {
+    color: #CCC;
+    text-decoration: line-through;
+}
+
+tr.history_changelog .resolve_feedback {
+    display: none;
 }
 
 @media print {

@@ -131,7 +131,7 @@ SECRET_KEY = os.getenv("DJANGO_SECURITY_KEY", ')_7av^!cy(wfx=k#3*7x+(=j^fzv+ot^1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
-DEBUG =  os.getenv("debug", "false").lower() == "true"
+DEBUG = os.getenv("debug", "false").lower() == "true"
 
 LOGIN_EXEMPT_URLS = (r'^admin/', r'^robots.txt$', r'^password_reset/', r'^reset/', r'^api/')
 
@@ -146,6 +146,9 @@ ALLOWED_HOSTS = ['*']
 ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@codecurricula.com'
 DEFAULT_FROM_EMAIL = 'josh@code.org'
+
+LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
+LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -529,6 +532,7 @@ ENABLE_PUBLISH = True
 
 CHANGELOG_USER = "changelog"
 FEEDBACK_USER = "feedback"
+RESOLVED_USER = "resolved"
 ADD_REVERSION_ADMIN = True
 
 #################

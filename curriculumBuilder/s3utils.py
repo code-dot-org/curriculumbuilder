@@ -58,5 +58,5 @@ class S3BotoStorageSafe(S3BotoStorage):
 
 StaticRootS3BotoStorage = lambda: S3BotoStorageSafe(location='static')
 StaticStagingS3BotoStorage = lambda: S3BotoStorageSafe(location='static_staging')
-MediaRootS3BotoStorage = lambda: S3BotoStorageSafe(location='media')
+MediaRootS3BotoStorage = lambda: S3BotoStorageSafe(location='media', file_overwrite=False)
 CurriculumRootS3BotoStorage = lambda: S3BotoStorageSafe(location='curriculum')

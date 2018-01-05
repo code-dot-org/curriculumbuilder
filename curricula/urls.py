@@ -9,11 +9,12 @@ urlpatterns = patterns('curricula.views',
 
                        # Ajax endpoints
                        # url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
-                       url(r'^test_view/(?P<pk>\d+)/$', views.CompareHistoryView.as_view() ),
+                       # url(r'^test_view/(?P<pk>\d+)/$', views.CompareHistoryView.as_view() ),
                        url(r'^page_history/(?P<pk>\d+)/$', views.CompareHistoryView.as_view()),
                        url(r'^publish/$', views.publish, name='publish'),
                        url(r'^upload/$', views.image_upload, name='image_upload'),
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
+                       url(r'^resolve_feedback/$', views.resolve_feedback, name='resolve_feedback'),
 
                        # JSON Metadata
                        url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
@@ -52,6 +53,8 @@ urlpatterns = patterns('curricula.views',
                            views.unit_resources, name='unit_resources'),
                        url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/standards/$',
                            standards_views.by_unit, name='by_unit_2'),
+                       url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/unit_feedback/$',
+                           views.unit_feedback, name='unit_feedback'),
                        url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/ch(?P<chapter_num>\d+)/$',
                            views.chapter_view, name='chapter_view'),
 
