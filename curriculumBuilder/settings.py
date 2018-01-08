@@ -147,8 +147,8 @@ ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@codecurricula.com'
 DEFAULT_FROM_EMAIL = 'josh@code.org'
 
-LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
-LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
+# LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
+# LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -343,7 +343,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
     "curriculumBuilder.disable_csrf.DisableCSRF",
-    "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
+    # "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
 )
 
 # Store these package names here as they may change in the future since
@@ -363,6 +363,10 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
+
+DEBUG_TOOLBAR_CONFIG = {
+'INTERCEPT_REDIRECTS': True,
+}
 
 #####################
 # PAGEDOWN SETTINGS #
@@ -646,7 +650,7 @@ LOGGING = {
         },
         'jackfrost': {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': True
         },
         'lessons': {

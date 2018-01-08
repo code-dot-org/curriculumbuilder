@@ -28,3 +28,5 @@ class LoginRequiredMiddleware:
                 path = request.path_info.lstrip('/')
                 if not any(m.match(path) for m in EXEMPT_URLS):
                     return HttpResponseRedirect('https://curriculum.code.org%s' % request.path)
+        else:
+            return

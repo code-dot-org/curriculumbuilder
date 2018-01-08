@@ -73,7 +73,7 @@ Core curricula and lesson views
 '''
 
 
-@login_required
+# @login_required
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
     try:
@@ -111,7 +111,7 @@ def curriculum_view(request, slug):
                                                          'form': form, 'changelog': changelog})
 
 
-@login_required
+# @login_required
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
 
@@ -186,7 +186,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
-@login_required
+# @login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
@@ -346,7 +346,7 @@ PDF rendering views
 '''
 
 
-@login_required
+# @login_required
 def lesson_pdf(request, slug, unit_slug, lesson_num):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -398,7 +398,7 @@ def unit_compiled(request, slug, unit_slug):
     return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
 
-@login_required
+# @login_required
 def unit_pdf(request, slug, unit_slug):
 
     buffer = StringIO()
@@ -475,7 +475,7 @@ def unit_pjspdf(request, slug, unit_slug):
     return pdfresponse
 
 
-@login_required
+# @login_required
 def unit_resources_pdf(request, slug, unit_slug):
     merger = PdfFileMerger()
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
@@ -530,7 +530,7 @@ def unit_resources_pdf(request, slug, unit_slug):
     return response
 
 
-@login_required
+# @login_required
 def curriculum_pdf(request, slug):
     buffer = StringIO()
     c = pycurl.Curl()
