@@ -352,12 +352,17 @@ class Unit(Page, RichText):
 
     @property
     def header_corner(self):
+        header = ''
         if self.curriculum.unit_numbering and not self.disable_numbering:
-            return "<span class='h2'>Unit</span><span class='h1'>%d</span>" % self.number
+            header = "<span class='h2'>Unit</span><span class='h1'>%d</span>" % self.number
         else:
-            re_title = "(\w+) (\w+)"
-            re_match = re.search(re_title, self.title)
-            return "<span class='h2'>%s</span><span class='h1'>%s</span>" % (re_match.group(1), re_match.group(2))
+            title_words = self.title.split()
+            for i, word in enumerate(title_words):
+                if i < 1 or i > 1:
+                    header += "<span class='h2'>%s</span>" % word
+                else:
+                    header += "<span class='h1'>%s</span>" % word
+        return header
 
     @property
     def block_count(self):
