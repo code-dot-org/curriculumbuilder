@@ -111,6 +111,20 @@ class Resource(Orderable):
         #                 % (formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
         return formatted
 
+    def formatted_student(self):
+        if self.url:
+            if self.gd:
+                formatted = "<a href='%s' target='_blank'>%s</a>" % (self.gd_pdf(), self.name)
+            else:
+                formatted = "<a href='%s' target='_blank'>%s</a>" % (self.fallback_url(), self.name)
+        else:
+            formatted = self.name
+        if self.type:
+            formatted = "%s - %s" % (formatted, self.type)
+        if self.dl_url:
+            formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+        return formatted
+
     def formatted_md(self):
         if self.url:
             if self.gd:

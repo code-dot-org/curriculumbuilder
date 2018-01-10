@@ -51,7 +51,9 @@
     <ul>
         {% for resource in lesson.resources.all %}
             {% if resource.student %}
-                <li>{{ resource.formatted|safe }}</li>
+                <li>
+                    {{ resource.formatted_md|richtext_filters|safe }}
+                </li>
             {% endif %}
         {% endfor %}
     </ul>
