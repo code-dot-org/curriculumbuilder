@@ -48,20 +48,20 @@ class BlockForm(ModelForm):
         super(BlockForm, self).__init__(*args, **kwargs)
 
         if self.instance.parent:
-            categories_queryset = Category.objects.filter(IDE=self.instance.parent.ide)
+            categories_queryset = Category.objects.filter(parent_ide=self.instance.parent.ide)
         else:
             categories_queryset = Category.objects.all()
 
-        if self.instance.category:
-            parent_obj_queryset = Block.objects.filter(category=self.instance.category)
-        elif self.instance.IDE:
-            parent_obj_queryset = Block.objects.filter(IDE=self.instance.IDE)
+        if self.instance.parent_cat:
+            parent_obj_queryset = Block.objects.filter(parent_cat=self.instance.parent_cat)
+        elif self.instance.parent_ide:
+            parent_obj_queryset = Block.objects.filter(parent_ide=self.instance.parent_ide)
         else:
             parent_obj_queryset = Block.objects.all()
 
         videos_queryset = Resource.objects.filter(type__iexact="video")
 
-        self.fields['category'].queryset = categories_queryset
+        self.fields['parent_cat'].queryset = categories_queryset
         self.fields['parent_object'].queryset = parent_obj_queryset
         self.fields['video'].queryset = videos_queryset
 
@@ -76,7 +76,7 @@ class BlockAdmin(PageAdmin, VersionAdmin):
             'fields': ['title', 'slug', 'video', 'image', ('description', 'gen_description')],
         }),
         ('Documentation', {
-            'fields': ['parent_object', 'proxy', 'ext_doc', 'category', 'content'],
+            'fields': ['parent_object', 'proxy', 'ext_doc', 'parent_cat', 'content'],
         }),
         ('Details', {
             'fields': ['syntax', 'return_value'],
@@ -106,8 +106,8 @@ class MapAdmin(PageAdmin, VersionAdmin):
 class BlockDocForm(ModelForm):
     class Meta:
         model = Block
-        fields = ['IDE', 'title', 'syntax', 'category', 'ext_doc', 'proxy']
-        ordering = ('IDE', '_order')
+        fields = ["parent_ide", 'title', 'syntax', "parent_cat", 'ext_doc', 'proxy']
+        ordering = ('parent_ide', '_order')
         widgets = {
             'syntax': Textarea(attrs={'cols': '10'}),
             'ext_doc': TextInput(attrs={'size': '10'})
@@ -120,9 +120,9 @@ class BlockDoc(Block):
 
 
 class BlockDocAdmin(admin.ModelAdmin):
-    list_display = ('title', 'IDE', 'category')
-    list_filter = ('IDE', 'category')
-    ordering = ('IDE', '_order')
+    list_display = ('title', 'parent_ide', 'parent_cat')
+    list_filter = ('parent_ide', 'parent_cat')
+    ordering = ('parent_ide', '_order')
     form = BlockForm
 
     inlines = [ParameterInline, ExampleInline]
@@ -132,7 +132,7 @@ class BlockDocAdmin(admin.ModelAdmin):
             'fields': ['title', 'slug', 'video', 'image', ('description', 'gen_description')],
         }),
         ('Documentation', {
-            'fields': ['proxy', 'ext_doc', 'category', 'content'],
+            'fields': ['proxy', 'ext_doc', 'parent_cat', 'content'],
         }),
         ('Details', {
             'fields': ['syntax', 'return_value'],
@@ -155,10 +155,10 @@ class MultiBlock(Block):
 
 
 class MultiBlockAdmin(admin.ModelAdmin):
-    list_display = ('IDE', 'title', 'syntax', 'category', 'ext_doc')
-    list_editable = ('syntax', 'category', 'ext_doc')
-    list_filter = ('IDE',)
-    ordering = ('IDE', '_order')
+    list_display = ('parent_ide', 'title', 'syntax', 'parent_cat', 'ext_doc')
+    list_editable = ('syntax', 'parent_cat', 'ext_doc')
+    list_filter = ('parent_ide',)
+    ordering = ('parent_ide', '_order')
 
     def get_changelist_form(self, request, **kwargs):
         return BlockDocForm

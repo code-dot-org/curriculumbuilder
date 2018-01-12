@@ -9,6 +9,8 @@ from django.utils.text import slugify
 from mezzanine.pages.models import Page, RichText, Orderable
 from mezzanine.core.fields import RichTextField
 
+from django_cloneable import CloneableMixin
+
 from django_slack import slack_message
 
 from jackfrost.receivers import build_page_for_obj
@@ -71,13 +73,13 @@ Toolbox Categories
 class Category(Orderable):
     name = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
-    IDE = models.ForeignKey(IDE)
+    parent_ide = models.ForeignKey(IDE, related_name='categories')
 
     class Meta:
-        ordering = ["IDE", "_order"]
+        ordering = ["parent_ide", "_order"]
 
     def __unicode__(self):
-        return "%s: %s" % (self.IDE.title, self.name)
+        return "%s: %s" % (self.parent_ide.title, self.name)
 
     @property
     def blocks(self):
@@ -90,8 +92,8 @@ Individual Code Elements
 """
 
 
-class Block(Page, RichText):
-    IDE = models.ForeignKey(IDE, blank=True, null=True)
+class Block(Page, RichText, CloneableMixin):
+    parent_ide = models.ForeignKey(IDE, blank=True, null=True, related_name='blocks')
     syntax = RichTextField(blank=True, null=True)
     ext_doc = models.URLField('External Documentation', blank=True, null=True,
                               help_text='Link to external documentation')
@@ -100,28 +102,26 @@ class Block(Page, RichText):
     proxy = models.ForeignKey("self", related_name="proxied", blank=True, null=True,
                               help_text='Existing block to pull documentation from')
     signature = models.CharField(max_length=255, blank=True, null=True)
-    category = models.ForeignKey(Category, blank=True, null=True)
+    parent_cat = models.ForeignKey(Category, blank=True, null=True, related_name='blocks')
     return_value = models.CharField(max_length=255, blank=True, null=True,
                                     help_text='Description of return value or alternate functionality')
     tips = RichTextField(blank=True, null=True, help_text='List of tips for using this block')
-    video = models.ForeignKey('lessons.Resource', blank=True, null=True)
+    video = models.ForeignKey('lessons.Resource', blank=True, null=True, related_name='blocks')
     # Using FileField instead of ImageField to support SVG blocks. ImageField is raster only :(
     image = models.FileField(blank=True, null=True, upload_to="blocks/")
     _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
-
-    class Meta:
-        ordering = ["IDE", "category"]
 
     def __unicode__(self):
         return self.block_with_ide
 
     @property
     def block_with_ide(self):
-        return "%s - %s" % (self.IDE, self.title)
+        return "%s - %s" % (self.parent_ide, self.title)
 
     @property
     def lessons_introduced(self):
-        return self.lesson_set.filter(unit__login_required=False, curriculum__login_required=False).order_by('curriculum', 'unit', 'number')
+        return self.lessons.filter(unit__login_required=False, curriculum__login_required=False)\
+            .order_by('curriculum', 'unit', 'number')
 
     @property
     def code(self):
@@ -131,10 +131,10 @@ class Block(Page, RichText):
             return self.title
 
     def get_absolute_url(self):
-        return '/%s/%s/' % (self.IDE.slug, self.slug)
+        return '/%s/%s/' % (self.parent_ide.slug, self.slug)
 
     def get_published_url(self):
-        return '//docs.code.org/%s/%s/' % (self.IDE.slug, self.slug)
+        return '//docs.code.org/%s/%s/' % (self.parent_ide.slug, self.slug)
 
     def jackfrost_urls(self):
         urls = ["/documentation%s" % self.get_absolute_url(), "/documentation%sembed/" % self.get_absolute_url()]
@@ -181,7 +181,7 @@ class Block(Page, RichText):
 
     def save(self, *args, **kwargs):
         self.parent = Page.objects.get(pk=self.parent_id)
-        self.IDE = self.get_IDE()
+        self.parent_ide = self.get_IDE()
         if not self.slug:
             self.slug = slugify(self.title)
         super(Block, self).save(*args, **kwargs)
@@ -193,9 +193,9 @@ Parameters
 """
 
 
-class Parameter(Orderable):
+class Parameter(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
-    block = models.ForeignKey(Block)
+    parent_block = models.ForeignKey(Block, related_name='parameters')
     type = models.CharField(max_length=64, blank=True, null=True, help_text='Data type, capitalized')
     required = models.BooleanField(default=True)
     description = RichTextField()
@@ -210,9 +210,9 @@ Code Examples
 """
 
 
-class Example(Orderable):
+class Example(Orderable, CloneableMixin):
     name = models.CharField(max_length=255, blank=True, null=True)
-    block = models.ForeignKey(Block)
+    parent_block = models.ForeignKey(Block, related_name='examples')
     description = models.TextField(blank=True, null=True)
     code = RichTextField()
     app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
@@ -239,7 +239,7 @@ Content Maps
 """
 
 
-class Map(Page, RichText):
+class Map(Page, RichText, CloneableMixin):
 
     def __unicode__(self):
         return self.title

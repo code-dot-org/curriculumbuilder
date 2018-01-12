@@ -147,7 +147,7 @@
             <h2>Introduced Code</h2>
             <ul>
                 {% for block in lesson.blocks.all %}
-                    <li><code class="block" style="background-color: {{ block.category.color }}">
+                    <li><code class="block" style="background-color: {{ block.parent_cat.color }}">
                         <a href="{{ block.get_published_url }}">{{ block.code }}</a>
                     </code></li>
                 {% endfor %}
