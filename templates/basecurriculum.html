@@ -60,7 +60,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body id="{% block body_id %}body{% endblock %}" class="has-drawer">
+<body id="{% block body_id %}body{% endblock %}" class="has-drawer {% block body_class %}{% endblock %}">
 
 {% block admin_link %}
 {% endblock %}

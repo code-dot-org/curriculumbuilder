@@ -551,6 +551,10 @@ tr.history_changelog .resolve_feedback {
     display: none;
 }
 
+.embedded {
+    overflow: hidden;
+}
+
 @media print {
 
     /*
