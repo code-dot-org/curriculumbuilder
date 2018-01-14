@@ -52,6 +52,7 @@ future==0.15.2
 -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
 # -e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
 -e git://github.com/mrjoshida/django-jackfrost.git@master#egg=django-jackfrost
+-e git://github.com/mrjoshida/django_cloneable.git@master#egg=django_cloneable
 grappelli-safe==0.4.2
 gunicorn==19.6.0
 html5lib==0.999999
