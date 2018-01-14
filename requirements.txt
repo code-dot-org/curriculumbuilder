@@ -1,6 +1,6 @@
 # uwsgi
 lxml==3.4.4
-Django==1.8.6
+Django==1.8
 Mezzanine==4.1.0
 Pillow==3.0.0
 Pygments==2.0.2
@@ -24,7 +24,7 @@ django-appconf==1.0.1
 django-compressor==2.1
 django-contrib-comments==1.6.2
 django-cors-headers==1.1.0
-#django-extensions==1.6.1
+django-extensions==1.9.9
 django-freeze==0.5.0
 django-import-export==0.5.1
 django-ipware==1.1.6
@@ -50,7 +50,7 @@ future==0.15.2
 -e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
 -e git://github.com/mrjoshida/PyPDF2.git@master#egg=PyPDF2
--e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
+# -e git://github.com/mrjoshida/django-extensions.git@master#egg=django_extensions
 # -e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
 -e git://github.com/mrjoshida/django-jackfrost.git@master#egg=django-jackfrost
 -e git://github.com/mrjoshida/django_cloneable.git@master#egg=django_cloneable

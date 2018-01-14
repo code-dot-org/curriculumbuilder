@@ -1,6 +1,7 @@
 import re
 import logging
 import json
+import itertools
 
 from django.conf import settings
 from django.db import models
@@ -185,6 +186,22 @@ class Block(Page, RichText, CloneableMixin):
         if not self.slug:
             self.slug = slugify(self.title)
         super(Block, self).save(*args, **kwargs)
+
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=['lessons']):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+        attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+
+        # Check for slug uniqueness, if not unique append number
+        for x in itertools.count(1, 100):
+            if not Block.objects.filter(slug=attrs['slug']):
+                break
+            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+
+        duplicate = super(Block, self).clone(attrs=attrs, commit=commit,
+                                             m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+        return duplicate
 
 
 """

@@ -61,9 +61,12 @@ class BlockForm(ModelForm):
 
         videos_queryset = Resource.objects.filter(type__iexact="video")
 
-        self.fields['parent_cat'].queryset = categories_queryset
-        self.fields['parent_object'].queryset = parent_obj_queryset
-        self.fields['video'].queryset = videos_queryset
+        if self.fields.get('parent_cat', False):
+            self.fields['parent_cat'].queryset = categories_queryset
+        if self.fields.get('parent_object', False):
+            self.fields['parent_object'].queryset = parent_obj_queryset
+        if self.fields.get('video', False):
+            self.fields['video'].queryset = videos_queryset
 
 
 class BlockAdmin(PageAdmin, VersionAdmin):
