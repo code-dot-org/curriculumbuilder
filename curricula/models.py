@@ -235,6 +235,17 @@ class Unit(Page, RichText):
         else:
             return
 
+    def renumber_lessons(self):
+        if self.chapters.count() > 0:
+            for i, chapter in enumerate(self.chapters.all()):
+                Chapter.objects.filter(id=chapter.id).update(_order=i)
+                chapter.renumber_lessons()
+        else:
+            for i, lesson in enumerate(self.lessons.all()):
+                qs = lessons.models.Lesson.objects.filter(id=lesson.id)
+                qs.update(_order=i)
+                qs.update(number=lesson.get_number())
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
@@ -437,6 +448,12 @@ class Chapter(Page, RichText):
 
     def get_number(self):
         return int(self._order) + 1
+
+    def renumber_lessons(self):
+        for i, lesson in enumerate(self.lessons.all()):
+            qs = lessons.models.Lesson.objects.filter(id=lesson.id)
+            qs.update(_order=i)
+            qs.update(number=lesson.get_number())
 
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required

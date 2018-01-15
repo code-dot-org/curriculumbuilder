@@ -154,7 +154,7 @@ class LessonForm(ModelForm):
         '''
         Optimize loading of blocks with related IDEs
         '''
-        self.fields['blocks'].queryset = Block.objects.all().select_related('IDE')
+        self.fields['blocks'].queryset = Block.objects.all().select_related('parent_ide')
 
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
