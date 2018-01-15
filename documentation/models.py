@@ -25,7 +25,7 @@ Programming Environments
 """
 
 
-class IDE(Page, RichText):
+class IDE(Page, RichText, CloneableMixin):
     url = models.URLField()
     language = models.CharField(blank=True, null=True, max_length=64)
 
@@ -63,6 +63,31 @@ class IDE(Page, RichText):
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
+
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+        attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'blocks']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        # Check for slug uniqueness, if not unique append number
+        for x in itertools.count(1, 100):
+            if not IDE.objects.filter(slug=attrs['slug']):
+                break
+            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+
+        duplicate = super(IDE, self).clone(attrs=attrs, commit=commit,
+                                           m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+        for block in self.blocks.all():
+            parent_cat = duplicate.categories.get(name=block.parent_cat.name)
+            block.clone(attrs={'title': block.title, 'slug': block.slug, 'parent': duplicate.page_ptr,
+                               'parent_ide': duplicate, 'parent_cat': parent_cat},
+                        exclude=['children', 'blocks'])
+        return duplicate
 
 
 """
@@ -197,9 +222,11 @@ class Block(Page, RichText, CloneableMixin):
         exclusions = ['lessons', 'proxied', 'properties']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
-        # Check for slug uniqueness, if not unique append number
+
+        # If block is copied within existing IDE, check for slug uniqueness
+        parent_ide = attrs.get('parent_ide', self.parent_ide)
         for x in itertools.count(1, 100):
-            if not Block.objects.filter(slug=attrs['slug']):
+            if not Block.objects.filter(slug=attrs['slug'], parent_ide=parent_ide):
                 break
             attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 
@@ -299,6 +326,21 @@ class Map(Page, RichText, CloneableMixin):
             self.slug = slugify(self.title)[:255]
 
         super(Map, self).save(*args, **kwargs)
+
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+        attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+
+        for x in itertools.count(1, 100):
+            if not Map.objects.filter(slug=attrs['slug'], parent=self.parent):
+                break
+            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+
+        duplicate = super(Map, self).clone(attrs=attrs, commit=commit,
+                                           m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+        return duplicate
 
 
 IDE._meta.get_field('slug').verbose_name = 'Slug'

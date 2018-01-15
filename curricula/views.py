@@ -642,7 +642,7 @@ def clone(request):
         })
 
         redirect_url = duplicate.get_absolute_url()
-        if page_type == 'Block':
+        if page_type in ['Block', 'Map', 'IDE']:
             redirect_url = "/documentation%s" % redirect_url
 
         payload = {'message': 'cloned to %s' % duplicate.title, 'redirect_url': redirect_url, 'status': 200}
