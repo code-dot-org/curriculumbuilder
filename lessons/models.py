@@ -25,6 +25,8 @@ from django_slack import slack_message
 
 from curriculumBuilder import settings
 
+from django_cloneable import CloneableMixin
+
 import reversion
 from reversion.models import Version
 
@@ -208,7 +210,7 @@ Complete Lesson Page
 """
 
 
-class Lesson(Page, RichText):
+class Lesson(Page, RichText, CloneableMixin):
     overview = RichTextField('Lesson Overview')
     duration = models.CharField('Duration', help_text='Duration of lesson',
                                 max_length=255, blank=True, null=True)
@@ -407,6 +409,19 @@ class Lesson(Page, RichText):
 
         super(Lesson, self).save(*args, **kwargs)
 
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+
+        # These must be excluded to avoid errors
+        # exclusions = ['lessons', 'proxied', 'properties']
+        # exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
+                                              m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+        return duplicate
+
     @property
     def optional_lessons(self):
         return Lesson.objects.filter(parent__lesson=self)
@@ -478,7 +493,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable):
+class Activity(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     time = models.CharField(max_length=255, blank=True, null=True)
@@ -510,7 +525,7 @@ Prerequisite Skills
 """
 
 
-class Prereq(Orderable):
+class Prereq(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
@@ -533,7 +548,7 @@ Learning Objectives
 """
 
 
-class Objective(Orderable):
+class Objective(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
