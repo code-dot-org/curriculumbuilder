@@ -98,7 +98,7 @@ class Block(Page, RichText, CloneableMixin):
     syntax = RichTextField(blank=True, null=True)
     ext_doc = models.URLField('External Documentation', blank=True, null=True,
                               help_text='Link to external documentation')
-    parent_object = models.ForeignKey("self", related_name='object', blank=True, null=True,
+    parent_object = models.ForeignKey("self", related_name='properties', blank=True, null=True,
                                       help_text='Parent object for property or method')
     proxy = models.ForeignKey("self", related_name="proxied", blank=True, null=True,
                               help_text='Existing block to pull documentation from')
@@ -187,11 +187,15 @@ class Block(Page, RichText, CloneableMixin):
             self.slug = slugify(self.title)
         super(Block, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=['lessons']):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
         attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+
+        # These must be excluded to avoid errors
+        exclusions = ['lessons', 'proxied', 'properties']
+        exclude = exclude + list(set(exclusions) - set(exclude))
 
         # Check for slug uniqueness, if not unique append number
         for x in itertools.count(1, 100):

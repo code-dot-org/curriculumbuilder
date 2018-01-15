@@ -615,6 +615,47 @@ def publish(request):
 
 
 @staff_member_required
+def clone(request):
+    try:
+        pk = int(request.POST.get('pk'))
+
+        page_type = request.POST.get('type')
+
+        klass = globals()[page_type]
+
+        obj = klass.objects.get(pk=pk)
+
+        cloneable = getattr(obj, "clone", None)
+        if not callable(cloneable):
+            logger.exception('%s is not cloneable' % obj.title)
+            return HttpResponse("Not cloneable", content_type='application/json', status=500)
+
+        attrs = request.POST.get('attrs', {})
+        exclude = request.POST.get('exclude', [])
+
+        duplicate = obj.clone(attrs=attrs, exclude=exclude)
+
+        slack_message('slack/message.slack', {
+            'message': 'cloned the %s %s'
+                       % (page_type, obj.title),
+            'user': request.user,
+        })
+
+        redirect_url = duplicate.get_absolute_url()
+        if page_type == 'Block':
+            redirect_url = "/documentation%s" % redirect_url
+
+        payload = {'message': 'cloned to %s' % duplicate.title, 'redirect_url': redirect_url, 'status': 200}
+
+        return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
+
+    except Exception, e:
+        logger.exception('Cloning failed')
+
+        return HttpResponse(e.message, content_type='application/json', status=500)
+
+
+@staff_member_required
 def old_publish(request):
     try:
         pk = int(request.POST.get('pk'))

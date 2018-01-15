@@ -159,24 +159,36 @@
                 }
             });
             client.send();
+        });
 
+        // Publish button
+        $("#clone_this").click(function () {
+            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            console.log("pk: " + pk);
+            var type = $(this).attr('data-type');
+            console.log("type: " + type);
+            $('#clone_spinner').addClass('fa fa-cog fa-spin');
 
-            /*
-             $.ajax({
+            $.ajax({
                  type: "POST",
-                 url: "/publish/",
-                 data: {pk: pk, type: type, lessons: lessons},
+                 url: "/clone/",
+                 data: {pk: pk, type: type},
                  timeout: 9999999
             }).done(function (response) {
-                $("#publish_this").addClass('btn-success').text("Success");
-                $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                $("#clone_this").addClass('btn-success').text("Success");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                if (response.hasOwnProperty('redirect_url')) {
+                    setTimeout(function () {
+                        window.location.href = response.redirect_url;
+                    }, 500);
+                }
             }).fail(function (response) {
-                $("#publish_this").addClass('btn-warning').text("Failed");
-                $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                $("#clone_this").addClass('btn-warning').text("Failed");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
             });
-            */
         });
     })
 </script>

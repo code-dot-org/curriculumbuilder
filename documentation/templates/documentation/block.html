@@ -65,6 +65,9 @@
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
                 {% endif %}
+                <h2>deepSpaceCopy</h2>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ code_block.pk }}" data-type="Block">Clone</button><i id="clone_spinner"></i><br/>
+                <pre id="clone_results"></pre>
             </div>
         </div>
     </div>
