@@ -18,6 +18,8 @@ from jackfrost.tasks import build_single
 
 from django_slack import slack_message
 
+from django_cloneable import CloneableMixin
+
 from standards.models import Standard, GradeBand, Category, Framework
 import lessons.models
 
@@ -29,7 +31,7 @@ Curriculum
 """
 
 
-class Curriculum(Page, RichText):
+class Curriculum(Page, RichText, CloneableMixin):
     gradeband = models.ForeignKey(GradeBand)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
     unit_numbering = models.BooleanField(default=True)
@@ -170,6 +172,32 @@ class Curriculum(Page, RichText):
     def in_main_menu(self):
         return '1' in self.in_menus
 
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+
+        # Add default values
+        attrs['ancestor'] = self
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'units', 'ancestor']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Curriculum, self).clone(attrs=attrs, commit=commit,
+                                                  m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        for unit in self.units.all():
+            unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
+                              'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            duplicate.keywords = self.keywords.all()
+            duplicate.keywords_string = self.keywords_string
+
+        return duplicate
+
 
 """
 Curricular Unit
@@ -177,7 +205,7 @@ Curricular Unit
 """
 
 
-class Unit(Page, RichText):
+class Unit(Page, RichText, CloneableMixin):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
@@ -227,7 +255,13 @@ class Unit(Page, RichText):
         return '%sstandards/' % (self.get_absolute_url())
 
     def get_number(self):
-        return int(self._order) + 1
+        order = 1
+        for unit in self.curriculum.units.all().order_by('parent___order', '_order'):
+            if unit == self:
+                break
+            else:
+                order += 1
+        return order
 
     def get_unit_numbering(self):
         if self.curriculum.unit_numbering and not self.disable_numbering:
@@ -238,13 +272,10 @@ class Unit(Page, RichText):
     def renumber_lessons(self):
         if self.chapters.count() > 0:
             for i, chapter in enumerate(self.chapters.all()):
-                Chapter.objects.filter(id=chapter.id).update(_order=i)
-                chapter.renumber_lessons()
-        else:
-            for i, lesson in enumerate(self.lessons.all()):
-                qs = lessons.models.Lesson.objects.filter(id=lesson.id)
-                qs.update(_order=i)
-                qs.update(number=lesson.get_number())
+                Chapter.objects.filter(id=chapter.id).update(number=i+1)
+
+        for i, lesson in enumerate(self.lessons.all().order_by('parent___order', '_order')):
+            lessons.models.Lesson.objects.filter(id=lesson.id).update(number=i+1)
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
@@ -418,6 +449,42 @@ class Unit(Page, RichText):
 
         super(Unit, self).save(*args, **kwargs)
 
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+        attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+
+        # Add default values
+        attrs['ancestor'] = self
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'lessons', 'chapters']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Unit, self).clone(attrs=attrs, commit=commit,
+                                            m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        if self.chapters.count() > 0:
+            for chapter in self.chapters.all():
+                chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        else:
+            for lesson in self.lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        # Check for slug uniqueness, if not unique append number
+        for x in range(1, 100):
+            if self.curriculum.units.filter(slug=attrs['slug']).count() == 0:
+                break
+            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            duplicate.keywords = self.keywords.all()
+            duplicate.keywords_string = self.keywords_string
+
+        return duplicate
+
 
 """
 Unit Chapter
@@ -425,7 +492,7 @@ Unit Chapter
 """
 
 
-class Chapter(Page, RichText):
+class Chapter(Page, RichText, CloneableMixin):
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
     understandings = models.ManyToManyField(Category, blank=True)
@@ -447,13 +514,13 @@ class Chapter(Page, RichText):
         return "%sch%s/" % (self.unit.get_absolute_url(), str(self.number))
 
     def get_number(self):
-        return int(self._order) + 1
-
-    def renumber_lessons(self):
-        for i, lesson in enumerate(self.lessons.all()):
-            qs = lessons.models.Lesson.objects.filter(id=lesson.id)
-            qs.update(_order=i)
-            qs.update(number=lesson.get_number())
+        order = 1
+        for chapter in self.unit.chapters.all().order_by('parent___order', '_order'):
+            if chapter == self:
+                break
+            else:
+                order += 1
+        return order
 
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
@@ -479,6 +546,35 @@ class Chapter(Page, RichText):
         except:
             self.number = self.unit.chapters.count() + 1
         super(Chapter, self).save(*args, **kwargs)
+
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+
+        # Add default values
+        attrs['ancestor'] = self
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'lessons', 'ancestors']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Chapter, self).clone(attrs=attrs, commit=commit,
+                                               m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        for lesson in self.lessons.all():
+            lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        if not attrs.get('no_renumber', False):
+            print("renumbering lessons")
+            duplicate.unit.renumber_lessons()
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            duplicate.keywords = self.keywords.all()
+            duplicate.keywords_string = self.keywords_string
+
+        return duplicate
 
 
 """

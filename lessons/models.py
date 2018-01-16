@@ -245,13 +245,6 @@ class Lesson(Page, RichText, CloneableMixin):
     def __unicode__(self):
         return self.title
 
-    def __deepcopy(self):
-        lesson_copy = self
-        lesson_copy.pk = None
-        # deepcopy page, activities, prereqs, and objectives
-        lesson_copy.save()
-        return lesson_copy
-
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):
@@ -279,6 +272,7 @@ class Lesson(Page, RichText, CloneableMixin):
                 return None
         return parent.unit
 
+    '''
     def get_number(self):
         order = 1
         if self.parent.content_model == 'chapter':
@@ -299,6 +293,16 @@ class Lesson(Page, RichText, CloneableMixin):
             except Exception as e:
                 print(e)
 
+        return order
+    '''
+
+    def get_number(self):
+        order = 1
+        for lesson in self.unit.lessons.all().order_by('parent___order', '_order'):
+            if lesson == self:
+                break
+            else:
+                order += 1
         return order
 
     def get_curriculum(self):
@@ -410,20 +414,34 @@ class Lesson(Page, RichText, CloneableMixin):
         super(Lesson, self).save(*args, **kwargs)
 
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
-
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
 
+        # Add default values
+        attrs['ancestor'] = self
 
         # These must be excluded to avoid errors
-        # exclusions = ['lessons', 'proxied', 'properties']
-        # exclude = exclude + list(set(exclusions) - set(exclude))
+        exclusions = ['children', 'lesson_set', 'ancestor']
+        exclude = exclude + list(set(exclusions) - set(exclude))
 
         duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
                                               m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        if not attrs.get('no_renumber', False):
-            duplicate.unit.renumber_lessons()
+        print(duplicate, duplicate._order, duplicate.number)
+
+        if self.optional_lessons.count() > 0:
+            for lesson in self.optional_lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        # if not attrs.get('no_renumber', False):
+        print("renumbering lessons")
+        duplicate.unit.renumber_lessons()
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            duplicate.keywords = self.keywords.all()
+            duplicate.keywords_string = self.keywords_string
+        duplicate.save()
 
         return duplicate
 
