@@ -340,6 +340,22 @@ def unit_code(request, slug, unit_slug):
                                                    'include_template': 'curricula/partials/code_list.html'})
 
 
+def curriculum_objectives(request, slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'list_type': 'Lesson Objectives',
+                                                        'include_template': 'curricula/partials/objective_list.html'})
+
+
+def unit_objectives(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'unit': unit,
+                                                        'list_type': 'Lesson Objectives',
+                                                        'include_template': 'curricula/partials/objective_list.html'})
+
+
 '''
 PDF rendering views
 
