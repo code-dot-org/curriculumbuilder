@@ -32,6 +32,7 @@ Curriculum
 
 
 class Curriculum(Page, RichText, CloneableMixin):
+    ancestor = models.ForeignKey('self', blank=True, null=True)
     gradeband = models.ForeignKey(GradeBand)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
     unit_numbering = models.BooleanField(default=True)
@@ -207,6 +208,7 @@ Curricular Unit
 
 class Unit(Page, RichText, CloneableMixin):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
@@ -462,6 +464,12 @@ class Unit(Page, RichText, CloneableMixin):
         exclusions = ['children', 'lessons', 'chapters']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
+        # Check for slug uniqueness, if not unique append number
+        for x in range(1, 100):
+            if self.curriculum.units.filter(slug=attrs['slug']).count() == 0:
+                break
+            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+
         duplicate = super(Unit, self).clone(attrs=attrs, commit=commit,
                                             m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
@@ -471,12 +479,6 @@ class Unit(Page, RichText, CloneableMixin):
         else:
             for lesson in self.lessons.all():
                 lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
-
-        # Check for slug uniqueness, if not unique append number
-        for x in range(1, 100):
-            if self.curriculum.units.filter(slug=attrs['slug']).count() == 0:
-                break
-            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -493,6 +495,7 @@ Unit Chapter
 
 
 class Chapter(Page, RichText, CloneableMixin):
+    ancestor = models.ForeignKey('self', blank=True, null=True)
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
     understandings = models.ManyToManyField(Category, blank=True)

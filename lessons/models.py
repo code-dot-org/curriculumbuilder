@@ -427,14 +427,11 @@ class Lesson(Page, RichText, CloneableMixin):
         duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
                                               m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        print(duplicate, duplicate._order, duplicate.number)
-
         if self.optional_lessons.count() > 0:
             for lesson in self.optional_lessons.all():
                 lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
 
         # if not attrs.get('no_renumber', False):
-        print("renumbering lessons")
         duplicate.unit.renumber_lessons()
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
