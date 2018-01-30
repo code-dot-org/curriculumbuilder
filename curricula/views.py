@@ -838,14 +838,13 @@ def feedback(request):
     title = None
     message = None
 
-
     match = re.match(RE_FEEDBACK, text)
     if match:
         details = "%s recorded: %s" % (user, match.group('msg'))
         try:
             curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
-        except ObjectDoesNotExist:
-
+        except Exception as e:
+            logger.exception('Error locating curriculum: %s' % e)
             attachments = [
                 {
                     'title': "Failure :(",
@@ -862,11 +861,10 @@ def feedback(request):
 
         try:
             unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
-        except ObjectDoesNotExist:
+        except Exception as e:
+            logger.exception('Error locating unit: %s' % e)
             # Didn't find a unit, so save feedback to curriculum
             with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
-
                 curriculum.save()
 
                 # Store some meta-information.
@@ -874,28 +872,27 @@ def feedback(request):
                 reversion.set_comment(details)
 
             title = "Success :)",
-            message = "Feedback recorded for %s" % curriculum
+            message = "Feedback recorded for %s." % curriculum
 
         try:
             lesson = Lesson.objects.filter(curriculum=curriculum, unit=unit, number=int(match.group('lesson'))).first()
 
             with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
-
                 lesson.save()
 
                 # Store some meta-information.
                 reversion.set_user(changelog_user)
                 reversion.set_comment(details)
             title = "Success :)"
-            message = "Feedback recorded for %s: %s." % (curriculum, unit)
+            message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
 
-        except ObjectDoesNotExist:
+        except Exception as e:
+            logger.exception('Error locating lesson: %s' % e)
             # Skip if we already saved a version
             if message is not None:
                 pass
 
-            # Didn't find a less, so save feedback to the unit
+            # Didn't find a lesson, so save feedback to the unit
 
             with reversion.create_revision():
                 changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
@@ -906,7 +903,7 @@ def feedback(request):
                 reversion.set_user(changelog_user)
                 reversion.set_comment(details)
             title = "Success :)"
-            message = "Feedback recorded for %s: %s: %s." % (lesson.curriculum, lesson.unit, lesson)
+            message = "Feedback recorded for %s: %s." % (curriculum, unit)
 
     else:
         title = "Failure :("
@@ -943,7 +940,7 @@ def resolve_feedback(request):
     except Exception:
         status = 500
         payload['error'] = "Failed to upload image"
-        logger.exception("Failed to mark reversion %s as resolved" % revision_id)
+        logger.exception("Failed to mark reversion %s as resolved" % pk)
 
     return JsonResponse(payload, status=status)
 
