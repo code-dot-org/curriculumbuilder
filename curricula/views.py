@@ -845,24 +845,12 @@ def feedback(request):
             curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
         except Exception as e:
             logger.exception('Error locating curriculum: %s' % e)
-            attachments = [
-                {
-                    'title': "Failure :(",
-                    'color': '#cc0000',
-                    'text': "Unable to find matching curriculum."
-                }
-            ]
-            payload = {
-                "response_type": "in_channel",
-                "attachments": attachments,
-            }
-
-            return Response(payload, content_type='application/json')
+            title = "Failure :(",
+            message = "Unable to find matching curriculum."
 
         try:
             unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
         except Exception as e:
-            logger.exception('Error locating unit: %s' % e)
             # Didn't find a unit, so save feedback to curriculum
             if curriculum:
                 with reversion.create_revision():
@@ -874,9 +862,11 @@ def feedback(request):
 
                 title = "Success :)",
                 message = "Feedback recorded for %s." % curriculum
+            else:
+                logger.exception('Error locating unit: %s' % e)
 
         try:
-            lesson = Lesson.objects.filter(curriculum=curriculum, unit=unit, number=int(match.group('lesson'))).first()
+            lesson = Lesson.objects.get(curriculum=curriculum, unit=unit, number=int(match.group('lesson')))
 
             with reversion.create_revision():
                 lesson.save()
@@ -888,7 +878,6 @@ def feedback(request):
             message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
 
         except Exception as e:
-            logger.exception('Error locating lesson: %s' % e)
             if unit:
                 # Didn't find a lesson, so save feedback to the unit
 
@@ -902,6 +891,8 @@ def feedback(request):
                     reversion.set_comment(details)
                 title = "Success :)"
                 message = "Feedback recorded for %s: %s." % (curriculum, unit)
+            else:
+                logger.exception('Error locating lesson: %s' % e)
 
     else:
         title = "Failure :("
