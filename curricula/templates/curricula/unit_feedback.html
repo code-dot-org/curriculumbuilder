@@ -43,7 +43,7 @@
     </tr>
     </thead>
     {% for version in unit_history %}
-        <tr class="history_{{ version.revision.user }}" data-pk="{{ version.pk }}">
+        <tr class="history_{{ version.revision.user }}" data-pk="{{ version.revision.pk }}">
         <td>{{ version.revision.user }}</td>
         <td>{{ version.revision.date_created|date:"SHORT_DATE_FORMAT" }}</td>
         <td>{{ version.revision.comment|richtext_filters|safe }}</td>
