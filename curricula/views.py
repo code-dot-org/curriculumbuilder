@@ -1,4 +1,5 @@
 import os, time, re
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -699,6 +700,7 @@ Supplemental Admin Views
 
 
 def page_history(request, page_id):
+    days = request.GET.get('days', 999)
     page = get_object_or_404(Page, pk=page_id)
     history = Version.objects.get_for_object(page).filter(revision__user__username__in=(settings.CHANGELOG_USER,
                                                                                         settings.FEEDBACK_USER))
@@ -707,13 +709,19 @@ def page_history(request, page_id):
 
 
 def unit_feedback(request, slug, unit_slug):
+    days = request.GET.get('days', 999)
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
+    unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+                                                               revision__user__username__in=(settings.CHANGELOG_USER,
+                                                                                             settings.FEEDBACK_USER))
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
-        .filter(revision__user__username__in=(settings.CHANGELOG_USER,
-                                              settings.FEEDBACK_USER,
-                                              settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
+        .filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+               revision__user__username__in=(settings.CHANGELOG_USER,
+                                             settings.FEEDBACK_USER,
+                                             settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
 
-    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'history': sorted(history.items())})
+    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'unit_history': unit_history,
+                                                            'history': sorted(history.items())})
 
 
 class CompareHistoryView(HistoryCompareDetailView):
