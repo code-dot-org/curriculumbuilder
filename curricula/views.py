@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
@@ -830,21 +830,54 @@ API views
 
 @api_view(['POST', ])
 def feedback(request):
-    RE_FEEDBACK = "^(?P<curric>\S+)\s{1}(u|U)(?P<unit>\d+)(l|L)(?P<lesson>\d+)\s{1}(?P<msg>.*)"
+    RE_FEEDBACK = "^(?P<curric>\S+)(?:\s{1}(u|U)(?P<unit>\d+))?(?:(l|L)(?P<lesson>\d+))?\s{1}(?P<msg>.*)"
 
     user = "@%s" % request.POST.get("user_name", "somebody")
     text = request.POST.get("text")
-    details = text
+    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+    title = None
+    message = None
+
 
     match = re.match(RE_FEEDBACK, text)
     if match:
-        curric_slug = match.group('curric').lower()
-        unit_num = int(match.group('unit'))
-        lesson_num = int(match.group('lesson'))
-        details = match.group('msg')
-        lesson = Lesson.objects.filter(curriculum__slug=curric_slug, unit__number=unit_num, number=lesson_num).first()
+        details = "%s recorded: %s" % (user, match.group('msg'))
+        try:
+            curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
+        except ObjectDoesNotExist:
 
-        if lesson:
+            attachments = [
+                {
+                    'title': "Failure :(",
+                    'color': '#cc0000',
+                    'text': "Unable to find matching curriculum."
+                }
+            ]
+            payload = {
+                "response_type": "in_channel",
+                "attachments": attachments,
+            }
+
+            return Response(payload, content_type='application/json')
+
+        try:
+            unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
+        except ObjectDoesNotExist:
+            # Didn't find a unit, so save feedback to curriculum
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+
+                curriculum.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(details)
+
+            title = "Success :)",
+            message = "Feedback recorded for %s" % curriculum
+
+        try:
+            lesson = Lesson.objects.filter(curriculum=curriculum, unit=unit, number=int(match.group('lesson'))).first()
 
             with reversion.create_revision():
                 changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
@@ -854,14 +887,30 @@ def feedback(request):
                 # Store some meta-information.
                 reversion.set_user(changelog_user)
                 reversion.set_comment(details)
+            title = "Success :)"
+            message = "Feedback recorded for %s: %s." % (curriculum, unit)
+
+        except ObjectDoesNotExist:
+            # Skip if we already saved a version
+            if message is not None:
+                pass
+
+            # Didn't find a less, so save feedback to the unit
+
+            with reversion.create_revision():
+                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+
+                unit.save()
+
+                # Store some meta-information.
+                reversion.set_user(changelog_user)
+                reversion.set_comment(details)
+            title = "Success :)"
             message = "Feedback recorded for %s: %s: %s." % (lesson.curriculum, lesson.unit, lesson)
-            title = "Success!"
-        else:
-            message = "Unable to find matching lesson."
-            title = "Failure :/"
+
     else:
-        message = "Unable to find matching lesson."
-        title = "Failure :/"
+        title = "Failure :("
+        message = "Unable to find curriculum, unit, or lesson"
 
     attachments = [
         {
