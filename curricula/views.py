@@ -864,15 +864,16 @@ def feedback(request):
         except Exception as e:
             logger.exception('Error locating unit: %s' % e)
             # Didn't find a unit, so save feedback to curriculum
-            with reversion.create_revision():
-                curriculum.save()
+            if curriculum:
+                with reversion.create_revision():
+                    curriculum.save()
 
-                # Store some meta-information.
-                reversion.set_user(changelog_user)
-                reversion.set_comment(details)
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
 
-            title = "Success :)",
-            message = "Feedback recorded for %s." % curriculum
+                title = "Success :)",
+                message = "Feedback recorded for %s." % curriculum
 
         try:
             lesson = Lesson.objects.filter(curriculum=curriculum, unit=unit, number=int(match.group('lesson'))).first()
@@ -888,22 +889,19 @@ def feedback(request):
 
         except Exception as e:
             logger.exception('Error locating lesson: %s' % e)
-            # Skip if we already saved a version
-            if message is not None:
-                pass
+            if unit:
+                # Didn't find a lesson, so save feedback to the unit
 
-            # Didn't find a lesson, so save feedback to the unit
+                with reversion.create_revision():
+                    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
 
-            with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+                    unit.save()
 
-                unit.save()
-
-                # Store some meta-information.
-                reversion.set_user(changelog_user)
-                reversion.set_comment(details)
-            title = "Success :)"
-            message = "Feedback recorded for %s: %s." % (curriculum, unit)
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s." % (curriculum, unit)
 
     else:
         title = "Failure :("
