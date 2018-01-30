@@ -1,10 +1,11 @@
 import os, time, re
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
@@ -748,13 +749,20 @@ def page_history(request, page_id):
 
 
 def unit_feedback(request, slug, unit_slug):
+    days = int(request.GET.get('days', 999))
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
+    unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+                                                               revision__user__username__in=(settings.CHANGELOG_USER,
+                                                                                             settings.FEEDBACK_USER,
+                                                                                             settings.RESOLVED_USER))
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
-        .filter(revision__user__username__in=(settings.CHANGELOG_USER,
-                                              settings.FEEDBACK_USER,
-                                              settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
+        .filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+               revision__user__username__in=(settings.CHANGELOG_USER,
+                                             settings.FEEDBACK_USER,
+                                             settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
 
-    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'history': sorted(history.items())})
+    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'unit_history': unit_history,
+                                                            'history': sorted(history.items())})
 
 
 class CompareHistoryView(HistoryCompareDetailView):
@@ -871,38 +879,78 @@ API views
 
 @api_view(['POST', ])
 def feedback(request):
-    RE_FEEDBACK = "^(?P<curric>\S+)\s{1}(u|U)(?P<unit>\d+)(l|L)(?P<lesson>\d+)\s{1}(?P<msg>.*)"
+    RE_FEEDBACK = "^(?P<curric>\S+)(?:\s{1}(u|U)(?P<unit>\d+))?(?:(l|L)(?P<lesson>\d+))?\s{1}(?P<msg>.*)"
 
     user = "@%s" % request.POST.get("user_name", "somebody")
     text = request.POST.get("text")
-    details = text
+    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+    recorded = False
+    title = "Failure :(",
+    message = "Didn't work"
 
     match = re.match(RE_FEEDBACK, text)
+
     if match:
-        curric_slug = match.group('curric').lower()
-        unit_num = int(match.group('unit'))
-        lesson_num = int(match.group('lesson'))
-        details = match.group('msg')
-        lesson = Lesson.objects.filter(curriculum__slug=curric_slug, unit__number=unit_num, number=lesson_num).first()
+        details = "%s recorded: %s" % (user, match.group('msg'))
+        try:
+            curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
+        except Exception as e:
+            logger.exception('Error locating curriculum: %s' % e)
+            title = "Failure :(",
+            message = "Unable to find matching curriculum."
 
-        if lesson:
+        try:
+            unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
+        except Exception as e:
+            # Didn't find a unit, so save feedback to curriculum
+            if curriculum and not recorded:
+                with reversion.create_revision():
+                    curriculum.save()
 
-            with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
 
-                lesson.save()
+                title = "Success :)",
+                message = "Feedback recorded for %s." % curriculum
+            else:
+                logger.exception('Error locating unit: %s' % e)
 
-                # Store some meta-information.
-                reversion.set_user(changelog_user)
-                reversion.set_comment(details)
-            message = "Feedback recorded for %s: %s: %s." % (lesson.curriculum, lesson.unit, lesson)
-            title = "Success!"
-        else:
-            message = "Unable to find matching lesson."
-            title = "Failure :/"
+        try:
+            lesson = Lesson.objects.get(curriculum=curriculum, unit=unit, number=int(match.group('lesson')))
+            if lesson and not recorded:
+                with reversion.create_revision():
+                    lesson.save()
+
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
+
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
+
+        except Exception as e:
+                # Didn't find a lesson, so save feedback to the unit
+            if unit and not recorded:
+
+                with reversion.create_revision():
+                    unit.save()
+
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
+
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s." % (curriculum, unit)
+            else:
+                logger.exception('Error locating lesson: %s' % e)
+
     else:
-        message = "Unable to find matching lesson."
-        title = "Failure :/"
+        title = "Failure :("
+        message = "Unable to find curriculum, unit, or lesson"
 
     attachments = [
         {
@@ -935,7 +983,7 @@ def resolve_feedback(request):
     except Exception:
         status = 500
         payload['error'] = "Failed to upload image"
-        logger.exception("Failed to mark reversion %s as resolved" % revision_id)
+        logger.exception("Failed to mark reversion %s as resolved" % pk)
 
     return JsonResponse(payload, status=status)
 
