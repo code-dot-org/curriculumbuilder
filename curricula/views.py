@@ -712,7 +712,8 @@ def unit_feedback(request, slug, unit_slug):
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
     unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
                                                                revision__user__username__in=(settings.CHANGELOG_USER,
-                                                                                             settings.FEEDBACK_USER))
+                                                                                             settings.FEEDBACK_USER,
+                                                                                             settings.RESOLVED_USER))
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
         .filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
                revision__user__username__in=(settings.CHANGELOG_USER,
