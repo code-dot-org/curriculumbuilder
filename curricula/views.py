@@ -700,7 +700,6 @@ Supplemental Admin Views
 
 
 def page_history(request, page_id):
-    days = request.GET.get('days', 999)
     page = get_object_or_404(Page, pk=page_id)
     history = Version.objects.get_for_object(page).filter(revision__user__username__in=(settings.CHANGELOG_USER,
                                                                                         settings.FEEDBACK_USER))
@@ -709,7 +708,7 @@ def page_history(request, page_id):
 
 
 def unit_feedback(request, slug, unit_slug):
-    days = request.GET.get('days', 999)
+    days = int(request.GET.get('days', 999))
     unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
     unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
                                                                revision__user__username__in=(settings.CHANGELOG_USER,
@@ -843,10 +842,12 @@ def feedback(request):
     user = "@%s" % request.POST.get("user_name", "somebody")
     text = request.POST.get("text")
     changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
-    title = None
-    message = None
+    recorded = False
+    title = "Failure :(",
+    message = "Didn't work"
 
     match = re.match(RE_FEEDBACK, text)
+
     if match:
         details = "%s recorded: %s" % (user, match.group('msg'))
         try:
@@ -860,13 +861,14 @@ def feedback(request):
             unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
         except Exception as e:
             # Didn't find a unit, so save feedback to curriculum
-            if curriculum:
+            if curriculum and not recorded:
                 with reversion.create_revision():
                     curriculum.save()
 
                     # Store some meta-information.
                     reversion.set_user(changelog_user)
                     reversion.set_comment(details)
+                    recorded = True
 
                 title = "Success :)",
                 message = "Feedback recorded for %s." % curriculum
@@ -875,28 +877,30 @@ def feedback(request):
 
         try:
             lesson = Lesson.objects.get(curriculum=curriculum, unit=unit, number=int(match.group('lesson')))
+            if lesson and not recorded:
+                with reversion.create_revision():
+                    lesson.save()
 
-            with reversion.create_revision():
-                lesson.save()
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
 
-                # Store some meta-information.
-                reversion.set_user(changelog_user)
-                reversion.set_comment(details)
-            title = "Success :)"
-            message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
 
         except Exception as e:
-            if unit:
                 # Didn't find a lesson, so save feedback to the unit
+            if unit and not recorded:
 
                 with reversion.create_revision():
-                    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
-
                     unit.save()
 
                     # Store some meta-information.
                     reversion.set_user(changelog_user)
                     reversion.set_comment(details)
+                    recorded = True
+
                 title = "Success :)"
                 message = "Feedback recorded for %s: %s." % (curriculum, unit)
             else:
