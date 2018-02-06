@@ -202,8 +202,11 @@ class Curriculum(Page, RichText, CloneableMixin):
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
-            duplicate.keywords = self.keywords.all()
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
+        duplicate.save()
 
         return duplicate
 
@@ -472,11 +475,12 @@ class Unit(Page, RichText, CloneableMixin):
         exclusions = ['children', 'lessons', 'chapters']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
-        # Check for slug uniqueness, if not unique append number
-        for x in range(1, 100):
-            if self.curriculum.units.filter(slug=attrs['slug']).count() == 0:
-                break
-            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+        if not attrs.get('slug', False):
+            # Check for slug uniqueness, if not unique append number
+            for x in range(1, 100):
+                if self.curriculum.units.filter(slug=attrs['slug']).count() == 0:
+                    break
+                attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 
         duplicate = super(Unit, self).clone(attrs=attrs, commit=commit,
                                             m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
@@ -490,8 +494,11 @@ class Unit(Page, RichText, CloneableMixin):
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
-            duplicate.keywords = self.keywords.all()
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
+        duplicate.save()
 
         return duplicate
 
@@ -582,8 +589,11 @@ class Chapter(Page, RichText, CloneableMixin):
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
-            duplicate.keywords = self.keywords.all()
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
+        duplicate.save()
 
         return duplicate
 

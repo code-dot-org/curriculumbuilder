@@ -421,7 +421,7 @@ class Lesson(Page, RichText, CloneableMixin):
         attrs['ancestor'] = self
 
         # These must be excluded to avoid errors
-        exclusions = ['children', 'lesson_set', 'ancestor']
+        exclusions = ['children', 'lesson_set', 'ancestor', 'keywords']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
         duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
@@ -436,7 +436,9 @@ class Lesson(Page, RichText, CloneableMixin):
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
-            duplicate.keywords = self.keywords.all()
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
         duplicate.save()
 

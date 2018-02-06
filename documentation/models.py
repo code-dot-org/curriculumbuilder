@@ -222,15 +222,25 @@ class Block(Page, RichText, CloneableMixin):
         exclusions = ['lessons', 'proxied', 'properties']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
-        # If block is copied within existing IDE, check for slug uniqueness
-        parent_ide = attrs.get('parent_ide', self.parent_ide)
-        for x in itertools.count(1, 100):
-            if not Block.objects.filter(slug=attrs['slug'], parent_ide=parent_ide):
-                break
-            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+        if not attrs.get('slug', False):
+            # If block is copied within existing IDE, check for slug uniqueness
+            parent_ide = attrs.get('parent_ide', self.parent_ide)
+            for x in itertools.count(1, 100):
+                if not Block.objects.filter(slug=attrs['slug'], parent_ide=parent_ide):
+                    break
+                attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 
         duplicate = super(Block, self).clone(attrs=attrs, commit=commit,
                                              m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
+            duplicate.keywords_string = self.keywords_string
+        duplicate.save()
+
         return duplicate
 
 
@@ -332,16 +342,26 @@ class Map(Page, RichText, CloneableMixin):
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
         attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
 
-        # If block is copied within existing IDE, check for slug uniqueness
-        parent = attrs.get('parent', self.parent)
+        if not attrs.get('slug', False):
+            # If block is copied within existing IDE, check for slug uniqueness
+            parent = attrs.get('parent', self.parent)
 
-        for x in itertools.count(1, 100):
-            if not Map.objects.filter(slug=attrs['slug'], parent=parent):
-                break
-            attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
+            for x in itertools.count(1, 100):
+                if not Map.objects.filter(slug=attrs['slug'], parent=parent):
+                    break
+                attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 
         duplicate = super(Map, self).clone(attrs=attrs, commit=commit,
                                            m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
+            duplicate.keywords_string = self.keywords_string
+        duplicate.save()
+
         return duplicate
 
 
