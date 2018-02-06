@@ -21,6 +21,7 @@ from django_slack import slack_message
 from django_cloneable import CloneableMixin
 
 from standards.models import Standard, GradeBand, Category, Framework
+from documentation.models import Map
 import lessons.models
 
 logger = logging.getLogger(__name__)
@@ -165,6 +166,10 @@ class Curriculum(Page, RichText, CloneableMixin):
         return columns, rows
 
     @property
+    def maps(self):
+        return Map.objects.filter(parent=self)
+
+    @property
     def units(self):
         return Unit.objects.filter(parent=self, login_required=False)
 
@@ -191,6 +196,9 @@ class Curriculum(Page, RichText, CloneableMixin):
         for unit in self.units.all():
             unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
                               'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        for map in self.maps.all():
+            map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr})
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -578,6 +586,34 @@ class Chapter(Page, RichText, CloneableMixin):
             duplicate.keywords_string = self.keywords_string
 
         return duplicate
+
+
+"""
+Topics that provide additional curriculum, unit, or chapter info
+
+"""
+
+
+class Topic(Orderable, CloneableMixin):
+    name = models.CharField(max_length=255)
+    content = RichTextField('Topic Content')
+    page = models.ForeignKey(Page, related_name='topics')
+
+    class Meta:
+        verbose_name_plural = "topics"
+        order_with_respect_to = "page"
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        try:
+            old_topic = Topic.objects.get(pk=self.pk)
+            if old_topic._order != self._order:
+                logger.debug('Activity order changing! Activity %s, lesson %s' % (self.pk, self.lesson.pk))
+        except:
+            pass
+        super(Topic, self).save(*args, **kwargs)
 
 
 """

@@ -91,6 +91,18 @@
         </div>
 
         <div class="clear"></div>
+        <div class="topics">
+            {% if unit.topics.count > 0 %}
+                {% for topic in unit.topics.all %}
+                    <div class="activity">
+                        {% editable topic.name topic.content %}
+                            <h2>{{ topic.name }}</h2>
+                            {{ topic.content|richtext_filters|safe }}
+                        {% endeditable %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
 
         <div class="chapter_overviews">
         {% if unit.chapters %}
@@ -192,7 +204,6 @@
                     {% endfor %}
                 {% endfor %}
                 </div>
-
 
                 <details>
                     <summary>Chapter Commentary</summary>

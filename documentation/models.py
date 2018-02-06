@@ -222,7 +222,6 @@ class Block(Page, RichText, CloneableMixin):
         exclusions = ['lessons', 'proxied', 'properties']
         exclude = exclude + list(set(exclusions) - set(exclude))
 
-
         # If block is copied within existing IDE, check for slug uniqueness
         parent_ide = attrs.get('parent_ide', self.parent_ide)
         for x in itertools.count(1, 100):
@@ -333,8 +332,11 @@ class Map(Page, RichText, CloneableMixin):
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
         attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
 
+        # If block is copied within existing IDE, check for slug uniqueness
+        parent = attrs.get('parent', self.parent)
+
         for x in itertools.count(1, 100):
-            if not Map.objects.filter(slug=attrs['slug'], parent=self.parent):
+            if not Map.objects.filter(slug=attrs['slug'], parent=parent):
                 break
             attrs['slug'] = '%s-%d' % (attrs['slug'][:250], x)
 

@@ -7,7 +7,7 @@ from reversion.admin import VersionAdmin
 
 from lessons.models import Lesson
 
-from curricula.models import Curriculum, Unit, Chapter
+from curricula.models import Curriculum, Unit, Chapter, Topic
 
 
 class LessonInline(TabularDynamicInlineAdmin):
@@ -24,20 +24,28 @@ class LessonInline(TabularDynamicInlineAdmin):
         return False
 
 
+class TopicInline(TabularDynamicInlineAdmin):
+    model = Topic
+    verbose_name_plural = "Topics"
+    extra = 5
+
+
 class CurriculumAdmin(PageAdmin, VersionAdmin):
     model = Curriculum
     verbose_name_plural = "Curricula"
     filter_horizontal = ('frameworks',)
+    inlines = (TopicInline,)
 
 
 class UnitAdmin(PageAdmin, VersionAdmin):
     model = Unit
-    inlines = [LessonInline, ]
+    inlines = (LessonInline, TopicInline)
 
 
 class ChapterAdmin(PageAdmin):
     model = Chapter
     filter_horizontal = ('understandings',)
+    inlines = (TopicInline,)
 
     fieldsets = (
         (None, {
