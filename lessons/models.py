@@ -298,7 +298,11 @@ class Lesson(Page, RichText, CloneableMixin):
 
     def get_number(self):
         order = 1
-        for lesson in self.unit.lessons.all().order_by('parent___order', '_order'):
+        if self.is_optional:
+            peers = self.parent.lesson.optional_lessons.order_by('_order')
+        else:
+            peers = self.unit.lessons.all().order_by('parent___order', '_order')
+        for lesson in peers:
             if lesson == self:
                 break
             else:
@@ -458,10 +462,7 @@ class Lesson(Page, RichText, CloneableMixin):
 
     @property
     def is_optional(self):
-        if self.keywords.filter(keyword__title="Optional"):
-            return True
-        else:
-            return False
+        return self.parent.content_model == 'lesson'
 
     @property
     def forum_link(self):
