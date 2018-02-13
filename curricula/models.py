@@ -33,9 +33,18 @@ Curriculum
 
 
 class Curriculum(Page, RichText, CloneableMixin):
+    CURRENT = 0
+    NEXT = 1
+    PAST = 2
+    VERSION_CHOICES = (
+        (CURRENT, 'Current'),
+        (NEXT, 'Next'),
+        (PAST, 'Past')
+    )
     ancestor = models.ForeignKey('self', blank=True, null=True)
     gradeband = models.ForeignKey(GradeBand)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
+    version = models.IntegerField(choices=VERSION_CHOICES, default=NEXT)
     unit_numbering = models.BooleanField(default=True)
     auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
     support_script = models.BooleanField(default=False, help_text='Link to support script in Code Studio?')
@@ -180,8 +189,10 @@ class Curriculum(Page, RichText, CloneableMixin):
 
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
 
-        # If new title and/or slug weren't passed, update
+        # If new title, slug, or version weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+        attrs['slug'] = attrs.get('slug', "%s_clone" % self.slug)
+        attrs['version'] = attrs.get('version', Curriculum.NEXT)
 
         # Add default values
         attrs['ancestor'] = self

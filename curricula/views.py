@@ -61,9 +61,9 @@ pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 @login_required
 def index(request):
     if request.user.is_staff:
-        curricula = Curriculum.objects.all()
+        curricula = Curriculum.objects.filter(version=Curriculum.CURRENT)
     else:
-        curricula = Curriculum.objects.filter(login_required=False)
+        curricula = Curriculum.objects.filter(login_required=False, version=Curriculum.CURRENT)
 
     return render(request, 'curricula/index.html', {'curricula': curricula})
 

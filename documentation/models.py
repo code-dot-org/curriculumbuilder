@@ -146,8 +146,8 @@ class Block(Page, RichText, CloneableMixin):
 
     @property
     def lessons_introduced(self):
-        return self.lessons.filter(unit__login_required=False, curriculum__login_required=False)\
-            .order_by('curriculum', 'unit', 'number')
+        return self.lessons.filter(unit__login_required=False, curriculum__login_required=False,
+                                   curriculum__version=0).order_by('curriculum', 'unit', 'number')
 
     @property
     def code(self):
