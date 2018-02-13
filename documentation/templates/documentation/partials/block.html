@@ -29,10 +29,10 @@
     <h1>{% editable code_block.title %}{{ code_block.title }}{% endeditable %}</h1>
 {% endif %}
 
-{% if code_block.category %}
-    {% editable code_block.category %}
+{% if code_block.parent_cat %}
+    {% editable code_block.parent_cat %}
     <div id="doc_category">
-        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.category.name }}</span>
+        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.parent_cat.name }}</span>
     </div>
     {% endeditable %}
 {% endif %}
@@ -50,11 +50,11 @@
 {{ code_block.content|richtext_filters|safe }}
 {% endeditable %}
 
-{% if code_block.example_set.count > 0 %}
+{% if code_block.examples.count > 0 %}
 
     <h2>Examples</h2>
 
-    {% for example in code_block.example_set.all %}
+    {% for example in code_block.examples.all %}
         {% editable example.name example.description example.code %}
         {% if example.app %}
             <div class="row">
@@ -66,7 +66,7 @@
 </pre>
                 </div>
                     <div class="col-sm-4">
-                        <iframe class="{{ code_block.IDE.slug }}-exemplar" src="{{ example.get_embed_app }}"></iframe>
+                        <iframe class="{{ code_block.parent_ide.slug }}-exemplar" src="{{ example.get_embed_app }}"></iframe>
                     </div>
             </div>
         {% elif example.image %}
@@ -104,7 +104,7 @@
     {% endeditable %}
 {% endif %}
 
-{% if code_block.parameter_set.count > 0 %}
+{% if code_block.parameters.count > 0 %}
     <div class="parameters">
         <h2>Parameters</h2>
         <table>
@@ -114,7 +114,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for parameter in code_block.parameter_set.all %}
+            {% for parameter in code_block.parameters.all %}
                 <tr>
                     <td>{{ parameter.name }}</td>
                     <td>{{ parameter.type }}</td>

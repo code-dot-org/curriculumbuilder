@@ -25,6 +25,8 @@ from django_slack import slack_message
 
 from curriculumBuilder import settings
 
+from django_cloneable import CloneableMixin
+
 import reversion
 from reversion.models import Version
 
@@ -208,7 +210,7 @@ Complete Lesson Page
 """
 
 
-class Lesson(Page, RichText):
+class Lesson(Page, RichText, CloneableMixin):
     overview = RichTextField('Lesson Overview')
     duration = models.CharField('Duration', help_text='Duration of lesson',
                                 max_length=255, blank=True, null=True)
@@ -228,7 +230,7 @@ class Lesson(Page, RichText):
     anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
                                               related_name="anchors", blank=True)
     vocab = models.ManyToManyField(Vocab, blank=True)
-    blocks = models.ManyToManyField(Block, blank=True)
+    blocks = models.ManyToManyField(Block, blank=True, related_name='lessons')
     comments = CommentsField()
     unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
     curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
@@ -242,13 +244,6 @@ class Lesson(Page, RichText):
 
     def __unicode__(self):
         return self.title
-
-    def __deepcopy(self):
-        lesson_copy = self
-        lesson_copy.pk = None
-        # deepcopy page, activities, prereqs, and objectives
-        lesson_copy.save()
-        return lesson_copy
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
@@ -277,6 +272,7 @@ class Lesson(Page, RichText):
                 return None
         return parent.unit
 
+    '''
     def get_number(self):
         order = 1
         if self.parent.content_model == 'chapter':
@@ -297,6 +293,16 @@ class Lesson(Page, RichText):
             except Exception as e:
                 print(e)
 
+        return order
+    '''
+
+    def get_number(self):
+        order = 1
+        for lesson in self.unit.lessons.all().order_by('parent___order', '_order'):
+            if lesson == self:
+                break
+            else:
+                order += 1
         return order
 
     def get_curriculum(self):
@@ -407,6 +413,37 @@ class Lesson(Page, RichText):
 
         super(Lesson, self).save(*args, **kwargs)
 
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+
+        # Add default values
+        attrs['ancestor'] = self
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'lesson_set', 'ancestor', 'keywords']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
+                                              m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        if self.optional_lessons.count() > 0:
+            for lesson in self.optional_lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        # if not attrs.get('no_renumber', False):
+        duplicate.unit.renumber_lessons()
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
+            duplicate.keywords_string = self.keywords_string
+        duplicate.save()
+
+        return duplicate
+
     @property
     def optional_lessons(self):
         return Lesson.objects.filter(parent__lesson=self)
@@ -478,7 +515,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable):
+class Activity(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     time = models.CharField(max_length=255, blank=True, null=True)
@@ -510,7 +547,7 @@ Prerequisite Skills
 """
 
 
-class Prereq(Orderable):
+class Prereq(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
@@ -533,7 +570,7 @@ Learning Objectives
 """
 
 
-class Objective(Orderable):
+class Objective(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)

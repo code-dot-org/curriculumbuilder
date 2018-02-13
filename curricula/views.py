@@ -61,9 +61,9 @@ pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 @login_required
 def index(request):
     if request.user.is_staff:
-        curricula = Curriculum.objects.all()
+        curricula = Curriculum.objects.filter(version=Curriculum.CURRENT)
     else:
-        curricula = Curriculum.objects.filter(login_required=False)
+        curricula = Curriculum.objects.filter(login_required=False, version=Curriculum.CURRENT)
 
     return render(request, 'curricula/index.html', {'curricula': curricula})
 
@@ -312,33 +312,33 @@ def curriculum_vocab(request, slug):
         raise ContinueResolving
 
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                    'list_type': 'Vocab',
-                                                    'include_template': 'curricula/partials/vocab_list.html'})
+                                                        'list_type': 'Vocab',
+                                                        'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def unit_vocab(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                    'unit': unit,
-                                                    'list_type': 'Vocab',
-                                                    'include_template': 'curricula/partials/vocab_list.html'})
+                                                        'unit': unit,
+                                                        'list_type': 'Vocab',
+                                                        'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def curriculum_code(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                   'list_type': 'Introduced Code',
-                                                   'include_template': 'curricula/partials/code_list.html'})
+                                                        'list_type': 'Introduced Code',
+                                                        'include_template': 'curricula/partials/code_list.html'})
 
 
 def unit_code(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                   'unit': unit,
-                                                   'list_type': 'Introduced Code',
-                                                   'include_template': 'curricula/partials/code_list.html'})
+                                                        'unit': unit,
+                                                        'list_type': 'Introduced Code',
+                                                        'include_template': 'curricula/partials/code_list.html'})
 
 
 def curriculum_objectives(request, slug):
@@ -629,6 +629,47 @@ def publish(request):
         return HttpResponse(e.message, content_type='application/json', status=500)
 
     return StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+
+
+@staff_member_required
+def clone(request):
+    try:
+        pk = int(request.POST.get('pk'))
+
+        page_type = request.POST.get('type')
+
+        klass = globals()[page_type]
+
+        obj = klass.objects.get(pk=pk)
+
+        cloneable = getattr(obj, "clone", None)
+        if not callable(cloneable):
+            logger.exception('%s is not cloneable' % obj.title)
+            return HttpResponse("Not cloneable", content_type='application/json', status=500)
+
+        attrs = request.POST.get('attrs', {})
+        exclude = request.POST.get('exclude', [])
+
+        duplicate = obj.clone(attrs=attrs, exclude=exclude)
+
+        slack_message('slack/message.slack', {
+            'message': 'cloned the %s %s'
+                       % (page_type, obj.title),
+            'user': request.user,
+        })
+
+        redirect_url = duplicate.get_absolute_url()
+        if page_type in ['Block', 'Map', 'IDE']:
+            redirect_url = "/documentation%s" % redirect_url
+
+        payload = {'message': 'cloned to %s' % duplicate.title, 'redirect_url': redirect_url, 'status': 200}
+
+        return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
+
+    except Exception, e:
+        logger.exception('Cloning failed')
+
+        return HttpResponse(e.message, content_type='application/json', status=500)
 
 
 @staff_member_required

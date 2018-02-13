@@ -252,6 +252,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+    "django.contrib.admindocs",
     "collectfast",  # Needs to come before staticfiles
     "django.contrib.staticfiles",
     "mezzanine.boot",

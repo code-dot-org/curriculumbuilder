@@ -21,7 +21,7 @@ def block_view(request, slug, ide_slug):
         raise ContinueResolving
 
     try:
-        block = Block.objects.get(slug=slug, IDE=ide)
+        block = Block.objects.get(slug=slug, parent_ide=ide)
     except Block.DoesNotExist:
         raise ContinueResolving
 
@@ -35,7 +35,7 @@ def embed_view(request, slug, ide_slug):
         raise ContinueResolving
 
     try:
-        block = Block.objects.get(slug=slug, IDE=ide)
+        block = Block.objects.get(slug=slug, parent_ide=ide)
     except Block.DoesNotExist:
         raise ContinueResolving
 
