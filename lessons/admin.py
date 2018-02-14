@@ -12,6 +12,7 @@ from mezzanine.pages.admin import PageAdmin
 from reversion.admin import VersionAdmin
 from reversion_compare.admin import CompareVersionAdmin
 
+from curriculumBuilder import settings
 from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource, Annotation
 from curricula.models import Curriculum, Unit
 from standards.models import Standard
@@ -94,7 +95,7 @@ and as such, ignores most other lesson fields
 '''
 
 
-class LessonResource(resources.ModelResource):
+class ImportLessonResource(resources.ModelResource):
     standards = fields.Field(column_name='standards', attribute='standards',
                              widget=ManyToManyWidget(Standard, field='slug'))
 
@@ -107,6 +108,99 @@ class LessonResource(resources.ModelResource):
     class Meta:
         model = Lesson
         fields = ("id", "title", "curriculum", "number", "standards")
+
+'''
+This import_export resource is optimized for exporting to Amazon Inspire
+'''
+
+
+class LessonResource(resources.ModelResource):
+
+    url = fields.Field()
+    grades = fields.Field()
+    keywords = fields.Field()
+    subjects = fields.Field()
+    license_type = fields.Field()
+    resource_type = fields.Field()
+    publisher = fields.Field()
+    collection_name = fields.Field()
+    collection_description = fields.Field()
+    collection_order = fields.Field()
+    collection2_name = fields.Field()
+    collection2_description = fields.Field()
+    collection2_order = fields.Field()
+
+    class Meta:
+        model = Lesson
+        fields = ("title", "description", "url", "license_type", "grades", "subjects", "resource_type", "keywords",
+                  "publisher", "collection_name", "collection_description", "collection_order", "collection2_name",
+                  "collection2_description", "collection2_order")
+        export_order = fields
+
+    def dehydrate_url(self, lesson):
+        return "https://%s%s" % (settings.AWS_S3_CUSTOM_DOMAIN, lesson.get_absolute_url())
+
+    # ToDo: Replace with course/unit assigned gradeband
+    def dehydrate_grades(self, lesson):
+        if lesson.curriculum.slug.startswith('csf'):
+            gradebands = {
+                'coursea': 'Kindergarten',
+                'courseb': '1',
+                'coursec': '2',
+                'coursed': '3',
+                'coursee': '4',
+                'coursef': '5',
+                'pre-express': 'Kindergarten;1;2',
+                'express': '3;4;5'
+            }
+            return gradebands.get(lesson.unit.slug, "Kindergarten;1;2;3;4;5")
+        elif lesson.curriculum.slug.startswith('csd'):
+            return '6;7;8;9'
+        elif lesson.curriculum.slug.startswith('csp'):
+            return '9;10;11;12'
+        else:
+            return 'Not Grade Specific'
+
+    def dehydrate_keywords(self, lesson):
+        keywords = lesson.keywords.values_list('keyword__title', flat=True)
+        standards = lesson.standards.values_list('slug', flat=True)
+        return list(keywords) + list(standards)
+
+    def dehydrate_subjects(self, lesson):
+        return "Computer Science"
+
+    def dehydrate_license_type(self, lesson):
+        return "Creative Commons Attribution-NonCommercial-ShareAlike 4.0"
+
+    def dehydrate_resource_type(self, lesson):
+        return "Instruction: Lesson Plan"
+
+    def dehydrate_publisher(self, lesson):
+        return "Code.org"
+
+    def dehydrate_collection_name(self, lesson):
+        return "Code.org %s" % lesson.curriculum.title
+
+    def dehydrate_collection_description(self, lesson):
+        return lesson.curriculum.description
+
+    def dehydrate_collection_order(self, lesson):
+        if lesson.is_optional:
+            return "%d.%d.%d" % (lesson.unit.number, lesson.parent.lesson.number, lesson.number)
+        else:
+            return "%d.%d" % (lesson.unit.number, lesson.number)
+
+    def dehydrate_collection2_name(self, lesson):
+        return "Code.org %s: %s" % (lesson.curriculum.title, lesson.unit.title)
+
+    def dehydrate_collection2_description(self, lesson):
+        return lesson.unit.description
+
+    def dehydrate_collection2_order(self, lesson):
+        if lesson.is_optional:
+            return "%d.%d" % (lesson.parent.lesson.number, lesson.number)
+        else:
+            return lesson.number
 
 
 class LessonInline(TabularDynamicInlineAdmin):
@@ -212,7 +306,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     resource_class = LessonResource
     list_display = ('curriculum', 'unit', 'number', 'title', 'week', 'pacing_weight', 'unplugged')
     list_editable = ('title', 'week', 'pacing_weight', 'unplugged')
-    list_filter = ('curriculum', 'unit', 'keywords__keyword')
+    list_filter = ('curriculum', 'unit', 'keywords__keyword', 'curriculum__version')
     actions = [publish]
     form = LessonForm
 
