@@ -628,7 +628,11 @@ def publish(request):
 
         return HttpResponse(e.message, content_type='application/json', status=500)
 
-    return StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+    response = StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+
+    # Necessary for nginx to accept streaming response
+    response['X-Accel-Buffering'] = 'no'
+    return response
 
 
 @staff_member_required
