@@ -58,10 +58,8 @@ def custom_admin_page_ordering(request):
 
         elif page.content_model == 'unit':
             unit = Unit.objects.get(id=page.id)
-            number = unit.get_number()
-            curriculum = unit.parent.curriculum
-            Unit.objects.filter(id=unit.id).update(number=number, curriculum=curriculum)
-            Lesson.objects.filter(unit=unit).update(unit=unit, curriculum=curriculum)
+            unit.save()
+            Lesson.objects.filter(unit=unit).update(unit=unit, curriculum=unit.curriculum)
 
         # Reorder previous siblings.
         pages = Page.objects.filter(parent_id=old_parent_id)
