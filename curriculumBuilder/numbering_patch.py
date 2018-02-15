@@ -43,23 +43,19 @@ def custom_admin_page_ordering(request):
         # Ensure lessons, chapters, and units are in the correct hierarchy
         if page.content_model == 'lesson':
             lesson = Lesson.objects.get(id=page.id)
-            number = lesson.get_number()
-            unit = lesson.get_unit()
-            curriculum = lesson.get_curriculum()
-            Lesson.objects.filter(id=lesson.id).update(number=number, unit=unit, curriculum=curriculum)
+            lesson.save()
 
         elif page.content_model == 'chapter':
             chapter = Chapter.objects.get(id=page.id)
-            number = chapter.get_number()
-            unit = chapter.parent.unit
-            curriculum = unit.curriculum
-            Chapter.objects.filter(id=chapter.id).update(number=number)
-            Lesson.objects.filter(parent=page).update(unit=unit, curriculum=curriculum)
+            chapter.save()
+            for lesson in chapter.lessons:
+                lesson.save()
 
         elif page.content_model == 'unit':
             unit = Unit.objects.get(id=page.id)
             unit.save()
-            Lesson.objects.filter(unit=unit).update(unit=unit, curriculum=unit.curriculum)
+            for lesson in unit.lessons:
+                lesson.save()
 
         # Reorder previous siblings.
         pages = Page.objects.filter(parent_id=old_parent_id)
