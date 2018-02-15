@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
-from mezzanine.generic.fields import CommentsField
+from mezzanine.generic.fields import CommentsField, KeywordsField
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.tasks import build_single
 from jsonfield import JSONField
@@ -519,6 +519,7 @@ Activities that compose a lesson
 class Activity(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
+    keywords = KeywordsField()
     time = models.CharField(max_length=255, blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
     ancestor = models.ForeignKey('self', blank=True, null=True)

@@ -58,6 +58,8 @@ class ActivityInline(StackedDynamicInlineAdmin):
     verbose_name_plural = "Activities"
     extra = 5
 
+    keywords = KeywordsField()
+
     exclude = ['ancestor', ]
 
 
