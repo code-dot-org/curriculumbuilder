@@ -765,7 +765,7 @@ def unit_feedback(request, slug, unit_slug):
         unit = Unit.objects.get(slug=unit_slug, curriculum__slug=slug)
     except:
         # If not using versioned slug, attempt to find by canonical slug
-        unit = get_object_or_404(Unit, canonical_slug=unit_slug, curriculum__slug=slug,
+        unit = get_object_or_404(Unit, slug=unit_slug, curriculum__canonical_slug=slug,
                                  curriculum__version=Curriculum.CURRENT)
     unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
                                                                revision__user__username__in=users)
