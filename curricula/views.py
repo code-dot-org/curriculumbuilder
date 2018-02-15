@@ -426,6 +426,7 @@ def unit_pdf(request, slug, unit_slug):
 
     try:
         c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
+        print unit.get_compiled_url()
         c.perform()
 
         c.close()
@@ -580,12 +581,14 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
     # On production we should pull the pages locally to ensure the most recent copy,
     # This causes a crash on local dev, so in that case pull pages from S3
-
+    '''
     if aws:  #aws or not settings.ON_PAAS:
-        print abs_url
-        return settings.AWS_BASE_URL + abs_url
+        return settings.AWS_S3_CUSTOM_DOMAIN + abs_url
     else:
         return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
+    '''
+
+    return "https://%s%s" % (settings.AWS_S3_CUSTOM_DOMAIN, abs_url)
 
 
 '''
