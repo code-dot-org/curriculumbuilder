@@ -457,9 +457,11 @@ WKHTMLTOPDF_BIN = os.environ.get('WKHTMLTOPDF_BIN')
 WKHTMLTOPDF_CMD_OPTIONS = {
     'page-size': 'Letter',
     'print-media-type': '',
-    'javascript-delay': 3000,
+    'javascript-delay': 10000,
     'debug-javascript': '',
     'no-stop-slow-scripts': '',
+    'load-error-handling': 'ignore',
+    'load-media-error-handling': 'ignore'
 }
 
 ############################
