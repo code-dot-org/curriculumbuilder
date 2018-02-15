@@ -54,6 +54,7 @@ class Curriculum(Page, RichText, CloneableMixin):
                                      help_text='Tuple of properties to use in feedback url')
     unit_template_override = models.CharField(max_length=255, blank=True, null=True,
                                               help_text='Override default unit template, eg "curricula/pl_unit.html')
+    canonical_slug = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "curricula"

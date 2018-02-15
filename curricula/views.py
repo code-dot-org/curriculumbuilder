@@ -761,7 +761,12 @@ def unit_feedback(request, slug, unit_slug):
     users = [settings.CHANGELOG_USER, settings.FEEDBACK_USER]
     if resolved:
         users.append(settings.RESOLVED_USER)
-    unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
+    try:
+        unit = Unit.objects.get(slug=unit_slug, curriculum__slug=slug)
+    except:
+        # If not using versioned slug, attempt to find by canonical slug
+        unit = get_object_or_404(Unit, canonical_slug=unit_slug, curriculum__slug=slug,
+                                 curriculum__version=Curriculum.CURRENT)
     unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
                                                                revision__user__username__in=users)
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
