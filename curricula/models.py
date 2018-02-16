@@ -236,6 +236,8 @@ class Unit(Page, RichText, CloneableMixin):
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
                                   help_text='Name of Code Studio script')
+    questions = RichTextField('Support Details', help_text='Open questions or comments to add to all lessons in unit',
+                              blank=True, null=True)
     show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
     week_length = models.IntegerField('Days in a Week', default=5, blank=True, null=True,
                                       help_text='Controls the minimum lesson size in the pacing calendar.')

@@ -158,7 +158,6 @@
 
         <div class="open_questions no_print">
             <h2>Support</h2>
-
             {% if curriculum.auto_forum %}
                 <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
             {% endif %}
@@ -169,6 +168,11 @@
 
 
             <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
+        
+            {% if unit.questions %}
+                {{ unit.questions|richtext_filters|safe }}
+            {% endif %}
+
             {% if curriculum.display_questions %}
                 {% if lesson.questions %}
                     {% editable lesson.questions %}
