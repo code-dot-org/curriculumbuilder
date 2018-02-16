@@ -891,7 +891,7 @@ API views
 
 @api_view(['POST', ])
 def feedback(request):
-    RE_FEEDBACK = "^(?P<curric>\S+)(?:\s{1}(u|U)(?P<unit>\d+))?(?:(l|L)(?P<lesson>\d+))?\s{1}(?P<msg>.*)"
+    RE_FEEDBACK = "^(?P<curric>\S+)(?:\s{1}(u|U)(?P<unit>\d+))?(?:(l|L)(?P<lesson>\d+))?\s{1}(?P<msg>[\s\S]*)"
 
     user = "@%s" % request.POST.get("user_name", "somebody")
     text = request.POST.get("text")
