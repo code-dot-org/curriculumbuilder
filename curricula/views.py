@@ -907,15 +907,12 @@ def feedback(request):
         try:
             curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
         except Exception as e:
-            logger.exception('Error locating curriculum: %s' % e)
-            title = "Failure :(",
-            message = "Unable to find matching curriculum by versioned url."
             try:
                 curriculum = Curriculum.objects.get(canonical_slug=match.group('curric').lower())
             except Exception as et:
                 logger.exception('Error locating curriculum: %s' % e)
                 title = "Failure :(",
-                message = "Unable to find matching curriculum by canonical url."
+                message = "Unable to find matching curriculum by versioned or canonical url."
 
         try:
             unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
