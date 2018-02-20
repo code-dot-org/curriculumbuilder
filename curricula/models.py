@@ -301,8 +301,19 @@ class Unit(Page, RichText, CloneableMixin):
             for i, chapter in enumerate(self.chapters.all()):
                 Chapter.objects.filter(id=chapter.id).update(number=i+1)
 
-        for i, lesson in enumerate(self.lessons.all().order_by('parent___order', '_order')):
+        # Renumber lessons that are actually under the unit
+        for i, lesson in enumerate(lessons.models.Lesson.objects.filter(parent=self.page_ptr)
+                                           .order_by('parent___order', '_order')):
             lessons.models.Lesson.objects.filter(id=lesson.id).update(number=i+1)
+            if lesson.unit is not self:
+                lesson.unit = self
+                lesson.save()
+
+        # Check for lessons that have been moved, but still think they belong
+        for lesson in self.lessons:
+            if lesson.get_unit() is not self:
+                lesson.unit = lesson.get_unit()
+                lesson.save()
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):

@@ -435,9 +435,6 @@ class Lesson(Page, RichText, CloneableMixin):
             for lesson in self.optional_lessons.all():
                 lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
 
-        if not attrs.get('no_renumber', False):
-            duplicate.unit.renumber_lessons()
-
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
             keyword_ids = self.keywords.values_list('keyword__id', flat=True)
@@ -445,6 +442,9 @@ class Lesson(Page, RichText, CloneableMixin):
                 duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
         duplicate.save()
+
+        if not attrs.get('no_renumber', False):
+            duplicate.unit.renumber_lessons()
 
         return duplicate
 
