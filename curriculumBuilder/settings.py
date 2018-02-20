@@ -602,7 +602,7 @@ COMPRESS_URL = STATIC_URL
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', "#curriculumbuilder")
 SLACK_USERNAME = os.environ.get('SLACK_USER', 'curricbot')
-SLACK_ENDPOINT_URL = os.environ.get('SLACK_ENDPOINT_URL')
+SLACK_ENDPOINT_URL = os.environ.get('SLACK_ENDPOINT_URL', 'https://hooks.slack.com/services/XXX/YYY/ZZZ')
 
 ###########
 # LOGGING #
