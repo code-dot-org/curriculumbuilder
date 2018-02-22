@@ -466,10 +466,8 @@ class Lesson(Page, RichText, CloneableMixin):
 
     @property
     def forum_link(self):
-        if self.is_optional:
-            return "//forum.code.org/c/%s%d/optional%02d" % (self.curriculum.slug, self.unit.number, self.number)
-        else:
-            return "//forum.code.org/c/%s%d/lesson%02d" % (self.curriculum.slug, self.unit.number, self.number)
+        # TODO: This assumes numbered units, which doesn't work for CSF - need to rework forum side of things
+        return "//forum.code.org/c/%s%d/" % (self.curriculum.get_canonical_slug(), self.unit.number)
 
     @property
     def feedback_link(self):

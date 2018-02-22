@@ -80,13 +80,16 @@ class Curriculum(Page, RichText, CloneableMixin):
         return '%sstandards/' % self.get_absolute_url()
 
     def get_resources_url(self):
-        return '%sresources/' % (self.get_absolute_url())
+        return '%sresources/' % self.get_absolute_url()
 
     def get_blocks_url(self):
         return '%scode/' % (self.get_absolute_url())
 
     def get_vocab_url(self):
         return '%svocab/' % (self.get_absolute_url())
+
+    def get_canonical_slug(self):
+        return self.canonical_slug or self.slug
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
