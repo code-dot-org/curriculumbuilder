@@ -41,8 +41,8 @@ class Curriculum(Page, RichText, CloneableMixin):
         (NEXT, 'Next'),
         (PAST, 'Past')
     )
-    ancestor = models.ForeignKey('self', blank=True, null=True)
-    gradeband = models.ForeignKey(GradeBand)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
+    gradeband = models.ForeignKey(GradeBand, blank=True, null=True, on_delete=models.SET_NULL)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
     version = models.IntegerField(choices=VERSION_CHOICES, default=NEXT)
     unit_numbering = models.BooleanField(default=True)
@@ -231,7 +231,7 @@ Curricular Unit
 
 class Unit(Page, RichText, CloneableMixin):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
     stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
@@ -535,7 +535,7 @@ Unit Chapter
 
 
 class Chapter(Page, RichText, CloneableMixin):
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
     understandings = models.ManyToManyField(Category, blank=True)

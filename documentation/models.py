@@ -125,14 +125,15 @@ class Block(Page, RichText, CloneableMixin):
                               help_text='Link to external documentation')
     parent_object = models.ForeignKey("self", related_name='properties', blank=True, null=True,
                                       help_text='Parent object for property or method')
-    proxy = models.ForeignKey("self", related_name="proxied", blank=True, null=True,
+    proxy = models.ForeignKey("self", related_name="proxied", blank=True, null=True, on_delete=models.SET_NULL,
                               help_text='Existing block to pull documentation from')
     signature = models.CharField(max_length=255, blank=True, null=True)
-    parent_cat = models.ForeignKey(Category, blank=True, null=True, related_name='blocks')
+    parent_cat = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL, related_name='blocks')
     return_value = models.CharField(max_length=255, blank=True, null=True,
                                     help_text='Description of return value or alternate functionality')
     tips = RichTextField(blank=True, null=True, help_text='List of tips for using this block')
-    video = models.ForeignKey('lessons.Resource', blank=True, null=True, related_name='blocks')
+    video = models.ForeignKey('lessons.Resource', blank=True, null=True, on_delete=models.SET_NULL,
+                              related_name='blocks')
     # Using FileField instead of ImageField to support SVG blocks. ImageField is raster only :(
     image = models.FileField(blank=True, null=True, upload_to="blocks/")
     _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)

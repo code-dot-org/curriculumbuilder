@@ -225,7 +225,7 @@ class Lesson(Page, RichText, CloneableMixin):
                               blank=True, null=True)
     cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',
                                blank=True, null=True)
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     standards = models.ManyToManyField(Standard, blank=True)
     anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
                                               related_name="anchors", blank=True)
@@ -522,7 +522,7 @@ class Activity(Orderable, CloneableMixin):
     keywords = KeywordsField()
     time = models.CharField(max_length=255, blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = "activities"
@@ -639,7 +639,7 @@ reversion.register(Objective, follow=('lesson', ))
 
 @receiver(post_delete, sender=Lesson)
 def reorder_peers(sender, instance, **kwargs):
-    for lesson in instance.curriculum.lesson_set.all():
+    for lesson in instance.unit.lesson_set.all():
         Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
 
 
