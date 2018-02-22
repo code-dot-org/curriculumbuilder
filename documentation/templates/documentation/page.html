@@ -56,8 +56,6 @@
 {% endif %}
 {% endblock %}
 
-{% block body_class %}embedded{% endblock %}
-
 {% block header %}
 {% endblock %}
 
@@ -79,6 +77,7 @@
 {% endblock %}
 
 {% block footer_js %}
+    {% if user.is_staff %}
     <script type="text/javascript">
     $(document).ready(function() {
         // Convert streaming responses to formattable JSON
@@ -173,4 +172,13 @@
         });
     })
 </script>
+    {% endif %}
+    <script type="text/javascript">
+    // If in an iFrame, apply embedded styles
+    $(function() {
+      if (window.self != window.top) {
+        $(document.body).addClass("embedded");
+      }
+    });
+    </script>
 {% endblock %}
