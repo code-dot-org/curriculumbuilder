@@ -1,4 +1,5 @@
 {% load mezzanine_tags %}
+{% load keyword_tags %}
 {% load staticfiles %}
 
 <div class="container">
@@ -17,6 +18,13 @@
                 {% for activity in lesson.activity_set.all %}
                     <div class="activity">
                         <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                        {% keywords_for activity as keywords %}
+                        <h4>
+                            {% for keyword in keywords %}
+                                {% if not forloop.first %}| {% endif %}
+                                {{ keyword }}
+                            {% endfor %}
+                        </h4>
                         {{ activity.content|richtext_filters|safe }}
                     </div>
                 {% endfor %}

@@ -180,6 +180,13 @@
         <div class="activity">
             {% editable activity.name activity.time activity.content %}
                 <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
+                {% keywords_for activity as keywords %}
+                <h4>
+                    {% for keyword in keywords %}
+                        {% if not forloop.first %}| {% endif %}
+                        {{ keyword }}
+                    {% endfor %}
+                </h4>
                 {{ activity.content|richtext_filters|safe }}
             {% endeditable %}
         </div>
