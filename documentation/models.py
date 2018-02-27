@@ -47,7 +47,7 @@ class IDE(Page, RichText, CloneableMixin):
 
     def publish(self, children=False):
         if children:
-            for block in self.block_set.all():
+            for block in self.blocks.all():
                 for result in block.publish():
                     yield result
         if self.jackfrost_can_build():
@@ -106,10 +106,6 @@ class Category(Orderable):
 
     def __unicode__(self):
         return "%s: %s" % (self.parent_ide.title, self.name)
-
-    @property
-    def blocks(self):
-        return self.block_set.order_by('_order')
 
 
 """
