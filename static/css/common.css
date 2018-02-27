@@ -297,7 +297,7 @@ footer {
 }
 
 .pacing-lesson.break { /* grey */
-  border-color: #5b6770;
+  border-color: #949ca2;
   background: #e7e8ea;
 }
 
@@ -343,7 +343,7 @@ footer {
 }
 
 .pacing-lesson.break.active { /* grey */
-    background: #5b6770 !important;
+    background: #949ca2 !important;
 }
 
 .pacing-lesson .lesson-number {
@@ -395,7 +395,7 @@ footer {
 }
 
 .pacing-lesson.break .lesson-number { /* grey */
-  background: #5b6770;
+  background: #949ca2;
 }
 
 .pacing-lesson .lesson-title {
