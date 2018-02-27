@@ -212,6 +212,8 @@ Complete Lesson Page
 
 class Lesson(Page, RichText, CloneableMixin):
     overview = RichTextField('Lesson Overview')
+    short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
+                                   max_length=64, blank=True, null=True)
     duration = models.CharField('Duration', help_text='Duration of lesson',
                                 max_length=255, blank=True, null=True)
     week = models.IntegerField('Week', help_text='Week within the unit (only use for first lesson of the week)',

@@ -264,7 +264,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
+            'fields': ['title', 'short_title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
                        'overview', 'keywords', ('description', 'gen_description')],
         }),
         ('Purpose, Prep, & Questions', {

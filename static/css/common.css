@@ -343,7 +343,7 @@ footer {
 }
 
 .pacing-lesson.break.active { /* grey */
-    background: #5b6770;
+    background: #5b6770 !important;
 }
 
 .pacing-lesson .lesson-number {

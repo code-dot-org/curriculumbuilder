@@ -8,13 +8,13 @@
                 {% if week.grouper != None %}</div><span class="week-label {{ printflag }}">Day {{ week.grouper }}</span><div class="pacing-week {{ printflag }}">{% endif %}
                 {% for session in week.list %}
                     {% keywords_for session as keywords %}
-                    <div class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %} {% if session.number == lesson.number %}active{% endif %}"
+                    <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug session.number %}" class="pacing-lesson {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %} {% if session.number == lesson.number %}active{% endif %}"
                          style="{% if session.pacing_weight != None %}flex-grow: {{ session.pacing_weight }}; {% endif %}
                                  flex-basis: {{ unit.lesson_width }}%">
                         <span class="lesson-number">{{ session.number|stringformat:"02d" }}</span>
-                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug session.number %}">{{ session.title }}</a>
+                        <span class="lesson-title">{{ session.short_title|default_if_none:session.title }}</span>
                         <span class="lesson-icon"></span>
-                    </div>
+                    </a>
                 {% endfor %}
             {% endfor %}
             </div>

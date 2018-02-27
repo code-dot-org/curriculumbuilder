@@ -4,7 +4,7 @@
 <!-- One Pager -->
 
 <div id="unit{{ unit.number }}lesson{{ lesson.number }}">
-    {% editable lesson.title lesson.duration %}
+    {% editable lesson.title lesson.short_title lesson.duration %}
         {% if optional %}
             <h1>Optional Lesson: {{ lesson.title }}</h1>
         {% else %}
