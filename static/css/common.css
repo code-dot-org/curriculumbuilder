@@ -266,7 +266,17 @@ footer {
    background: #a6e3e8;
 }
 
+.pacing-lesson.lesson-exploration { /* teal */
+   border-color: #00adbc;
+   background: #a6e3e8;
+}
+
 .pacing-lesson.lesson-planning-session { /* green */
+   border-color: #b9bf15;
+   background: #f5f5dc;
+}
+
+.pacing-lesson.lesson-planning { /* green */
    border-color: #b9bf15;
    background: #f5f5dc;
 }
@@ -308,7 +318,15 @@ footer {
     background: #00adbc !important;
 }
 
+.pacing-lesson.lesson-exploration.active { /* teal */
+    background: #00adbc !important;
+}
+
 .pacing-lesson.lesson-planning-session.active { /* green */
+    background: #b9bf15 !important;
+}
+
+.pacing-lesson.lesson-planning.active { /* green */
     background: #b9bf15 !important;
 }
 
@@ -352,7 +370,15 @@ footer {
     background: #00adbc;
 }
 
+.pacing-lesson.lesson-exploration .lesson-number { /* teal */
+    background: #00adbc;
+}
+
 .pacing-lesson.lesson-planning-session .lesson-number { /* green */
+    background: #b9bf15;
+}
+
+.pacing-lesson.lesson-planning .lesson-number { /* green */
     background: #b9bf15;
 }
 
