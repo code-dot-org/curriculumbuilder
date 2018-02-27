@@ -32,7 +32,7 @@
 {% if code_block.parent_cat %}
     {% editable code_block.parent_cat %}
     <div id="doc_category">
-        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.category.color }}">{{ code_block.parent_cat.name }}</span>
+        <span class="category_label">Category:</span><span class="category_name" style="background: {{ code_block.parent_cat.color }}">{{ code_block.parent_cat.name }}</span>
     </div>
     {% endeditable %}
 {% endif %}
