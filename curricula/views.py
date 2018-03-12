@@ -905,10 +905,11 @@ def feedback(request):
     if match:
         details = "%s recorded: %s" % (user, match.group('msg'))
         try:
-            curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
+            curriculum = Curriculum.objects.get(slug__iexact=match.group('curric').lower())
         except Exception as e:
             try:
-                curriculum = Curriculum.objects.get(canonical_slug=match.group('curric').lower())
+                curriculum = Curriculum.objects.get(canonical_slug__iexact=match.group('curric').lower(),
+                                                    version=Curriculum.CURRENT)
             except Exception as et:
                 logger.exception('Error locating curriculum: %s' % e)
                 title = "Failure :(",
