@@ -9,10 +9,9 @@
     <meta name="description" content="{% block meta_description %}{% endblock %}">
     <title>{% block meta_title %}Code.org Tool Documentation{% endblock %}</title>
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="{% static "css/jquery-ui.min.css" %}">
 
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
@@ -52,15 +51,15 @@
     {% block sidebar %}
         <div id="categories" class="col-sm-2 hidden-sm hidden-xs">
             {% block categories %}
-                {% if ide.category_set.count > 0 %}
+                {% if ide.categories.count > 0 %}
                     <ul class="category_list">
-                    {% for category in ide.category_set.all %}
-                        <li class="category_name{% if category == code_block.category %} active{% endif %}"
+                    {% for category in ide.categories.all %}
+                        <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
                             style="background: {{ category.color }}; border-left-color: {{ category.color }}"
                             data-color="{{ category.color }}"><span>{{ category.name }}</span>
-                        {% if category.block_set.count > 0 %}
-                            <ul class="category_blocks" {% if category != code_block.category %}style="display: none;"{% endif %}>
-                            {% for block in category.blocks %}
+                        {% if category.blocks.count > 0 %}
+                            <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
+                            {% for block in category.blocks.all %}
                                 <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
                             {% endfor %}
                             </ul>
@@ -159,24 +158,36 @@
                 }
             });
             client.send();
+        });
 
+        // Clone button
+        $("#clone_this").click(function () {
+            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            console.log("pk: " + pk);
+            var type = $(this).attr('data-type');
+            console.log("type: " + type);
+            $('#clone_spinner').addClass('fa fa-cog fa-spin');
 
-            /*
-             $.ajax({
+            $.ajax({
                  type: "POST",
-                 url: "/publish/",
-                 data: {pk: pk, type: type, lessons: lessons},
+                 url: "/clone/",
+                 data: {pk: pk, type: type},
                  timeout: 9999999
             }).done(function (response) {
-                $("#publish_this").addClass('btn-success').text("Success");
-                $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                $("#clone_this").addClass('btn-success').text("Success");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                if (response.hasOwnProperty('redirect_url')) {
+                    setTimeout(function () {
+                        window.location.href = response.redirect_url;
+                    }, 500);
+                }
             }).fail(function (response) {
-                $("#publish_this").addClass('btn-warning').text("Failed");
-                $("#publish_results").text(JSON.stringify(response, undefined, 2));
-                $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                $("#clone_this").addClass('btn-warning').text("Failed");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
             });
-            */
         });
     })
 </script>

@@ -147,8 +147,8 @@ ADMINS = [('Josh', 'josh@code.org')]
 SERVER_EMAIL = 'root@codecurricula.com'
 DEFAULT_FROM_EMAIL = 'josh@code.org'
 
-LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
-LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
+# LOGIN_REDIRECT_URL = 'https://code.org' # Avoid redirecting randos to our login page
+# LOGIN_URL = 'https://code.org' # Avoid redirecting randos to our login page
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -252,6 +252,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.sitemaps",
+    "django.contrib.admindocs",
     "collectfast",  # Needs to come before staticfiles
     "django.contrib.staticfiles",
     "mezzanine.boot",
@@ -343,7 +344,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
     "curriculumBuilder.disable_csrf.DisableCSRF",
-    "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
+    # "curriculumBuilder.login_required_middleware.LoginRequiredMiddleware",
 )
 
 # Store these package names here as they may change in the future since
@@ -363,6 +364,10 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
+
+DEBUG_TOOLBAR_CONFIG = {
+'INTERCEPT_REDIRECTS': True,
+}
 
 #####################
 # PAGEDOWN SETTINGS #
@@ -452,9 +457,11 @@ WKHTMLTOPDF_BIN = os.environ.get('WKHTMLTOPDF_BIN')
 WKHTMLTOPDF_CMD_OPTIONS = {
     'page-size': 'Letter',
     'print-media-type': '',
-    'javascript-delay': 3000,
+    'javascript-delay': 10000,
     'debug-javascript': '',
     'no-stop-slow-scripts': '',
+    'load-error-handling': 'ignore',
+    'load-media-error-handling': 'ignore'
 }
 
 ############################
@@ -471,7 +478,8 @@ AWS_QUERYSTRING_AUTH = False
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
 AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
 AWS_HEADERS = {
  'Cache-Control': 'max-age=0',
@@ -594,7 +602,7 @@ COMPRESS_URL = STATIC_URL
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', "#curriculumbuilder")
 SLACK_USERNAME = os.environ.get('SLACK_USER', 'curricbot')
-SLACK_ENDPOINT_URL = 'https://hooks.slack.com/services/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'
+SLACK_ENDPOINT_URL = os.environ.get('SLACK_ENDPOINT_URL', 'https://hooks.slack.com/services/XXX/YYY/ZZZ')
 
 ###########
 # LOGGING #
@@ -646,7 +654,7 @@ LOGGING = {
         },
         'jackfrost': {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': True
         },
         'lessons': {

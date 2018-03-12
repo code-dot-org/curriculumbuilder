@@ -16,7 +16,7 @@
 {% endmetablock %}{% endblock %}
 
 {% block meta_description %}{% metablock %}
-    {{ page.description }}
+    {{ page.title }}
 {% endmetablock %}{% endblock %}
 
 {% block extra_css %}
@@ -47,6 +47,9 @@
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
                 {% endif %}
+                <h2>deepSpaceCopy</h2>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ page.pk }}" data-type="Map">Clone</button><i id="clone_spinner"></i><br/>
+                <pre id="clone_results"></pre>
             </div>
         </div>
     </div>
@@ -74,6 +77,7 @@
 {% endblock %}
 
 {% block footer_js %}
+    {% if user.is_staff %}
     <script type="text/javascript">
     $(document).ready(function() {
         // Convert streaming responses to formattable JSON
@@ -136,6 +140,45 @@
             });
             client.send();
         });
+
+        // Clone button
+        $("#clone_this").click(function () {
+            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            console.log("pk: " + pk);
+            var type = $(this).attr('data-type');
+            console.log("type: " + type);
+            $('#clone_spinner').addClass('fa fa-cog fa-spin');
+
+            $.ajax({
+                 type: "POST",
+                 url: "/clone/",
+                 data: {pk: pk, type: type},
+                 timeout: 9999999
+            }).done(function (response) {
+                $("#clone_this").addClass('btn-success').text("Success");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                if (response.hasOwnProperty('redirect_url')) {
+                    setTimeout(function () {
+                        window.location.href = response.redirect_url;
+                    }, 500);
+                }
+            }).fail(function (response) {
+                $("#clone_this").addClass('btn-warning').text("Failed");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+            });
+        });
     })
 </script>
+    {% endif %}
+    <script type="text/javascript">
+    // If in an iFrame, apply embedded styles
+    $(function() {
+      if (window.self != window.top) {
+        $(document.body).addClass("embedded");
+      }
+    });
+    </script>
 {% endblock %}

@@ -15,7 +15,7 @@ textarea {
     height: 50px;
 }
 
-.inline-tabular .keywords-field {
+.inline-tabular .keywords-field, .inline-stacked .keywords-field {
     display: none;
     visibility: hidden;
 }

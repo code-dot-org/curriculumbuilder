@@ -50,6 +50,9 @@
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
                 {% endif %}
+                <h2>deepSpaceCopy</h2>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ unit.pk }}" data-type="Unit">Clone</button><i id="clone_spinner"></i><br/>
+                <pre id="clone_results"></pre>
             </div>
         </div>
     </div>
@@ -80,6 +83,18 @@
         </div>
 
         <div class="clear"></div>
+        <div class="topics">
+            {% if unit.topics.count > 0 %}
+                {% for topic in unit.topics.all %}
+                    <div class="activity">
+                        {% editable topic.name topic.content %}
+                            <h2>{{ topic.name }}</h2>
+                            {{ topic.content|richtext_filters|safe }}
+                        {% endeditable %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
 
         <div class="chapter_overviews">
         {% if unit.chapters %}
@@ -363,6 +378,36 @@
                 });
                 */
             });
+
+            // Clone button
+            $("#clone_this").click(function () {
+            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+            var pk = $(this).attr('data-pk');
+            console.log("pk: " + pk);
+            var type = $(this).attr('data-type');
+            console.log("type: " + type);
+            $('#clone_spinner').addClass('fa fa-cog fa-spin');
+
+            $.ajax({
+                 type: "POST",
+                 url: "/clone/",
+                 data: {pk: pk, type: type},
+                 timeout: 9999999
+            }).done(function (response) {
+                $("#clone_this").addClass('btn-success').text("Success");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                if (response.hasOwnProperty('redirect_url')) {
+                    setTimeout(function () {
+                        window.location.href = response.redirect_url;
+                    }, 500);
+                }
+            }).fail(function (response) {
+                $("#clone_this").addClass('btn-warning').text("Failed");
+                $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+            });
+        });
         });
     </script>
 {% endif %}

@@ -1,10 +1,11 @@
 import os, time, re
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse, JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
@@ -60,9 +61,9 @@ pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 @login_required
 def index(request):
     if request.user.is_staff:
-        curricula = Curriculum.objects.all()
+        curricula = Curriculum.objects.filter(version=Curriculum.CURRENT)
     else:
-        curricula = Curriculum.objects.filter(login_required=False)
+        curricula = Curriculum.objects.filter(login_required=False, version=Curriculum.CURRENT)
 
     return render(request, 'curricula/index.html', {'curricula': curricula})
 
@@ -73,7 +74,7 @@ Core curricula and lesson views
 '''
 
 
-@login_required
+# @login_required
 def curriculum_view(request, slug):
     pdf = request.GET.get('pdf', False)
     try:
@@ -111,7 +112,7 @@ def curriculum_view(request, slug):
                                                          'form': form, 'changelog': changelog})
 
 
-@login_required
+# @login_required
 def unit_view(request, slug, unit_slug):
     pdf = request.GET.get('pdf', False)
 
@@ -186,7 +187,7 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
-@login_required
+# @login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
     parent = None
@@ -311,33 +312,49 @@ def curriculum_vocab(request, slug):
         raise ContinueResolving
 
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                    'list_type': 'Vocab',
-                                                    'include_template': 'curricula/partials/vocab_list.html'})
+                                                        'list_type': 'Vocab',
+                                                        'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def unit_vocab(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                    'unit': unit,
-                                                    'list_type': 'Vocab',
-                                                    'include_template': 'curricula/partials/vocab_list.html'})
+                                                        'unit': unit,
+                                                        'list_type': 'Vocab',
+                                                        'include_template': 'curricula/partials/vocab_list.html'})
 
 
 def curriculum_code(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                   'list_type': 'Introduced Code',
-                                                   'include_template': 'curricula/partials/code_list.html'})
+                                                        'list_type': 'Introduced Code',
+                                                        'include_template': 'curricula/partials/code_list.html'})
 
 
 def unit_code(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
     return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
-                                                   'unit': unit,
-                                                   'list_type': 'Introduced Code',
-                                                   'include_template': 'curricula/partials/code_list.html'})
+                                                        'unit': unit,
+                                                        'list_type': 'Introduced Code',
+                                                        'include_template': 'curricula/partials/code_list.html'})
+
+
+def curriculum_objectives(request, slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'list_type': 'Lesson Objectives',
+                                                        'include_template': 'curricula/partials/objective_list.html'})
+
+
+def unit_objectives(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    return render(request, 'curricula/list_view.html', {'curriculum': curriculum,
+                                                        'unit': unit,
+                                                        'list_type': 'Lesson Objectives',
+                                                        'include_template': 'curricula/partials/objective_list.html'})
 
 
 '''
@@ -346,7 +363,7 @@ PDF rendering views
 '''
 
 
-@login_required
+# @login_required
 def lesson_pdf(request, slug, unit_slug, lesson_num):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -398,7 +415,7 @@ def unit_compiled(request, slug, unit_slug):
     return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
 
-@login_required
+# @login_required
 def unit_pdf(request, slug, unit_slug):
 
     buffer = StringIO()
@@ -409,6 +426,7 @@ def unit_pdf(request, slug, unit_slug):
 
     try:
         c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
+        print unit.get_compiled_url()
         c.perform()
 
         c.close()
@@ -475,7 +493,7 @@ def unit_pjspdf(request, slug, unit_slug):
     return pdfresponse
 
 
-@login_required
+# @login_required
 def unit_resources_pdf(request, slug, unit_slug):
     merger = PdfFileMerger()
     unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
@@ -530,7 +548,7 @@ def unit_resources_pdf(request, slug, unit_slug):
     return response
 
 
-@login_required
+# @login_required
 def curriculum_pdf(request, slug):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -563,12 +581,14 @@ def curriculum_pdf(request, slug):
 def get_url_for_pdf(request, abs_url, aws=False):
     # On production we should pull the pages locally to ensure the most recent copy,
     # This causes a crash on local dev, so in that case pull pages from S3
-
+    '''
     if aws:  #aws or not settings.ON_PAAS:
-        print abs_url
-        return settings.AWS_BASE_URL + abs_url
+        return settings.AWS_S3_CUSTOM_DOMAIN + abs_url
     else:
         return 'http://%s%s?pdf=true' % (get_current_site(request).domain, abs_url)
+    '''
+
+    return "https://%s%s" % (settings.AWS_S3_CUSTOM_DOMAIN, abs_url)
 
 
 '''
@@ -611,7 +631,52 @@ def publish(request):
 
         return HttpResponse(e.message, content_type='application/json', status=500)
 
-    return StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+    response = StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+
+    # Necessary for nginx to accept streaming response
+    response['X-Accel-Buffering'] = 'no'
+    return response
+
+
+@staff_member_required
+def clone(request):
+    try:
+        pk = int(request.POST.get('pk'))
+
+        page_type = request.POST.get('type')
+
+        klass = globals()[page_type]
+
+        obj = klass.objects.get(pk=pk)
+
+        cloneable = getattr(obj, "clone", None)
+        if not callable(cloneable):
+            logger.exception('%s is not cloneable' % obj.title)
+            return HttpResponse("Not cloneable", content_type='application/json', status=500)
+
+        attrs = request.POST.get('attrs', {})
+        exclude = request.POST.get('exclude', [])
+
+        duplicate = obj.clone(attrs=attrs, exclude=exclude)
+
+        slack_message('slack/message.slack', {
+            'message': 'cloned the %s %s'
+                       % (page_type, obj.title),
+            'user': request.user,
+        })
+
+        redirect_url = duplicate.get_absolute_url()
+        if page_type in ['Block', 'Map', 'IDE']:
+            redirect_url = "/documentation%s" % redirect_url
+
+        payload = {'message': 'cloned to %s' % duplicate.title, 'redirect_url': redirect_url, 'status': 200}
+
+        return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
+
+    except Exception, e:
+        logger.exception('Cloning failed')
+
+        return HttpResponse(e.message, content_type='application/json', status=500)
 
 
 @staff_member_required
@@ -691,13 +756,25 @@ def page_history(request, page_id):
 
 
 def unit_feedback(request, slug, unit_slug):
-    unit = get_object_or_404(Unit, slug=unit_slug, curriculum__slug=slug)
+    days = int(request.GET.get('days', 999))
+    resolved = request.GET.get('resolved', False)
+    users = [settings.CHANGELOG_USER, settings.FEEDBACK_USER]
+    if resolved:
+        users.append(settings.RESOLVED_USER)
+    try:
+        unit = Unit.objects.get(slug=unit_slug, curriculum__slug=slug)
+    except:
+        # If not using versioned slug, attempt to find by canonical slug
+        unit = get_object_or_404(Unit, slug=unit_slug, curriculum__canonical_slug=slug,
+                                 curriculum__version=Curriculum.CURRENT)
+    unit_history = Version.objects.get_for_object(unit).filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+                                                               revision__user__username__in=users)
     history = {"L%02d - %s" % (l.number, l.title): [v.revision for v in Version.objects.get_for_object(l)
-        .filter(revision__user__username__in=(settings.CHANGELOG_USER,
-                                              settings.FEEDBACK_USER,
-                                              settings.RESOLVED_USER))] for l in unit.lesson_set.all()}
+        .filter(revision__date_created__gte=datetime.now()-timedelta(days=days),
+               revision__user__username__in=users)] for l in unit.lesson_set.all()}
 
-    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'history': sorted(history.items())})
+    return render(request, 'curricula/unit_feedback.html', {'unit': unit, 'unit_history': unit_history,
+                                                            'history': sorted(history.items())})
 
 
 class CompareHistoryView(HistoryCompareDetailView):
@@ -814,38 +891,81 @@ API views
 
 @api_view(['POST', ])
 def feedback(request):
-    RE_FEEDBACK = "^(?P<curric>\S+)\s{1}(u|U)(?P<unit>\d+)(l|L)(?P<lesson>\d+)\s{1}(?P<msg>.*)"
+    RE_FEEDBACK = "^(?P<curric>\S+)(?:\s{1}(u|U)(?P<unit>\d+))?(?:(l|L)(?P<lesson>\d+))?\s{1}(?P<msg>[\s\S]*)"
 
     user = "@%s" % request.POST.get("user_name", "somebody")
     text = request.POST.get("text")
-    details = text
+    changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+    recorded = False
+    title = "Failure :(",
+    message = "Didn't work"
 
     match = re.match(RE_FEEDBACK, text)
+
     if match:
-        curric_slug = match.group('curric').lower()
-        unit_num = int(match.group('unit'))
-        lesson_num = int(match.group('lesson'))
-        details = match.group('msg')
-        lesson = Lesson.objects.filter(curriculum__slug=curric_slug, unit__number=unit_num, number=lesson_num).first()
+        details = "%s recorded: %s" % (user, match.group('msg'))
+        try:
+            curriculum = Curriculum.objects.get(slug=match.group('curric').lower())
+        except Exception as e:
+            try:
+                curriculum = Curriculum.objects.get(canonical_slug=match.group('curric').lower())
+            except Exception as et:
+                logger.exception('Error locating curriculum: %s' % e)
+                title = "Failure :(",
+                message = "Unable to find matching curriculum by versioned or canonical url."
 
-        if lesson:
+        try:
+            unit = Unit.objects.get(curriculum=curriculum, number=int(match.group('unit')))
+        except Exception as e:
+            # Didn't find a unit, so save feedback to curriculum
+            if curriculum and not recorded:
+                with reversion.create_revision():
+                    curriculum.save()
 
-            with reversion.create_revision():
-                changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
 
-                lesson.save()
+                title = "Success :)",
+                message = "Feedback recorded for %s." % curriculum
+            else:
+                logger.exception('Error locating unit: %s' % e)
 
-                # Store some meta-information.
-                reversion.set_user(changelog_user)
-                reversion.set_comment(details)
-            message = "Feedback recorded for %s: %s: %s." % (lesson.curriculum, lesson.unit, lesson)
-            title = "Success!"
-        else:
-            message = "Unable to find matching lesson."
-            title = "Failure :/"
+        try:
+            lesson = Lesson.objects.get(curriculum=curriculum, unit=unit, number=int(match.group('lesson')))
+            if lesson and not recorded:
+                with reversion.create_revision():
+                    lesson.save()
+
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
+
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s: %s." % (curriculum, unit, lesson)
+
+        except Exception as e:
+                # Didn't find a lesson, so save feedback to the unit
+            if unit and not recorded:
+
+                with reversion.create_revision():
+                    unit.save()
+
+                    # Store some meta-information.
+                    reversion.set_user(changelog_user)
+                    reversion.set_comment(details)
+                    recorded = True
+
+                title = "Success :)"
+                message = "Feedback recorded for %s: %s." % (curriculum, unit)
+            else:
+                logger.exception('Error locating lesson: %s' % e)
+
     else:
-        message = "Unable to find matching lesson."
-        title = "Failure :/"
+        title = "Failure :("
+        message = "Unable to find curriculum, unit, or lesson"
 
     attachments = [
         {
@@ -878,7 +998,7 @@ def resolve_feedback(request):
     except Exception:
         status = 500
         payload['error'] = "Failed to upload image"
-        logger.exception("Failed to mark reversion %s as resolved" % revision_id)
+        logger.exception("Failed to mark reversion %s as resolved" % pk)
 
     return JsonResponse(payload, status=status)
 

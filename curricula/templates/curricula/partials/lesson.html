@@ -62,6 +62,8 @@
 
         $(document).ready(function () {
 
+            // iframes break pdf, kill 'em
+            $('iframe').remove();
 
             // New Code Studio Integration
             $('#{{ lesson.title|slugify }}-content .stage_guide').each(function () {

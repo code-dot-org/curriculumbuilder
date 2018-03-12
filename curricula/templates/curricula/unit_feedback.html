@@ -33,6 +33,24 @@
 {% endblock %}
 
 {% block main %}
+    <table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Comment</th>
+        <th>Resolve</th>
+    </tr>
+    </thead>
+    {% for version in unit_history %}
+        <tr class="history_{{ version.revision.user }}" data-pk="{{ version.revision.pk }}">
+        <td>{{ version.revision.user }}</td>
+        <td>{{ version.revision.date_created|date:"SHORT_DATE_FORMAT" }}</td>
+        <td>{{ version.revision.comment|richtext_filters|safe }}</td>
+        <td><button class="resolve_feedback" data-pk="{{ version.pk }}">Toggle</button></td>
+        </tr>
+    {% endfor %}
+    </table>
     {% for lesson, versions in history %}
         <h2>{{ lesson }}</h2>
             <table class="table table-striped">

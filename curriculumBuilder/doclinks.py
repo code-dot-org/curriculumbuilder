@@ -33,15 +33,15 @@ class AttrTagPattern(Pattern):
 
         if m.group('ide'):
             try:
-                block = Block.objects.get(IDE__slug=m.group('ide'), slug=block_full)
+                block = Block.objects.get(parent_ide__slug=m.group('ide'), slug=block_full)
             except Block.DoesNotExist:
                 try:
-                    print "Block with IDE not found, trying by title"
-                    block = Block.objects.get(IDE__slug=m.group('ide'), title=block_full)
+                    print("Block with IDE not found, trying by title")
+                    block = Block.objects.get(parent_ide__slug=m.group('ide'), title=block_full)
                 except Block.DoesNotExist:
-                    print "Block with IDE not found, trying with alphanum only"
-                    block = Block.objects.filter(Q(IDE__slug=m.group('ide'), slug=block_alphanum) |
-                                                 Q(IDE__slug=m.group('ide'), title=block_alphanum)).first()
+                    print("Block with IDE not found, trying with alphanum only")
+                    block = Block.objects.filter(Q(parent_ide__slug=m.group('ide'), slug=block_alphanum) |
+                                                 Q(parent_ide__slug=m.group('ide'), title=block_alphanum)).first()
 
         if not block:
             block = Block.objects.filter(Q(slug=block_full) | Q(title=block_full)).first()
@@ -50,7 +50,7 @@ class AttrTagPattern(Pattern):
 
         if block:
             el.set('class', 'block')
-            el.set('style', 'background-color: %s;' % block.category.color)
+            el.set('style', 'background-color: %s;' % block.parent_cat.color)
             el.text = "<a href='%s'>%s</a>" % (block.get_published_url(), self.escape(m.group('block')))
         else:
             el.text = "%s%s" % (m.group('ide') or '', self.escape(m.group('block')) or '')

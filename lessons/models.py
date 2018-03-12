@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
-from mezzanine.generic.fields import CommentsField
+from mezzanine.generic.fields import CommentsField, KeywordsField
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.tasks import build_single
 from jsonfield import JSONField
@@ -24,6 +24,8 @@ from documentation.models import Block
 from django_slack import slack_message
 
 from curriculumBuilder import settings
+
+from django_cloneable import CloneableMixin
 
 import reversion
 from reversion.models import Version
@@ -111,6 +113,20 @@ class Resource(Orderable):
         #                 % (formatted, self.gd_pdf(), self.gd_doc(), self.gd_copy())
         return formatted
 
+    def formatted_student(self):
+        if self.url:
+            if self.gd:
+                formatted = "<a href='%s' target='_blank'>%s</a>" % (self.gd_pdf(), self.name)
+            else:
+                formatted = "<a href='%s' target='_blank'>%s</a>" % (self.fallback_url(), self.name)
+        else:
+            formatted = self.name
+        if self.type:
+            formatted = "%s - %s" % (formatted, self.type)
+        if self.dl_url:
+            formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+        return formatted
+
     def formatted_md(self):
         if self.url:
             if self.gd:
@@ -194,8 +210,10 @@ Complete Lesson Page
 """
 
 
-class Lesson(Page, RichText):
+class Lesson(Page, RichText, CloneableMixin):
     overview = RichTextField('Lesson Overview')
+    short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
+                                   max_length=64, blank=True, null=True)
     duration = models.CharField('Duration', help_text='Duration of lesson',
                                 max_length=255, blank=True, null=True)
     week = models.IntegerField('Week', help_text='Week within the unit (only use for first lesson of the week)',
@@ -209,12 +227,12 @@ class Lesson(Page, RichText):
                               blank=True, null=True)
     cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',
                                blank=True, null=True)
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     standards = models.ManyToManyField(Standard, blank=True)
     anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
                                               related_name="anchors", blank=True)
     vocab = models.ManyToManyField(Vocab, blank=True)
-    blocks = models.ManyToManyField(Block, blank=True)
+    blocks = models.ManyToManyField(Block, blank=True, related_name='lessons')
     comments = CommentsField()
     unit = models.ForeignKey(curricula.models.Unit, blank=True, null=True)
     curriculum = models.ForeignKey(curricula.models.Curriculum, blank=True, null=True)
@@ -228,13 +246,6 @@ class Lesson(Page, RichText):
 
     def __unicode__(self):
         return self.title
-
-    def __deepcopy(self):
-        lesson_copy = self
-        lesson_copy.pk = None
-        # deepcopy page, activities, prereqs, and objectives
-        lesson_copy.save()
-        return lesson_copy
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
@@ -263,6 +274,7 @@ class Lesson(Page, RichText):
                 return None
         return parent.unit
 
+    '''
     def get_number(self):
         order = 1
         if self.parent.content_model == 'chapter':
@@ -283,6 +295,20 @@ class Lesson(Page, RichText):
             except Exception as e:
                 print(e)
 
+        return order
+    '''
+
+    def get_number(self):
+        order = 1
+        if self.is_optional:
+            peers = self.parent.lesson.optional_lessons.order_by('_order')
+        else:
+            peers = self.unit.lessons.all().order_by('parent___order', '_order')
+        for lesson in peers:
+            if lesson == self:
+                break
+            else:
+                order += 1
         return order
 
     def get_curriculum(self):
@@ -393,6 +419,37 @@ class Lesson(Page, RichText):
 
         super(Lesson, self).save(*args, **kwargs)
 
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+        # If new title and/or slug weren't passed, update
+        attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
+
+        # Add default values
+        attrs['ancestor'] = self
+
+        # These must be excluded to avoid errors
+        exclusions = ['children', 'lesson_set', 'ancestor', 'keywords']
+        exclude = exclude + list(set(exclusions) - set(exclude))
+
+        duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
+                                              m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
+
+        if self.optional_lessons.count() > 0:
+            for lesson in self.optional_lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+
+        # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
+        if self.keywords.count() > 0:
+            keyword_ids = self.keywords.values_list('keyword__id', flat=True)
+            for keyword_id in keyword_ids:
+                duplicate.keywords.create(keyword_id=keyword_id)
+            duplicate.keywords_string = self.keywords_string
+        duplicate.save()
+
+        if not attrs.get('no_renumber', False):
+            duplicate.unit.renumber_lessons()
+
+        return duplicate
+
     @property
     def optional_lessons(self):
         return Lesson.objects.filter(parent__lesson=self)
@@ -407,17 +464,12 @@ class Lesson(Page, RichText):
 
     @property
     def is_optional(self):
-        if self.keywords.filter(keyword__title="Optional"):
-            return True
-        else:
-            return False
+        return self.parent.content_model == 'lesson'
 
     @property
     def forum_link(self):
-        if self.is_optional:
-            return "//forum.code.org/c/%s%d/optional%02d" % (self.curriculum.slug, self.unit.number, self.number)
-        else:
-            return "//forum.code.org/c/%s%d/lesson%02d" % (self.curriculum.slug, self.unit.number, self.number)
+        # TODO: This assumes numbered units, which doesn't work for CSF - need to rework forum side of things
+        return "//forum.code.org/c/%s%d/" % (self.curriculum.get_canonical_slug(), self.unit.number)
 
     @property
     def feedback_link(self):
@@ -464,12 +516,13 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable):
+class Activity(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
+    keywords = KeywordsField()
     time = models.CharField(max_length=255, blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
-    ancestor = models.ForeignKey('self', blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = "activities"
@@ -496,7 +549,7 @@ Prerequisite Skills
 """
 
 
-class Prereq(Orderable):
+class Prereq(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
@@ -519,7 +572,7 @@ Learning Objectives
 """
 
 
-class Objective(Orderable):
+class Objective(Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
@@ -586,7 +639,7 @@ reversion.register(Objective, follow=('lesson', ))
 
 @receiver(post_delete, sender=Lesson)
 def reorder_peers(sender, instance, **kwargs):
-    for lesson in instance.curriculum.lesson_set.all():
+    for lesson in instance.unit.lesson_set.all():
         Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
 
 
