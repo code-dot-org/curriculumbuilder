@@ -291,6 +291,12 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
                               'vocab', 'resources', 'activity_set')
 
 
+'''
+MultiLesson allows for quick inline editing of multiple lessons at once, at the cost of the 
+more structured drag and drop view
+'''
+
+
 class MultiLessonForm(ModelForm):
     class Meta:
         model = Lesson
@@ -336,7 +342,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     )
 
     def get_changelist_form(self, request, **kwargs):
-        return MultiLessonForm
+        return LessonForm
 
 
 class ResourceAdmin(AjaxSelectAdmin):
@@ -374,6 +380,7 @@ class ActivityAdmin(CompareVersionAdmin):
 
     curriculum.admin_order_field = 'lesson__curriculum'
     unit.admin_order_field = 'lesson__unit'
+
 
 class AnnotationAdmin(CompareVersionAdmin):
     pass

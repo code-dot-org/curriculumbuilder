@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.forms import ModelForm
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.generic.fields import KeywordsField
+from import_export.admin import ImportExportModelAdmin
 
 from reversion.admin import VersionAdmin
 
@@ -16,6 +18,18 @@ class LessonInline(TabularDynamicInlineAdmin):
     fields = ['number', 'title', 'week', 'pacing_weight', 'unplugged', 'keywords']
 
     keywords = KeywordsField()
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class LessonStandardsInline(TabularDynamicInlineAdmin):
+    model = Lesson
+    fk_name = 'unit'
+    fields = ['standards']
 
     def has_add_permission(self, request):
         return False
@@ -54,7 +68,34 @@ class ChapterAdmin(PageAdmin):
     )
 
 
+'''
+UnitStandards allows for quick standards aligning without the ability to edit actual lesson content
+'''
+
+
+class UnitStandardsForm(ModelForm):
+    class Meta:
+        model = Unit
+        fields = ('title',)
+
+
+class UnitStandards(Unit):
+    class Meta:
+        proxy = True
+
+
+class UnitStandardsAdmin(ImportExportModelAdmin):
+    list_display = ('title', 'curriculum', 'number')
+    list_filter = ('curriculum', 'curriculum__version')
+    list_editable = ()
+    inlines = (LessonStandardsInline,)
+    form = UnitStandardsForm
+
+    def get_changelist_form(self, request, **kwargs):
+        return UnitStandardsForm
+
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(Chapter, ChapterAdmin)
+admin.site.register(UnitStandards, UnitStandardsAdmin)
 # admin.site.register(UnitLesson)
