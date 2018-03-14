@@ -26,6 +26,7 @@ def custom_admin_page_ordering(request):
 
     page = get_object_or_404(Page, id=get_id(request.POST['id']))
     old_parent_id = page.parent_id
+    old_parent = Page.objects.get(id=old_parent_id)
     new_parent_id = get_id(request.POST['parent_id'])
     new_parent = Page.objects.get(id=new_parent_id) if new_parent_id else None
 
@@ -46,35 +47,31 @@ def custom_admin_page_ordering(request):
             Page.objects.filter(id=page.id).update(_order=i)
 
         # Renumber while still attached to old unit
-        update_numbering(page)
+        # update_numbering(page)
 
     # Set the new order for the moved page and its current siblings.
     for i, page_id in enumerate(request.POST.getlist('siblings[]')):
         Page.objects.filter(id=get_id(page_id)).update(_order=i)
 
-        sibling = Page.objects.get(id=get_id(page_id))
-
-        # Need to make sure that children get renumbered as well
-        if sibling.content_model is not "lesson":
-            update_numbering(sibling)
-
-    page.save()
-
     # If page moved to another parent, call renumbering again under the new unit
-    if new_parent_id != page.parent_id:
-        update_numbering(page)
+
+    update_numbering(page)
+    if new_parent_id != old_parent_id:
+        update_numbering(old_parent)
 
     return HttpResponse("ok")
 
 
 def update_numbering(page):
 
-        if page.content_model == 'lesson':
-            page.lesson.unit.renumber_lessons()
-        elif page.content_model == 'chapter':
-            page.chapter.unit.renumber_lessons()
-        elif page.content_model == 'unit':
-            page.unit.renumber_lessons()
+    if page.content_model == 'lesson':
+        unit = page.lesson.unit
+    elif page.content_model == 'chapter':
+        unit = page.chapter.unit
+    elif page.content_model == 'unit':
+        unit = page.unit
+
+    unit.renumber_lessons()
 
 
 views.admin_page_ordering = custom_admin_page_ordering

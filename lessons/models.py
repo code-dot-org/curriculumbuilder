@@ -398,6 +398,8 @@ class Lesson(Page, RichText, CloneableMixin):
             self.curriculum = self.get_curriculum()
         except Exception:
             logger.exception("Couldn't get curriculum for %s" % self)
+        '''
+        # Don't try to renumber every save
         try:
             self.number = self.get_number()
         except Exception as e:
@@ -405,7 +407,7 @@ class Lesson(Page, RichText, CloneableMixin):
             print("couldn't get number")
             logger.exception("Couldn't get number for %s" % self)
 
-        '''
+
         # Don't try to get stage data on every save.
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (

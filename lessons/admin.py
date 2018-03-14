@@ -134,7 +134,7 @@ class LessonResource(resources.ModelResource):
 
     class Meta:
         model = Lesson
-        fields = ("title", "description", "url", "license_type", "grades", "subjects", "resource_type", "keywords",
+        fields = ("title", "overview", "url", "license_type", "grades", "subjects", "resource_type", "keywords",
                   "publisher", "collection_name", "collection_description", "collection_order", "collection2_name",
                   "collection2_description", "collection2_order")
         export_order = fields
@@ -316,7 +316,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     list_editable = ('title', 'week', 'pacing_weight', 'unplugged')
     list_filter = ('curriculum', 'unit', 'keywords__keyword', 'curriculum__version')
     actions = [publish]
-    form = LessonForm
+    form = MultiLessonForm
 
     inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
@@ -342,7 +342,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     )
 
     def get_changelist_form(self, request, **kwargs):
-        return LessonForm
+        return MultiLessonForm
 
 
 class ResourceAdmin(AjaxSelectAdmin):
