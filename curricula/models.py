@@ -24,6 +24,8 @@ from standards.models import Standard, GradeBand, Category, Framework
 from documentation.models import Map
 import lessons.models
 
+from i18n.models import InternationalizablePage
+
 logger = logging.getLogger(__name__)
 
 """
@@ -32,7 +34,7 @@ Curriculum
 """
 
 
-class Curriculum(Page, RichText, CloneableMixin):
+class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     CURRENT = 0
     NEXT = 1
     PAST = 2
@@ -232,7 +234,7 @@ Curricular Unit
 """
 
 
-class Unit(Page, RichText, CloneableMixin):
+class Unit(InternationalizablePage, RichText, CloneableMixin):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")

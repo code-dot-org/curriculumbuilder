@@ -24,6 +24,7 @@ from documentation.models import Block
 from django_slack import slack_message
 
 from curriculumBuilder import settings
+from i18n.models import InternationalizablePage
 
 from django_cloneable import CloneableMixin
 
@@ -210,7 +211,7 @@ Complete Lesson Page
 """
 
 
-class Lesson(Page, RichText, CloneableMixin):
+class Lesson(InternationalizablePage, RichText, CloneableMixin):
     overview = RichTextField('Lesson Overview')
     short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
                                    max_length=64, blank=True, null=True)
@@ -243,6 +244,10 @@ class Lesson(Page, RichText, CloneableMixin):
 
     class Meta:
         ordering = ["number"]
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Lesson, cls).internationalizable_fields() + ['overview', 'short_title', 'cs_content', 'prep']
 
     def __unicode__(self):
         return self.title
