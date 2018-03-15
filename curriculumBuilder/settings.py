@@ -286,6 +286,7 @@ INSTALLED_APPS = (
     "reversion_compare",
     "django_slack",
     # Custom apps for Code.org curriculum
+    "i18n",
     "standards",
     "lessons",
     "curricula",
