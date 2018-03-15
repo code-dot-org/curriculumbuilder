@@ -8,6 +8,7 @@ import os
 class Command(BaseCommand):
     def handle(self, *args, **options):
         staticfiles = os.path.join(os.path.dirname(__file__), '../../static')
+        os.makedirs(staticfiles)
 
         for model in django.apps.apps.get_models():
             if (issubclass(model, InternationalizablePage)):
