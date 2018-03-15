@@ -33,7 +33,6 @@ class LessonStandardsInline(StackedDynamicInlineAdmin):
     form = LessonForm
     fk_name = 'unit'
     fields = ('standards',)
-    # readonly_fields = ('number', 'title')
     filter_horizontal = ('standards',)
 
     def has_add_permission(self, request):
@@ -95,6 +94,7 @@ class UnitStandardsAdmin(ImportExportModelAdmin):
     list_display = ('title', 'curriculum', 'number')
     list_filter = ('curriculum', 'curriculum__version')
     list_editable = ()
+    readonly_fields = ('title',)
     inlines = (LessonStandardsInline,)
     form = UnitStandardsForm
 
