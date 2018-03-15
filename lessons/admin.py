@@ -244,13 +244,17 @@ class LessonForm(ModelForm):
         if standards_queryset is None:
             standards_queryset = Standard.objects.all()
 
-        self.fields['standards'].queryset = standards_queryset
-        self.fields['anchor_standards'].queryset = standards_queryset
+        if self.fields.get('standards', False):
+            self.fields['standards'].queryset = standards_queryset
+
+        if self.fields.get('anchor_standards', False):
+            self.fields['anchor_standards'].queryset = standards_queryset
 
         '''
         Optimize loading of blocks with related IDEs
         '''
-        self.fields['blocks'].queryset = Block.objects.all().select_related('parent_ide')
+        if self.fields.get('blocks', False):
+            self.fields['blocks'].queryset = Block.objects.all().select_related('parent_ide')
 
 
 class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):

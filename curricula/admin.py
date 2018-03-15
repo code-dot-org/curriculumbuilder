@@ -8,8 +8,10 @@ from import_export.admin import ImportExportModelAdmin
 from reversion.admin import VersionAdmin
 
 from lessons.models import Lesson
+from lessons.admin import LessonForm
 
 from curricula.models import Curriculum, Unit, Chapter, Topic
+from standards.models import Standard
 
 
 class LessonInline(TabularDynamicInlineAdmin):
@@ -26,10 +28,13 @@ class LessonInline(TabularDynamicInlineAdmin):
         return False
 
 
-class LessonStandardsInline(TabularDynamicInlineAdmin):
+class LessonStandardsInline(StackedDynamicInlineAdmin):
     model = Lesson
+    form = LessonForm
     fk_name = 'unit'
-    fields = ['standards']
+    fields = ('standards',)
+    # readonly_fields = ('number', 'title')
+    filter_horizontal = ('standards',)
 
     def has_add_permission(self, request):
         return False
@@ -82,6 +87,8 @@ class UnitStandardsForm(ModelForm):
 class UnitStandards(Unit):
     class Meta:
         proxy = True
+        verbose_name = u'Unit Standards'
+        verbose_name_plural = u'Unit Standards'
 
 
 class UnitStandardsAdmin(ImportExportModelAdmin):
