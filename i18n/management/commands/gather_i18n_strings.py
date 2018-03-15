@@ -11,7 +11,12 @@ class Command(BaseCommand):
         os.makedirs(staticfiles)
 
         for model in django.apps.apps.get_models():
-            if (issubclass(model, InternationalizablePage)):
+            # We care about models that:
+            #   extend the InternationalizablePage models defined by this module
+            #   are not proxy models (used by Django Admin for editing)
+            is_internationalizable = issubclass(model, InternationalizablePage)
+            is_not_proxy = not model._meta.proxy
+            if (is_internationalizable and is_not_proxy):
                 strings = model.gather_strings()
                 outpath = os.path.abspath(os.path.join(staticfiles, model.__name__ + ".json"))
                 with open(outpath, 'w') as outfile:
