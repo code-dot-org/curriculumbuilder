@@ -1,8 +1,22 @@
 language: python
 python: 2.7
+cache: pip
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.6"
+  apt:
+    packages:
+      - postgresql-server-dev-9.6
+
 install: 
- - pip install -r requirements.txt
+  - pip install -r requirements.txt
+
 before_script:
- - python manage.py syncdb –migrate –noinput
+  - psql -c 'create database curriculumbuilder;' -U postgres
+  - python manage.py migrate
+
 script:
- - python manage.py test
+  - python manage.py test
