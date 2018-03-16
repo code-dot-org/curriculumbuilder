@@ -26,3 +26,5 @@ docker-compose\.dev\.yml
 *.sql
 
 heroku\.env
+
+crowdin_credentials.yml
