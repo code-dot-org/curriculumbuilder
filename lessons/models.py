@@ -403,16 +403,8 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
             self.curriculum = self.get_curriculum()
         except Exception:
             logger.exception("Couldn't get curriculum for %s" % self)
+
         '''
-        # Don't try to renumber every save
-        try:
-            self.number = self.get_number()
-        except Exception as e:
-            print(e)
-            print("couldn't get number")
-            logger.exception("Couldn't get number for %s" % self)
-
-
         # Don't try to get stage data on every save.
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
@@ -645,9 +637,17 @@ reversion.register(Objective, follow=('lesson', ))
 
 
 @receiver(post_delete, sender=Lesson)
-def reorder_peers(sender, instance, **kwargs):
-    for lesson in instance.unit.lesson_set.all():
-        Lesson.objects.filter(id=lesson.id).update(number=lesson.get_number())
+def renumber_post_delete(sender, instance, **kwargs):
+    print "post deleting %s" % instance
+    instance.unit.renumber_lessons()
+
+
+@receiver(post_save, sender=Lesson)
+def renumber_post_create(sender, instance, created, *args, **kwargs):
+    if instance.number is None:
+        instance.number = instance.get_number()
+        instance.save()
+        instance.unit.renumber_lessons()
 
 
 """

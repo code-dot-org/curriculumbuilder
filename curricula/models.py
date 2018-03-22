@@ -308,30 +308,22 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                 for lesson in lessons.models.Lesson.objects.filter(parent=chapter.page_ptr)\
                                                                    .order_by('parent___order', '_order'):
 
-                    # Check for lessons that have been moved, but still think they belong
-                    if lesson.get_unit() is not self:
-                        lesson.unit = lesson.get_unit()
-                        lesson.save()
-                    elif lesson.unit is not self:
+                    # Check for lessons that have been moved here
+                    if lesson.unit.pk != self.pk:
                         lesson.unit = self
                         lesson.save()
         else:
             for lesson in lessons.models.Lesson.objects.filter(parent=self.page_ptr)\
                                                                .order_by('parent___order', '_order'):
 
-                # Check for lessons that have been moved, but still think they belong
-                if lesson.get_unit() is not self:
-                    lesson.unit = lesson.get_unit()
-                    lesson.save()
-                elif lesson.unit is not self:
+                # Check for lessons that have been moved here
+                if lesson.unit.pk != self.pk:
                     lesson.unit = self
                     lesson.save()
 
         # Renumber lessons that are actually under the unit
         for i, lesson in enumerate(self.lesson_set.all().order_by('parent___order', '_order')):
-            print("Renumbering %s as %d" % (lesson, i + 1))
             lessons.models.Lesson.objects.filter(id=lesson.id).update(number=i+1)
-
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
