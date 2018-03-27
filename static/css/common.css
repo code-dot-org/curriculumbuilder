@@ -65,6 +65,7 @@ summary {
 #admin_edit .drawer-controls {
     margin: 0;
     width: auto;
+    height: auto;
     position: fixed;
     z-index: 10000;
     top: 0;
