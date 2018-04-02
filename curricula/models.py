@@ -93,6 +93,19 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def get_canonical_slug(self):
         return self.canonical_slug or self.slug
 
+    def renumber_units(self):
+        for unit in Unit.objects.filter(parent=self.page_ptr)\
+                .order_by('parent___order', '_order'):
+
+            # Check for lessons that have been moved here
+            if unit.curriculum.pk != self.pk:
+                unit.curriculum = self
+                unit.save()
+
+        # Renumber units that are actually under the curriculum
+        for i, unit in enumerate(self.unit_set.all().order_by('parent___order', '_order')):
+            Unit.objects.filter(id=unit.id).update(number=i+1)
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_standards_url(), self.get_resources_url(),
@@ -495,8 +508,6 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         if not self.stage_name:
             self.stage_name = "%s%d" % (self.curriculum.slug, self.number)
 
-        self.renumber_lessons()
-
         super(Unit, self).save(*args, **kwargs)
 
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
@@ -536,6 +547,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                 duplicate.keywords.create(keyword_id=keyword_id)
             duplicate.keywords_string = self.keywords_string
         duplicate.save()
+
+        if not attrs.get('no_renumber', False):
+            duplicate.curriculum.renumber_units()
 
         return duplicate
 
