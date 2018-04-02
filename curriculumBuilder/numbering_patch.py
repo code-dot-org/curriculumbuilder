@@ -70,6 +70,7 @@ def update_numbering(page):
         unit = page.chapter.unit
     elif page.content_model == 'unit':
         unit = page.unit
+        unit.curriculum.renumber_units()
 
     unit.renumber_lessons()
 
