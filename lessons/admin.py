@@ -349,11 +349,29 @@ class MultiLessonAdmin(ImportExportModelAdmin):
         return MultiLessonForm
 
 
-class ResourceAdmin(AjaxSelectAdmin):
-    model = Resource
+class ResourceResource(resources.ModelResource):
+
+    lessons = fields.Field()
+
+    class Meta:
+        model = Resource
+        fields = ('name', 'type', 'student', 'gd', 'url', 'dl_url', 'lessons')
+
+    def dehydrate_lessons(self, resource):
+        resource_lessons = "; ".join([l.get_absolute_url() for l in resource.lesson_set.all()])
+        return list(resource_lessons)
+
+
+class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
+    
+    resource_class = ResourceResource
+
+    class Meta:
+        model = Resource
 
     list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
+    list_filter = ('lesson__curriculum',)
 
 
 class VocabAdmin(ImportExportModelAdmin):
