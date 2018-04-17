@@ -48,11 +48,11 @@
                 {% if ide.category_set.count > 0 %}
                     <ul class="category_list">
                     {% for category in ide.category_set.all %}
-                        <li class="category_name{% if category == code_block.category %} active{% endif %}"
+                        <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
                             style="background: {{ category.color }}; border-left-color: {{ category.color }}"
                             data-color="{{ category.color }}"><span>{{ category.name }}</span>
                         {% if category.block_set.count > 0 %}
-                            <ul class="category_blocks" {% if category != code_block.category %}style="display: none;"{% endif %}>
+                            <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
                             {% for block in category.block_set.all %}
                                 <li><a href="{{ block.get_absolute_url }}">{{ block.title }}</a></li>
                             {% endfor %}
