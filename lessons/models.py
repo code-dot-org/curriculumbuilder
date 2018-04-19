@@ -638,8 +638,8 @@ reversion.register(Objective, follow=('lesson', ))
 
 @receiver(post_delete, sender=Lesson)
 def renumber_post_delete(sender, instance, **kwargs):
-    print "post deleting %s" % instance
-    instance.unit.renumber_lessons()
+    if hasattr(instance, "unit"):
+        instance.unit.renumber_lessons()
 
 
 @receiver(post_save, sender=Lesson)
