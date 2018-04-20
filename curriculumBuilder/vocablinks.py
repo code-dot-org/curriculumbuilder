@@ -4,13 +4,14 @@ from markdown.inlinepatterns import Pattern
 
 from lessons.models import Vocab
 
-VOCAB_RE = r'(\[v )(.*?)\]'
+VOCAB_RE = r'(\[v )(.*?)\](?:\[([^\]]*)\])?'
 
 
 class AttrTagPattern(Pattern):
     """
-    Return element of type `tag` with a text attribute of group(3)
-    of a Pattern and with the html attributes defined with the constructor.
+    Return element of type `tag` with a text attribute of group(4) of a Pattern
+    if it exists and group(3) otherwise and with the html attributes defined
+    with the constructor.
 
     """
 
@@ -21,14 +22,16 @@ class AttrTagPattern(Pattern):
 
     def handleMatch(self, m):
         el = etree.Element(self.tag)
-        el.text = m.group(3)
+        word = m.group(3)
+        override = m.group(4)
+        el.text = override or word
 
         try:
-            vocab = Vocab.objects.get(word=el.text, mathy=False)
+            vocab = Vocab.objects.get(word=word, mathy=False)
             el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
 
         except Vocab.DoesNotExist:
-            vocab = Vocab.objects.filter(word__icontains=el.text, mathy=False).first()
+            vocab = Vocab.objects.filter(word__icontains=word, mathy=False).first()
             if vocab:
                 el.set('title', '%s: %s' % (vocab.word, vocab.detailDef))
             else:
