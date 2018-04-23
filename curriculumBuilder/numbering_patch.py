@@ -26,7 +26,6 @@ def custom_admin_page_ordering(request):
 
     page = get_object_or_404(Page, id=get_id(request.POST['id']))
     old_parent_id = page.parent_id
-    old_parent = Page.objects.get(id=old_parent_id)
     new_parent_id = get_id(request.POST['parent_id'])
     new_parent = Page.objects.get(id=new_parent_id) if new_parent_id else None
 
@@ -57,13 +56,14 @@ def custom_admin_page_ordering(request):
 
     update_numbering(page)
     if new_parent_id != old_parent_id:
-        update_numbering(old_parent)
+        update_numbering(Page.objects.get(id=old_parent_id))
 
     return HttpResponse("ok")
 
 
 def update_numbering(page):
 
+    unit = None
     if page.content_model == 'lesson':
         unit = page.lesson.unit
     elif page.content_model == 'chapter':
@@ -72,7 +72,8 @@ def update_numbering(page):
         unit = page.unit
         unit.curriculum.renumber_units()
 
-    unit.renumber_lessons()
+    if unit:
+        unit.renumber_lessons()
 
 
 views.admin_page_ordering = custom_admin_page_ordering
