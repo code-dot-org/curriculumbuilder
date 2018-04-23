@@ -91,6 +91,7 @@ summary {
 .headercontent h1 {
     font-size: 50px;
     line-height: 1em;
+    margin: auto 20px;
 }
 
 .headercontent h1, .headercontent h2, .headercontent h3 {
@@ -132,10 +133,6 @@ summary {
     width: 1.5em;
     text-align: center;
     display: inline-block;
-}
-
-div.content {
-    padding-left: 40px;
 }
 
 .together {
