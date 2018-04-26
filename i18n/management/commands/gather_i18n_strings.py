@@ -8,7 +8,8 @@ import os
 class Command(BaseCommand):
     def handle(self, *args, **options):
         staticfiles = os.path.join(os.path.dirname(__file__), '../../static/source')
-        os.makedirs(staticfiles)
+        if not os.path.exists(staticfiles):
+            os.makedirs(staticfiles)
 
         for model in django.apps.apps.get_models():
             # We care about models that:
