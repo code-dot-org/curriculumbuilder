@@ -24,7 +24,7 @@ from documentation.models import Block
 from django_slack import slack_message
 
 from curriculumBuilder import settings
-from i18n.models import InternationalizablePage
+from i18n.models import Internationalizable, InternationalizablePage
 
 from django_cloneable import CloneableMixin
 
@@ -515,7 +515,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable, CloneableMixin):
+class Activity(Internationalizable, Orderable, CloneableMixin):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     keywords = KeywordsField()
@@ -526,6 +526,10 @@ class Activity(Orderable, CloneableMixin):
     class Meta:
         verbose_name_plural = "activities"
         order_with_respect_to = "lesson"
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'content']
 
     def __unicode__(self):
         if self.time:
