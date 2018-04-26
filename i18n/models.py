@@ -9,15 +9,15 @@ class Internationalizable:
     def gather_strings(cls):
         strings = {}
         for obj in cls.objects.all():
-            strings[obj.unique_identifier] = {}
+            strings[obj.i18n_key] = {}
             for field in cls.internationalizable_fields():
                 string = getattr(obj, field)
                 if string:
-                    strings[obj.unique_identifier][field] = getattr(obj, field)
+                    strings[obj.i18n_key][field] = getattr(obj, field)
         return strings
 
     @property
-    def unique_identifier(self):
+    def i18n_key(self):
         return self.pk
 
     @classmethod
@@ -30,7 +30,7 @@ class InternationalizablePage(Internationalizable, Page):
         abstract = True
 
     @property
-    def unique_identifier(self):
+    def i18n_key(self):
         return self.slug
 
     @classmethod
