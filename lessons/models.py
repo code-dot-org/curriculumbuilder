@@ -526,6 +526,7 @@ class Activity(Orderable, CloneableMixin):
     class Meta:
         verbose_name_plural = "activities"
         order_with_respect_to = "lesson"
+        unique_together = ('lesson', 'name')
 
     def __unicode__(self):
         if self.time:
