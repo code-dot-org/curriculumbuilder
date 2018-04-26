@@ -1,4 +1,4 @@
-from i18n.models import InternationalizablePage
+from i18n.models import Internationalizable
 from django.core.management.base import BaseCommand, CommandError
 
 import django.apps
@@ -14,7 +14,7 @@ class Command(BaseCommand):
             # We care about models that:
             #   extend the InternationalizablePage models defined by this module
             #   are not proxy models (used by Django Admin for editing)
-            is_internationalizable = issubclass(model, InternationalizablePage)
+            is_internationalizable = issubclass(model, Internationalizable)
             is_not_proxy = not model._meta.proxy
             if (is_internationalizable and is_not_proxy):
                 strings = model.gather_strings()
