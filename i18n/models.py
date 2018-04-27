@@ -1,6 +1,6 @@
 from mezzanine.pages.models import Page
 
-class InternationalizablePage(Page):
+class Internationalizable:
 
     class Meta:
         abstract = True
@@ -9,12 +9,29 @@ class InternationalizablePage(Page):
     def gather_strings(cls):
         strings = {}
         for obj in cls.objects.all():
-            strings[obj.slug] = {}
+            strings[obj.i18n_key] = {}
             for field in cls.internationalizable_fields():
                 string = getattr(obj, field)
                 if string:
-                    strings[obj.slug][field] = getattr(obj, field)
+                    strings[obj.i18n_key][field] = getattr(obj, field)
         return strings
+
+    @property
+    def i18n_key(self):
+        return self.pk
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return []
+
+class InternationalizablePage(Internationalizable, Page):
+
+    class Meta:
+        abstract = True
+
+    @property
+    def i18n_key(self):
+        return self.slug
 
     @classmethod
     def internationalizable_fields(cls):

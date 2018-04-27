@@ -560,7 +560,7 @@ Unit Chapter
 """
 
 
-class Chapter(Page, RichText, CloneableMixin):
+class Chapter(InternationalizablePage, RichText, CloneableMixin):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
@@ -569,6 +569,10 @@ class Chapter(Page, RichText, CloneableMixin):
 
     class Meta:
         order_with_respect_to = "parent"
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Chapter, cls).internationalizable_fields() + ['questions']
 
     def __unicode__(self):
         return self.title
