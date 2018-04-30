@@ -6,6 +6,10 @@ class Internationalizable:
         abstract = True
 
     @classmethod
+    def internationalizable_fields(cls):
+        return []
+
+    @classmethod
     def gather_strings(cls):
         strings = {}
         for obj in cls.objects.select_related().all():
@@ -20,10 +24,6 @@ class Internationalizable:
     @property
     def i18n_key(self):
         return self.pk
-
-    @classmethod
-    def internationalizable_fields(cls):
-        return []
 
 class InternationalizablePage(Internationalizable, Page):
 
