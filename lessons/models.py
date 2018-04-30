@@ -246,6 +246,14 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         ordering = ["number"]
 
     @classmethod
+    def get_i18n_objects(cls):
+        return super(Lesson, cls).get_i18n_objects().select_related('curriculum')
+
+    @property
+    def should_be_translated(self):
+        return self.curriculum.should_be_translated
+
+    @classmethod
     def internationalizable_fields(cls):
         return super(Lesson, cls).internationalizable_fields() + ['overview', 'short_title', 'cs_content', 'prep']
 
@@ -531,6 +539,14 @@ class Activity(Internationalizable, Orderable, CloneableMixin):
     @classmethod
     def internationalizable_fields(cls):
         return ['name', 'content']
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__curriculum')
+
+    @property
+    def should_be_translated(self):
+        return self.lesson.should_be_translated
 
     @property
     def i18n_key(self):
