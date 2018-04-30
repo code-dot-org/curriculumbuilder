@@ -1,3 +1,8 @@
+from __future__ import print_function
+
+import sys
+import time
+
 from mezzanine.pages.models import Page
 
 class Internationalizable:
@@ -16,7 +21,17 @@ class Internationalizable:
     @classmethod
     def gather_strings(cls):
         strings = {}
-        for obj in cls.get_i18n_objects().all():
+        objects = cls.get_i18n_objects()
+        total = objects.count()
+        index = 0
+        elapsed = 0
+        for obj in objects.all():
+            index += 1
+            average = elapsed / index
+            expected = elapsed + ((total - index) * average)
+            print("%s: %s/%s (%0.2f elapsed, %0.2f expected, %0.4f average)" % (cls.__name__, index, total, elapsed, expected, average), end='\r')
+            sys.stdout.flush()
+            start = time.time()
             if obj.should_be_translated:
                 key = obj.i18n_key
                 strings[key] = {}
@@ -24,6 +39,9 @@ class Internationalizable:
                     string = getattr(obj, field)
                     if string:
                         strings[key][field] = getattr(obj, field)
+            end = time.time()
+            elapsed += (end - start)
+        print("%s: complete (%0.2f elapsed, %0.4f average)                       " % (cls.__name__, elapsed, (elapsed/total)))
         return strings
 
     @property
