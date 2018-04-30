@@ -532,6 +532,10 @@ class Activity(Internationalizable, Orderable, CloneableMixin):
     def internationalizable_fields(cls):
         return ['name', 'content']
 
+    @property
+    def i18n_key(self):
+        return "%s/%s" % (self.lesson.i18n_key, self.name)
+
     def __unicode__(self):
         if self.time:
             return "%s (%s)" % (self.name, self.time)

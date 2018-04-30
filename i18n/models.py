@@ -8,12 +8,13 @@ class Internationalizable:
     @classmethod
     def gather_strings(cls):
         strings = {}
-        for obj in cls.objects.all():
-            strings[obj.i18n_key] = {}
+        for obj in cls.objects.select_related().all():
+            key = obj.i18n_key
+            strings[key] = {}
             for field in cls.internationalizable_fields():
                 string = getattr(obj, field)
                 if string:
-                    strings[obj.i18n_key][field] = getattr(obj, field)
+                    strings[key][field] = getattr(obj, field)
         return strings
 
     @property
