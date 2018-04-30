@@ -10,9 +10,13 @@ class Internationalizable:
         return []
 
     @classmethod
+    def get_i18n_objects(cls):
+        return cls.objects
+
+    @classmethod
     def gather_strings(cls):
         strings = {}
-        for obj in cls.objects.select_related().all():
+        for obj in cls.get_i18n_objects().all():
             key = obj.i18n_key
             strings[key] = {}
             for field in cls.internationalizable_fields():
@@ -29,6 +33,10 @@ class InternationalizablePage(Internationalizable, Page):
 
     class Meta:
         abstract = True
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(InternationalizablePage, cls).get_i18n_objects().select_related('parent')
 
     @property
     def i18n_key(self):
