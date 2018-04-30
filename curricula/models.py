@@ -201,6 +201,10 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def units(self):
         return Unit.objects.filter(parent=self, login_required=False)
 
+    @property
+    def should_be_translated(self):
+        return self.slug == "csf-1718"
+
     # Hijacking the Mezzanine top menu to control which curricula show on the home page
     @property
     def in_main_menu(self):
