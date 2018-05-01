@@ -57,7 +57,7 @@ class CurriculumAdmin(PageAdmin, VersionAdmin):
 
 class UnitAdmin(PageAdmin, VersionAdmin):
     model = Unit
-    inlines = (LessonInline, TopicInline)
+    inlines = (TopicInline, )
 
 
 class ChapterAdmin(PageAdmin):

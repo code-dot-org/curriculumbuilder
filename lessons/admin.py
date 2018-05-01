@@ -319,6 +319,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     list_display = ('curriculum', 'unit', 'number', 'title', 'week', 'pacing_weight', 'unplugged')
     list_editable = ('title', 'week', 'pacing_weight', 'unplugged')
     list_filter = ('curriculum', 'unit', 'keywords__keyword', 'curriculum__version')
+    ordering = ('curriculum', 'unit__number', 'number')
     actions = [publish]
     form = MultiLessonForm
 
