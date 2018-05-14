@@ -4,6 +4,7 @@ import json
 import math
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count, Q
 from django.db.models.signals import post_save
@@ -70,25 +71,25 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
             raise PageMoveException(msg)
 
     def get_absolute_url(self):
-        return '/%s/' % self.slug
+        return reverse('curriculum:curriculum_view', args=[self.slug])
 
     def get_pdf_url(self):
-        return '/%s.pdf' % self.slug
+        return reverse('curriculum:curriculum_pdf', args=[self.slug])
 
     def get_json_url(self):
-        return '/metadata/course/%s.json' % self.slug
+        return reverse('curriculum:curriculum_element', args=[self.slug])
 
     def get_standards_url(self):
-        return '%sstandards/' % self.get_absolute_url()
+        return reverse('curriculum:by_curriculum', args=[self.slug])
 
     def get_resources_url(self):
-        return '%sresources/' % self.get_absolute_url()
+        return reverse('curriculum:curriculum_resources', args=[self.slug])
 
     def get_blocks_url(self):
-        return '%scode/' % (self.get_absolute_url())
+        return reverse('curriculum:curriculum_code', args=[self.slug])
 
     def get_vocab_url(self):
-        return '%svocab/' % (self.get_absolute_url())
+        return reverse('curriculum:curriculum_vocab', args=[self.slug])
 
     def get_canonical_slug(self):
         return self.canonical_slug or self.slug
@@ -277,31 +278,31 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
             raise PageMoveException(msg)
 
     def get_absolute_url(self):
-        return '%s%s/' % (self.curriculum.get_absolute_url(), self.slug)
+        return reverse('curriculum:unit_view', args=[self.curriculum.slug, self.slug])
 
     def get_compiled_url(self):
-        return '%s%s/compiled/' % (self.curriculum.get_absolute_url(), self.slug)
+        return reverse('curriculum:unit_compiled', args=[self.curriculum.slug, self.slug])
 
     def get_pdf_url(self):
-        return '%s%s.pdf' % (self.curriculum.get_absolute_url(), self.slug)
+        return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_json_url(self):
-        return '/metadata/%s.json' % self.stage_name
+        return reverse('curriculum:stage_element', args=[self.stage_name])
 
     def get_resources_pdf_url(self):
-        return '%s%s_resources.pdf' % (self.curriculum.get_absolute_url(), self.slug)
+        return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_resources_url(self):
-        return '%sresources/' % (self.get_absolute_url())
+        return reverse('curriculum:unit_resources', args=[self.curriculum.slug, self.slug])
 
     def get_blocks_url(self):
-        return '%scode/' % (self.get_absolute_url())
+        return reverse('curriculum:unit_code', args=[self.curriculum.slug, self.slug])
 
     def get_vocab_url(self):
-        return '%svocab/' % (self.get_absolute_url())
+        return reverse('curriculum:unit_vocab', args=[self.curriculum.slug, self.slug])
 
     def get_standards_url(self):
-        return '%sstandards/' % (self.get_absolute_url())
+        return reverse('curriculum:by_unit_2', args=[self.curriculum.slug, self.slug])
 
     def get_number(self):
         order = 1
@@ -588,7 +589,7 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
             raise PageMoveException(msg)
 
     def get_absolute_url(self):
-        return "%sch%s/" % (self.unit.get_absolute_url(), str(self.number))
+        return reverse('curriculum:chapter_view', args=[self.unit.curriculum.slug, self.unit.slug, self.number])
 
     def get_number(self):
         order = 1
