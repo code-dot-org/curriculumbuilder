@@ -6,6 +6,7 @@ import sys
 import time
 
 from django.conf import settings
+from django.core.cache import cache
 
 from mezzanine.pages.models import Page
 
@@ -67,23 +68,33 @@ class Internationalizable:
             if translated:
                 setattr(self, field, translated)
 
-    def get_translated_field(self, field, lang):
+    def load_translations(self, lang):
         translation_file = os.path.join(os.path.dirname(__file__), 'static', lang, self.__class__.__name__ + '.json')
+        cached = cache.get(translation_file)
+        if cached is None:
+            try:
+                with open(translation_file, 'r') as translation_json:
+                    try:
+                        translations = json.load(translation_json)
+                    except ValueError:
+                        # Could not parse the translation file; this should not
+                        # happen, and probably represents a significant problem
+                        # in the i18n sync process
+                        translations = {}
+                    cached = translations
+            except IOError:
+                # Could not find the translation file; most likely the locale
+                # string is malformed or simply referencing a language we are
+                # not yet translating
+                cached = {}
+            cache.set(translation_file, cached)
+
+        return cached
+
+    def get_translated_field(self, field, lang):
+        translations = self.load_translations(lang)
         try:
-            translation_json = open(translation_file, 'r')
-        except IOError:
-            # Could not find the translation file; most likely the locale string
-            # is malformed or simply referencing a language we are not yet
-            # translating
-            return ""
-        try:
-            translations = json.load(translation_json)
-        except ValueError:
-            # Could not parse the translation file; this should not happen, and
-            # probably represents a significant problem in the i18n sync process
-            return ""
-        try:
-            return translations[self.slug][field]
+            return translations[self.i18n_key][field]
         except KeyError:
             # Could not find the specified string in the translation file,
             # possibly just because the string is new and has not yet been
