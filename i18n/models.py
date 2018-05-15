@@ -7,14 +7,24 @@ import time
 
 from django.conf import settings
 from django.core.cache import cache
+from django.db import models
+from django.utils import translation
 
 from mezzanine.pages.models import Page
 
 
-class Internationalizable:
+class Internationalizable(models.Model):
 
     class Meta:
         abstract = True
+
+    @classmethod
+    def from_db(cls, *args):
+        instance = super(Internationalizable, cls).from_db(*args)
+        lang = translation.get_language()
+        if lang and lang != settings.LANGUAGE_CODE:
+            instance.translate_to(lang)
+        return instance
 
     @classmethod
     def internationalizable_fields(cls):
@@ -103,7 +113,7 @@ class Internationalizable:
             # exists but has not yet been translated
             return ""
 
-class InternationalizablePage(Internationalizable, Page):
+class InternationalizablePage(Page, Internationalizable):
 
     class Meta:
         abstract = True

@@ -523,7 +523,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Internationalizable, Orderable, CloneableMixin):
+class Activity(Orderable, CloneableMixin, Internationalizable):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     keywords = KeywordsField()
