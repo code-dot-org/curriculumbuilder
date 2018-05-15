@@ -69,8 +69,7 @@ if "django.contrib.admin" in settings.INSTALLED_APPS:
 
 
 urlpatterns += i18n_patterns_no_default_language_prefix('',
-        url(r'^$', views.index, name='home'),
-        url(r'^', include('curricula.urls', namespace="curriculum"))
+    url(r'^$', views.index, name='home'),
 )
 
 urlpatterns += patterns('',
@@ -120,6 +119,13 @@ urlpatterns += patterns('',
     url("^None/$", views.index),  # Dealing with JackFrost bug
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
+)
+
+urlpatterns += i18n_patterns_no_default_language_prefix('',
+    url(r'^', include('curricula.urls', namespace="curriculum"))
+)
+
+urlpatterns += patterns('',
 
     # MEZZANINE'S URLS
     # ----------------
