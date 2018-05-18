@@ -116,11 +116,12 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en-us"
 
 # Supported languages
 LANGUAGES = (
-    ('en', _('English')),
+    ('en-us', _('English')),
+    ('es-mx', _('Mexican Spanish')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -157,7 +158,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
 
@@ -319,6 +320,7 @@ TEMPLATES = [{u'APP_DIRS': False,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
