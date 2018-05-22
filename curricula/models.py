@@ -267,6 +267,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
+    i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
 
     def __unicode__(self):
         return self.title
