@@ -204,7 +204,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     @property
     def should_be_translated(self):
-        return self.slug == "csf-1718"
+        return any(unit.should_be_translated for unit in self.units)
 
     # Hijacking the Mezzanine top menu to control which curricula show on the home page
     @property
@@ -271,6 +271,10 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
     def __unicode__(self):
         return self.title
+
+    @property
+    def should_be_translated(self):
+        return self.i18n_ready
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)

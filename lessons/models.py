@@ -247,11 +247,11 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     @classmethod
     def get_i18n_objects(cls):
-        return super(Lesson, cls).get_i18n_objects().select_related('curriculum')
+        return super(Lesson, cls).get_i18n_objects().select_related('unit')
 
     @property
     def should_be_translated(self):
-        return self.curriculum.should_be_translated
+        return self.unit and self.unit.should_be_translated
 
     @classmethod
     def internationalizable_fields(cls):
@@ -542,7 +542,7 @@ class Activity(Internationalizable, Orderable, CloneableMixin):
 
     @classmethod
     def get_i18n_objects(cls):
-        return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__curriculum')
+        return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__unit')
 
     @property
     def should_be_translated(self):
