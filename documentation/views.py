@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.exceptions import MultipleObjectsReturned
+
 from multiurl import ContinueResolving
 
 from models import IDE, Block, Map
@@ -42,11 +44,20 @@ def embed_view(request, slug, ide_slug):
     return render(request, 'documentation/embed.html', {'code_block': block, 'ide': ide})
 
 
-def page_view(request, slug, curric_slug):
-    try:
-        page = Map.objects.get(slug=slug, parent__slug=curric_slug)
-    except Map.DoesNotExist:
+def page_view(request, parents, slug):
+    pages = Map.objects.filter(slug=slug)
+
+    if pages.count() == 0:
         raise ContinueResolving
+    elif pages.count() > 1:
+        # If more than one map was found with the same slug, try narrowing by parent
+        if parents:
+            parent_slug = parents.split('/')[-1]
+            pages = pages.filter(parent__slug=parent_slug)
+            if pages.count() == 0:
+                raise ContinueResolving
+
+    page = pages.first()
 
     return render(request, 'documentation/page.html', {'page': page})
 
