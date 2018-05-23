@@ -56,6 +56,10 @@
                             <option value="/admin/documentation/block/add/?parent={{ page.id }}">
                                 Block
                             </option>
+                        {% elif page.content_model == 'map'%}
+                            <option value="/admin/documentation/map/add/?parent={{ page.id }}">
+                                Map
+                            </option>
                         {% endif %}
                 </select>
             {% endif %}
