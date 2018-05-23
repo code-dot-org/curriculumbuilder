@@ -299,10 +299,20 @@ class Map(Page, RichText, CloneableMixin):
         return self.title
 
     def get_absolute_url(self):
-        return '/%s/%s/' % (self.parent.slug, self.slug)
+        url = '/concepts/'
+
+        parent = self.parent
+
+        while parent is not None:
+            url += '%s/' % parent.slug
+            parent = parent.parent
+
+        url += '%s/' % self.slug
+
+        return url
 
     def get_published_url(self):
-        return '//docs.code.org/%s/%s/' % (self.parent.slug, self.slug)
+        return '//docs.code.org%s' % self.get_absolute_url()
 
     def jackfrost_urls(self):
         urls = ["/documentation%s" % self.get_absolute_url()]
