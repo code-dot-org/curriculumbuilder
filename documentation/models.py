@@ -294,6 +294,7 @@ Content Maps
 
 
 class Map(Page, RichText, CloneableMixin):
+    blocks = models.ManyToManyField(Block, blank=True)
 
     def __unicode__(self):
         return self.title

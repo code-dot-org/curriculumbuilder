@@ -58,7 +58,6 @@ def page_view(request, parents, slug):
     return render(request, 'documentation/page.html', {'page': page})
 
 
-def maps_view(request, curric_slug):
-    curriculum = Curriculum.objects.get(slug=curric_slug)
-    maps = Map.objects.filter(parent__slug=curric_slug)
-    return render(request, 'documentation/pages.html', {'curriculum': curriculum, 'pages': maps, 'type': 'Maps'})
+def maps_view(request, ):
+    maps = Map.objects.all()
+    return render(request, 'documentation/pages.html', {'pages': maps, 'type': 'Maps'})
