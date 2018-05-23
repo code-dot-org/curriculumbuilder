@@ -47,15 +47,11 @@ def embed_view(request, slug, ide_slug):
 def page_view(request, parents, slug):
     pages = Map.objects.filter(slug=slug)
 
-    if pages.count() == 0:
-        raise ContinueResolving
-    elif pages.count() > 1:
+    if pages.count() > 1 and parents is not None:
         # If more than one map was found with the same slug, try narrowing by parent
-        if parents:
-            parent_slug = parents.split('/')[-1]
+        parent_slug = parents.split('/')[-1]
+        if pages.filter(parent__slug=parent_slug).count() > 0:
             pages = pages.filter(parent__slug=parent_slug)
-            if pages.count() == 0:
-                raise ContinueResolving
 
     page = pages.first()
 
