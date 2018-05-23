@@ -50,9 +50,10 @@ def page_view(request, parents, slug):
     if pages.count() > 1 and parents is not None:
         # If more than one map was found with the same slug, try narrowing by parent
         parent_slug = parents.split('/')[-1]
-        if pages.filter(parent__slug=parent_slug).count() > 0:
-            pages = pages.filter(parent__slug=parent_slug)
-
+        pages_by_parent = pages.filter(parent__slug=parent_slug)
+        if pages_by_parent.count() > 0:
+            pages = pages_by_parent
+            
     page = pages.first()
 
     return render(request, 'documentation/page.html', {'page': page})
