@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.exceptions import MultipleObjectsReturned
+from django.http import HttpResponseNotFound, HttpResponseServerError
 
 from multiurl import ContinueResolving
 
@@ -45,15 +45,19 @@ def embed_view(request, slug, ide_slug):
 
 
 def page_view(request, parents, slug):
-    pages = Map.objects.filter(slug=slug)
 
-    if pages.count() > 1 and parents is not None:
-        # If more than one map was found with the same slug, try narrowing by parent
+    if parents == '':
+        pages = Map.objects.filter(slug=slug)
+    else:
         parent_slug = parents.split('/')[-1]
-        pages_by_parent = pages.filter(parent__slug=parent_slug)
-        if pages_by_parent.count() > 0:
-            pages = pages_by_parent
-            
+        pages = Map.objects.filter(slug=slug, parent__slug=parent_slug)
+
+    if pages.count() == 0:
+        return HttpResponseNotFound()
+    elif pages.count() > 1:
+        return HttpResponseServerError("<p>Multiple maps share the same slug "
+                                       "%s</p>" % ["<a href='%s'>%s</a>" % (p.get_admin_url(), p.id) for p in pages])
+
     page = pages.first()
 
     return render(request, 'documentation/page.html', {'page': page})
