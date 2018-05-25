@@ -204,7 +204,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     @property
     def should_be_translated(self):
-        return self.slug == "csf-1718"
+        return any(unit.should_be_translated for unit in self.units)
 
     # Hijacking the Mezzanine top menu to control which curricula show on the home page
     @property
@@ -267,9 +267,14 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
+    i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
 
     def __unicode__(self):
         return self.title
+
+    @property
+    def should_be_translated(self):
+        return self.i18n_ready
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
