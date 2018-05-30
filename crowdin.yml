@@ -23,7 +23,7 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "source/*.json",
+  "source" : "redacted/*.json",
 
   #
   # where translations live
