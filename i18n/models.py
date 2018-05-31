@@ -18,6 +18,12 @@ class Internationalizable(models.Model):
     class Meta:
         abstract = True
 
+    def __init__(self, *args, **kwargs):
+        # add an instance attribute for saving the fields that get overwritten
+        # by the translation process
+        self._untranslated_values = {}
+        return super(Internationalizable, self).__init__(*args, **kwargs)
+
     @classmethod
     def from_db(cls, *args):
         instance = super(Internationalizable, cls).from_db(*args)
@@ -68,6 +74,12 @@ class Internationalizable(models.Model):
     def i18n_key(self):
         return self.pk
 
+    def get_untranslated_field(self, field):
+        if field in self._untranslated_values:
+            return self._untranslated_values[field]
+        elif hasattr(self, field):
+            return getattr(self, field)
+
     def translate_to(self, lang):
         # don't bother to translate the default language
         if lang == settings.LANGUAGE_CODE:
@@ -76,6 +88,8 @@ class Internationalizable(models.Model):
         for field in self.__class__.internationalizable_fields():
             translated = self.get_translated_field(field, lang)
             if translated:
+                if field not in self._untranslated_values:
+                    self._untranslated_values[field] = getattr(self, field)
                 setattr(self, field, translated)
 
     def load_translations(self, lang):
