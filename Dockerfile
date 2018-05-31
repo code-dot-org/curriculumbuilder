@@ -26,6 +26,7 @@ WORKDIR /usr/src/app/
 # ADD requirements.txt /code/
 
 RUN pip install -r requirements.txt
+RUN npm install
 
 # ADD . /code/
 
