@@ -422,7 +422,9 @@ footer {
 .pacing-lesson.game-lab .lesson-icon:before,
 .pacing-lesson.app-lab .lesson-icon:before,
 .pacing-lesson.web-lab .lesson-icon:before,
-.pacing-lesson.widget .lesson-icon:before {
+.pacing-lesson.widget .lesson-icon:before,
+.pacing-lesson.research .lesson-icon:before,
+.pacing-lesson.external-tool .lesson-icon:before {
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
     content: "\f108";
