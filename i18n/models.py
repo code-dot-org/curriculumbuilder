@@ -79,7 +79,7 @@ class Internationalizable(models.Model):
                 setattr(self, field, translated)
 
     def load_translations(self, lang):
-        translation_file = os.path.join(os.path.dirname(__file__), 'static', lang, self.__class__.__name__ + '.json')
+        translation_file = os.path.join(os.path.dirname(__file__), 'static', 'translations', lang, self.__class__.__name__ + '.json')
         cached = cache.get(translation_file)
         if cached is None:
             try:
