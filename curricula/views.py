@@ -58,7 +58,6 @@ logger = logging.getLogger(__name__)
 pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 
 
-@login_required
 def index(request):
     if request.user.is_staff:
         curricula = Curriculum.objects.filter(version=Curriculum.CURRENT)
