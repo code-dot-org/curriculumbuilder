@@ -26,6 +26,7 @@ docker-compose\.dev\.yml
 *.sql
 
 heroku\.env
+.apt
 
 crowdin_credentials.yml
 node_modules
