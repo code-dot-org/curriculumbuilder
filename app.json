@@ -98,6 +98,9 @@
       "url": "https://github.com/heroku/heroku-buildpack-apt"
     },
     {
+      "url": "heroku/nodejs"
+    },
+    {
       "url": "heroku/python"
     }
   ]
