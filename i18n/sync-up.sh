@@ -2,9 +2,10 @@
 
 shopt -s nullglob
 
-i18n_dir="${BASH_SOURCE%/*}/static"
-source_dir="$i18n_dir/source"
-redacted_dir="$i18n_dir/redacted"
+i18n_dir="${BASH_SOURCE%/*}"
+static_dir="$i18n_dir/static"
+source_dir="$static_dir/source"
+redacted_dir="$static_dir/redacted"
 
 mkdir -p $redacted_dir
 
@@ -19,4 +20,4 @@ done
 
 echo "Uploading redacted sources"
 
-crowdin --config $i18n_dir/../../crowdin.yml --identity $i18n_dir/../../crowdin_credentials.yml upload sources
+$i18n_dir/heroku_crowdin.sh --config $i18n_dir/../crowdin.yml --identity $i18n_dir/../crowdin_credentials.yml upload sources
