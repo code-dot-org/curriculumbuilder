@@ -63,12 +63,6 @@
     "SLACK_USER": {
       "required": true
     },
-    "WEBTOPDF_API_KEY": {
-      "required": true
-    },
-    "WEBTOPDF_CLIENT_ID": {
-      "required": true
-    },
     "WKHTMLTOPDF_BIN": {
       "required": true
     },
@@ -84,10 +78,14 @@
   "addons": [
     "loaderio",
     "newrelic",
-    "heroku-postgresql",
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.6"
+      }
+    },
     "heroku-redis",
-    "sendgrid",
-    "webtopdf"
+    "sendgrid"
   ],
   "buildpacks": [
     {
