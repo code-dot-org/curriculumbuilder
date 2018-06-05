@@ -4,9 +4,9 @@
 "project_identifier" : "curriculumbuilder"
 "base_path" : "./i18n/static"
 
-# API Credentials must be loaded from a separate identity file. See
-# https://support.crowdin.com/configuration-file/#split-project-configuration-and-api-credentials
-"api_key" : ""
+# API Credentials must be provided in the CROWDIN_API_KEY environment variable
+# https://support.crowdin.com/configuration-file/#api-credentials-from-environment-variables
+"api_key_env": CROWDIN_API_KEY
 
 #
 # Choose file structure in crowdin

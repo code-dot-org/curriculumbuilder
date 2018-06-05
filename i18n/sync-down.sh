@@ -9,7 +9,7 @@ locale_dir="$static_dir/translations"
 
 echo "Downloading translations to $locale_dir"
 
-$i18n_dir/heroku_crowdin.sh --config $i18n_dir/../crowdin.yml --identity $i18n_dir/../crowdin_credentials.yml download
+$i18n_dir/heroku_crowdin.sh --config $i18n_dir/../crowdin.yml download
 
 echo "Restoring translations from $source_dir:"
 
