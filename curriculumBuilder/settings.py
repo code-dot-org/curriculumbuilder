@@ -122,6 +122,8 @@ LANGUAGE_CODE = "en-us"
 LANGUAGES = (
     ('en-us', _('English')),
     ('es-mx', _('Mexican Spanish')),
+    ('it-it', _('Italian')),
+    ('th-th', _('Thai')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
