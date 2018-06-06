@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 shopt -s nullglob
 
 i18n_dir="${BASH_SOURCE%/*}"
