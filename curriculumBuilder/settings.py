@@ -674,6 +674,11 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
             'propagate': True
         },
+        'i18n': {
+            'handlers': ['console', 'slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+            'propagate': True
+        },
         'pdfkit': {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'DEBUG',
