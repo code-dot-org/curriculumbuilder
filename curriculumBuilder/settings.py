@@ -500,6 +500,8 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
+I18N_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
 # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
 # MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
