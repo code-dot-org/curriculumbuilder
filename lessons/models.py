@@ -550,7 +550,7 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
 
     @property
     def i18n_key(self):
-        return "%s/%s" % (self.lesson.i18n_key, self.name)
+        return "%s/%s" % (self.lesson.i18n_key, self.get_untranslated_field('name'))
 
     def __unicode__(self):
         if self.time:
