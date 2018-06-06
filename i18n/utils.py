@@ -64,5 +64,5 @@ class I18nFileWrapper:
         if cls._storage is None:
             storage = getattr(settings, 'I18N_STORAGE', 'django.core.files.storage.FileSystemStorage')
             storage_cls = import_string(storage)
-            cls._storage = storage_cls(location='i18n')
+            cls._storage = storage_cls(location=getattr(settings, 'I18N_STORAGE_LOCATION', 'i18n'))
         return cls._storage
