@@ -12,8 +12,8 @@ from django.utils.module_loading import import_string
 logger = logging.getLogger(__name__)
 
 
-def print_clear(string):
-    print("\033[K%s" % (string), end='\r')
+def print_clear(string, end='\r'):
+    print("\033[K%s" % (string), end=end)
     sys.stdout.flush()
 
 

@@ -11,7 +11,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
         translations_dir = os.path.join(I18nFileWrapper.static_dir(), 'translations')
-        num_locales = len(settings.LANGUAGES)
 
         # Download translations from crowdin
         print("Downloading translations")
@@ -23,29 +22,33 @@ class Command(BaseCommand):
 
         # Restore translations from source
         print("Restoring translations")
-        for source_path in glob.glob(os.path.join(source_dir, '*')):
-            filename = os.path.basename(source_path)
-            for index, (locale, _) in enumerate(settings.LANGUAGES):
+        for index, (locale, _) in enumerate(settings.LANGUAGES):
+            if locale == settings.LANGUAGE_CODE:
+                continue
+            for source_path in glob.glob(os.path.join(source_dir, '*')):
+                filename = os.path.basename(source_path)
                 translation_path = os.path.join(translations_dir, locale, filename)
                 if not os.path.exists(translation_path):
                     continue
-                print_clear("%s - restoring %s (%s/%s)" % (filename, locale, index + 1, num_locales))
+                print_clear("%s - restoring %s" % (locale, filename))
                 subprocess.call([
                     'restore',
                     '-s', source_path,
                     '-r', translation_path,
                     '-o', translation_path
                 ])
-            print_clear("%s - finished" % filename)
+            print_clear("%s - finished" % locale, end='\n')
 
         # Upload restored translation data to s3
         print("Uploading translations")
         for index, (locale, _) in enumerate(settings.LANGUAGES):
+            if locale == settings.LANGUAGE_CODE:
+                continue
             for translation_path in glob.glob(os.path.join(translations_dir, locale, '*')):
                 if not os.path.exists(translation_path):
                     continue
                 filename = os.path.basename(translation_path)
-                print_clear("%s - uploading %s (%s/%s)" % (locale, filename, index + 1, num_locales))
+                print_clear("%s - uploading %s" % (locale, filename))
                 with open(translation_path) as translation_file:
                     I18nFileWrapper.storage().save(os.path.join('translations', locale, filename), translation_file)
-            print_clear("%s - finished" % locale)
+            print_clear("%s - finished" % locale, end='\n')
