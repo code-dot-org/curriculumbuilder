@@ -1,18 +1,33 @@
+from __future__ import print_function
+
 import json
 import logging
 import os
+import sys
 
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.module_loading import import_string
 
-from cStringIO import StringIO
-
 logger = logging.getLogger(__name__)
+
+
+def print_clear(string):
+    print("\033[K%s" % (string), end='\r')
+    sys.stdout.flush()
+
 
 class I18nFileWrapper:
 
     _storage = None
+
+    @classmethod
+    def i18n_dir(cls):
+        return os.path.dirname(__file__)
+
+    @classmethod
+    def static_dir(cls):
+        return os.path.join(cls.i18n_dir(), 'static')
 
     @classmethod
     def _load_translations(cls, name, lang):
@@ -52,12 +67,6 @@ class I18nFileWrapper:
             # exists but has not yet been translated
             logger.warning("could not find %s[%s][%s] for %s" % (name, i18n_key, field, lang))
             return ""
-
-    @classmethod
-    def write_source(cls, name, strings):
-        path = os.path.join("source", name + ".json")
-        content = json.dumps(strings, indent=4, sort_keys=True)
-        cls.storage().save(path, StringIO(content))
 
     @classmethod
     def storage(cls):
