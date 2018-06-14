@@ -7,9 +7,11 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils import translation
 
 from i18n.models import Internationalizable
+from i18n.utils import print_clear
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        print("Publishing translated content")
         for model in django.apps.apps.get_models():
             is_internationalizable = issubclass(model, Internationalizable)
             is_not_proxy = not model._meta.proxy
@@ -22,6 +24,11 @@ class Command(BaseCommand):
                 print("%s - skipping (no publish operation available)" % name)
                 continue
 
+            print_clear("%s - loading" % name)
+            objects = model.get_i18n_objects()
+            total = objects.count()
+            for index, obj in enumerate(objects.all()):
+                print_clear("%s - publishing %s/%s" % (name, index, total))
                 if not obj.should_be_translated:
                     continue
 
@@ -37,3 +44,4 @@ class Command(BaseCommand):
                         list(obj.publish_pdfs())
 
                 translation.activate(original_lang)
+            print_clear("%s - finished" % name, end='\n')
