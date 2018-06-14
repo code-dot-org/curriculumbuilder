@@ -35,6 +35,7 @@ class I18nFileWrapper:
         translations = cache.get(path)
         if translations is None:
             try:
+                logger.debug("opening translation file %s" % path)
                 translation_file = cls.storage().open(path, 'r')
                 try:
                     translations = json.load(translation_file)
@@ -65,7 +66,7 @@ class I18nFileWrapper:
             # through the sync process. If crowdin is set up to only export
             # translated strings, this might also happen whenever a string
             # exists but has not yet been translated
-            logger.warning("could not find %s[%s][%s] for %s" % (name, i18n_key, field, lang))
+            logger.debug("could not find %s[%s][%s] for %s" % (name, i18n_key, field, lang))
             return ""
 
     @classmethod
