@@ -16,7 +16,12 @@ class Command(BaseCommand):
             if not (is_internationalizable and is_not_proxy):
                 continue
 
-            for obj in model.objects.all():
+            name = model.__name__
+
+            if not hasattr(model, 'publish') and not hasattr(model, 'publish_pdfs'):
+                print("%s - skipping (no publish operation available)" % name)
+                continue
+
                 if not obj.should_be_translated:
                     continue
 
