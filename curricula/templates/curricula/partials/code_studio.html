@@ -102,7 +102,7 @@
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    <span class="level-icon"></span> {{ level.position }}
+                                    <span class="level-icon"></span> {% if level.bonus_level %}Extra{% else %}{{ level.position }}{% endif %}
                                 </a>
                             </li>
                         {% endfor %}
