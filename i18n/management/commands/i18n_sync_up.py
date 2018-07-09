@@ -26,6 +26,6 @@ class Command(BaseCommand):
         print("Uploading source files")
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
-            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "crowdin.yml"),
+            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
             "upload sources"
         ])
