@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import glob
@@ -8,12 +7,15 @@ import re
 import subprocess
 import tempfile
 
+from ddt import ddt, idata, unpack
 from unittest2 import TestCase
 
 from i18n.utils import I18nFileWrapper
 
-from ddt import ddt, idata, unpack
-
+# Of the top twenty words in the initial curriculumbuilder data set, take out
+# all those like "r" that represent control characters and all the things like
+# "csf" that don't actually have translations, and put together a super-basic
+# english-to-french translation scheme for them.
 EN_FR = {
   'to': u'à',
   'the': u'la',
@@ -68,6 +70,11 @@ def _translate(data):
         return data
 
 def _get_source_and_translated_data_from_file(source_path):
+    """
+    Given a source file, redact, translate, and restore all data in that file
+    and return a tuple containing the original data from the file as well as the
+    generated result
+    """
     redacted_data = _redact(source_path)
     translated_data = _translate(redacted_data)
     restored_json = _restore(source_path, translated_data)
@@ -112,7 +119,17 @@ def _parse(source_path=None, source_json=None):
 
     return json.loads(parsed_json)
 
+
 def _map_mdast(node):
+    """
+    Walk a MDAST and return a "map" that includes just the hierarchy and types
+    of nodes, but none of the inner content of those nodes. Can be used to
+    easily compare, for example, two trees which represent the same basic
+    content in two different languages, and verify that they produce the same
+    basic HTML structure.
+
+    See https://github.com/syntax-tree/mdast for MDAST specification
+    """
     result = {
         "type": node["type"]
     }
@@ -122,14 +139,26 @@ def _map_mdast(node):
 
     return result
 
+def _annotate(left, right):
+    """
+    This is kinda dumb. The data-driven test library we're using will only give
+    the generated tests useful names if `data.__name__` exists. But since our
+    data is a primitive type (specifically, a list) we can't actually set
+    arbitrary attributes on it (which raises the question of why the authors of
+    the library picked that as the metric in the first place).
+
+    To get around that, we create a simple subclass of list that allows us to
+    set the __name__ attribute and annontate our data with something useful.
+
+    See http://ddt.readthedocs.io/en/latest/api.html#ddt.ddt
+    """
+    return [NamedList(key, [left[key], right[key]]) for key in left.keys()]
 
 class NamedList(list):
     def __init__(self, name, *args):
         self.__name__ = name
         return super(NamedList, self).__init__(*args)
 
-def _annotate(left, right):
-    return [NamedList(key, [left[key], right[key]]) for key in left.keys()]
 
 curriculum_file = os.path.join(I18nFileWrapper.i18n_dir(), 'tests', 'data', "curriculum" + '.json')
 lesson_file = os.path.join(I18nFileWrapper.i18n_dir(), 'tests', 'data', "lesson" + '.json')
@@ -154,7 +183,15 @@ class RedactRestoreTestCase(TestCase):
         self._run_tests(*args)
 
     def _run_tests(self, source, restored):
+        # Each entry represents a single piece of content, which can have
+        # several individual fields. Verify that the source and redacted
+        # versions have the same fields, and check each field pairwise against
+        # both source and redacted.
         self.assertEqual(set(source.keys()), set(restored.keys()))
         for key in source.keys():
             with self.subTest(key=key):
+                # no matter the changes made in the redaction, translation, and
+                # restoration process, the restored data should still produce
+                # the same HTML structure (but not necessarily the same text
+                # content) as the original markdown
                 self.assertEqual(_map_mdast(source[key]), _map_mdast(restored[key]))
