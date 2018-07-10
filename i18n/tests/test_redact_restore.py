@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import subprocess
-import re
+import glob
 import json
 import os
+import re
+import subprocess
 import tempfile
 
 from unittest2 import TestCase
@@ -81,22 +82,32 @@ def _restore(source_path, translated_data):
         restore = subprocess.Popen([
             "restore",
             "-s", source_path,
-            "-r", translated.name
+            "-r", translated.name,
+            "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
         ], stdout=subprocess.PIPE)
         restored_json, err = restore.communicate()
         return restored_json
 
 def _redact(source_path):
-    redact = subprocess.Popen(["redact", source_path], stdout=subprocess.PIPE)
+    redact = subprocess.Popen([
+        "redact", source_path,
+        "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
+    ], stdout=subprocess.PIPE)
     redacted_json, err = redact.communicate()
     return json.loads(redacted_json)
 
 def _parse(source_path=None, source_json=None):
     if source_path:
-        parse = subprocess.Popen(["parse", source_path], stdout=subprocess.PIPE)
+        parse = subprocess.Popen([
+            "parse", source_path,
+            "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
+        ], stdout=subprocess.PIPE)
         parsed_json, err = parse.communicate()
     elif source_json:
-        parse = subprocess.Popen(["parse"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        parse = subprocess.Popen([
+            "parse",
+            "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
+        ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         parsed_json, err = parse.communicate(input=source_json)
 
     return json.loads(parsed_json)
