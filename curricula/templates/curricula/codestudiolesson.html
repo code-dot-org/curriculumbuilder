@@ -206,6 +206,9 @@
     <h2>Standards Alignment</h2>
     <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+    <h2>Cross-curricular Opportunities</h2>
+    <h6>These standards represent potential opportunities for standards alignment in other content areas</h6>
+    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
 </div>
 {% endif %}
 
