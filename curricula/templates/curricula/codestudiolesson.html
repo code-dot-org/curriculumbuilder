@@ -209,6 +209,14 @@
 </div>
 {% endif %}
 
+{% if lesson.opportunity_standards.count > 0 %}
+<div class="standards">
+    <h2>Cross-curricular Opportunities</h2>
+    <p>This list represents opportunities in this lesson to support standards in other content areas.</p>
+    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
+</div>
+{% endif %}
+
 <!-- Feedback Modal -->
 
 {% if curriculum.feedback_url %}

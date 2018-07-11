@@ -232,6 +232,8 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     standards = models.ManyToManyField(Standard, blank=True)
     anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
                                               related_name="anchors", blank=True)
+    opportunity_standards = models.ManyToManyField(Standard, help_text='Opportunities for content standards alignment',
+                                                   related_name="opportunities", blank=True)
     vocab = models.ManyToManyField(Vocab, blank=True)
     blocks = models.ManyToManyField(Block, blank=True, related_name='lessons')
     comments = CommentsField()
