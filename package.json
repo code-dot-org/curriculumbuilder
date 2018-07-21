@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@code-dot-org/redactable-markdown": "github:code-dot-org/redactable-markdown#b58a64ec9d9f36da248f98712f54a592fec116ca"
+    "@code-dot-org/redactable-markdown": "0.3.0"
   }
 }
