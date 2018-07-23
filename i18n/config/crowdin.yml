@@ -2,7 +2,7 @@
 # Your crowdin's credentials
 #
 "project_identifier" : "curriculumbuilder"
-"base_path" : "./static"
+"base_path" : "../static"
 
 # API Credentials must be provided in the CROWDIN_API_KEY environment variable
 # https://support.crowdin.com/configuration-file/#api-credentials-from-environment-variables

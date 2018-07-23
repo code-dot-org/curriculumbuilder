@@ -20,12 +20,17 @@ class Command(BaseCommand):
         for path in glob.glob(os.path.join(source_dir, '*')):
             filename = os.path.basename(path)
             destination = os.path.join(redacted_dir, filename)
-            subprocess.call(["redact", path, "-o", destination])
+            plugins = ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
+            subprocess.call([
+                "redact", path,
+                "-o", destination,
+                "-p", plugins
+            ])
 
         # Upload redacted source files to crowdin
         print("Uploading source files")
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
-            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "crowdin.yml"),
+            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
             "upload sources"
         ])

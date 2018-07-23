@@ -16,7 +16,7 @@ class Command(BaseCommand):
         print("Downloading translations")
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
-            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "crowdin.yml"),
+            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
             "download"
         ])
 
@@ -30,12 +30,14 @@ class Command(BaseCommand):
                 translation_path = os.path.join(translations_dir, locale, filename)
                 if not os.path.exists(translation_path):
                     continue
+                plugins = ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
                 print_clear("%s - restoring %s" % (locale, filename))
                 subprocess.call([
                     'restore',
                     '-s', source_path,
                     '-r', translation_path,
-                    '-o', translation_path
+                    '-o', translation_path,
+                    '-p', plugins
                 ])
             print_clear("%s - finished" % locale, end='\n')
 

@@ -1,0 +1,149 @@
+{
+    "2016": {
+        "description": "2016 Hour of Code Activities"
+    },
+    "a-f-playground": {
+        "description": "A-F Playground"
+    },
+    "admin-workshop": {
+        "description": "Administrator Workshop"
+    },
+    "ayp": {
+        "description": "PwC's Access Your Potential Curriculum\n"
+    },
+    "bridging-activities": {
+        "description": "These activities concretely link unplugged activities to the following online lessons."
+    },
+    "counselor-workshop": {
+        "description": "Counselor Workshop"
+    },
+    "course1": {
+        "description": "20 hour introductory Computer Science course for pre-readers."
+    },
+    "course2": {
+        "description": "For early readers"
+    },
+    "course3": {
+        "description": "For students who have taken course 2"
+    },
+    "course4": {
+        "description": "For students who have taken course 3"
+    },
+    "courseA": {
+        "description": "The first 10 hour course provides students with the foundational skills and knowledge to begin using computer programming as a tool to learn about and develop algebraic functions. Students will be introduced to a graphical programming language designed for Algebra instruction, through which they will gain a deeper understanding of the order of operations, create images with algebraic expressions, and learn a technique for creating functions called the Design Recipe."
+    },
+    "courseB": {
+        "description": "For classes that wish to go further, the second 10 hour course builds on the skills students developed in Course A through the development of a simple video game. Students will delve deeper into the intersection of Math and CS by studying topics such as boolean logic, piecewise functions, and collision detection with the Pythagorean Theorem, using these concepts to build supporting functions that will eventually drive the logic in their culminating game."
+    },
+    "coursea": {
+        "description": "In this course you will learn about all about computers. You will learn about programming, algorithms, debugging, loops, and events!"
+    },
+    "courseb": {
+        "description": "Course B was developed with first graders in mind. Tailored to a novice reading level, this course also assumes limited knowledge of shapes and numbers."
+    },
+    "coursec": {
+        "description": "Course C was developed for students in and around the second grade. It uses a limited understanding of shapes and elementary math concepts."
+    },
+    "coursed": {
+        "description": "Course D was created for students who read at roughly a third grade level. Angles and mathematical concepts are introduced with helpful videos and hints."
+    },
+    "coursee": {
+        "description": "Created with fourth grade students in mind, this course begins with a brief review of concepts previously taught in courses C and D. This introduction is intended to inspire beginners and remind the experts of the wonders of computer science. Students will practice coding with algorithms, loops, conditionals, and events before they are introduced to functions. At the end of the course, students will have the opportunity to create a capstone project that they can proudly share with peers and loved ones."
+    },
+    "coursef": {
+        "description": "The last course in CS Fundamentals was tailored to the needs students in the fifth grade."
+    },
+    "csp-create": {
+        "description": "This unit contains lessons to help students with preparation and execution of the AP® Performance Task: Create – Applications from Ideas"
+    },
+    "csp-explore": {
+        "description": "This unit contains lessons to help students with preparation and execution of the AP® Performance Task: Explore – Impact of Computing Innovations"
+    },
+    "dead-3rd-party-lessons": {
+        "description": "I see dead lessons"
+    },
+    "deep-dive": {
+        "description": "For teachers who have already started who want to go farther into course materials, teaching practices, and strategies for continuing to teach CS Fundamentals."
+    },
+    "express": {
+        "description": "Learn the basics of computer science and internet safety. At the end of the course, create your very own game or story you can share."
+    },
+    "graveyard": {
+        "description": "Lessons no longer in use"
+    },
+    "intro": {
+        "description": "A foundational look at CS Fundamentals for educators who are interested in learning more and getting started with the course."
+    },
+    "local": {
+        "description": "This is the detailed facilitator agenda for TeacherCon 2017.  TeacherCon is a 5 day in person training to prepare teachers to start teaching CS Discoveries. It focuses on the first semester of the course."
+    },
+    "march-summit": {
+        "description": "March Summit"
+    },
+    "other": {
+        "description": "other"
+    },
+    "plugged": {
+        "description": "Lesson plans for online (plugged) Hour of Code activities."
+    },
+    "pre-express": {
+        "description": "Pre-readers and early readers can learn the basics of computer science and internet safety."
+    },
+    "q1": {
+        "description": "Quarter 1 Workshop Agenda"
+    },
+    "q1-and-q2": {
+        "description": "CS Discoveries Quarter 1 and 2 in 2 day format"
+    },
+    "q2": {
+        "description": "PDF of Q2 Workshop Agenda"
+    },
+    "q3": {
+        "description": "Quarter 3 Workshop"
+    },
+    "q3-and-q4": {
+        "description": "CS Discoveries Quarter 3 and 4 in 2 day format"
+    },
+    "q3-semester": {
+        "description": "PDF of Q3 Semester Workshop Agenda"
+    },
+    "q4": {
+        "description": "Quarter 4"
+    },
+    "q4-semester": {
+        "description": "PDF of Q4 Workshop Agenda"
+    },
+    "teachercon": {
+        "description": "This is the detailed facilitator agenda for TeacherCon 2017.  TeacherCon is a 5 day in person training to prepare teachers to start teaching CS Discoveries. It focuses on the first semester of the course."
+    },
+    "turdunit": {
+        "description": "Where orphaned lessons go to die"
+    },
+    "unit1": {
+        "description": "What can be represented with a single bit and how do we get a single bit of information from one place to another? This unit explores the technical challenges and questions that arise from the need to represent digital information in computers and transfer it between people and computational devices. Topics include: the digital representation of information - numbers, text, images, and communication protocols. \r\n\r\n* Check out all unit 1 student-facing activity guides <a href = \"http://bit.ly/csp-u1\" target=_blank>here</a>. \r\n* You can access a flat pdf of all the lessons in unit 1 <a href=\"https://curriculum.code.org/csp/unit1.pdf\" target=_blank>here</a>.\r\n\r\n"
+    },
+    "unit2": {
+        "description": "This unit further explores the ways that digital information is encoded, represented and manipulated. In this unit students will look at and generate data, clean it, manipulate it, and create and use visualizations to identify patterns and trends.\r\n\r\n* Check out all unit 2 student-facing activity guides <a href = \"http://bit.ly/csp-u2\" target=_blank>here</a>. \r\n* You can access a flat pdf of all the lessons in unit 2 <a href=\"https://curriculum.code.org/csp/unit2.pdf\" target=_blank>here</a>.\r\n"
+    },
+    "unit3": {
+        "description": "This unit introduces the foundational concepts of computer programming, which unlocks the ability to make rich, interactive apps. This course uses JavaScript as the programming language, and App Lab as the programming environment to build apps, but the concepts learned in these lessons span all programming languages and tools.\r\n\r\n* Check out all unit 3 student-facing activity guides <a href = \"http://bit.ly/csp-u3\" target=_blank>here</a>. \r\n* Access a flat pdf of all the lessons in unit 3 <a href=\"https://curriculum.code.org/csp/unit3.pdf\" target=_blank>here</a>."
+    },
+    "unit4": {
+        "description": "The data rich world we live in also introduces many complex questions related to public policy, law, ethics and societal impact. In many ways this unit acts as a unit on current events. It is highly likely that there will be something related to big data, privacy and security going on in the news at any point in time. The major goals of the unit are 1) for students to develop a well-rounded and balanced view about data in the world around them and both the positive and negative effects of it and 2) to understand the basics of how and why modern encryption works.\r\n\r\n* Check out all unit 4 student-facing activity guides <a href = \"http://bit.ly/csp-u4\" target=_blank>here</a>. \r\n* Access a flat pdf of all the lessons in unit 4 <a href=\"https://curriculum.code.org/csp/unit4.pdf\" target=_blank>here</a>."
+    },
+    "unit4v1": {
+        "description": "The data rich world we live in also introduces many complex questions related to public policy, law, ethics and societal impact. In many ways this unit acts as a unit on current events. It is highly likely that there will be something related to big data, privacy and security going on in the news at any point in time. The major goals of the unit are 1) for students to develop a well-rounded and balanced view about data in the world around them and both the positive and negative effects of it and 2) to understand the basics of how and why modern encryption works.\r\n\r\nIn response to feedback from our 2015-2016 pilot teachers, we are reordering, condensing, and clarifying lesson content. \r\n\r\n* You can learn more about the updates [here](https://docs.google.com/document/export?format=pdf&id=1ElvZenQSCigqBXKEHnXYRruck7umCJd699aippGCfLQ).  \r\n* Target date for release of updated Unit 4: **Oct. 1, 2016**"
+    },
+    "unit5": {
+        "description": "Students learn the fundamentals programming constructs of JavaScript by solving problems with “turtle graphics.” Then move on to programming simple event driven apps. An emphasis is placed on enabling students to solve problems and write code in teams."
+    },
+    "unit6": {
+        "description": "In Unit 6, students further develop their programming skills, while exploring more deeply the role of hardware platforms in computing. Harkening back to the Input/Storage/Processing/Output model for a computer, students look towards modern “smart” devices to understand the ways in which non-traditional computing platforms take input and provide output in ways that couldn't be done with the traditional keyboard, mouse, and monitor."
+    },
+    "unit6v1": {
+        "description": "This unit is primarily set aside to ensure that students have enough time in class to work on and complete their performance tasks for submission to the College Board. There are a few guided activities for teachers to run that will help students get organized and ensure they have reasonable project plans that can be achieved in the time allotted. In the official submission to the College Board, teachers will attest that all student work is original and that the appropriate amount of class time 8 hours for Explore, and 12 hours for Create was provided."
+    },
+    "unplugged": {
+        "description": "Lesson plans for offline (unplugged) Hour of Code activities."
+    }
+}
