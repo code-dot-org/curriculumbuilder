@@ -222,7 +222,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     pacing_weight = models.DecimalField('Pacing Weight', help_text='Higher numbers take up more space pacing calendar',
                                         default=1, max_digits=4, decimal_places=1, blank=True, null=True)
     unplugged = models.BooleanField(default=False)
-    resources = SortedManyToManyField(Resource, blank=True)
+    resources = SortedManyToManyField(Resource, blank=True, related_name='lessons')
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
     questions = RichTextField('Support Details', help_text='Open questions or comments about this lesson',
                               blank=True, null=True)

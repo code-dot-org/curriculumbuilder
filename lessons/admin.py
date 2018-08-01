@@ -213,6 +213,24 @@ class LessonInline(TabularDynamicInlineAdmin):
     keywords = KeywordsField()
 
 
+class LessonResourceInline(admin.TabularInline):
+    model = Lesson.resources.through
+    extra = 0
+    raw_id_fields = ['lesson']
+    show_change_link = True
+
+    fields = ['resource_lesson', 'lesson']
+    readonly_fields = ['resource_lesson']
+
+    def resource_lesson(self, instance):
+        return "%s %s #%d: %s" % (instance.lesson.curriculum,
+                                  instance.lesson.unit,
+                                  instance.lesson.number,
+                                  instance.lesson.title)
+
+    resource_lesson.short_description = 'Lessons'
+
+
 class LessonForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(LessonForm, self).__init__(*args, **kwargs)
@@ -372,7 +390,9 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
 
     list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
-    list_filter = ('lesson__curriculum',)
+    list_filter = ('lessons__curriculum',)
+    inlines = [LessonResourceInline]
+    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug']
 
 
 class VocabAdmin(ImportExportModelAdmin):
