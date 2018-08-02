@@ -69,7 +69,7 @@ Linked Resources
 """
 
 
-class Resource(Orderable):
+class Resource(Orderable, Internationalizable):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True, null=True)
     student = models.BooleanField('Student Facing', default=False)
@@ -77,9 +77,34 @@ class Resource(Orderable):
     url = models.URLField(blank=True, null=True)
     dl_url = models.URLField('Download URL', help_text='Alternate download url', blank=True, null=True)
     slug = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    force_i18n = models.BooleanField('Force I18n', default=False, help_text="""
+        By default, only Resources that have been associated with a Lesson that
+        is itself being internationalized will be internationalized. However, we
+        occasionally want to be able to include Resources inline in markdown,
+        and those Resources will not be automatically synced.
+
+        Use this flag if for that or any other reason you would like to force a
+        Resource to be synced.
+    """)
 
     class Meta:
         ordering = ['name', ]
+
+    @property
+    def i18n_key(self):
+        return self.slug
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'url', 'dl_url']
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Resource, cls).get_i18n_objects().prefetch_related('lessons', 'lessons__unit')
+
+    @property
+    def should_be_translated(self):
+        return self.force_i18n or any(lesson.should_be_translated for lesson in self.lessons.all())
 
     def __unicode__(self):
         '''
