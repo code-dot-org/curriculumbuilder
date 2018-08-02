@@ -392,7 +392,7 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
     list_filter = ('lessons__curriculum',)
     inlines = [LessonResourceInline]
-    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
+    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug']
 
 
 class VocabAdmin(ImportExportModelAdmin):
