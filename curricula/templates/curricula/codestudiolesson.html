@@ -170,6 +170,11 @@
 <!-- Nav Pills -->
 
 {% block resources_nav %}
+
+    <ul class="breadcrumb" style="float:left">
+        <li><a href="../../">< {{ unit.curriculum }}</a></li>
+        <li><a href="../">{{ unit }}</a></li>
+    </ul>
     {% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}
 {% endblock %}
 
