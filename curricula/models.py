@@ -186,7 +186,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
                     rows.append(row)
             else:
                 values = [unit.title] + \
-                         [json.dumps(list(cat.standards.filter(lesson__in=unit.lessons)
+                         [json.dumps(list(cat.standards.filter(Q(lesson__in=unit.lessons) |
+                                                               Q(opportunities__in=unit.lessons))
                                           .distinct().values_list("shortcode", flat=True)))
                           for fw in self.frameworks.all() for cat in fw.categories.bottom()]
                 row = dict(zip(keys, values))
@@ -437,7 +438,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in fw.categories.bottom()]
         for lesson in self.lessons:
             values = ["Lesson %d" % lesson.number] + \
-                     [json.dumps(list(lesson.standards.filter(category=cat)
+                     [json.dumps(list(cat.standards.filter(Q(lesson__in=[lesson]) |
+                                                           Q(opportunities__in=[lesson]))
                                       .distinct().values_list("shortcode", flat=True)))
                       for fw in frameworks for cat in fw.categories.bottom()]
             row = dict(zip(keys, values))

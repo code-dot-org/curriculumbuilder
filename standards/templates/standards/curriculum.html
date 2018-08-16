@@ -34,8 +34,15 @@
 
 {% block resources_nav %}
     {% if unit %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+        <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
+    </ul>
         {% include "curricula/partials/unit_pills.html" with unit=unit %}
     {% else %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+    </ul>
         {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
     {% endif %}
 {% endblock %}
@@ -52,9 +59,21 @@
             <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
 
             {% for lesson in unit.lessons %}
-                <h3><a href="{{ lesson.get_absolute_url }}">
-                Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
-                {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+                <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
+
+                {% if lesson.standards.count > 0 %}
+                <div class="standards">
+                    <h4>Standards Alignment</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+                </div>
+                {% endif %}
+
+                {% if lesson.opportunity_standards.count > 0 %}
+                <div class="standards">
+                    <h4>Cross-curricular Opportunities</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
+                </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% else %}
