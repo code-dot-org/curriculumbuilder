@@ -25,20 +25,22 @@ def by_framework(request, slug, curriculum_slug=None):
 
 def by_curriculum(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
+    '''
     standards_cols, standards_rows = curriculum.get_standards()
-    # curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set__unitlesson_set__lesson__standards'), slug = slug)
-    # units = Unit.objects.filter(curriculum = curriculum).prefetch_related('unitlesson_set__lesson__standards')
     cols = json.dumps(standards_cols)
     cols = cols.replace("\"heatCell\"", "heatCell")
     rows = json.dumps(standards_rows)
     return render(request, 'standards/curriculum.html', {'curriculum': curriculum,
                                                          'standards_cols': cols,
                                                          'standards_rows': rows})
+    '''
+    return render(request, 'standards/curriculum_nogrid.html', {'curriculum': curriculum})
 
 
 def by_unit(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    '''
     standards_cols, standards_rows = unit.get_standards()
     cols = json.dumps(standards_cols)
     cols = cols.replace("\"heatCell\"", "heatCell")
@@ -47,6 +49,8 @@ def by_unit(request, slug, unit_slug):
                                                          'unit': unit,
                                                          'standards_cols': cols,
                                                          'standards_rows': rows})
+    '''
+    return render(request, 'standards/curriculum_nogrid.html', {'curriculum': curriculum, 'unit': unit})
 
 
 def single_standard(request, slug, shortcode):
