@@ -82,6 +82,9 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def get_standards_url(self):
         return reverse('curriculum:by_curriculum', args=[self.slug])
 
+    def get_standards_csv_url(self):
+        return reverse('curriculum:by_curriculum_csv', args=[self.slug])
+
     def get_resources_url(self):
         return reverse('curriculum:curriculum_resources', args=[self.slug])
 
@@ -109,8 +112,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_standards_url(), self.get_resources_url(),
-                self.get_blocks_url(), self.get_vocab_url(), self.get_json_url()]
+        urls = [self.get_absolute_url(), self.get_standards_url(), self.get_standards_csv_url(),
+                self.get_resources_url(), self.get_blocks_url(), self.get_vocab_url(), self.get_json_url()]
         return urls
 
     def jackfrost_can_build(self):
@@ -310,6 +313,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     def get_standards_url(self):
         return reverse('curriculum:by_unit_2', args=[self.curriculum.slug, self.slug])
 
+    def get_standards_csv_url(self):
+        return reverse('curriculum:by_unit_csv', args=[self.curriculum.slug, self.slug])
+
     def get_number(self):
         order = 1
         for unit in self.curriculum.units.all().order_by('parent___order', '_order'):
@@ -352,8 +358,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
-                self.get_vocab_url(), self.get_standards_url(), self.get_compiled_url(),
-                self.get_json_url()]
+                self.get_vocab_url(), self.get_standards_url(), self.get_standards_csv_url(),
+                self.get_compiled_url(), self.get_json_url()]
         return urls
 
     def pdf_urls(self):

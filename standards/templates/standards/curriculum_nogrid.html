@@ -48,6 +48,10 @@
     <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
     {% if unit %}{# If unit is passed, just grab that unit #}
+        <br/>
+        <a class="btn" role="button" href="{% url 'curriculum:by_unit_csv' curriculum.slug unit.slug %}">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download as CSV
+        </a>
         <div class="together">
             <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
 
@@ -70,6 +74,10 @@
             {% endfor %}
         </div>
     {% else %}
+        <br/>
+        <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download as CSV
+        </a>
         {% for unit in curriculum.units %}
         <div class="together">
             <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
