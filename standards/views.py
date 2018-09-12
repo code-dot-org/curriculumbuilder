@@ -51,10 +51,10 @@ def by_curriculum_csv(request, slug):
         for lesson in unit.lessons:
             for standard in lesson.standards.all():
                 writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                                 standard.framework.slug, standard.shortcode, 'false'])
+                                 standard.framework.slug, standard.shortcode, False])
             for standard in lesson.opportunity_standards.all():
                 writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                                 standard.framework.slug, standard.shortcode, 'true'])
+                                 standard.framework.slug, standard.shortcode, True])
     return response
 
 
