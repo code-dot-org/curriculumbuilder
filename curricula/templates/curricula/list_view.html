@@ -34,8 +34,15 @@
 
 {% block resources_nav %}
     {% if unit %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+        <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
+    </ul>
         {% include "curricula/partials/unit_pills.html" with unit=unit %}
     {% else %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+    </ul>
         {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
     {% endif %}
 {% endblock %}

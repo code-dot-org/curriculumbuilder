@@ -1,4 +1,4 @@
-{% load mezzanine_tags no_autoplay %}
+{% load mezzanine_tags no_autoplay level_link %}
 
 <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
 
@@ -34,7 +34,7 @@
                     {% if level.teacher_markdown %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 
@@ -47,7 +47,7 @@
 
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 
@@ -69,7 +69,7 @@
                         <!-- Include contained levels for predictions -->
                         {% if level.reference  and not pdf %}
                         <div class="curriculum-reference">
-                            <iframe frameborder="0" class="map-embed" src="https://docs.code.org{{ level.reference }}" width="100%" height="500"></iframe>
+                            <iframe frameborder="0" class="map-embed" src="https://curriculum.code.org{{ level.reference }}" width="100%" height="500"></iframe>
                         </div>
                         {% endif %}
 
@@ -102,7 +102,7 @@
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    <span class="level-icon"></span> {{ level.position }}
+                                    <span class="level-icon"></span> {% if level.bonus_level %}Extra{% else %}{{ level.position }}{% endif %}
                                 </a>
                             </li>
                         {% endfor %}
@@ -113,7 +113,7 @@
                     {% for level in chunk.levels %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
 
-                        <a href="https://studio.code.org{{ level.path }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 

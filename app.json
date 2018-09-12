@@ -1,0 +1,111 @@
+{
+  "name": "curriculumbuilder",
+  "scripts": {
+  },
+  "env": {
+    "AUTO_PUBLISH": {
+      "required": true
+    },
+    "AWS_ACCESS_KEY_ID": {
+      "required": true
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "required": true
+    },
+    "CROWDIN_API_KEY": {
+      "required": true
+    },
+    "DJANGO_LOG_LEVEL": {
+      "required": true
+    },
+    "DJANGO_SECURITY_KEY": {
+      "required": true
+    },
+    "DJANGO_SETTINGS_MODULE": {
+      "required": true
+    },
+    "ENV": {
+      "required": true
+    },
+    "HEROKU_POSTGRESQL_AMBER_URL": {
+      "required": true
+    },
+    "LOADERIO_API_KEY": {
+      "required": true
+    },
+    "NEW_RELIC_LICENSE_KEY": {
+      "required": true
+    },
+    "NEW_RELIC_LOG": {
+      "required": true
+    },
+    "PGBOUNCER_MAX_CLIENT_CONN": {
+      "required": true
+    },
+    "REDIS_URL": {
+      "required": true
+    },
+    "SENDGRID_API_KEY": {
+      "required": true
+    },
+    "SENDGRID_PASSWORD": {
+      "required": true
+    },
+    "SENDGRID_USER": {
+      "required": true
+    },
+    "SENDGRID_USERNAME": {
+      "required": true
+    },
+    "SLACK_ENDPOINT_URL": {
+      "required": true
+    },
+    "SLACK_TOKEN": {
+      "required": true
+    },
+    "SLACK_USER": {
+      "required": true
+    },
+    "WKHTMLTOPDF_BIN": {
+      "required": true
+    },
+    "WKHTMLTOPDF_URL": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "loaderio",
+    "newrelic",
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.6"
+      }
+    },
+    "heroku-redis",
+    "sendgrid",
+    "scheduler"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/mrjoshida/nginx-buildpack"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-apt"
+    },
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

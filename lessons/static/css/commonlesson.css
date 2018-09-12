@@ -112,6 +112,17 @@ html, body{
     font-weight: 600;
 }
 
+.breadcrumb {
+    float: left;
+    padding: 5px;
+}
+
+.breadcrumb li {
+    font-size: 12px;
+    line-height: 1.5;
+    height: auto;
+}
+
 .resource-nav {
     float:right;
 }

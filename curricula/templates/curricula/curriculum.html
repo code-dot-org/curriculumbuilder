@@ -82,7 +82,7 @@
 
         <h2>Units</h2>
         {% for unit in units %}
-            <h3>{{ unit.long_name }}</h3>
+            <h3><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}">{{ unit.long_name }}</a></h3>
             <p>
             {{ unit.description|truncatechars:160 }}
             <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}"> more</a>

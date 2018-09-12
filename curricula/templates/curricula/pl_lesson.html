@@ -155,7 +155,6 @@
 
 {% block header %}
 
-<p class="no_print">< <a href="../">{{ unit.title }}</a></p>
 {% include "curricula/partials/pl_header.html" with unit=unit lesson=lesson printflag="no_print" %}
 
 {% endblock %}
@@ -163,6 +162,10 @@
 <!-- Nav Pills -->
 
 {% block resources_nav %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+        <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
+    </ul>
     {% comment %}{% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}{% endcomment %}
 {% endblock %}
 

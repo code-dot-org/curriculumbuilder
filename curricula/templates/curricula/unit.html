@@ -72,6 +72,10 @@
 {% endblock %}
 
 {% block resources_nav %}
+
+<ul class="breadcrumb">
+    <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+</ul>
     {% include "curricula/partials/unit_pills.html" with unit=unit %}
 {% endblock %}
 
