@@ -11,8 +11,8 @@ def level_embed(link):
     if match is not None:
         try:
             sub = match.group('sub')
-            patch = match.group('path')
-            return "https://%s.code.org%s" %(sub, patch)
+            path = match.group('path')
+            return "https://%s.code.org%s" %(sub, path)
         except IndexError:
             logger.exception('Failed to embed page' % link)
             return link
