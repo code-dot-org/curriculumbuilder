@@ -280,6 +280,10 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     def should_be_translated(self):
         return self.i18n_ready
 
+    @property
+    def has_resource_pdf(self):
+        return self.curriculum.slug not in ['csf-18', 'csf-1718']
+
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not parent_type == 'curriculum':

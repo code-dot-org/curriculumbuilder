@@ -7,7 +7,10 @@
         {% if unit.block_count > 0 %}<a href="{{ unit.get_blocks_url }}" class="btn" role="button">Code Documentation</a>{% endif %}
         <a href="{{ unit.get_resources_url }}" class="btn" role="button">Other Resources</a>
         <a href="{{ unit.get_pdf_url }}" class="btn" role="button">Lessons PDF</a>
+        {# Removing handouts PDF link from CSF until we can fix it #}
+        {% if unit.has_resource_pdf %}
         <a href="{{ unit.get_resources_pdf_url }}" class="btn" role="button">Handouts PDF</a>
+        {% endif %}
         {% if changelog.count > 0 %}
 
             <div class="btn-group" role="group">
