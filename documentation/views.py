@@ -3,6 +3,8 @@ from django.http import HttpResponseNotFound, HttpResponseServerError
 
 from multiurl import ContinueResolving
 
+from mezzanine.pages.models import Page
+
 from models import IDE, Block, Map
 from curricula.models import Curriculum
 
@@ -47,8 +49,11 @@ def embed_view(request, slug, ide_slug):
 def page_view(request, parents, slug):
 
     if parents == '':
-        pages = Map.objects.filter(slug=slug)
+        # Not not under a map parent, look for a top level map under the
+        # concepts page
+        pages = Map.objects.filter(slug=slug, parent__slug='concepts')
     else:
+        # Otherwise look up by the nearest parent
         parent_slug = parents.split('/')[-1]
         pages = Map.objects.filter(slug=slug, parent__slug=parent_slug)
 
@@ -64,5 +69,6 @@ def page_view(request, parents, slug):
 
 
 def maps_view(request, ):
-    maps = Map.objects.all()
-    return render(request, 'documentation/pages.html', {'pages': maps, 'type': 'Maps'})
+    maps = Map.objects.filter(parent__slug='concepts')
+    page = Page.objects.get(slug='concepts')
+    return render(request, 'documentation/pages.html', {'page': page, 'pages': maps, 'type': 'Maps'})
