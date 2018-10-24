@@ -4,6 +4,7 @@
 {% load static %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load pages_tags %}
 
 {% block meta_title %}{{ page.parent.title }} | {{ page.title }}{% endblock %}
 
@@ -64,8 +65,10 @@
 
 {% block main %}
 
-    <div class="together">
+{% page_menu "pages/menus/tree.html" %}
 
+    <div class="together">
+        <h1>testing</h1>
         {% editable page.title page.content %}
         <h1>{{ page.title }}</h1>
         {{ page.content|richtext_filters|safe }}

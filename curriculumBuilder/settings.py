@@ -50,10 +50,15 @@ ADMIN_MENU_COLLAPSED = False
 # that doesn't appear in this setting, all pages will appear in it.
 
 PAGE_MENU_TEMPLATES = (
+    # Used to generate the main curriculum.code.org course list
     (1, _("Main Curriculum Listing"), "pages/menus/dropdown.html"),
-    (2, _("Unused"), "pages/menus/tree.html"),
-    (3, _("Unused"), "pages/menus/footer.html"),
+    # Used to generate the docs.code.org/concepts/ menu
+    (2, _("Concept Maps"), "pages/menus/tree.html"),
+    #(3, _("Unused"), "pages/menus/footer.html"),
 )
+
+# Don't add new pages to any menuds by default
+PAGE_MENU_TEMPLATES_DEFAULT = ()
 
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.

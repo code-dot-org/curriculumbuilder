@@ -102,7 +102,7 @@ class MapAdmin(PageAdmin, VersionAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', 'blocks', 'content'],
+            'fields': ['title', 'slug', 'keywords', 'blocks', 'content', 'in_menus'],
         }),
     )
 
