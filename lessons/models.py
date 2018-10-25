@@ -470,7 +470,8 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         if children:
             if self.optional_lessons.count() > 0:
                 for lesson in self.optional_lessons.all():
-                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                 children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:

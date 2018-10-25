@@ -234,11 +234,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
         if children:
             for unit in self.units.all():
-                unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
-                                  'parent': duplicate.page_ptr, 'no_renumber': True})
+                unit.clone(attrs={'title': unit.title, 'slug': unit.slug,'parent': duplicate.page_ptr,
+                                  'no_renumber': True}, children=True)
 
             for map in self.maps.all():
-                map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr})
+                map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr}, children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -558,10 +558,12 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         if children:
             if self.chapters.count() > 0:
                 for chapter in self.chapters.all():
-                    chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+                    chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                  children=True)
             else:
                 for lesson in self.lessons.all():
-                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                 children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -660,7 +662,8 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
 
         if children:
             for lesson in self.lessons.all():
-                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr,'no_renumber': True},
+                             children=True)
 
         if not attrs.get('no_renumber', False):
             print("renumbering lessons")

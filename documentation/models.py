@@ -87,7 +87,7 @@ class IDE(Page, RichText, CloneableMixin):
                 parent_cat = duplicate.categories.get(name=block.parent_cat.name)
                 block.clone(attrs={'title': block.title, 'slug': block.slug, 'parent': duplicate.page_ptr,
                                    'parent_ide': duplicate, 'parent_cat': parent_cat},
-                            exclude=['children', 'blocks'])
+                            exclude=['children', 'blocks'], children=True)
         return duplicate
 
 
