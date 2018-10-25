@@ -453,7 +453,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
         super(Lesson, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
 
@@ -467,9 +467,11 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
                                               m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        if self.optional_lessons.count() > 0:
-            for lesson in self.optional_lessons.all():
-                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            if self.optional_lessons.count() > 0:
+                for lesson in self.optional_lessons.all():
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                 children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:

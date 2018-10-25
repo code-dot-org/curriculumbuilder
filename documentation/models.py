@@ -64,7 +64,7 @@ class IDE(Page, RichText, CloneableMixin):
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -82,11 +82,12 @@ class IDE(Page, RichText, CloneableMixin):
 
         duplicate = super(IDE, self).clone(attrs=attrs, commit=commit,
                                            m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
-        for block in self.blocks.all():
-            parent_cat = duplicate.categories.get(name=block.parent_cat.name)
-            block.clone(attrs={'title': block.title, 'slug': block.slug, 'parent': duplicate.page_ptr,
-                               'parent_ide': duplicate, 'parent_cat': parent_cat},
-                        exclude=['children', 'blocks'])
+        if children:
+            for block in self.blocks.all():
+                parent_cat = duplicate.categories.get(name=block.parent_cat.name)
+                block.clone(attrs={'title': block.title, 'slug': block.slug, 'parent': duplicate.page_ptr,
+                                   'parent_ide': duplicate, 'parent_cat': parent_cat},
+                            exclude=['children', 'blocks'], children=True)
         return duplicate
 
 
@@ -209,7 +210,7 @@ class Block(Page, RichText, CloneableMixin):
             self.slug = slugify(self.title)
         super(Block, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -333,7 +334,7 @@ class Map(Page, RichText, CloneableMixin):
 
         super(Map, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)

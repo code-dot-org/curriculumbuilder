@@ -28,6 +28,7 @@
 
 {% block admin_link %}
 {% if user.is_staff %}
+    {% comment %} ToDo: refactor admin menu out into partial {% endcomment %}
     <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
         <div class="drawer-controls">
             <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
@@ -53,6 +54,8 @@
                 {% endif %}
                 <h2>deepSpaceCopy</h2>
                 <button class="btn btn-primary" id="clone_this" data-pk="{{ unit.pk }}" data-type="Unit">Clone</button><i id="clone_spinner"></i><br/>
+                <input type="checkbox" name="children" id="clone_children"> Clone Children</input>
+                {% comment %} ToDo: add ability to clone into a different parent {% endcomment %}
                 <pre id="clone_results"></pre>
             </div>
         </div>
@@ -306,6 +309,7 @@
 {% block footer_js %}
 
 {% if user.is_staff %}
+    {% comment %} ToDo: pull this out into a shared js file {% endcomment %}
     <script type="text/javascript">
         function getCookie(name) {
             var cookieValue = null;
@@ -474,33 +478,32 @@
 
             // Clone button
             $("#clone_this").click(function () {
-            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
-            var pk = $(this).attr('data-pk');
-            console.log("pk: " + pk);
-            var type = $(this).attr('data-type');
-            console.log("type: " + type);
-            $('#clone_spinner').addClass('fa fa-cog fa-spin');
+                $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                var children = $('#clone_children').prop('checked');
+                $('#clone_spinner').addClass('fa fa-cog fa-spin');
 
-            $.ajax({
-                 type: "POST",
-                 url: "/clone/",
-                 data: {pk: pk, type: type},
-                 timeout: 9999999
-            }).done(function (response) {
-                $("#clone_this").addClass('btn-success').text("Success");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-                if (response.hasOwnProperty('redirect_url')) {
-                    setTimeout(function () {
-                        window.location.href = response.redirect_url;
-                    }, 500);
-                }
-            }).fail(function (response) {
-                $("#clone_this").addClass('btn-warning').text("Failed");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                $.ajax({
+                     type: "POST",
+                     url: "/clone/",
+                     data: {pk: pk, type: type, children: children},
+                     timeout: 9999999
+                }).done(function (response) {
+                    $("#clone_this").addClass('btn-success').text("Success");
+                    $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                    $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                    if (response.hasOwnProperty('redirect_url')) {
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 500);
+                    }
+                }).fail(function (response) {
+                    $("#clone_this").addClass('btn-warning').text("Failed");
+                    $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                    $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                });
             });
-        });
         });
     </script>
 {% endif %}
