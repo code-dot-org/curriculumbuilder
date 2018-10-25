@@ -215,7 +215,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def in_main_menu(self):
         return '1' in self.in_menus
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title, slug, or version weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -232,12 +232,13 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Curriculum, self).clone(attrs=attrs, commit=commit,
                                                   m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        for unit in self.units.all():
-            unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
-                              'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            for unit in self.units.all():
+                unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
+                                  'parent': duplicate.page_ptr, 'no_renumber': True})
 
-        for map in self.maps.all():
-            map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr})
+            for map in self.maps.all():
+                map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr})
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -532,7 +533,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
         super(Unit, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -554,13 +555,13 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
         duplicate = super(Unit, self).clone(attrs=attrs, commit=commit,
                                             m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
-
-        if self.chapters.count() > 0:
-            for chapter in self.chapters.all():
-                chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
-        else:
-            for lesson in self.lessons.all():
-                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            if self.chapters.count() > 0:
+                for chapter in self.chapters.all():
+                    chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+            else:
+                for lesson in self.lessons.all():
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -642,7 +643,7 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
             self.number = self.unit.chapters.count() + 1
         super(Chapter, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -657,8 +658,9 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Chapter, self).clone(attrs=attrs, commit=commit,
                                                m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        for lesson in self.lessons.all():
-            lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            for lesson in self.lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
 
         if not attrs.get('no_renumber', False):
             print("renumbering lessons")
