@@ -215,6 +215,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def in_main_menu(self):
         return '1' in self.in_menus
 
+    @property
+    def is_pl(self):
+        return self.curriculum.slug.startswith('pl') or \
+               self.curriculum.slug in ['facilitator-development', 'regionalpartner']
+
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
 
         # If new title, slug, or version weren't passed, update

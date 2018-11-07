@@ -107,7 +107,12 @@ def curriculum_view(request, slug):
 
     changelog = Version.objects.get_for_object(curriculum).filter(revision__user__username=settings.CHANGELOG_USER)
 
-    return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units,
+    if curiculum.is_pl:
+        template = 'curricula/pl_curriculum.html'
+    else:
+        template = 'curricula/curriculum.html'
+
+    return render(request, template, {'curriculum': curriculum, 'pdf': pdf, 'units': units,
                                                          'form': form, 'changelog': changelog})
 
 
@@ -147,13 +152,15 @@ def unit_view(request, slug, unit_slug):
     changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
 
     if pdf:
-        if curriculum.unit_template_override == 'curricula/pl_unit.html':
+        if curriculum.is_pl':
             template = 'curricula/pl_unit_lessons.html'
         else:
             template = 'curricula/unit_lessons.html'
     else:
         if curriculum.unit_template_override:
             template = unit.curriculum.unit_template_override
+        else if curriculum.is_pl:
+            template = 'curricula/pl_unit.html'
         else:
             template = 'curricula/unit.html'
 
@@ -257,6 +264,8 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
     if lesson.unit.lesson_template_override:
         template = lesson.unit.lesson_template_override
+    else if curriculum.is_pl:
+        template = 'curricula/pl_lesson.html'
     else:
         template = 'curricula/codestudiolesson.html'
 
@@ -413,7 +422,7 @@ def unit_compiled(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
 
-    if curriculum.unit_template_override == 'curricula/pl_unit.html':
+    if curriculum.is_pl:
         template = 'curricula/pl_unit_lessons.html'
     else:
         template = 'curricula/unit_lessons.html'
