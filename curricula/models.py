@@ -676,6 +676,48 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
 
 
 """
+Curriculum Front Matter
+
+"""
+
+
+class FrontMatter(InternationalizablePage, RichText, CloneableMixin):
+    curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
+    ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
+    i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
+
+    # Return publishable urls for JackFrost
+    def jackfrost_urls(self):
+        urls = [self.get_absolute_url()]
+        return urls
+
+    def jackfrost_can_build(self):
+        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+
+    def publish(self, children=False):
+        if self.jackfrost_can_build():
+            for url in self.jackfrost_urls():
+                try:
+                    read, written = build_single(url)
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s %s' % (self.content_model, self.title, url),
+                        'color': '#00adbc'
+                    })
+                    yield json.dumps(written)
+                    yield '\n'
+                except Exception, e:
+                    yield json.dumps(e.message)
+                    yield '\n'
+                    logger.exception('Failed to publish %s' % self)
+
+    def save(self, *args, **kwargs):
+
+        if not self.slug:
+            self.slug = slugify(self.title)[:255]
+        super(FrontMatter, self).save(*args, **kwargs)
+
+
+"""
 Topics that provide additional curriculum, unit, or chapter info
 
 """

@@ -10,7 +10,7 @@ from reversion.admin import VersionAdmin
 from lessons.models import Lesson
 from lessons.admin import LessonForm
 
-from curricula.models import Curriculum, Unit, Chapter, Topic
+from curricula.models import Curriculum, Unit, Chapter, FrontMatter, Topic
 from standards.models import Standard
 
 
@@ -72,6 +72,11 @@ class ChapterAdmin(PageAdmin):
     )
 
 
+class FrontMatterAdmin(PageAdmin, VersionAdmin):
+    model = FrontMatter
+    inlines = (TopicInline, )
+
+
 '''
 UnitStandards allows for quick standards aligning without the ability to edit actual lesson content
 '''
@@ -104,5 +109,6 @@ class UnitStandardsAdmin(ImportExportModelAdmin):
 admin.site.register(Curriculum, CurriculumAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(Chapter, ChapterAdmin)
+admin.site.register(FrontMatter, FrontMatterAdmin)
 admin.site.register(UnitStandards, UnitStandardsAdmin)
 # admin.site.register(UnitLesson)
