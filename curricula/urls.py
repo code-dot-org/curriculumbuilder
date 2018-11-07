@@ -36,6 +36,8 @@ urlpatterns = patterns('curricula.views',
                            standards_views.by_curriculum_csv, name='by_curriculum_csv'),
                        url(r'^(?P<slug>[-\w]+)/standards/(?P<unit_slug>[a-zA-Z]+)/$',
                            standards_views.by_unit, name='by_unit'),
+                       url(r'^(?P<slug>[-\w]+)/guide/(?P<front_slug>[a-zA-Z]+)/$',
+                           views.front_matter_view, name='front_matter_view'),
 
                        # Unit URLs
                        url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/$',

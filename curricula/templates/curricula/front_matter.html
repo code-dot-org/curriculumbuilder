@@ -1,0 +1,206 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ curriculum.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable curriculum.title %}{{ curriculum.title }}{% endeditable %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-drawer.min.css" %}">
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static "js/drawer.min.js" %}"></script>
+{% endblock %}
+
+{% block admin_link %}
+{% if user.is_staff %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-body">
+                <h2>Logging</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save Changelog or Feedback</button>
+                    </form>
+                <h2>Publishing</h2>
+                {% if curriculum.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ curriculum.pk }}" data-type="Curriculum">Publish</button><i id="progress_spinner"></i><br/>
+                    <input type="checkbox" name="lessons" id="include_lessons"> Include Units and Lessons</input>
+                    <pre id="publish_results"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ curriculum.title }}</h1>
+{% endblock %}
+
+{% block resources_nav %}
+    {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="together overview-page row">
+
+            {% editable front.content %}
+            {{ front.content|richtext_filters|safe }}
+            {% endeditable %}
+
+    </div>
+
+</div>
+
+    <div class="topics">
+        {% if front.topics.count > 0 %}
+            {% for topic in front.topics.all %}
+                <div class="activity">
+                    {% editable topic.name topic.content %}
+                        <h2>{{ topic.name }}</h2>
+                        {{ topic.content|richtext_filters|safe }}
+                    {% endeditable %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block footer_js %}
+
+{% if user.is_staff %}
+    <script type="text/javascript">
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $(document).ready(function () {
+
+            // Convert streaming responses to formattable JSON
+            function parseResponse(responseText) {
+                var responses = responseText.split("\n");
+                var response = [];
+                for (var i in responses) {
+                    if (responses[i] != "") {
+                        response.push(JSON.parse(responses[i]));
+                    }
+                }
+                return response
+            }
+
+            // Publish button
+            $("#publish_this").click(function () {
+                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                var type = $(this).attr('data-type');
+                var lessons = $('#include_lessons').prop('checked');
+                $('#progress_spinner').addClass('fa fa-cog fa-spin');
+
+                // Switch to streaming results
+                var params = "pk=" + pk + "&type=" + type + "&lessons=" + lessons;
+                var client = new XMLHttpRequest();
+                client.open('GET', '/publish/?' + params, true);
+                client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                client.onprogress = function(){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    console.log(this.responseText);
+                };
+                client.upload.addEventListener('error', function(event){
+                    var response = parseResponse(this.responseText);
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, null, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+
+                client.addEventListener('readystatechange', function(e) {
+                    if (this.readyState == 4) {
+                        var response = parseResponse(this.responseText);
+                        console.log(this.status);
+                        if (this.status == 200) {
+                            $("#publish_this").addClass('btn-success').text("Success");
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
+                            $("#publish_results").append('\nFinished');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        } else {
+                            $("#publish_this").addClass('btn-warning').text("Failed");
+                            $("#publish_results").text(JSON.stringify(response, null, 2));
+                            $("#publish_results").append('\nFailed');
+                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                        }
+                    }
+                });
+                client.send();
+                /*
+                $.ajax({
+                    type: "POST",
+                    url: "/publish/",
+                    data: {pk: pk, type: type, lessons: lessons},
+                    timeout: 9999999
+                }).done(function(response) {
+                    $("#publish_this").addClass('btn-success').text("Success");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                }).fail(function(response) {
+                    $("#publish_this").addClass('btn-warning').text("Failed");
+                    $("#publish_results").text(JSON.stringify(response, undefined, 2));
+                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
+                });
+                */
+            });
+        });
+    </script>
+{% endif %}
+{% endblock %}

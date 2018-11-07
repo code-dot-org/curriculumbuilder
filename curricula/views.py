@@ -186,6 +186,13 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
+def front_matter_view(request, slug, front_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    front = get_object_or_404(FrontMatter, curriculum=curriculum, slug=front_slug)
+
+    return render(request, 'curricula/front_matter.html', {'curriculum': curriculum, 'front': front})
+
+
 # @login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
