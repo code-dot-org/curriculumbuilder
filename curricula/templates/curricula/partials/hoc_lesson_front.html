@@ -1,0 +1,193 @@
+{% load mezzanine_tags %}
+{% load staticfiles %}
+
+<!-- One Pager -->
+
+<div class="together" id="unit{{ unit.number }}lesson{{ lesson.number }}">
+    {% editable lesson.title lesson.pacing_weight %}
+        {% if optional %}
+            <h1>Optional Lesson: {{ lesson.title }}</h1>
+        {% else %}
+            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+        {% endif %}
+    {% endeditable %}
+
+    <div class="keywords">
+        <h4>
+            {% for keyword in lesson.keywords.all %}
+                {% if not forloop.first %}| {% endif %}
+                {{ keyword }}
+            {% endfor %}
+        </h4>
+    </div>
+</div>
+
+<div class="together overview-page row">
+
+    <div class="col-sm-7 left-col">
+        <h2>Overview</h2>
+        {% editable lesson.overview %}
+            {{ lesson.overview|richtext_filters|safe }}
+        {% endeditable %}
+
+        {% if lesson.cs_content %}
+            <h2>Purpose</h2>
+            {% editable lesson.cs_content %}
+                {{ lesson.cs_content|richtext_filters|safe }}
+            {% endeditable %}
+        {% endif %}
+
+        <h2>Agenda</h2>
+        <div class="toc" id="toc{{ lesson|slugify }}">
+            {% for activity in lesson.activity_set.all %}
+                <h3>{{ activity }}</h3>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="col-sm-5 right-col">
+
+<!-- Sidebar -->
+
+        <h3><a href="{{ lesson.code_studio_link }}">View on Code Studio</a></h3>
+
+<!-- Anchor Standards -->
+
+        {% if lesson.anchor_standards.all.count > 0 %}
+            <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+            {% with lesson.anchor_standards.all as standards %}
+                {% regroup standards by framework as standards_by_framework %}
+                {% for framework in standards_by_framework %}
+                    <h3>{{ framework.grouper }}</h3>
+                    <ul>
+                        {% for standard in framework.list %}
+                            <li><strong>{{ standard.shortcode }}</strong> - {{ standard.description }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+
+<!-- Objectives -->
+
+        {% if lesson.objective_set.count > 0 %}
+            <h2>Objectives</h2>
+            <h3>Students will be able to:</h3>
+            <ul>
+                {% for objective in lesson.objective_set.all %}
+                    <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+<!-- Prep -->
+
+        {% if lesson.prep %}
+            <h2>Preparation</h2>
+            <div class="prep">
+                {% editable lesson.prep %}
+                    {{ lesson.prep|richtext_filters|safe }}
+                {% endeditable %}
+            </div>
+        {% endif %}
+
+<!-- Resources -->
+
+        {% if lesson.resources.count > 0 %}
+            <h2>Links</h2>
+            <div class="alert alert-warning">
+                <strong>Heads Up!</strong> Please make a copy of any documents you plan to share with students.
+            </div>
+            {% with lesson.resources.all as resources %}
+                {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% for audience in resources_by_audience %}
+                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <ul>
+                        {% for resource in audience.list %}
+                            <li>
+                                {% editable resource.name resource.type resource.url %}
+                                    {{ resource.formatted|safe }}
+                                    {% if resource.gd %}
+                                    <span class="dropdown resource-copy">
+                                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Make a Copy
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                        <li><a href="{{ resource.gd_pdf }}">PDF</a></li>
+                                        <li><a href="{{ resource.gd_doc }}">Microsoft Word</a></li>
+                                        <li><a href="{{ resource.gd_copy }}" target="_blank">Google Docs</a></li>
+                                      </ul>
+                                    </span>
+                                    {% endif %}
+                                {% endeditable %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endwith %}
+        {% endif %}
+        {% if user.is_staff %}
+            <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
+                resource</a>{% endif %}
+
+<!-- Vocab -->
+
+        {% if lesson.vocab.count > 0 %}
+            <h2>Vocabulary</h2>
+            <ul>
+                {% for word in lesson.vocab.all %}
+                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+<!-- Introduced Code -->
+
+        {% if lesson.blocks.count > 0 %}
+            <h2>Introduced Code</h2>
+            <ul>
+                {% for block in lesson.blocks.all %}
+                    <li><code class="block" style="background-color: {{ block.parent_cat.color }}">
+                        <a href="{{ block.get_published_url }}">{{ block.code }}</a>
+                    </code></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+<!-- Support -->
+
+        <div class="open_questions no_print">
+            <h2>Support</h2>
+            {% if curriculum.auto_forum %}
+                <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
+            {% endif %}
+
+            {% if curriculum.support_script %}
+                <h3><a href="{{ unit.support_script }}" target="_blank">{{ unit.short_name }} Online Professional Learning Course</a></h3>
+            {% endif %}
+
+
+            <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
+        
+            {% if unit.questions %}
+                {{ unit.questions|richtext_filters|safe }}
+            {% endif %}
+
+            {% if curriculum.display_questions %}
+                {% if lesson.questions %}
+                    {% editable lesson.questions %}
+                        {{ lesson.questions|richtext_filters|safe }}
+                    {% endeditable %}
+                {% endif %}
+                {% if curriculum.feedback_url %}
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
+                        Give us feedback!
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+</div>
