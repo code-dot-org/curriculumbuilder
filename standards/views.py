@@ -1,7 +1,8 @@
 import operator
-import json
+import json, csv
 
 from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -25,20 +26,42 @@ def by_framework(request, slug, curriculum_slug=None):
 
 def by_curriculum(request, slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
+    '''
     standards_cols, standards_rows = curriculum.get_standards()
-    # curriculum = get_object_or_404(Curriculum.objects.prefetch_related('unit_set__unitlesson_set__lesson__standards'), slug = slug)
-    # units = Unit.objects.filter(curriculum = curriculum).prefetch_related('unitlesson_set__lesson__standards')
     cols = json.dumps(standards_cols)
     cols = cols.replace("\"heatCell\"", "heatCell")
     rows = json.dumps(standards_rows)
     return render(request, 'standards/curriculum.html', {'curriculum': curriculum,
                                                          'standards_cols': cols,
                                                          'standards_rows': rows})
+    '''
+    return render(request, 'standards/curriculum_nogrid.html', {'curriculum': curriculum})
+
+
+def by_curriculum_csv(request, slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % curriculum.slug
+
+    writer = csv.writer(response)
+    writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
+                     'standard framework', 'standard', 'cross curricular opportunity'])
+    for unit in curriculum.units:
+        for lesson in unit.lessons:
+            for standard in lesson.standards.all():
+                writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
+                                 standard.framework.slug, standard.shortcode, False])
+            for standard in lesson.opportunity_standards.all():
+                writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
+                                 standard.framework.slug, standard.shortcode, True])
+    return response
 
 
 def by_unit(request, slug, unit_slug):
     curriculum = get_object_or_404(Curriculum, slug=slug)
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+    '''
     standards_cols, standards_rows = unit.get_standards()
     cols = json.dumps(standards_cols)
     cols = cols.replace("\"heatCell\"", "heatCell")
@@ -47,6 +70,28 @@ def by_unit(request, slug, unit_slug):
                                                          'unit': unit,
                                                          'standards_cols': cols,
                                                          'standards_rows': rows})
+    '''
+    return render(request, 'standards/curriculum_nogrid.html', {'curriculum': curriculum, 'unit': unit})
+
+
+def by_unit_csv(request, slug, unit_slug):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+    unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_standards.csv"' % (curriculum.slug, unit.slug)
+
+    writer = csv.writer(response)
+    writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
+                     'standard framework', 'standard', 'cross curricular opportunity'])
+    for lesson in unit.lessons:
+        for standard in lesson.standards.all():
+            writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
+                             standard.framework.slug, standard.shortcode, 'false'])
+        for standard in lesson.opportunity_standards.all():
+            writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
+                             standard.framework.slug, standard.shortcode, 'true'])
+    return response
 
 
 def single_standard(request, slug, shortcode):

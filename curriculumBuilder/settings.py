@@ -116,11 +116,14 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE = "en-us"
 
 # Supported languages
 LANGUAGES = (
-    ('en', _('English')),
+    ('en-us', _('English')),
+    ('es-mx', _('Mexican Spanish')),
+    ('it-it', _('Italian')),
+    ('th-th', _('Thai')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -157,7 +160,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
 
@@ -319,6 +322,7 @@ TEMPLATES = [{u'APP_DIRS': False,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
@@ -496,6 +500,8 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
+I18N_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
 # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
 # MEDIA_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/media/'
@@ -666,6 +672,11 @@ LOGGING = {
         'curricula': {
             'handlers': ['console', 'slack_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'propagate': True
+        },
+        'i18n': {
+            'handlers': ['console', 'slack_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
             'propagate': True
         },
         'pdfkit': {

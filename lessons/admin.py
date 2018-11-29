@@ -213,6 +213,24 @@ class LessonInline(TabularDynamicInlineAdmin):
     keywords = KeywordsField()
 
 
+class LessonResourceInline(admin.TabularInline):
+    model = Lesson.resources.through
+    extra = 0
+    raw_id_fields = ['lesson']
+    show_change_link = True
+
+    fields = ['resource_lesson', 'lesson']
+    readonly_fields = ['resource_lesson']
+
+    def resource_lesson(self, instance):
+        return "%s %s #%d: %s" % (instance.lesson.curriculum,
+                                  instance.lesson.unit,
+                                  instance.lesson.number,
+                                  instance.lesson.title)
+
+    resource_lesson.short_description = 'Lessons'
+
+
 class LessonForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(LessonForm, self).__init__(*args, **kwargs)
@@ -247,8 +265,8 @@ class LessonForm(ModelForm):
         if self.fields.get('standards', False):
             self.fields['standards'].queryset = standards_queryset
 
-        if self.fields.get('anchor_standards', False):
-            self.fields['anchor_standards'].queryset = standards_queryset
+        if self.fields.get('opportunity_standards', False):
+            self.fields['opportunity_standards'].queryset = standards_queryset
 
         '''
         Optimize loading of blocks with related IDEs
@@ -264,7 +282,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
 
     inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
-    filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
+    filter_horizontal = ('standards', 'opportunity_standards', 'vocab', 'blocks')
 
     fieldsets = (
         (None, {
@@ -280,7 +298,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
             'classes': ['collapse-closed'],
         }),
         ('Standards', {
-            'fields': ['standards', 'anchor_standards'],
+            'fields': ['standards', 'opportunity_standards'],
             'classes': ['collapse-closed'],
         }),
     )
@@ -291,7 +309,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
 
     def get_queryset(self, request):
         return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr') \
-            .prefetch_related('standards', 'anchor_standards',
+            .prefetch_related('standards', 'opportunity_standards',
                               'vocab', 'resources', 'activity_set')
 
 
@@ -325,7 +343,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
 
     inlines = [ObjectiveInline, ResourceInline, ActivityInline]
 
-    filter_horizontal = ('standards', 'anchor_standards', 'vocab', 'blocks')
+    filter_horizontal = ('standards', 'opportunity_standards', 'vocab', 'blocks')
 
     fieldsets = (
         (None, {
@@ -341,7 +359,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
             'classes': ['collapse-closed'],
         }),
         ('Standards', {
-            'fields': ['standards', 'anchor_standards'],
+            'fields': ['standards', 'opportunity_standards'],
             'classes': ['collapse-closed'],
         }),
     )
@@ -372,7 +390,9 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
 
     list_display = ('name', 'type', 'student', 'gd', 'url', 'dl_url')
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
-    list_filter = ('lesson__curriculum',)
+    list_filter = ('lessons__curriculum',)
+    inlines = [LessonResourceInline]
+    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
 
 class VocabAdmin(ImportExportModelAdmin):

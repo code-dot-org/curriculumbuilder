@@ -1,15 +1,18 @@
-from i18n.models import Internationalizable
-from django.core.management.base import BaseCommand, CommandError
-
-import django.apps
 import json
 import os
 
+import django.apps
+
+from django.core.management.base import BaseCommand
+from i18n.models import Internationalizable
+from i18n.utils import I18nFileWrapper
+
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        staticfiles = os.path.join(os.path.dirname(__file__), '../../static/source')
-        if not os.path.exists(staticfiles):
-            os.makedirs(staticfiles)
+        source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
+        if not os.path.exists(source_dir):
+            os.makedirs(source_dir)
 
         for model in django.apps.apps.get_models():
             # We care about models that:
@@ -19,6 +22,6 @@ class Command(BaseCommand):
             is_not_proxy = not model._meta.proxy
             if (is_internationalizable and is_not_proxy):
                 strings = model.gather_strings()
-                outpath = os.path.abspath(os.path.join(staticfiles, model.__name__ + ".json"))
+                outpath = os.path.abspath(os.path.join(source_dir, model.__name__ + ".json"))
                 with open(outpath, 'w') as outfile:
                     json.dump(strings, outfile, indent=4, sort_keys=True)

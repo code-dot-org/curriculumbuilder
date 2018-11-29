@@ -1,0 +1,123 @@
+{% extends "basestandards.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ curriculum.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.1.5/css/tabulator.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block header_title %}
+    <h1>{{ curriculum.title }}</h1>
+    <span class="disclaimer">Standards Alignment</span>
+{% endblock %}
+
+{% block resources_nav %}
+    {% if unit %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+        <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
+    </ul>
+        {% include "curricula/partials/unit_pills.html" with unit=unit %}
+    {% else %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+    </ul>
+        {% include "curricula/partials/curriculum_pills.html" with curriculum=curriculum %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="together standards row">
+    <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
+    <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
+    {% if unit %}{# If unit is passed, just grab that unit #}
+        <br/>
+        <a class="btn" role="button" href="{% url 'curriculum:by_unit_csv' curriculum.slug unit.slug %}">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download as CSV
+        </a>
+        <div class="together">
+            <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
+
+            {% for lesson in unit.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
+
+                {% if lesson.standards.count > 0 %}
+                <div class="standards">
+                    <h4>Standards Alignment</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+                </div>
+                {% endif %}
+
+                {% if lesson.opportunity_standards.count > 0 %}
+                <div class="standards">
+                    <h4>Cross-curricular Opportunities</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <br/>
+        <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download as CSV
+        </a>
+        {% for unit in curriculum.units %}
+        <div class="together">
+            <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>
+            {% for lesson in unit.lessons %}
+                <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson }}</a></h3>
+
+                {% if lesson.standards.count > 0 %}
+                <div class="standards">
+                    <h4>Standards Alignment</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+                </div>
+                {% endif %}
+
+                {% if lesson.opportunity_standards.count > 0 %}
+                <div class="standards">
+                    <h4>Cross-curricular Opportunities</h4>
+                    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block footer_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#expand-all").click(function () {
+                $("details").each(function() {
+                    this.open = true;
+                });
+            });
+            $("#collapse-all").click(function () {
+                $("details").each(function() {
+                    this.open = false;
+                });
+            });
+        });
+    </script>
+{% endblock %}

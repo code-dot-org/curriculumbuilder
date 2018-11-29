@@ -69,7 +69,7 @@ Linked Resources
 """
 
 
-class Resource(Orderable):
+class Resource(Orderable, Internationalizable):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True, null=True)
     student = models.BooleanField('Student Facing', default=False)
@@ -77,9 +77,34 @@ class Resource(Orderable):
     url = models.URLField(blank=True, null=True)
     dl_url = models.URLField('Download URL', help_text='Alternate download url', blank=True, null=True)
     slug = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    force_i18n = models.BooleanField('Force I18n', default=False, help_text="""
+        By default, only Resources that have been associated with a Lesson that
+        is itself being internationalized will be internationalized. However, we
+        occasionally want to be able to include Resources inline in markdown,
+        and those Resources will not be automatically synced.
+
+        Use this flag if for that or any other reason you would like to force a
+        Resource to be synced.
+    """)
 
     class Meta:
         ordering = ['name', ]
+
+    @property
+    def i18n_key(self):
+        return self.slug
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'url', 'dl_url']
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Resource, cls).get_i18n_objects().prefetch_related('lessons', 'lessons__unit')
+
+    @property
+    def should_be_translated(self):
+        return self.force_i18n or any(lesson.should_be_translated for lesson in self.lessons.all())
 
     def __unicode__(self):
         '''
@@ -222,7 +247,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     pacing_weight = models.DecimalField('Pacing Weight', help_text='Higher numbers take up more space pacing calendar',
                                         default=1, max_digits=4, decimal_places=1, blank=True, null=True)
     unplugged = models.BooleanField(default=False)
-    resources = SortedManyToManyField(Resource, blank=True)
+    resources = SortedManyToManyField(Resource, blank=True, related_name='lessons')
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
     questions = RichTextField('Support Details', help_text='Open questions or comments about this lesson',
                               blank=True, null=True)
@@ -232,6 +257,8 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     standards = models.ManyToManyField(Standard, blank=True)
     anchor_standards = models.ManyToManyField(Standard, help_text='1 - 3 key standards this lesson focuses on',
                                               related_name="anchors", blank=True)
+    opportunity_standards = models.ManyToManyField(Standard, help_text='Opportunities for content standards alignment',
+                                                   related_name="opportunities", blank=True)
     vocab = models.ManyToManyField(Vocab, blank=True)
     blocks = models.ManyToManyField(Block, blank=True, related_name='lessons')
     comments = CommentsField()
@@ -247,11 +274,11 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     @classmethod
     def get_i18n_objects(cls):
-        return super(Lesson, cls).get_i18n_objects().select_related('curriculum')
+        return super(Lesson, cls).get_i18n_objects().select_related('unit')
 
     @property
     def should_be_translated(self):
-        return self.curriculum.should_be_translated
+        return self.unit and self.unit.should_be_translated
 
     @classmethod
     def internationalizable_fields(cls):
@@ -426,7 +453,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
         super(Lesson, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
 
@@ -440,9 +467,11 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Lesson, self).clone(attrs=attrs, commit=commit,
                                               m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        if self.optional_lessons.count() > 0:
-            for lesson in self.optional_lessons.all():
-                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            if self.optional_lessons.count() > 0:
+                for lesson in self.optional_lessons.all():
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                 children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -523,7 +552,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Internationalizable, Orderable, CloneableMixin):
+class Activity(Orderable, CloneableMixin, Internationalizable):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     keywords = KeywordsField()
@@ -542,7 +571,7 @@ class Activity(Internationalizable, Orderable, CloneableMixin):
 
     @classmethod
     def get_i18n_objects(cls):
-        return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__curriculum')
+        return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__unit')
 
     @property
     def should_be_translated(self):
@@ -550,7 +579,7 @@ class Activity(Internationalizable, Orderable, CloneableMixin):
 
     @property
     def i18n_key(self):
-        return "%s/%s" % (self.lesson.i18n_key, self.name)
+        return "%s/%s" % (self.lesson.i18n_key, self.get_untranslated_field('name'))
 
     def __unicode__(self):
         if self.time:

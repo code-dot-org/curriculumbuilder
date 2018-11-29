@@ -1,0 +1,38 @@
+{
+    "algebra": {
+        "description": "Code.org has partnered with Bootstrap to develop a curriculum which teaches algebraic and geometric concepts through computer programming. The twenty lessons focus on concepts like order of operations, the Cartesian plane, function composition and definition, and solving word problems - all within the context of video game design. By shifting classwork from abstract pencil-and-paper problems to a series of relevant programming problems, Code.org CS in Algebra demonstrates how algebra applies in the real world, using an exciting, hands-on approach to create something cool."
+    },
+    "csd-1718": {
+        "description": "What is CS Discoveries?\nComputer Science Discoveries (CS Discoveries) is an introductory computer science course that empowers students to create authentic artifacts and engage with computer science as a medium for creativity, communication, problem solving, and fun. "
+    },
+    "csf-1718": {
+        "description": "The CS Fundamentals units are designed to be a great introduction to CS for students of all ages, starting as young as Kindergarten. The courses blend online, self-guided and self-paced tutorials with “unplugged” activities that require no computer at all. Each course consists of about 20 lessons that may be implemented as one unit or over the course of a semester. Even kindergarten-aged pre-readers can participate."
+    },
+    "csp-1718": {
+        "description": "What is CS Principles?\nIn fall 2016, the College Board launched its newest AP® course, AP Computer Science Principles. The course introduces students to the foundational concepts of computer science and challenges them to explore how computing and technology can impact the world. The AP Program designed AP Computer Science Principles with the goal of creating leaders in computer science fields and attracting and engaging those who are traditionally underrepresented with essential computing tools and multidisciplinary opportunities. "
+    },
+    "csp-18": {
+        "description": "What is CS Principles?\nIn fall 2016, the College Board launched its newest AP® course, AP Computer Science Principles. The course introduces students to the foundational concepts of computer science and challenges them to explore how computing and technology can impact the world. The AP Program designed AP Computer Science Principles with the goal of creating leaders in computer science fields and attracting and engaging those who are traditionally underrepresented with essential computing tools and multidisciplinary opportunities. "
+    },
+    "graveyard": {
+        "description": "Where units go to die"
+    },
+    "hoc": {
+        "description": "The Hour of Code is a global movement reaching tens of millions of students in 180+ countries. Anyone, anywhere can organize an Hour of Code event. One-hour tutorials are available in over 30 languages. No experience needed. Ages 4 to 104."
+    },
+    "plcsd": {
+        "description": "Welcome to Professional Learning Program for the CS Discoveries Curriculum!"
+    },
+    "plcsf": {
+        "description": "Welcome to Professional Learning Program for the CS Fundamentals Curriculum!"
+    },
+    "plcsp": {
+        "description": "Welcome to Professional Learning Program for the CS Principles Curriculum!"
+    },
+    "pwc": {
+        "description": "At PwC, we believe that all students have the potential to be tomorrow’s leaders and tech-driven workforce. Access Your Potential is our commitment to help close the opportunity gap by equipping young people, especially those from disadvantaged communities, with the financial, technology and career-selection skills they need to change the trajectory of their lives."
+    },
+    "regionalpartner": {
+        "description": "Welcome to Regional Partner Page!"
+    }
+}

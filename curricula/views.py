@@ -58,7 +58,6 @@ logger = logging.getLogger(__name__)
 pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_BIN)
 
 
-@login_required
 def index(request):
     if request.user.is_staff:
         curricula = Curriculum.objects.filter(version=Curriculum.CURRENT)
@@ -642,8 +641,11 @@ def publish(request):
 def clone(request):
     try:
         pk = int(request.POST.get('pk'))
-
         page_type = request.POST.get('type')
+        if request.POST.get('children') == 'true':
+            children = True
+        else:
+            children = False
 
         klass = globals()[page_type]
 
@@ -657,7 +659,7 @@ def clone(request):
         attrs = request.POST.get('attrs', {})
         exclude = request.POST.get('exclude', [])
 
-        duplicate = obj.clone(attrs=attrs, exclude=exclude)
+        duplicate = obj.clone(attrs=attrs, exclude=exclude, children=children)
 
         slack_message('slack/message.slack', {
             'message': 'cloned the %s %s'

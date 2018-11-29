@@ -29,7 +29,7 @@ class AttrTagPattern(Pattern):
     except Resource.DoesNotExist:
       print "slug not found, trying name"
       try:
-        resource = Resource.objects.get(name=el.text)
+        resource = Resource.objects.filter(name=el.text).first()
         el.set('href', resource.fallback_url())
         el.text = str(resource)
 

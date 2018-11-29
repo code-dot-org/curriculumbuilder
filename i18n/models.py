@@ -3,12 +3,33 @@ from __future__ import print_function
 import sys
 import time
 
+from django.conf import settings
+from django.db import models
+from django.utils import translation
+
 from mezzanine.pages.models import Page
 
-class Internationalizable:
+from .utils import I18nFileWrapper
+
+
+class Internationalizable(models.Model):
 
     class Meta:
         abstract = True
+
+    def __init__(self, *args, **kwargs):
+        # add an instance attribute for saving the fields that get overwritten
+        # by the translation process
+        self._untranslated_values = {}
+        return super(Internationalizable, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def from_db(cls, *args):
+        instance = super(Internationalizable, cls).from_db(*args)
+        lang = translation.get_language()
+        if lang and lang != settings.LANGUAGE_CODE:
+            instance.translate_to(lang)
+        return instance
 
     @classmethod
     def internationalizable_fields(cls):
@@ -52,7 +73,25 @@ class Internationalizable:
     def i18n_key(self):
         return self.pk
 
-class InternationalizablePage(Internationalizable, Page):
+    def get_untranslated_field(self, field):
+        if field in self._untranslated_values:
+            return self._untranslated_values[field]
+        elif hasattr(self, field):
+            return getattr(self, field)
+
+    def translate_to(self, lang):
+        # don't bother to translate the default language
+        if lang == settings.LANGUAGE_CODE:
+            return
+
+        for field in self.__class__.internationalizable_fields():
+            translated = I18nFileWrapper.get_translated_field(self.__class__.__name__, self.i18n_key, field, lang)
+            if translated:
+                if field not in self._untranslated_values:
+                    self._untranslated_values[field] = getattr(self, field)
+                setattr(self, field, translated)
+
+class InternationalizablePage(Page, Internationalizable):
 
     class Meta:
         abstract = True

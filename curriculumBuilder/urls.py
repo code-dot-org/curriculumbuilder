@@ -21,13 +21,15 @@ from curricula import views
 from standards.views import *
 from gong import views as gong_views
 
+from i18n.urls import i18n_patterns_no_default_language_prefix
+
 admin.autodiscover()
 
 # Add the urlpatterns for any custom Django applications here.
 # You can also change the ``home`` view to add your own functionality
 # to the project's homepage.
 
-urlpatterns = i18n_patterns("",
+urlpatterns = patterns("",
     # Change the admin prefix here to use an alternate URL for the
     # admin interface, which would be marginally more secure.
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -66,6 +68,10 @@ if "django.contrib.admin" in settings.INSTALLED_APPS:
     ]
 
 
+urlpatterns += i18n_patterns_no_default_language_prefix('',
+    url(r'^$', views.index, name='home'),
+)
+
 urlpatterns += patterns('',
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
@@ -93,7 +99,6 @@ urlpatterns += patterns('',
     # should be used if you want to customize the homepage's template.
 
     # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
-    url(r'^$', views.index, name='home'),
 
     # HOMEPAGE FOR A BLOG-ONLY SITE
     # -----------------------------
@@ -114,7 +119,13 @@ urlpatterns += patterns('',
     url("^None/$", views.index),  # Dealing with JackFrost bug
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
-    url(r'^', include('curricula.urls', namespace="curriculum")),
+)
+
+urlpatterns += i18n_patterns_no_default_language_prefix('',
+    url(r'^', include('curricula.urls', namespace="curriculum"))
+)
+
+urlpatterns += patterns('',
 
     # MEZZANINE'S URLS
     # ----------------

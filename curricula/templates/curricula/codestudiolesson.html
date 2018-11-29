@@ -170,6 +170,10 @@
 <!-- Nav Pills -->
 
 {% block resources_nav %}
+    <ul class="breadcrumb">
+        <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
+        <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
+    </ul>
     {% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}
 {% endblock %}
 
@@ -204,8 +208,16 @@
 {% if lesson.standards.count > 0 %}
 <div class="standards">
     <h2>Standards Alignment</h2>
-    <h4><a href="/{{ curriculum.slug }}/standards/">View full course alignment</a></h4>
+    <h4><a href="{{ curriculum.get_standards_url }}">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
+</div>
+{% endif %}
+
+{% if lesson.opportunity_standards.count > 0 %}
+<div class="standards">
+    <h2>Cross-curricular Opportunities</h2>
+    <p>This list represents opportunities in this lesson to support standards in other content areas.</p>
+    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
 </div>
 {% endif %}
 

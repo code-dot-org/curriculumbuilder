@@ -82,6 +82,9 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     def get_standards_url(self):
         return reverse('curriculum:by_curriculum', args=[self.slug])
 
+    def get_standards_csv_url(self):
+        return reverse('curriculum:by_curriculum_csv', args=[self.slug])
+
     def get_resources_url(self):
         return reverse('curriculum:curriculum_resources', args=[self.slug])
 
@@ -109,8 +112,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_standards_url(), self.get_resources_url(),
-                self.get_blocks_url(), self.get_vocab_url(), self.get_json_url()]
+        urls = [self.get_absolute_url(), self.get_standards_url(), self.get_standards_csv_url(),
+                self.get_resources_url(), self.get_blocks_url(), self.get_vocab_url(), self.get_json_url()]
         return urls
 
     def jackfrost_can_build(self):
@@ -186,7 +189,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
                     rows.append(row)
             else:
                 values = [unit.title] + \
-                         [json.dumps(list(cat.standards.filter(lesson__in=unit.lessons)
+                         [json.dumps(list(cat.standards.filter(Q(lesson__in=unit.lessons) |
+                                                               Q(opportunities__in=unit.lessons))
                                           .distinct().values_list("shortcode", flat=True)))
                           for fw in self.frameworks.all() for cat in fw.categories.bottom()]
                 row = dict(zip(keys, values))
@@ -204,14 +208,14 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     @property
     def should_be_translated(self):
-        return self.slug == "csf-1718"
+        return any(unit.should_be_translated for unit in self.units)
 
     # Hijacking the Mezzanine top menu to control which curricula show on the home page
     @property
     def in_main_menu(self):
         return '1' in self.in_menus
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title, slug, or version weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -228,12 +232,13 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Curriculum, self).clone(attrs=attrs, commit=commit,
                                                   m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        for unit in self.units.all():
-            unit.clone(attrs={'title': unit.title, 'slug': unit.slug,
-                              'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            for unit in self.units.all():
+                unit.clone(attrs={'title': unit.title, 'slug': unit.slug,'parent': duplicate.page_ptr,
+                                  'no_renumber': True}, children=True)
 
-        for map in self.maps.all():
-            map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr})
+            for map in self.maps.all():
+                map.clone(attrs={'slug': map.slug, 'title': map.title, 'parent': duplicate.page_ptr}, children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -267,9 +272,18 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
+    i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
 
     def __unicode__(self):
         return self.title
+
+    @property
+    def should_be_translated(self):
+        return self.i18n_ready
+
+    @property
+    def has_resource_pdf(self):
+        return self.curriculum.slug not in ['csf-18', 'csf-1718']
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
@@ -303,6 +317,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
     def get_standards_url(self):
         return reverse('curriculum:by_unit_2', args=[self.curriculum.slug, self.slug])
+
+    def get_standards_csv_url(self):
+        return reverse('curriculum:by_unit_csv', args=[self.curriculum.slug, self.slug])
 
     def get_number(self):
         order = 1
@@ -346,8 +363,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
-                self.get_vocab_url(), self.get_standards_url(), self.get_compiled_url(),
-                self.get_json_url()]
+                self.get_vocab_url(), self.get_standards_url(), self.get_standards_csv_url(),
+                self.get_compiled_url(), self.get_json_url()]
         return urls
 
     def pdf_urls(self):
@@ -432,7 +449,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         keys = ["lesson"] + ["%s-%s" % (fw.slug, cat.shortcode) for fw in frameworks for cat in fw.categories.bottom()]
         for lesson in self.lessons:
             values = ["Lesson %d" % lesson.number] + \
-                     [json.dumps(list(lesson.standards.filter(category=cat)
+                     [json.dumps(list(cat.standards.filter(Q(lesson__in=[lesson]) |
+                                                           Q(opportunities__in=[lesson]))
                                       .distinct().values_list("shortcode", flat=True)))
                       for fw in frameworks for cat in fw.categories.bottom()]
             row = dict(zip(keys, values))
@@ -515,7 +533,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
         super(Unit, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -537,13 +555,15 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
         duplicate = super(Unit, self).clone(attrs=attrs, commit=commit,
                                             m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
-
-        if self.chapters.count() > 0:
-            for chapter in self.chapters.all():
-                chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
-        else:
-            for lesson in self.lessons.all():
-                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            if self.chapters.count() > 0:
+                for chapter in self.chapters.all():
+                    chapter.clone(attrs={'title': chapter.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                  children=True)
+            else:
+                for lesson in self.lessons.all():
+                    lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True},
+                                 children=True)
 
         # Keywords are a complex model and don't survive cloning, so we re-add here before returning the clone
         if self.keywords.count() > 0:
@@ -625,7 +645,7 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
             self.number = self.unit.chapters.count() + 1
         super(Chapter, self).save(*args, **kwargs)
 
-    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[]):
+    def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
         attrs['title'] = attrs.get('title', "%s (clone)" % self.title)
@@ -640,8 +660,10 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
         duplicate = super(Chapter, self).clone(attrs=attrs, commit=commit,
                                                m2m_clone_reverse=m2m_clone_reverse, exclude=exclude)
 
-        for lesson in self.lessons.all():
-            lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr, 'no_renumber': True})
+        if children:
+            for lesson in self.lessons.all():
+                lesson.clone(attrs={'title': lesson.title, 'parent': duplicate.page_ptr,'no_renumber': True},
+                             children=True)
 
         if not attrs.get('no_renumber', False):
             print("renumbering lessons")
