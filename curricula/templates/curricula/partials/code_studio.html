@@ -55,11 +55,12 @@
 
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}
+                            {{ level.long_instructions|richtext_filters|safe }}
 
                         </div>
 
                         <!-- Embed video if present -->
-                        {% if level.video_youtube and not pdf%}
+                        {% if level.type == "StandaloneVideo" and not pdf%}
                         <div class="level-video">
                             <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
                             <p><a href="{{ level.video_download }}">Download Video</a></p>
@@ -77,6 +78,7 @@
                             <div class="contained">
                                 {% for contained in level.contained_levels %}
                                     {{ contained.markdown_instructions|richtext_filters|safe }}
+                                    {{ contained.long_instructions|richtext_filters|safe }}
                                     <div class="question">
                                         {{ contained.questions.0.text|richtext_filters|safe }}
                                     </div>
@@ -128,10 +130,11 @@
                             <h3>Student Instructions</h3>
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}
+                            {{ level.long_instructions|richtext_filters|safe }}
                         </div>
 
                         <!-- Embed video if present -->
-                        {% if level.video_youtube and not pdf%}
+                        {% if level.type == "StandaloneVideo" and not pdf%}
                         <div class="level-video">
                             <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
                             <p><a href="{{ level.video_download }}">Download Video</a></p>
@@ -149,6 +152,7 @@
                             <div class="contained">
                                 {% for contained in level.contained_levels %}
                                     {{ contained.markdown_instructions|richtext_filters|safe }}
+                                    {{ contained.long_instructions|richtext_filters|safe }}
                                     <div class="question">
                                         {{ contained.questions.0.text|richtext_filters|safe }}
                                     </div>
