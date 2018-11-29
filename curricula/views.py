@@ -641,8 +641,11 @@ def publish(request):
 def clone(request):
     try:
         pk = int(request.POST.get('pk'))
-
         page_type = request.POST.get('type')
+        if request.POST.get('children') == 'true':
+            children = True
+        else:
+            children = False
 
         klass = globals()[page_type]
 
@@ -656,7 +659,7 @@ def clone(request):
         attrs = request.POST.get('attrs', {})
         exclude = request.POST.get('exclude', [])
 
-        duplicate = obj.clone(attrs=attrs, exclude=exclude)
+        duplicate = obj.clone(attrs=attrs, exclude=exclude, children=children)
 
         slack_message('slack/message.slack', {
             'message': 'cloned the %s %s'

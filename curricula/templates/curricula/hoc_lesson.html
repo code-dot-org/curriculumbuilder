@@ -1,6 +1,6 @@
 {% extends "basecurriculum.html" %}
 
-{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n no_autoplay %}
+{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n %}
 
 {% block meta_title %}{{ lesson.meta_title }}{% endblock %}
 
@@ -47,7 +47,7 @@
                         .annotator('addPlugin', 'Permissions', {
                             user: '{{ user.username }}',
                             showViewPermissionsCheckbox: true,
-                            showEditPermissionsCheckbox: false
+                            showEditPermissionsCheckbox: true
                         })
                         .annotator('addPlugin', 'RichText', {
                             tinymce: {
@@ -125,7 +125,7 @@
                     <pre id="clone_results"></pre>
                     <h2>Code Studio</h2>
                     <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
-                        Get Code Studio Stage Deatils
+                        Get Code Studio Stage Details
                     </button>
                     <i id="stage_progress_spinner"></i>
                     <pre id="stage_details_results"></pre>
@@ -153,10 +153,18 @@
 
 <!-- Header Bubbles -->
 
-{% block header %}
+{% block lessonnumber %}
+    <div class="unitnumber">
+        <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
+    </div>
 
-{% include "curricula/partials/pl_header.html" with unit=unit lesson=lesson printflag="no_print" %}
+    {% with lesson=parent|default_if_none:lesson %}
+        {% include "curricula/partials/bubbles_header.html" with unit=unit lesson=lesson %}
+    {% endwith %}
 
+{% endblock %}
+
+{% block header_title %}
 {% endblock %}
 
 <!-- Nav Pills -->
@@ -166,30 +174,24 @@
         <li><a href={% url 'curriculum:curriculum_view' curriculum.slug %}>< {{ curriculum }}</a></li>
         <li><a href={% url 'curriculum:unit_view' curriculum.slug unit.slug %}>{{ unit }}</a></li>
     </ul>
-    {% comment %}{% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}{% endcomment %}
+    {% include "curricula/partials/lesson_pills.html" with unit=unit changelog=changelog %}
 {% endblock %}
 
 {% block main %}
 
-{% include "curricula/partials/pl_lesson_front.html" with unit=unit lesson=lesson %}
+{% include "curricula/partials/hoc_lesson_front.html" with unit=unit lesson=lesson %}
+
 
 <!-- Lesson Content -->
 
 <div id="{{ lesson.title|slugify }}content">
 
-    <h1>Facilitation Guide</h1>
+    <h1>Teaching Guide</h1>
 
     {% for activity in lesson.activity_set.all %}
         <div class="activity">
             {% editable activity.name activity.time activity.content %}
                 <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
-                {% keywords_for activity as keywords %}
-                <h4>
-                    {% for keyword in keywords %}
-                        {% if not forloop.first %}| {% endif %}
-                        {{ keyword }}
-                    {% endfor %}
-                </h4>
                 {{ activity.content|richtext_filters|safe }}
             {% endeditable %}
         </div>
@@ -201,15 +203,23 @@
 
 {% include "curricula/partials/code_studio.html" with unit=unit lesson=lesson %}
 
-{% comment %}
 <!-- Standards Alignment -->
 
+{% if lesson.standards.count > 0 %}
 <div class="standards">
     <h2>Standards Alignment</h2>
     <h4><a href="{{ curriculum.get_standards_url }}">View full course alignment</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
-{% endcomment %}
+{% endif %}
+
+{% if lesson.opportunity_standards.count > 0 %}
+<div class="standards">
+    <h2>Cross-curricular Opportunities</h2>
+    <p>This list represents opportunities in this lesson to support standards in other content areas.</p>
+    {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
+</div>
+{% endif %}
 
 <!-- Feedback Modal -->
 
@@ -280,10 +290,6 @@
 
         $(document).ready(function () {
 
-            // Only print the current day with title
-            var day = $('.pacing-lesson.active').first().parent();
-            day.removeClass('no_print');
-            day.prev().removeClass('no_print');
 
             // New Code Studio Integration
             $('.stage_guide').each(function () {
@@ -341,6 +347,11 @@
                         $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
                         $('.stage_guide_hidden .stage-chunk').appendTo(this);
                     }
+                    // Add base urls to links coming from Code Studio
+
+                    $(this).find('a').not('[href^="http"],[href^="https"],[href^="//"],[href^="#"]').each(function() {
+                        $(this).attr('href', "//studio.code.org" + $(this).attr('href'));
+                    });
                 }
             });
 
@@ -488,33 +499,33 @@
 
             // Clone button
             $("#clone_this").click(function () {
-            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
-            var pk = $(this).attr('data-pk');
-            console.log("pk: " + pk);
-            var type = $(this).attr('data-type');
-            console.log("type: " + type);
-            $('#clone_spinner').addClass('fa fa-cog fa-spin');
+                $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+                var pk = $(this).attr('data-pk');
+                console.log("pk: " + pk);
+                var type = $(this).attr('data-type');
+                console.log("type: " + type);
+                $('#clone_spinner').addClass('fa fa-cog fa-spin');
 
-            $.ajax({
-                 type: "POST",
-                 url: "/clone/",
-                 data: {pk: pk, type: type},
-                 timeout: 9999999
-            }).done(function (response) {
-                $("#clone_this").addClass('btn-success').text("Success");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-                if (response.hasOwnProperty('redirect_url')) {
-                    setTimeout(function () {
-                        window.location.href = response.redirect_url;
-                    }, 500);
-                }
-            }).fail(function (response) {
-                $("#clone_this").addClass('btn-warning').text("Failed");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                $.ajax({
+                     type: "POST",
+                     url: "/clone/",
+                     data: {pk: pk, type: type},
+                     timeout: 9999999
+                }).done(function (response) {
+                    $("#clone_this").addClass('btn-success').text("Success");
+                    $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                    $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                    if (response.hasOwnProperty('redirect_url')) {
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 500);
+                    }
+                }).fail(function (response) {
+                    $("#clone_this").addClass('btn-warning').text("Failed");
+                    $("#clone_results").text(JSON.stringify(response, undefined, 2));
+                    $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+                });
             });
-        });
 
             // Get Stage Details Button
             $("#get_stage_details").click(function () {
@@ -537,6 +548,27 @@
                 });
             });
 
+            var isFeedbackActive = false;
+
+            $('#feedbackFrame').load(function () {
+                if ($(this).attr('src')) {
+                    isFeedbackActive = !isFeedbackActive;
+                    if (!isFeedbackActive) {
+                        $('#feedbackModal').modal('toggle');
+                    }
+                }
+            });
+
+
+            $('#feedbackModal').on('shown.bs.modal', function () {
+                if (!isFeedbackActive) {
+                    $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
+                }
+
+                //$(this).find('.modal-body').css({
+                //    'max-height':'100%'
+                //});
+            });
         });
     </script>
 

@@ -30,3 +30,5 @@ heroku\.env
 
 crowdin_credentials.yml
 node_modules
+
+reloaddb\.sh
