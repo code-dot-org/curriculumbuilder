@@ -300,19 +300,6 @@ class Map(Page, RichText, CloneableMixin):
     def __unicode__(self):
         return self.title
 
-    def get_absolute_url(self):
-        url = '/concepts/'
-
-        parent = self.parent
-
-        while parent is not None:
-            url += '%s/' % parent.slug
-            parent = parent.parent
-
-        url += '%s/' % self.slug
-
-        return url
-
     def get_published_url(self):
         return '//docs.code.org%s' % self.get_absolute_url()
 
@@ -338,12 +325,14 @@ class Map(Page, RichText, CloneableMixin):
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
+    '''
     def save(self, *args, **kwargs):
 
         if not self.slug:
             self.slug = slugify(self.title)[:255]
 
         super(Map, self).save(*args, **kwargs)
+    '''
 
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 

@@ -1,0 +1,15 @@
+
+{% for m in map_menu %}
+    <li class="concept_name{% if m.grouper == map %} active{% endif %}">
+        <a href="/documentation{{ m.grouper.get_absolute_url }}">{{ m.grouper.title }}</a>
+    {% if m.list|length > 0 %}
+    <ul>
+        {% for sub in m.list %}
+            <li><a href="/documentation{{ sub.get_absolute_url }}">{{ sub.title }}</a></li>
+            {% regroup sub.children.all by parent as sub_menu %}
+            {% include "documentation/partials/map_menu.html" with map_menu=sub_menu %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    </li>
+{% endfor %}

@@ -68,6 +68,14 @@ def page_view(request, parents, slug):
     return render(request, 'documentation/page.html', {'page': page})
 
 
+def map_view(request, slug):
+
+    page = get_object_or_404(Map, slug=slug)
+    maps = Map.objects.filter(parent__slug='concepts')
+
+    return render(request, 'documentation/map.html', {'map': page, 'maps': maps})
+
+
 def maps_view(request, ):
     maps = Map.objects.filter(parent__slug='concepts')
     page = Page.objects.get(slug='concepts')

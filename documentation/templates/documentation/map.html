@@ -1,0 +1,132 @@
+{% extends "cdo_base.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for map as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ map.title }}
+{% endmetablock %}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block sidebar %}
+    <div id="categories" class="col-sm-2 hidden-sm hidden-xs">
+        <ul class="category_list">
+        {% regroup maps by parent as map_menu %}
+        {% include "documentation/partials/map_menu.html" with map_menu=map_menu %}
+
+            <ul class="category_list">
+            {% for category in ide.categories.all %}
+                <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
+                    style="background: {{ category.color }}; border-left-color: {{ category.color }}"
+                    data-color="{{ category.color }}"><span>{{ category.name }}</span>
+                {% if category.blocks.count > 0 %}
+                    <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
+                    {% for block in category.blocks.all %}
+                        <li><a href="../{{ block.slug }}/">{{ block.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% block categories %}
+            {% if ide.categories.count > 0 %}
+                <ul class="category_list">
+                {% for category in ide.categories.all %}
+                    <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
+                        style="background: {{ category.color }}; border-left-color: {{ category.color }}"
+                        data-color="{{ category.color }}"><span>{{ category.name }}</span>
+                    {% if category.blocks.count > 0 %}
+                        <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
+                        {% for block in category.blocks.all %}
+                            <li><a href="../{{ block.slug }}/">{{ block.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block main %}
+
+{% block admin_link %}
+{% if user.is_staff %}
+    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
+        <div class="drawer-controls">
+            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
+        </div>
+        <div class="drawer-contents">
+            <div class="drawer-body">
+                <h2>Add to Changelog</h2>
+                    <form method="POST" action="." class="post-form">{% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-primary">Save</button>
+                    </form>
+                <h2>Publishing</h2>
+                {% if code_block.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ code_block.pk }}" data-type="Block">Publish</button><i id="progress_spinner"></i><br/>
+                    <pre id="publish_results"></pre>
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+                <h2>deepSpaceCopy</h2>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ code_block.pk }}" data-type="Block">Clone</button><i id="clone_spinner"></i><br/>
+                <pre id="clone_results"></pre>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+    <div class="content col-md-10">
+
+    <div class="together">
+        {% editable map.title map.content %}
+        <h1>{{ map.title }}</h1>
+        {{ map.content|richtext_filters|safe }}
+        {% endeditable %}
+    </div>
+
+    <p>Found a bug in the documentation? Let us know at <a href="mailto:documentation@code.org">documentation@code.org</a></p>
+    </div>
+{% endblock %}
+
+{% block footer_scripts %}
+<link rel="stylesheet" type="text/css" href="{% static "codemirror/lib/codemirror.css" %}">
+<script src="{% static "codemirror/lib/codemirror.js" %}"></script>
+<script src="{% static "codemirror/mode/javascript/javascript.js" %}"></script>
+<script src="{% static "codemirror/mode/htmlmixed/htmlmixed.js" %}"></script>
+<script type="text/javascript">
+$(function() {
+  $('pre').each(function() {
+
+        var $this = $(this);
+        var $code = $this.text().trimRight();
+
+        $this.empty();
+
+        var editor = CodeMirror(this, {
+            value: $code,
+            mode: '{{ ide.language|default:"javascript" }}',
+            lineNumbers: !$this.is('inline'),
+            readOnly: true
+        });
+    });
+});
+</script>
+{% endblock %}
