@@ -282,7 +282,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
 
     @property
     def has_resource_pdf(self):
-        return self.curriculum.slug not in ['csf-18', 'csf-1718']
+        return self.curriculum.slug not in ['csf-18', 'csf-1718', 'hoc']
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
