@@ -4,6 +4,7 @@ import datetime
 import urllib2
 import logging
 import json
+import bleach
 from urlparse import urlparse
 # from copy import copy, deepcopy
 from django.conf import settings
@@ -34,6 +35,16 @@ from reversion.models import Version
 import curricula.models
 
 logger = logging.getLogger(__name__)
+
+RE_DOC = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
+
+# Bleach settings for extracting html
+allowed_tags = bleach.ALLOWED_TAGS + ['head', 'body', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p',
+                                      'table', 'tr', 'td', 'pre']
+allowed_attrs = bleach.ALLOWED_ATTRIBUTES
+allowed_attrs['*'] = ['style', 'id', 'class', 'alt', 'src', 'width', 'height', 'type']
+allowed_styles = ['background-color', 'color', 'font-family', 'font-size', 'font-style', 'font-width',
+                  'strike-through', 'text-align', 'text-decoration']
 
 """
 Vocabulary
@@ -191,8 +202,7 @@ class Resource(Orderable, Internationalizable):
 
     def gd_pdf(self):
         try:
-            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
-            doc_id = re.search(re_doc, self.url).group('doc_id')
+            doc_id = re.search(RE_DOC, self.url).group('doc_id')
             pdf = 'https://docs.google.com/document/d/%s/export?format=pdf' % doc_id
             return pdf
         except:
@@ -200,8 +210,7 @@ class Resource(Orderable, Internationalizable):
 
     def gd_doc(self):
         try:
-            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
-            doc_id = re.search(re_doc, self.url).group('doc_id')
+            doc_id = re.search(RE_DOC, self.url).group('doc_id')
             pdf = 'https://docs.google.com/document/d/%s/export?format=doc' % doc_id
             return pdf
         except:
@@ -209,12 +218,22 @@ class Resource(Orderable, Internationalizable):
 
     def gd_copy(self):
         try:
-            re_doc = '(drive|docs)\.google\.com\/(a\/code.org\/)?(document\/d\/|open\?id\=)(?P<doc_id>[\w-]*)'
-            doc_id = re.search(re_doc, self.url).group('doc_id')
+            doc_id = re.search(RE_DOC, self.url).group('doc_id')
             pdf = 'https://docs.google.com/document/d/%s/copy' % doc_id
             return pdf
         except:
             return self.url
+
+    def gd_html(self):
+        try:
+            doc_id = re.search(RE_DOC, self.url).group('doc_id')
+            url = 'https://docs.google.com/document/d/%s/export?format=html' % doc_id
+            response = urllib2.urlopen(url)
+            html = response.read()
+            return bleach.clean(html, tags=allowed_tags, attributes=allowed_attrs, styles=allowed_styles, strip=True)
+        except Exception as e:
+            print(e)
+            return ""
 
     def save(self, *args, **kwargs):
 
