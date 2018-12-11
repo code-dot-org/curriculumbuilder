@@ -1,7 +1,5 @@
 
 {% for m in map_menu %}
-    <li class="concept_name{% if m.grouper == map %} active{% endif %}">
-        <a href="/documentation{{ m.grouper.get_absolute_url }}">{{ m.grouper.title }}</a>
     {% if m.list|length > 0 %}
     <ul>
         {% for sub in m.list %}
@@ -11,5 +9,4 @@
         {% endfor %}
     </ul>
     {% endif %}
-    </li>
 {% endfor %}
