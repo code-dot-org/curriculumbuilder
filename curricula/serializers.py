@@ -6,9 +6,15 @@ from documentation.models import Block
 
 
 class ResourceSerializer(serializers.ModelSerializer):
+    html = serializers.SerializerMethodField()
+
     class Meta:
         model = Resource
         fields = ('name', 'type', 'url')
+
+    def get_html(self, obj):
+        if self.context.get('with_html'):
+            # ToDo embed html
 
 
 class VocabSerializer(serializers.ModelSerializer):
@@ -54,7 +60,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     def get_student_resources(self, obj):
         resources = obj.resources.filter(student=True)
-        serializer = ResourceSerializer(resources, many=True)
+        serializer = ResourceSerializer(resources, many=True, context=self.context)
         return serializer.data
 
     def get_vocab(self, obj):
@@ -85,7 +91,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
     def get_lessons(self, obj):
         lessons = obj.lessons
-        serializer = LessonSerializer(lessons, many=True)
+        serializer = LessonSerializer(lessons, many=True, context=self.context)
         return serializer.data
 
 
@@ -100,7 +106,7 @@ class CurriculumSerializer(serializers.ModelSerializer):
 
     def get_units(self, obj):
         units = obj.units
-        serializer = UnitSerializer(units, many=True)
+        serializer = UnitSerializer(units, many=True, context=self.context)
         return serializer.data
 
     def get_teacher_desc(self, obj):
