@@ -1122,6 +1122,14 @@ def lesson_element(request, slug, unit_slug, lesson_num):
     return Response(serializer.data)
 
 
+@api_view(['GET', ])
+def onenote_export(request, slug, format=None):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+
+    serializer = CurriculumSerializer(curriculum, context={'with_html': True})
+    return Response(serializer.data)
+
+
 '''
 class AnnotationList(generics.ListCreateAPIView):
   queryset = Annotation.objects.all()
