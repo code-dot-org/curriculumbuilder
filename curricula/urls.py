@@ -23,6 +23,7 @@ urlpatterns = patterns('curricula.views',
 
                        # Curriculum URLs
                        url(r'^(?P<slug>[-\w]+)/$', views.curriculum_view, name='curriculum_view'),
+                       url(r'^(?P<slug>[-\w]+).json$', views.onenote_export, name="onenote_export"),
                        url(r'^(?P<slug>[-\w]+)/pdf$', views.curriculum_pdf, name='curriculum_pdf'),
                        url(r'^(?P<slug>[-\w]+)/code/$', views.curriculum_code, name='curriculum_code'),
                        url(r'^(?P<slug>[-\w]+)/vocab/$', views.curriculum_vocab, name='curriculum_vocab'),

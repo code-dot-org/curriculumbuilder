@@ -1086,7 +1086,7 @@ def unit_element(request, slug, unit_slug, format=None):
 
     unit = get_object_or_404(Unit, curriculum=curriculum, slug=unit_slug)
 
-    serializer = UnitSerializer(unit)
+    serializer = UnitSerializer(unit, context={'with_html': True})
     return Response(serializer.data)
 
 
@@ -1119,6 +1119,14 @@ def lesson_element(request, slug, unit_slug, lesson_num):
                                parent=unit, _order=int(lesson_num) - 1)
 
     serializer = LessonSerializer(lesson)
+    return Response(serializer.data)
+
+
+@api_view(['GET', ])
+def onenote_export(request, slug, format=None):
+    curriculum = get_object_or_404(Curriculum, slug=slug)
+
+    serializer = CurriculumSerializer(curriculum, context={'with_html': True})
     return Response(serializer.data)
 
 
