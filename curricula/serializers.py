@@ -1,3 +1,4 @@
+import json
 from rest_framework import serializers
 
 from curricula.models import Unit, Curriculum
@@ -10,11 +11,11 @@ class ResourceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resource
-        fields = ('name', 'type', 'url')
+        fields = ('name', 'type', 'url', 'html')
 
     def get_html(self, obj):
-        if self.context.get('with_html'):
-            # ToDo embed html
+        if self.context.get('with_html') and obj.gd:
+            return json.dumps(obj.gd_html())
 
 
 class VocabSerializer(serializers.ModelSerializer):
@@ -55,7 +56,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     def get_teacher_resources(self, obj):
         resources = obj.resources.filter(student=False)
-        serializer = ResourceSerializer(resources, many=True)
+        serializer = ResourceSerializer(resources, many=True, context=self.context)
         return serializer.data
 
     def get_student_resources(self, obj):
