@@ -98,10 +98,11 @@ class BlockAdmin(PageAdmin, VersionAdmin):
 
 class MapAdmin(PageAdmin, VersionAdmin):
     model = Map
+    filter_horizontal = ('blocks',)
 
     fieldsets = (
         (None, {
-            'fields': ['title', 'slug', 'keywords', 'content'],
+            'fields': ['title', 'slug', 'keywords', 'blocks', 'content', 'in_menus'],
         }),
     )
 
