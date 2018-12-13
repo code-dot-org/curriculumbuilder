@@ -57,7 +57,7 @@ PAGE_MENU_TEMPLATES = (
     #(3, _("Unused"), "pages/menus/footer.html"),
 )
 
-# Don't add new pages to any menuds by default
+# Don't add new pages to any menus by default
 PAGE_MENU_TEMPLATES_DEFAULT = ()
 
 # A sequence of fields that will be injected into Mezzanine's (or any
