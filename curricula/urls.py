@@ -8,7 +8,7 @@ urlpatterns = patterns('curricula.views',
                        url(r'^$', views.index, name='home'),
 
                        # Allow viewing concept documentations without the /documentation/ prefix
-                       # so links work on both curriculumbuilder and curriculum.code.org
+                       # so links work on both curriculumbuilder and docs.code.org
                        url(r'^(?P<slug>concepts.*)/$', documentation_views.map_view, name="map_view"),
 
                        # Ajax endpoints
