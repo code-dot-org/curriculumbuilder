@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    <div id="categories" class="col-sm-2 hidden-sm hidden-xs">
+    <div id="categories" class="col-sm-3 hidden-sm hidden-xs">
         {% block categories %}
             <ul class="category_list">
             {% regroup maps by parent as map_menu %}
@@ -59,7 +59,7 @@
 {% endif %}
 {% endblock %}
 
-    <div class="content col-md-10">
+    <div class="content col-md-9">
 
     <div class="together">
         {% editable map.title map.content %}
