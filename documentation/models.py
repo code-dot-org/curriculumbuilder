@@ -325,15 +325,6 @@ class Map(Page, RichText, CloneableMixin):
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
-    '''
-    def save(self, *args, **kwargs):
-
-        if not self.slug:
-            self.slug = slugify(self.title)[:255]
-
-        super(Map, self).save(*args, **kwargs)
-    '''
-
     def clone(self, attrs={}, commit=True, m2m_clone_reverse=True, exclude=[], children=False):
 
         # If new title and/or slug weren't passed, update
