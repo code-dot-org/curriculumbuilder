@@ -21,43 +21,12 @@
 
 {% block sidebar %}
     <div id="categories" class="col-sm-2 hidden-sm hidden-xs">
-        <ul class="category_list">
-        {% regroup maps by parent as map_menu %}
-        {% include "documentation/partials/map_menu.html" with map_menu=map_menu %}
-
-            <ul class="category_list">
-            {% for category in ide.categories.all %}
-                <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
-                    style="background: {{ category.color }}; border-left-color: {{ category.color }}"
-                    data-color="{{ category.color }}"><span>{{ category.name }}</span>
-                {% if category.blocks.count > 0 %}
-                    <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
-                    {% for block in category.blocks.all %}
-                        <li><a href="../{{ block.slug }}/">{{ block.title }}</a></li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-                </li>
-            {% endfor %}
-            </ul>
         {% block categories %}
-            {% if ide.categories.count > 0 %}
-                <ul class="category_list">
-                {% for category in ide.categories.all %}
-                    <li class="category_name{% if category == code_block.parent_cat %} active{% endif %}"
-                        style="background: {{ category.color }}; border-left-color: {{ category.color }}"
-                        data-color="{{ category.color }}"><span>{{ category.name }}</span>
-                    {% if category.blocks.count > 0 %}
-                        <ul class="category_blocks" {% if category != code_block.parent_cat %}style="display: none;"{% endif %}>
-                        {% for block in category.blocks.all %}
-                            <li><a href="../{{ block.slug }}/">{{ block.title }}</a></li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    </li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+            <ul class="category_list">
+            {% regroup maps by parent as map_menu %}
+                <h2><a href="/concepts/">Concepts</a></h2>
+            {% include "documentation/partials/map_menu.html" with map_menu=map_menu %}
+            </ul>
         {% endblock %}
     </div>
 {% endblock %}

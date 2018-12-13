@@ -7,6 +7,10 @@ from documentation import views as documentation_views
 urlpatterns = patterns('curricula.views',
                        url(r'^$', views.index, name='home'),
 
+                       # Allow viewing concept documentations without the /documentation/ prefix
+                       # so links work on both curriculumbuilder and curriculum.code.org
+                       url(r'^(?P<slug>concepts.*)/$', documentation_views.map_view, name="map_view"),
+
                        # Ajax endpoints
                        # url(r'^page_history/(?P<page_id>\d+)/$', views.page_history, name='page_history'),
                        # url(r'^test_view/(?P<pk>\d+)/$', views.CompareHistoryView.as_view() ),
