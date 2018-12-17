@@ -28,8 +28,9 @@ cd curriculumbuilder
 
 ```
 pip install virtualenv
-virtualenv cb
-source cb/bin/activate
+mkdir ~/.virtualenvs
+virtualenv ~/.virtualenvs/cb
+source ~/.virtualenvs/cb/bin/activate
 ```
 
 4. install python dependencies
@@ -43,7 +44,7 @@ pip install -r requirements.txt
 ```
 export PYCURL_SSL_LIBRARY=openssl
 pip uninstall pycurl
-pip install --install-option="--with-openssl" --install-option="--openssl-r=/usr/local/opt/openssl" pycurl
+pip install --install-option="--with-openssl" --install-option="--openssl-dir=/usr/local/opt/openssl" pycurl
 ```
 
 6. copy the db
