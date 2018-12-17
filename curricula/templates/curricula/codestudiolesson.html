@@ -1,6 +1,6 @@
 {% extends "basecurriculum.html" %}
 
-{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n %}
+{% load staticfiles mezzanine_tags keyword_tags comment_tags i18n with_unit %}
 
 {% block meta_title %}{{ lesson.meta_title }}{% endblock %}
 
@@ -192,7 +192,7 @@
         <div class="activity">
             {% editable activity.name activity.time activity.content %}
                 <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
-                {{ activity.content|richtext_filters|safe }}
+                {{ activity.content|with_unit:unit|richtext_filters|safe }}
             {% endeditable %}
         </div>
     {% endfor %}
