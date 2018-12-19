@@ -44,14 +44,14 @@
                         <button type="submit" class="save btn btn-primary">Save</button>
                     </form>
                 <h2>Publishing</h2>
-                {% if map.jackfrost_can_build %}
-                    <button class="btn btn-primary" id="publish_this" data-pk="{{ map.pk }}" data-type="Map">Publish</button><i id="progress_spinner"></i><br/>
+                {% if code_block.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ code_block.pk }}" data-type="Block">Publish</button><i id="progress_spinner"></i><br/>
                     <pre id="publish_results"></pre>
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
                 {% endif %}
                 <h2>deepSpaceCopy</h2>
-                <button class="btn btn-primary" id="clone_this" data-pk="{{ map.pk }}" data-type="Map">Clone</button><i id="clone_spinner"></i><br/>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ code_block.pk }}" data-type="Block">Clone</button><i id="clone_spinner"></i><br/>
                 <pre id="clone_results"></pre>
             </div>
         </div>
