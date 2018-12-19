@@ -300,6 +300,10 @@ class Map(Page, RichText, CloneableMixin):
     def __unicode__(self):
         return self.title
 
+    # Override default Page override logic so that new slugs get generated on move
+    def overridden(self):
+        return False
+
     def get_published_url(self):
         return '//docs.code.org%s' % self.get_absolute_url()
 
