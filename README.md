@@ -57,6 +57,7 @@ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 7. run the server
 
 ```
+source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
 python manage.py runserver_plus
 ```
 
