@@ -315,6 +315,10 @@ class Map(Page, RichText, CloneableMixin):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
     def publish(self, children=False):
+        if children:
+            for page in self.children.all():
+                for result in page.map.publish(children=children):
+                    yield result
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Map, self)

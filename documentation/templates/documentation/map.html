@@ -46,6 +46,7 @@
                 <h2>Publishing</h2>
                 {% if map.jackfrost_can_build %}
                     <button class="btn btn-primary" id="publish_this" data-pk="{{ map.pk }}" data-type="Map">Publish</button><i id="progress_spinner"></i><br/>
+                    <input type="checkbox" name="lessons" id="include_lessons"> Include Children</input>
                     <pre id="publish_results"></pre>
                 {% else %}
                     <em>Can't publish, check settings in admin</em>
