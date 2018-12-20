@@ -1,5 +1,6 @@
 {% load mezzanine_tags %}
 {% load staticfiles %}
+{% load with_unit %}
 
 <div class="container">
     <div class="header printbackground">
@@ -26,7 +27,7 @@
                 {% for activity in lesson.activity_set.all %}
                     <div class="activity">
                         <h2>{{ activity.name }}{% if activity.time %} ({{ activity.time }}){% endif %}</h2>
-                        {{ activity.content|richtext_filters|safe }}
+                        {{ activity.content|with_unit:unit|richtext_filters|safe }}
                     </div>
                 {% endfor %}
 
