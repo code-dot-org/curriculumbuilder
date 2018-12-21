@@ -15,7 +15,7 @@ class ResourceSerializer(serializers.ModelSerializer):
 
     def get_html(self, obj):
         if self.context.get('with_html') and obj.gd:
-            return json.dumps(obj.gd_html())
+            return obj.gd_html()
 
 
 class VocabSerializer(serializers.ModelSerializer):
