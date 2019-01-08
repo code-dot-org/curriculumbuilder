@@ -549,7 +549,7 @@ tr.history_changelog .resolve_feedback {
 }
 
 .embedded {
-    overflow: hidden;
+    overflow: auto;
 }
 
 @media print {
