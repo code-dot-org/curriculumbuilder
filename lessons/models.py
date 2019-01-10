@@ -523,8 +523,14 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     @property
     def forum_link(self):
-        # TODO: This assumes numbered units, which doesn't work for CSF - need to rework forum side of things
-        return "//forum.code.org/c/%s%d/" % (self.curriculum.get_canonical_slug(), self.unit.number)
+        if self.unit.forum_url:
+            if self.unit.forum_vars:
+                replacements = eval(self.unit.forum_vars)
+                return self.unit.forum_url % replacements
+            else:
+                return self.unit.forum_url
+        else:
+            return "//forum.code.org/"
 
     @property
     def feedback_link(self):

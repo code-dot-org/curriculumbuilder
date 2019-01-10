@@ -269,6 +269,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
     show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
     week_length = models.IntegerField('Days in a Week', default=5, blank=True, null=True,
                                       help_text='Controls the minimum lesson size in the pacing calendar.')
+    forum_url = models.URLField(blank=True, null=True, help_text='URL to forum, using % operators')
+    forum_vars = models.CharField(max_length=255, blank=True, null=True,
+                                  help_text='Tuple of properties to use in forum url')
     lesson_template_override = models.CharField(max_length=255, blank=True, null=True,
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
