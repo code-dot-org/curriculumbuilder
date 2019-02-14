@@ -115,4 +115,4 @@ class InternationalizablePage(Page, Internationalizable):
 
     @classmethod
     def internationalizable_fields(cls):
-        return ['title', 'description']
+        return ['title', 'description', 'content']
