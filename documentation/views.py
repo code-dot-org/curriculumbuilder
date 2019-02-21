@@ -70,7 +70,11 @@ def page_view(request, parents, slug):
 
 def map_view(request, slug):
 
-    page = get_object_or_404(Map, slug=slug)
+    try:
+        page = Map.objects.get(slug=slug)
+    except Map.DoesNotExist:
+        raise ContinueResolving
+
     maps = Map.objects.filter(parent__slug='concepts')
 
     return render(request, 'documentation/map.html', {'map': page, 'maps': maps})
