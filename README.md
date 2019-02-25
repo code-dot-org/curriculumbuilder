@@ -14,8 +14,17 @@ You'll probably end up asking josh anyway, but why not try this first...
   ```
   brew install openssl postgres heroku/brew/heroku Caskroom/cask/wkhtmltopdf
   brew services start postgresql
-  # might also need to install python
   ```
+
+2. make sure you have python 2.7
+  ```
+  python -V # -> Python 2.7.10
+  ```
+  if you don't, try installing it:
+  ```
+  brew install python@2
+  ```
+  And then run `python -V` again to make sure you now have version 2.7 installed. If you don't, stop here and try to get yourself onto this version of python before proceeding.
 
 2. clone repo
 
