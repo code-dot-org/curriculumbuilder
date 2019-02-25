@@ -20,4 +20,4 @@
 # dependencies on heroku this can be removed.
 
 apt_dir="${BASH_SOURCE%/*}/../.apt/"
-JAVA_TOOL_OPTIONS= $apt_dir/usr/lib/jvm/java-8-openjdk-amd64/bin/java -jar "$apt_dir/usr/local/bin/crowdin-cli.jar" "$@"
+JAVA_TOOL_OPTIONS= $apt_dir/usr/lib/jvm/java-8-openjdk-amd64/bin/java -jar "$apt_dir/usr/lib/crowdin/crowdin-cli.jar" "$@"
