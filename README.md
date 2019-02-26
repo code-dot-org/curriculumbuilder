@@ -73,17 +73,13 @@ import os
 import sys
 
 PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
-#PROJECT_APP = os.path.basename(PROJECT_APP_PATH)
 PROJECT_ROOT = BASE_DIR = os.path.dirname(PROJECT_APP_PATH)
 
 DEBUG = True
 
-sys.dont_write_bytecode = True
-
 SLACK_BACKEND = 'django_slack.backends.DisabledBackend'
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-#DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
 
 CACHES = {
