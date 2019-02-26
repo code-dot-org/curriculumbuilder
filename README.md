@@ -64,7 +64,14 @@ heroku login # need credentials from Josh C.
 heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 ```
 
-8. run the server
+8. set up local_settings.py
+
+```
+create curruculumbuilder/curriculumBuilder/local_settings.py
+copy starter settings from local_settings.py.example
+```
+
+9. run the server
 
 ```
 source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
