@@ -65,8 +65,7 @@ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 8. set up local_settings.py
 
 ```
-create curruculumbuilder/curriculumBuilder/local_settings.py
-copy starter settings from local_settings.py.example
+cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
 ```
 
 9. run the server
