@@ -80,18 +80,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-<!-- Assessment -->
-
-        {% if lesson.assessment %}
-            <h2>Assessment Opportunity</h2>
-            <div class="assessment">
-                {% editable lesson.assessment %}
-                    {{ lesson.assessment|richtext_filters|safe }}
-                {% endeditable %}
-            </div>
-        {% endif %}
-
+        
 <!-- Prep -->
 
         {% if lesson.prep %}
