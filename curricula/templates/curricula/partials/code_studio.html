@@ -15,6 +15,9 @@
                     <ul>
                         <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                             {{ level.display_name|default:level.name }} <span class="level-icon"></span>
+                            {% if level.assessment %}
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            {% endif %}
                         </li>
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
@@ -118,6 +121,35 @@
                         <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
+
+                        {% if level.mini_rubric %}
+                            <div class="teacher-markdown admonition tip">
+                            <p class="admonition-title"><i class="fa fa-check-circle" aria-hidden="true"></i> Teacher Evaluation Guidelines</p>
+                                <div>
+                                    <span>Key Concepts:</span>
+                                    {{ level.rubric_key_concept|richtext_filters|safe }}
+                                </div>
+                                <div>
+                                    <span>Assessment Criteria:</span>
+                                    <details>
+                                        <summary>Exceeds</summary>
+                                        {{ level.rubric_exceeds|richtext_filters|safe }}
+                                    </details>
+                                    <details>
+                                        <summary>Meets</summary>
+                                        {{ level.rubric_meets|richtext_filters|safe }}
+                                    </details>
+                                    <details>
+                                        <summary>Approaches</summary>
+                                        {{ level.rubric_approaches|richtext_filters|safe }}
+                                    </details>
+                                    <details>
+                                        <summary>No Evidence</summary>
+                                        {{ level.rubric_no_evidence|richtext_filters|safe }}
+                                    </details>
+                                </div>
+                            </div>
+                        {% endif %}
 
                         {% if level.teacher_markdown %}
                             <div class="teacher-markdown admonition tip">
