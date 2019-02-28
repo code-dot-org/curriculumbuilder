@@ -15,14 +15,18 @@
                     <ul>
                         <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                             {{ level.display_name|default:level.name }} <span class="level-icon"></span>
-                            {% if level.assessment %}
-                            <i class="fa fa-check-circle" aria-hidden="true"></i>
-                            {% endif %}
                         </li>
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                             <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
                                 Teacher Overview
+                                <!-- TODO: Remove outer if statement here when -->
+                                    <!-- we want to roll out for all courses not just CSD -->
+                                    {% if 'csd' in level.path %}
+                                        {% if level.assessment %}
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        {% endif %}
+                                    {% endif %}
                             </a>
                         </li>
                         {% endif %}
@@ -34,6 +38,7 @@
                     </ul>
 
                     <!-- Body panels -->
+                    <!-- Teacher Overview Content -->
                     {% if level.teacher_markdown %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
@@ -48,6 +53,7 @@
                     </div>
                     {% endif %}
 
+                    <!-- Student Overview Content -->
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
                         <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
@@ -107,7 +113,19 @@
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    <span class="level-icon"></span> {% if level.bonus_level %}Extra{% else %}{{ level.position }}{% endif %}
+                                    <span class="level-icon"></span>
+                                    {% if level.bonus_level %}
+                                        Extra
+                                    {% else %}
+                                        {{ level.position }}
+                                    {% endif %}
+                                    <!-- TODO: Remove outer if statement here when -->
+                                    <!-- we want to roll out for all courses not just CSD -->
+                                    {% if 'csd' in level.path %}
+                                        {% if level.assessment %}
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        {% endif %}
+                                    {% endif %}
                                 </a>
                             </li>
                         {% endfor %}
