@@ -289,6 +289,10 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
             'fields': ['title', 'short_title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
                        'overview', 'keywords', ('description', 'gen_description')],
         }),
+        ('Assessment', {
+            'fields': ['assessment'],
+            'classes': ['collapse-closed'],
+        }),
         ('Purpose, Prep, & Questions', {
             'fields': ['cs_content', 'prep', 'questions'],
             'classes': ['collapse-closed'],
@@ -349,6 +353,10 @@ class MultiLessonAdmin(ImportExportModelAdmin):
         (None, {
             'fields': ['title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
                        'overview', 'keywords', ('description', 'gen_description')],
+        }),
+        ('Assessment', {
+            'fields': ['assessment'],
+            'classes': ['collapse-closed'],
         }),
         ('Purpose, Prep, & Questions', {
             'fields': ['cs_content', 'prep', 'questions'],
