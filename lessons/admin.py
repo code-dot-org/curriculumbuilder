@@ -287,7 +287,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
     fieldsets = (
         (None, {
             'fields': ['title', 'short_title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
-                       'overview', 'keywords', ('description', 'gen_description')],
+                       'overview', 'keywords', 'assessment', ('description', 'gen_description')],
         }),
         ('Purpose, Prep, & Questions', {
             'fields': ['cs_content', 'prep', 'questions'],
@@ -348,7 +348,7 @@ class MultiLessonAdmin(ImportExportModelAdmin):
     fieldsets = (
         (None, {
             'fields': ['title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
-                       'overview', 'keywords', ('description', 'gen_description')],
+                       'overview', 'keywords', 'assessment', ('description', 'gen_description')],
         }),
         ('Purpose, Prep, & Questions', {
             'fields': ['cs_content', 'prep', 'questions'],
