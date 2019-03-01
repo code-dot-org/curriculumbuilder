@@ -268,6 +268,9 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     unplugged = models.BooleanField(default=False)
     resources = SortedManyToManyField(Resource, blank=True, related_name='lessons')
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
+    assessment = RichTextField('Assessment Opportunities',
+                               help_text='Parts of the lesson that can be assessed for students understaning',
+                               blank=True, null=True)
     questions = RichTextField('Support Details', help_text='Open questions or comments about this lesson',
                               blank=True, null=True)
     cs_content = RichTextField('Purpose', help_text='Purpose of this lesson in progression and CS in general',

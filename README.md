@@ -7,8 +7,6 @@ An internal tool designed for Code.org curricula
 
 ### How to install Curriculum Builder locally on OS X
 
-You'll probably end up asking josh anyway, but why not try this first...
-
 1. install mac os x dependencies
 
   ```
@@ -64,7 +62,13 @@ heroku login # need credentials from Josh C.
 heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 ```
 
-8. run the server
+8. set up local_settings.py
+
+```
+cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
+```
+
+9. run the server
 
 ```
 source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
@@ -72,3 +76,9 @@ python manage.py runserver_plus
 ```
 
 http://localhost:8000
+
+10. In order to create PRs 
+
+```
+Make sure to ask JoshC to add you as an contributor to the repo
+```
