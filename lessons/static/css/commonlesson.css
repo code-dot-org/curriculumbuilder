@@ -366,6 +366,7 @@ html, body{
 
 .admonition.assessment {
     border: 2px solid #0094ca;
+    background-color: white;
 }
 
 .admonition.assessment > p.admonition-title {
