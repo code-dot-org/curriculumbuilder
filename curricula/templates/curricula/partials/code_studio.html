@@ -123,7 +123,10 @@
                                     <!-- we want to roll out for all courses not just CSD -->
                                     {% if 'csd' in level.path and '2019' in level.path %}
                                         {% if level.assessment %}
-                                            <i class="assessment-icon fa fa-check-circle" aria-hidden="true"></i>
+                                            <span class="assessment-icon fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-1x fa-inverse"></i>
+                                                <i class="fa fa-check-circle fa-stack-1x "></i>
+                                            </span>
                                         {% endif %}
                                     {% endif %}
                                 </a>
