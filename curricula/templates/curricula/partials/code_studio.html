@@ -22,7 +22,7 @@
                                 Teacher Overview
                                 <!-- TODO: Remove outer if statement here when -->
                                     <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path %}
+                                    {% if 'csd' in level.path and '19' in level.path %}
                                         {% if level.assessment %}
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         {% endif %}
@@ -121,7 +121,7 @@
                                     {% endif %}
                                     <!-- TODO: Remove outer if statement here when -->
                                     <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path %}
+                                    {% if 'csd' in level.path and '19' in level.path %}
                                         {% if level.assessment %}
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         {% endif %}
@@ -142,7 +142,7 @@
 
                         <!-- TODO: Remove outer if statement here when -->
                         <!-- we want to roll out for all courses not just CSD -->
-                        {% if 'csd' in level.path %}
+                        {% if 'csd' in level.path and '19' in level.path %}
                             {% if level.mini_rubric %}
                                 <div class="teacher-markdown admonition tip">
                                 <p class="admonition-title"><i class="fa fa-check-circle" aria-hidden="true"></i> Teacher Evaluation Guidelines</p>
