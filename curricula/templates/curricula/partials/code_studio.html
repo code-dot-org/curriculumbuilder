@@ -140,33 +140,37 @@
                             View on Code Studio
                         </a>
 
-                        {% if level.mini_rubric %}
-                            <div class="teacher-markdown admonition tip">
-                            <p class="admonition-title"><i class="fa fa-check-circle" aria-hidden="true"></i> Teacher Evaluation Guidelines</p>
-                                <div>
-                                    <span>Key Concepts:</span>
-                                    {{ level.rubric_key_concept|richtext_filters|safe }}
+                        <!-- TODO: Remove outer if statement here when -->
+                        <!-- we want to roll out for all courses not just CSD -->
+                        {% if 'csd' in level.path %}
+                            {% if level.mini_rubric %}
+                                <div class="teacher-markdown admonition tip">
+                                <p class="admonition-title"><i class="fa fa-check-circle" aria-hidden="true"></i> Teacher Evaluation Guidelines</p>
+                                    <div>
+                                        <span>Key Concepts:</span>
+                                        {{ level.rubric_key_concept|richtext_filters|safe }}
+                                    </div>
+                                    <div>
+                                        <span>Assessment Criteria:</span>
+                                        <details>
+                                            <summary>Exceeds</summary>
+                                            {{ level.rubric_exceeds|richtext_filters|safe }}
+                                        </details>
+                                        <details>
+                                            <summary>Meets</summary>
+                                            {{ level.rubric_meets|richtext_filters|safe }}
+                                        </details>
+                                        <details>
+                                            <summary>Approaches</summary>
+                                            {{ level.rubric_approaches|richtext_filters|safe }}
+                                        </details>
+                                        <details>
+                                            <summary>No Evidence</summary>
+                                            {{ level.rubric_no_evidence|richtext_filters|safe }}
+                                        </details>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span>Assessment Criteria:</span>
-                                    <details>
-                                        <summary>Exceeds</summary>
-                                        {{ level.rubric_exceeds|richtext_filters|safe }}
-                                    </details>
-                                    <details>
-                                        <summary>Meets</summary>
-                                        {{ level.rubric_meets|richtext_filters|safe }}
-                                    </details>
-                                    <details>
-                                        <summary>Approaches</summary>
-                                        {{ level.rubric_approaches|richtext_filters|safe }}
-                                    </details>
-                                    <details>
-                                        <summary>No Evidence</summary>
-                                        {{ level.rubric_no_evidence|richtext_filters|safe }}
-                                    </details>
-                                </div>
-                            </div>
+                            {% endif %}
                         {% endif %}
 
                         {% if level.teacher_markdown %}
