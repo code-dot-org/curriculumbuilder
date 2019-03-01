@@ -298,7 +298,7 @@ html, body{
 .toc a { color: #428bca; }
 .toc a:visited { color: #428bca; }
 
-.admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content {
+.admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content, .admonition.assessment {
     margin: 40px 15px 15px 15px;
     padding: 10px;
     float: right;
@@ -323,8 +323,11 @@ html, body{
     margin-right: 7px;
 }
 
-.admonition.tip > .admonition-title, .admonition.tip-center > .admonition-title,
-.admonition.discussion > .admonition-title, .admonition.content > .admonition-title {
+.admonition.tip > .admonition-title,
+.admonition.tip-center > .admonition-title,
+.admonition.discussion > .admonition-title,
+.admonition.content > .admonition-title,
+.admonition.assessment > .admonition-title {
     color: white!important;
     font-size: 12pt;
     height: 30px;
@@ -361,6 +364,14 @@ html, body{
     background-color: #00adbc!important;
 }
 
+.admonition.assessment {
+    border: 2px solid #0094ca;
+}
+
+.admonition.assessment > p.admonition-title {
+    background-color: #0094ca!important;
+}
+
 .tiplink {
     float: left;
     width: 20px;
@@ -380,6 +391,10 @@ html, body{
 
 .tiplink-content a:link, .tiplink-content a:visited {
     color: #00adbc;
+}
+
+.tiplink-assessment a:link, .tiplink-assessment a:visited {
+    color: #0094ca;
 }
 
 .say > .admonition-title, .guide > .admonition-title,
@@ -854,7 +869,7 @@ a.btn.btn-warning:visited {
 }
 
 @media only screen and (max-width : 480px) {
-    .admonition.tip, .admonition.discussion, .admonition.content {
+    .admonition.tip, .admonition.discussion, .admonition.content, .admonition.assessment {
         text-align: inherit;
         width: 100%;
         margin: 40px 0 15px 0;
@@ -873,4 +888,34 @@ a.btn.btn-warning:visited {
     body {
         font-size: 20px;
     }
+}
+
+/* Assessment Icon on Code Studio Pull Through */
+
+.assessment-icon {
+    color: #0094ca;
+    padding: 10px;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 12.5px;
+    top: -25px;
+    font-size: 15px;
+}
+
+/* Mini Rubric Display */
+
+details.rubric-performance-level {
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+
+
+.rubric-header {
+    font-weight: bold;
+}
+
+div.rubric-key-concept p {
+    margin: 5px;
 }
