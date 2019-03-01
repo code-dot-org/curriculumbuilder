@@ -616,7 +616,7 @@ tr.history_changelog .resolve_feedback {
         color: #ffffff !important;
     }
 
-    .admonition.tip i:before, .admonition.discussion i:before, .admonition.content i:before {
+    .admonition.tip i:before, .admonition.discussion i:before, .admonition.content i:before, .admonition.assessment i:before {
         color: white !important;
     }
 
