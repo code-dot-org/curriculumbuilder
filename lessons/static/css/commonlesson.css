@@ -341,7 +341,7 @@ html, body{
 }
 
 .admonition.tip {
-    border: 2px solid #000000;
+    border: 2px solid #ffa400;
 }
 
 .admonition.tip > p.admonition-title {
@@ -365,11 +365,11 @@ html, body{
 }
 
 .admonition.assessment {
-    border: 2px solid #00adbc;
+    border: 2px solid #0094ca;
 }
 
 .admonition.assessment > p.admonition-title {
-    background-color: #00adbc!important;
+    background-color: #0094ca!important;
 }
 
 .tiplink {
@@ -890,19 +890,27 @@ a.btn.btn-warning:visited {
     }
 }
 
+/* Assessment Icon on Code Studio Pull Through */
+
+.assessment-icon {
+    color: #0094ca;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: -3px;
+    top: -17px;
+    font-size: 15px;
+}
+
+/* Mini Rubric Display */
+
 details.rubric-performance-level {
     margin-left: 10px;
     margin-top: 5px;
 }
 
-.assessment-icon {
-    color: black;
-    padding: 10px;
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    top: -20px;
-}
+
 
 .rubric-header {
     font-weight: bold;
