@@ -775,6 +775,7 @@ th a:link, th a:visited, th a:hover, th a:active {
     margin-left: -18px;
 }
 */
+
 /*
 .named-True, .named-True + .stage-level,
 .teacher-markdown-true, .teacher-markdown-true + .stage-level,
@@ -791,32 +792,59 @@ th a:link, th a:visited, th a:hover, th a:active {
     clear:both;
 }
 */
+
 .level-icon:before {
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
 }
 
-.type-External .level-icon:before {                 content: "\f0f6"; }
-.type-Map .level-icon:before {                      content: "\f278"; }
-.type-StandaloneVideo .level-icon:before {          content: "\f03d"; }
-.type-FreeResponse .level-icon:before {             content: "\f040"; }
-.type-Multi .level-icon:before {                    content: "\f0ca"; }
-.type-Match .level-icon:before {                    content: "\f009"; }
-.type-Applab .level-icon:before {                   content: "\f10b"; }
-.type-NetSim .level-icon:before {                   content: "\f0e8"; }
-.type-Pixelation .level-icon:before {               content: "\f00a"; }
-.type-TextCompression .level-icon:before {          content: "\f066"; }
-.type-Odometer .level-icon:before {                 content: "\f0e4"; }
-.type-Gamelab .level-icon:before {                  content: "\f11b"; }
-.type-Weblab .level-icon:before {                   content: "\f0ac"; }
-.type-Unplugged .level-icon:before {                content: "\f127"; }
-.type-Maze .level-icon:before {                     content: "\f047"; }
-.type-Karel .level-icon:before {                    content: "\f047"; }
-.type-Artist .level-icon:before {                   content: "\f040"; }
-.type-Playlab .level-icon:before {                  content: "\f135"; }
-.type-Calc .level-icon:before {                     content: "\f1ec"; }
-.type-Eval .level-icon:before {                     content: "\f040"; }
-.level-icon:before {                                content: "\f108"; }
+/* Concept Levels */
+
+/* Text */
+.type-External .level-icon:before {
+    content: "\f15c";
+}
+/* Video */
+.type-StandaloneVideo .level-icon:before {
+    content: "\f03d";
+}
+/* Map */
+.type-Map .level-icon:before {
+    content: "\f279";
+}
+
+/* Activity Levels */
+
+/* Unplugged */
+.type-Unplugged .level-icon:before {
+    content: "\f0c4";
+}
+
+/* Question */
+.type-FreeResponse .level-icon:before,
+.type-Multi .level-icon:before,
+.type-Match .level-icon:before,
+.type-Eval .level-icon:before{
+    content: "\f0ca";
+}
+
+/* Online */
+.type-Applab .level-icon:before,
+.type-Gamelab .level-icon:before,
+.type-Weblab .level-icon:before,
+.type-NetSim .level-icon:before,
+.type-Pixelation .level-icon:before,
+.type-TextCompression .level-icon:before,
+.type-Odometer .level-icon:before,
+.type-Maze .level-icon:before,
+.type-Karel .level-icon:before,
+.type-Artist .level-icon:before,
+.type-Playlab .level-icon:before,
+.type-Calc .level-icon:before,
+.level-icon:before
+{
+    content: '\f108';
+}
 
 
 ul.multi {
@@ -894,7 +922,7 @@ a.btn.btn-warning:visited {
 /* Assessment Icon on Code Studio Pull Through */
 
 .assessment-icon {
-    color: #0094ca;
+    color: white;
     padding: 10px;
     width: 15px;
     height: 15px;
@@ -902,6 +930,10 @@ a.btn.btn-warning:visited {
     right: 12.5px;
     top: -25px;
     font-size: 15px;
+}
+
+.assessment-icon .fa-circle{
+    color: #0094ca;
 }
 
 /* Mini Rubric Display */
