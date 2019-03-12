@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 
 import django.apps
 
@@ -25,3 +26,6 @@ class Command(BaseCommand):
                 outpath = os.path.abspath(os.path.join(source_dir, model.__name__ + ".json"))
                 with open(outpath, 'w') as outfile:
                     json.dump(strings, outfile, indent=4, sort_keys=True)
+
+        # Gather strings for translation in html files.
+        subprocess.call(["python", "manage.py", "makemessages", "-l", "en"])

@@ -41,6 +41,9 @@ class Command(BaseCommand):
                 ])
             print_clear("%s - finished" % locale, end='\n')
 
+        # Compile Django translations
+        subprocess.call(['python', 'manage.py', 'compilemessages'])
+
         # Upload restored translation data to s3
         print("Uploading translations")
         for index, (locale, _) in enumerate(settings.LANGUAGES):
