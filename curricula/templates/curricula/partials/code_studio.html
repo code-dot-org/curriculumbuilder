@@ -14,7 +14,7 @@
                     <!-- Header tabs -->
                     <ul>
                         <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
-                            {{ level.display_name|default:level.name }} <span class="level-icon"></span>
+                            {{ level.display_name|default:level.name }} <span class="level-icon fa"></span>
                         </li>
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
@@ -116,7 +116,7 @@
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    <span class="level-icon"></span>
+                                    <span class="level-icon fa"></span>
                                     {% if level.bonus_level %}
                                         Extra
                                     {% else %}

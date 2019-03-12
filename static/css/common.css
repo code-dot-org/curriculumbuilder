@@ -425,8 +425,6 @@ footer {
 .pacing-lesson.widget .lesson-icon:before,
 .pacing-lesson.research .lesson-icon:before,
 .pacing-lesson.external-tool .lesson-icon:before {
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
     content: "\f108";
 }
 
