@@ -4,6 +4,7 @@ import subprocess
 
 import django.apps
 
+from django.core import management
 from django.core.management.base import BaseCommand
 from i18n.models import Internationalizable
 from i18n.utils import I18nFileWrapper
@@ -31,6 +32,4 @@ class Command(BaseCommand):
         # For some reason makemessages won't create the locale/ directory but will create
         # the subdirectories
         subprocess.call(["mkdir", "locale/"])
-        subprocess.call(["python", "manage.py", "makemessages", "-l", "en"])
-        # Django.po isn't a very useful file name
-        subprocess.call(["mv", "locale/en/LC_MESSAGES/django.po", "locale/en/LC_MESSAGES/miscellaneous.po"])
+        management.call_command("makemessages", "-l en")
