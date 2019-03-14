@@ -3,6 +3,7 @@ import os
 import subprocess
 
 from django.conf import settings
+from django.core import management
 from django.core.management.base import BaseCommand
 from i18n.utils import I18nFileWrapper, print_clear
 
@@ -42,7 +43,7 @@ class Command(BaseCommand):
             print_clear("%s - finished" % locale, end='\n')
 
         # Compile Django translations
-        subprocess.call(['python', 'manage.py', 'compilemessages'])
+        management.call_command("compilemessages")
 
         # Upload restored translation data to s3
         print("Uploading translations")
