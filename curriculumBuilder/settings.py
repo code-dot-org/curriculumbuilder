@@ -129,6 +129,7 @@ LANGUAGES = (
     ('es-mx', _('Mexican Spanish')),
     ('it-it', _('Italian')),
     ('th-th', _('Thai')),
+    ('sk-sk', _('Slovak')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
