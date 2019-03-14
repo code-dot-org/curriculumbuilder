@@ -28,4 +28,9 @@ class Command(BaseCommand):
                     json.dump(strings, outfile, indent=4, sort_keys=True)
 
         # Gather strings for translation in html files.
+        # For some reason makemessages won't create the locale/ directory but will create
+        # the subdirectories
+        subprocess.call(["mkdir", "locale/"])
         subprocess.call(["python", "manage.py", "makemessages", "-l", "en"])
+        # Django.po isn't a very useful file name
+        subprocess.call(["mv", "locale/en/LC_MESSAGES/django.po", "locale/en/LC_MESSAGES/miscellaneous.po"])
