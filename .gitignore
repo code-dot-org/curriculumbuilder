@@ -14,7 +14,7 @@ _output
 backups
 media
 uploads
-*.mo
+locale
 
 *.backup
 
