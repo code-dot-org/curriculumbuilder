@@ -10,11 +10,6 @@
     <title>{% block meta_title %}Code.org CurriculumBuilder{% endblock %}</title>
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
-    {% ifinstalled mezzanine.blog %}
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
-        <link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
-    {% endifinstalled %}
-
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
