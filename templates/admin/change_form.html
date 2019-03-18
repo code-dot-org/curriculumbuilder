@@ -81,7 +81,7 @@
             <!-- Errors -->
             {% if errors %}
             <p class="errornote">
-                {% if count errors|length = 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
+                {% if errors|length == 1 %}Please correct the error below.{% else %}Please correct the errors below.{% endif %}
             </p>
             <ul class="errorlist">{% for error in adminform.form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
