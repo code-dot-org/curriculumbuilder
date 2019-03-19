@@ -3,6 +3,13 @@
 {% load pages_tags mezzanine_tags i18n future staticfiles %}
 
 <head>
+    {% if LANGUAGE_CODE == LANGUAGE_CODE_DO_TRANSLATION %}
+        <script type="text/javascript">
+            var _jipt = [];
+            _jipt.push(['project', 'curriculumbuilder']);
+        </script>
+        <script type="text/javascript" src="//cdn.crowdin.com/jipt/jipt.js"></script>
+    {% endif %}
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
