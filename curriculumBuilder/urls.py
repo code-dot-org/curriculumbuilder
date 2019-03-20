@@ -100,16 +100,6 @@ urlpatterns += patterns('',
 
     # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
 
-    # HOMEPAGE FOR A BLOG-ONLY SITE
-    # -----------------------------
-    # This pattern points the homepage to the blog post listing page,
-    # and is useful for sites that are primarily blogs. If you use this
-    # pattern, you'll also need to set BLOG_SLUG = "" in your
-    # ``settings.py`` module, and delete the blog page object from the
-    # page tree in the admin if it was installed.
-
-    # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
-
     url(r'^robots.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", content_type="text/plain")),
     url("^edit/$", views.reversion_edit, name="edit"),
     url("^search/$", core_views.search, name="search"),
