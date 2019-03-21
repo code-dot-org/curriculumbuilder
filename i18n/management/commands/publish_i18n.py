@@ -15,11 +15,18 @@ class Command(BaseCommand):
 
     def handle(self):
         log("I18n Sync Step 4 of 4: Publish translated content to S3")
+
         models = [
             model for model in django.apps.apps.get_models()
             if self.should_publish_model(model)
         ]
         log("Models to publish: %s" % ', '.join(model.__name__ for model in models))
+
+        language_codes = [
+            language_code for language_code, _ in settings.LANGUAGES
+            if language_code != settings.LANGUAGE_CODE
+        ]
+        log("Languages to publish: %s" % ', '.join(language_codes))
 
         for model_index, model in enumerate(models):
             name = model.__name__
@@ -32,11 +39,7 @@ class Command(BaseCommand):
                 if not obj.should_be_translated:
                     continue
 
-                original_lang = translation.get_language()
-                for language_code, _ in settings.LANGUAGES:
-                    if language_code == settings.LANGUAGE_CODE:
-                        continue
-
+                for language_code in language_codes:
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
@@ -44,5 +47,4 @@ class Command(BaseCommand):
                         list(obj.publish_pdfs(silent=True))
                 success_count += 1
 
-                translation.activate(original_lang)
             log("%s/%s %s objects published" % (success_count, total, name))
