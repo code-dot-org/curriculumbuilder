@@ -700,7 +700,7 @@ def old_publish(request):
         if request.POST.get('pdf') == 'true':
             payload = obj.publish_pdfs()
         else:
-            payload = obj.publish(children)
+            payload = obj.publish(children=children)
 
         attachments = [
             {

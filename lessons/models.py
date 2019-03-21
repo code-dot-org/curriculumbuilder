@@ -427,15 +427,16 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
         return can_build
 
-    def publish(self, children=False):
+    def publish(self, children=False, silent=False):
         if self.jackfrost_can_build():
             for url in self.jackfrost_urls():
                 try:
                     read, written = build_single(url)
-                    slack_message('slack/message.slack', {
-                        'message': 'published %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
+                    if not silent:
+                        slack_message('slack/message.slack', {
+                            'message': 'published %s %s' % (self.content_model, self.title),
+                            'color': '#00adbc'
+                        })
                     yield json.dumps(written)
                     yield '\n'
                 except Exception, e:
