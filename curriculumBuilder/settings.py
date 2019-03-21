@@ -122,6 +122,7 @@ USE_TZ = True
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
 LANGUAGES = (
@@ -130,6 +131,7 @@ LANGUAGES = (
     ('it-it', _('Italian')),
     ('th-th', _('Thai')),
     ('sk-sk', _('Slovak')),
+    (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -316,7 +318,8 @@ TEMPLATES = [{u'APP_DIRS': False,
                                           u'django.core.context_processors.request',
                                           u'django.core.context_processors.tz',
                                           u'mezzanine.conf.context_processors.settings',
-                                          u'mezzanine.pages.context_processors.page'),
+                                          u'mezzanine.pages.context_processors.page',
+                                          u'i18n.context_processors.language_code_do_translation'),
                   u'loaders': [(u'django.template.loaders.cached.Loader',
                                (u'django.template.loaders.filesystem.Loader',
                                 u'django.template.loaders.app_directories.Loader'))]}
