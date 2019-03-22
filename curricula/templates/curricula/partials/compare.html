@@ -1,4 +1,3 @@
-{% load i18n %}
 {% for record in compare_data %}
     {% for field_diff in record %}
         <h3>{% firstof field_diff.field.verbose_name field_diff.field.related_name %}{% if field_diff.is_related and not field_diff.follow %}<sup class="follow">*</sup>{% endif %}</h3>
@@ -10,15 +9,13 @@
     {% endfor %}
 {% endfor %}
 
-<h4>{% trans "Edit comment:" %}</h4>
+<h4>Edit comment:</h4>
 <blockquote>{{ version2.revision.comment|default:"(no comment exists)" }}</blockquote>
 
 {% if has_unfollowed_fields %}
-<h4 class="follow">{% trans "Note:" %}</h4>
+<h4 class="follow">Note:</h4>
 <p class="follow">
-    {% blocktrans %}
-        Fields/entries marked with <sup class="follow">*</sup> are not under reversion control.
-        It may be that not all marked information are correct.
-    {% endblocktrans %}
+    Fields/entries marked with <sup class="follow">*</sup> are not under reversion control.
+    It may be that not all marked information are correct.
 </p>
 {% endif %}
