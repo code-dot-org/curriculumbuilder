@@ -273,7 +273,6 @@ INSTALLED_APPS = (
     "mezzanine.pages",
     # "mezzanine.forms",
     # "mezzanine.galleries",
-    # "mezzanine.twitter",
     # "mezzanine.accounts",
     "mezzanine.mobile",
     # Third party apps
