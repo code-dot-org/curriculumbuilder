@@ -599,6 +599,10 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
         return ['name', 'content']
 
     @classmethod
+    def should_redact(cls):
+        return True
+
+    @classmethod
     def get_i18n_objects(cls):
         return super(Activity, cls).get_i18n_objects().select_related('lesson', 'lesson__unit')
 
