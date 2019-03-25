@@ -56,6 +56,6 @@ class Command(BaseCommand):
                 filename = os.path.basename(translation_path)
                 log("%s - uploading %s" % (locale, filename))
                 with open(translation_path) as translation_file:
-                    dest_path = os.path.join('translations', locale, filename), translation_file
-                    I18nFileWrapper.storage().save(dest_path)
+                    dest_path = os.path.join('translations', locale, filename)
+                    I18nFileWrapper.storage().save(dest_path, translation_file)
             log("%s - finished" % locale)

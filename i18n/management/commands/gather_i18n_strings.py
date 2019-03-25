@@ -10,7 +10,7 @@ from i18n.utils import I18nFileWrapper
 
 
 class Command(BaseCommand):
-    def handle(self):
+    def handle(self, *args, **options):
         log("I18n Sync Step 1 of 4: Gather source strings from models")
         source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
         if not os.path.exists(source_dir):

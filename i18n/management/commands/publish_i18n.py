@@ -13,7 +13,7 @@ class Command(BaseCommand):
         model_has_publish_operation = hasattr(model, 'publish') or hasattr(model, 'publish_pdfs')
         return should_sync_model(model) and model_has_publish_operation
 
-    def handle(self):
+    def handle(self, *args, **options):
         log("I18n Sync Step 4 of 4: Publish translated content to S3")
 
         models = [
