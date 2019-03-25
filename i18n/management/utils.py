@@ -3,6 +3,8 @@ Helper methods for use during the i18n sync process
 """
 from django_slack import slack_message
 
+import django.apps
+
 from i18n.models import Internationalizable
 
 
@@ -17,6 +19,9 @@ def should_sync_model(model):
     is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
     return is_internationalizable and is_not_proxy
 
+def get_models_to_sync():
+    """Retrieve all models that should be processed by the i18n sync"""
+    return [model for model in django.apps.apps.get_models() if should_sync_model(model)]
 
 def log(message):
     """
