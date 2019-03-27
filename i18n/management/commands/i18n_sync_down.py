@@ -33,6 +33,7 @@ class Command(BaseCommand):
                 filename = os.path.basename(source_path)
                 translation_path = os.path.join(translations_dir, locale, filename)
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to restore" % translation_path)
                     continue
                 plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
                 plugins = ",".join(glob.glob(plugins_path))
@@ -49,6 +50,7 @@ class Command(BaseCommand):
         for locale in get_non_english_language_codes():
             for translation_path in glob.glob(os.path.join(translations_dir, locale, '*')):
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to upload" % translation_path)
                     continue
                 filename = os.path.basename(translation_path)
                 with open(translation_path) as translation_file:
