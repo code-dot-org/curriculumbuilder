@@ -64,9 +64,11 @@ class StandardsViewsTestCase(TestCase):
     def test_by_curriculum_csv_unicode(self, *args):
         """CSVs generated from Curriculum models should support unicode content"""
 
-        self.test_lesson.title = u"Lección de Prueba con Unicodé"
+        unicode_string = u"Lección de Prueba con Unicodé"
+        self.test_lesson.title = unicode_string
         self.test_lesson.save()
         response = self.client.get(
             reverse('curriculum:by_curriculum_csv', args=[self.test_curriculum.slug])
         )
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, unicode_string)
