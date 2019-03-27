@@ -1,5 +1,7 @@
 import operator
-import json, csv
+import json
+
+import unicodecsv as csv
 
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
@@ -44,7 +46,7 @@ def by_curriculum_csv(request, slug):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % curriculum.slug
 
-    writer = csv.writer(response)
+    writer = csv.writer(response, encoding='utf-8')
     writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
                      'standard framework', 'standard', 'cross curricular opportunity'])
     for unit in curriculum.units:
@@ -81,7 +83,7 @@ def by_unit_csv(request, slug, unit_slug):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="%s_%s_standards.csv"' % (curriculum.slug, unit.slug)
 
-    writer = csv.writer(response)
+    writer = csv.writer(response, encoding='utf-8')
     writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
                      'standard framework', 'standard', 'cross curricular opportunity'])
     for lesson in unit.lessons:
