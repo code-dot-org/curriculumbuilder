@@ -3,6 +3,8 @@ Helper methods for use during the i18n sync process
 """
 from django_slack import slack_message
 
+from django.conf import settings
+
 from i18n.models import Internationalizable
 
 
@@ -16,6 +18,17 @@ def should_sync_model(model):
     is_internationalizable = issubclass(model, Internationalizable)
     is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
     return is_internationalizable and is_not_proxy
+
+
+def get_non_english_language_codes():
+    """
+    Retrieve all languages codes (ie "es-mx") for languages we need to process
+    in the i18n sync.
+    """
+    return [
+        locale for locale, _ in settings.LANGUAGES
+        if not locale == settings.LANGUAGE_CODE
+    ]
 
 
 def log(message):
