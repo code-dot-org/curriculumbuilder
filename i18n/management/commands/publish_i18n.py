@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         language_codes = [
             language_code for language_code, _ in settings.LANGUAGES
-            if language_code != settings.LANGUAGE_CODE and language_code != settings.LANGUAGE_CODE_DO_TRANSLATION
+            if language_code != settings.LANGUAGE_CODE
         ]
         log("Languages to publish: %s" % ', '.join(language_codes))
 
