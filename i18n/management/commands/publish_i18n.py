@@ -7,8 +7,6 @@ from django.utils import translation
 
 from i18n.management.utils import log, should_publish_pdf, should_sync_model
 
-import sys
-
 class Command(BaseCommand):
     def should_publish_model(self, model):
         model_has_publish_operation = hasattr(model, 'publish') or hasattr(model, 'publish_pdfs')
