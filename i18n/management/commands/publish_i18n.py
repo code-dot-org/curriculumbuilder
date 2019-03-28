@@ -1,4 +1,7 @@
 # pylint: disable=missing-docstring,too-few-public-methods,no-self-use
+import datetime
+import time
+
 import django.apps
 
 from django.conf import settings
@@ -28,12 +31,14 @@ class Command(BaseCommand):
         ]
         log("Languages to publish: %s" % ', '.join(language_codes))
 
+        total_elapsed_time = 0
         for model_index, model in enumerate(models):
             name = model.__name__
             log("Publishing %s (%s/%s)" % (name, model_index + 1, len(models)))
             objects = model.get_i18n_objects()
             total = objects.count()
             success_count = 0
+            start_time = time.time()
 
             for obj in objects.all():
                 if not obj.should_be_translated:
@@ -51,5 +56,16 @@ class Command(BaseCommand):
                     # if hasattr(obj, 'publish_pdfs'):
                     #     list(obj.publish_pdfs(silent=True))
                 success_count += 1
+            end_time = time.time()
+            elapsed_time = (end_time - start_time)
+            total_elapsed_time += elapsed_time
 
-            log("%s/%s %s objects published" % (success_count, total, name))
+            log("%s/%s %s objects published in %s" % (
+                success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
+            ))
+
+        log("Publishing %s models in %s languages finished in %s (average of ~%s per language" % (
+            len(models), len(language_codes),
+            datetime.timedelta(seconds=int(total_elapsed_time)),
+            datetime.timedelta(seconds=int(total_elapsed_time/len(language_codes)))
+        ))
