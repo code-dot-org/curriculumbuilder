@@ -3,10 +3,9 @@ import glob
 import os
 import subprocess
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from i18n.management.utils import log
+from i18n.management.utils import log, get_non_english_language_codes
 from i18n.utils import I18nFileWrapper
 
 
@@ -23,19 +22,21 @@ class Command(BaseCommand):
             "download"
         ])
 
+        source_paths = glob.glob(os.path.join(source_dir, '*'))
+        log("Restoring and uploading %s" % ", ".join(map(os.path.basename, source_paths)))
+        log("For %s" % ", ".join(get_non_english_language_codes()))
+
         # Restore translations from source
         log("Restoring redacted translations from source")
-        for locale, _ in settings.LANGUAGES:
-            if locale == settings.LANGUAGE_CODE:
-                continue
-            for source_path in glob.glob(os.path.join(source_dir, '*')):
+        for locale in get_non_english_language_codes():
+            for source_path in source_paths:
                 filename = os.path.basename(source_path)
                 translation_path = os.path.join(translations_dir, locale, filename)
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to restore" % translation_path)
                     continue
                 plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
                 plugins = ",".join(glob.glob(plugins_path))
-                log("%s - restoring %s" % (locale, filename))
                 subprocess.call([
                     'restore',
                     '-s', source_path,
@@ -43,19 +44,15 @@ class Command(BaseCommand):
                     '-o', translation_path,
                     '-p', plugins
                 ])
-            log("%s - finished" % locale)
 
         # Upload restored translation data to s3
         log("Uploading restored translations to S3")
-        for locale, _ in settings.LANGUAGES:
-            if locale == settings.LANGUAGE_CODE:
-                continue
+        for locale in get_non_english_language_codes():
             for translation_path in glob.glob(os.path.join(translations_dir, locale, '*')):
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to upload" % translation_path)
                     continue
                 filename = os.path.basename(translation_path)
-                log("%s - uploading %s" % (locale, filename))
                 with open(translation_path) as translation_file:
                     dest_path = os.path.join('translations', locale, filename)
                     I18nFileWrapper.storage().save(dest_path, translation_file)
-            log("%s - finished" % locale)
