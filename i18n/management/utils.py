@@ -1,9 +1,10 @@
 """
 Helper methods for use during the i18n sync process
 """
-from django_slack import slack_message
-
 import django.apps
+
+from django.conf import settings
+from django_slack import slack_message
 
 from i18n.models import Internationalizable
 
@@ -22,6 +23,16 @@ def should_sync_model(model):
 def get_models_to_sync():
     """Retrieve all models that should be processed by the i18n sync"""
     return [model for model in django.apps.apps.get_models() if should_sync_model(model)]
+
+def get_non_english_language_codes():
+    """
+    Retrieve all languages codes (ie "es-mx") for languages we need to process
+    in the i18n sync.
+    """
+    return [
+        locale for locale, _ in settings.LANGUAGES
+        if not locale == settings.LANGUAGE_CODE
+    ]
 
 def log(message):
     """
