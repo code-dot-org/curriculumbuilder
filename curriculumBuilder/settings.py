@@ -492,7 +492,13 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
-AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
+# Preloading metadata for AWS _dramatically_ slows down publish operations.
+# Specifically, it slows down any call to S3BotoStorage.exists for large
+# buckets. In turn, jackfrost uses `self.storage.exists` as part of the write
+# operation which is used for every publish. Disabling preloading here should
+# speed up publishing content by about an order of magnitude.
+# see https://stackoverflow.com/a/21121924/1810460 for more info
+AWS_PRELOAD_METADATA = False
 AWS_HEADERS = {
  'Cache-Control': 'max-age=0',
 }
