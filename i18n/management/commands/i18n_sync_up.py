@@ -4,8 +4,9 @@ import os
 import subprocess
 
 from django.core.management.base import BaseCommand
+from distutils.dir_util import copy_tree
 
-from i18n.management.utils import log
+from i18n.management.utils import log, get_models_to_sync
 from i18n.utils import I18nFileWrapper
 
 
@@ -14,21 +15,28 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         log("I18n Sync Step 2 of 4: Upload source strings to Crowdin")
         source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
-        redacted_dir = os.path.join(I18nFileWrapper.static_dir(), 'redacted')
+        upload_dir = os.path.join(I18nFileWrapper.static_dir(), 'upload')
 
-        if not os.path.exists(redacted_dir):
-            os.makedirs(redacted_dir)
+        # Strings uploaded should include all source strings, some of which
+        # will need to be redacted.
+        copy_tree(source_dir, upload_dir)
+
+        models_to_redact = [
+            model for model in get_models_to_sync()
+            if model.should_redact()
+        ]
 
         # Redact all source files
-        log("Redacting source files")
-        for path in glob.glob(os.path.join(source_dir, '*')):
-            filename = os.path.basename(path)
-            destination = os.path.join(redacted_dir, filename)
+        log("Redacting source files for %s" % ', '.join(model.__name__ for model in models_to_redact))
+        for model in models_to_redact:
+            filename = model.__name__ + ".json"
+            source_path = os.path.join(source_dir, filename)
+            destination_path = os.path.join(upload_dir, filename)
             plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
             plugins = ",".join(glob.glob(plugins_path))
             subprocess.call([
-                "redact", path,
-                "-o", destination,
+                "redact", source_path,
+                "-o", destination_path,
                 "-p", plugins
             ])
 
