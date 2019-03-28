@@ -5,8 +5,9 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import translation
 
-from i18n.management.utils import log, should_sync_model
+from i18n.management.utils import log, should_publish_pdf, should_sync_model
 
+import sys
 
 class Command(BaseCommand):
     def should_publish_model(self, model):
@@ -24,7 +25,7 @@ class Command(BaseCommand):
 
         language_codes = [
             language_code for language_code, _ in settings.LANGUAGES
-            if language_code != settings.LANGUAGE_CODE
+            if language_code != settings.LANGUAGE_CODE and language_code != settings.LANGUAGE_CODE_DO_TRANSLATION
         ]
         log("Languages to publish: %s" % ', '.join(language_codes))
 
@@ -43,13 +44,8 @@ class Command(BaseCommand):
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    # PDF generation is currently broken in such a way that
-                    # when we attempt to publish a pdf, it not only doesn't
-                    # publish but stops trying to publish anything after this
-                    # step in the sequence.
-                    # TODO: reenable this step once PDF generation is fixed
-                    # if hasattr(obj, 'publish_pdfs'):
-                    #     list(obj.publish_pdfs(silent=True))
+                    if should_publish_pdf(obj):
+                        list(obj.publish_pdfs(silent=True))
                 success_count += 1
 
             log("%s/%s %s objects published" % (success_count, total, name))

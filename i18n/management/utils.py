@@ -7,6 +7,8 @@ from django.conf import settings
 
 from i18n.models import Internationalizable
 
+from curricula.models import Curriculum
+
 
 def should_sync_model(model):
     """
@@ -19,6 +21,8 @@ def should_sync_model(model):
     is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
     return is_internationalizable and is_not_proxy
 
+def should_publish_pdf(obj):
+    return hasattr(obj, 'publish_pdfs') and not isinstance(obj, Curriculum)
 
 def get_non_english_language_codes():
     """
