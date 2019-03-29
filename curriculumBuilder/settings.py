@@ -501,7 +501,7 @@ AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
 AWS_PRELOAD_METADATA = True # False
 # Of course, disabling AWS_PRELOAD_METADATA breaks CollectFast. Disable here
 # until we can figure out whether or not removing it would be a bad thing.
-COLLECTFAST_ENABLED = True # False
+#COLLECTFAST_ENABLED = False
 AWS_HEADERS = {
  'Cache-Control': 'max-age=0',
 }
