@@ -21,9 +21,6 @@ def should_sync_model(model):
     is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
     return is_internationalizable and is_not_proxy
 
-def should_publish_pdf(obj):
-    return hasattr(obj, 'publish_pdfs') and not isinstance(obj, Curriculum)
-
 def get_non_english_language_codes():
     """
     Retrieve all languages codes (ie "es-mx") for languages we need to process

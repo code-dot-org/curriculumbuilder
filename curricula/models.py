@@ -139,22 +139,6 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
 
-    def publish_pdfs(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            try:
-                read, written = build_single(self.get_pdf_url())
-                if not silent:
-                    slack_message('slack/message.slack', {
-                        'message': 'published %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield json.dumps(e.message)
-                yield '\n'
-                logger.exception('Failed to publish PDF for %s' % self)
-
     def get_standards(self):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
         if Chapter.objects.filter(parent__unit__curriculum=self).count() > 0:

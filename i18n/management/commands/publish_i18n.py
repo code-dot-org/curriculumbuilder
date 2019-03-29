@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import translation
 
-from i18n.management.utils import log, should_publish_pdf, should_sync_model
+from i18n.management.utils import log, should_sync_model
 
 class Command(BaseCommand):
     def should_publish_model(self, model):
@@ -42,7 +42,7 @@ class Command(BaseCommand):
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    if should_publish_pdf(obj):
+                    if hasattr(obj, 'publish_pdfs'):
                         list(obj.publish_pdfs(silent=True))
                 success_count += 1
 
