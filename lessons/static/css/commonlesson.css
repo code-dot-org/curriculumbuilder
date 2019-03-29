@@ -752,8 +752,6 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .level-link:after {
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
     content: "\f08e";
 }
 
@@ -819,7 +817,9 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-FreeResponse .level-icon:before,
 .type-Multi .level-icon:before,
 .type-Match .level-icon:before,
-.type-Eval .level-icon:before{
+.type-Eval .level-icon:before,
+.type-LevelGroup .level-icon:before
+{
     content: "\f0ca";
 }
 

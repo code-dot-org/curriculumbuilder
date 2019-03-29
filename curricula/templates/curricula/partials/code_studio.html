@@ -45,7 +45,7 @@
                     {% if level.teacher_markdown %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
                             View on Code Studio
                         </a>
 
@@ -59,7 +59,7 @@
                     <!-- Student Overview Content -->
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
                             View on Code Studio
                         </a>
 
@@ -142,14 +142,14 @@
                     {% for level in chunk.levels %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
                             View on Code Studio
                         </a>
 
                         <!-- TODO: Remove outer if statement here when -->
                         <!-- we want to roll out for all courses not just CSD -->
                         {% if 'csd' in level.path and '2019' in level.path %}
-                            {% if level.mini_rubric %}
+                            {% if level.mini_rubric == "true" %}
                                 <div class="admonition assessment">
                                     <p class="admonition-title">
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>
