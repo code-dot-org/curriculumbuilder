@@ -1,11 +1,10 @@
 # pylint: disable=missing-docstring,too-few-public-methods,no-self-use
 import json
 import os
-import django.apps
 
 from django.core.management.base import BaseCommand
 
-from i18n.management.utils import log, should_sync_model
+from i18n.management.utils import log, get_models_to_sync
 from i18n.utils import I18nFileWrapper
 
 
@@ -16,10 +15,7 @@ class Command(BaseCommand):
         if not os.path.exists(source_dir):
             os.makedirs(source_dir)
 
-        for model in django.apps.apps.get_models():
-            if not should_sync_model(model):
-                continue
-
+        for model in get_models_to_sync():
             strings = model.gather_strings()
             outpath = os.path.abspath(os.path.join(source_dir, model.__name__ + ".json"))
             with open(outpath, 'w') as outfile:

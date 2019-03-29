@@ -2,26 +2,22 @@
 import datetime
 import time
 
-import django.apps
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import translation
 
-from i18n.management.utils import log, should_sync_model
-
+from i18n.management.utils import log, get_models_to_sync
 
 class Command(BaseCommand):
-    def should_publish_model(self, model):
-        model_has_publish_operation = hasattr(model, 'publish') or hasattr(model, 'publish_pdfs')
-        return should_sync_model(model) and model_has_publish_operation
+    def can_publish_model(self, model):
+        return hasattr(model, 'publish') or hasattr(model, 'publish_pdfs')
 
     def handle(self, *args, **options):
         log("I18n Sync Step 4 of 4: Publish translated content to S3")
 
         models = [
-            model for model in django.apps.apps.get_models()
-            if self.should_publish_model(model)
+            model for model in get_models_to_sync()
+            if self.can_publish_model(model)
         ]
         log("Models to publish: %s" % ', '.join(model.__name__ for model in models))
 
@@ -48,13 +44,8 @@ class Command(BaseCommand):
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    # PDF generation is currently broken in such a way that
-                    # when we attempt to publish a pdf, it not only doesn't
-                    # publish but stops trying to publish anything after this
-                    # step in the sequence.
-                    # TODO: reenable this step once PDF generation is fixed
-                    # if hasattr(obj, 'publish_pdfs'):
-                    #     list(obj.publish_pdfs(silent=True))
+                    if hasattr(obj, 'publish_pdfs'):
+                        list(obj.publish_pdfs(silent=True))
                 success_count += 1
             end_time = time.time()
             elapsed_time = (end_time - start_time)
