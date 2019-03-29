@@ -1,4 +1,4 @@
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring
 import glob
 import os
 import subprocess
@@ -13,7 +13,8 @@ class Command(BaseCommand):
     source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
     translations_dir = os.path.join(I18nFileWrapper.static_dir(), 'translations')
 
-    def download_translations(self):
+    @staticmethod
+    def download_translations():
         """Download translations from crowdin"""
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
