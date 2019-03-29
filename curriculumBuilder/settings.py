@@ -498,10 +498,10 @@ AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
 # operation which is used for every publish. Disabling preloading here should
 # speed up publishing content by about an order of magnitude.
 # see https://stackoverflow.com/a/21121924/1810460 for more info
-AWS_PRELOAD_METADATA = False
+AWS_PRELOAD_METADATA = True # False
 # Of course, disabling AWS_PRELOAD_METADATA breaks CollectFast. Disable here
 # until we can figure out whether or not removing it would be a bad thing.
-COLLECTFAST_ENABLED = False
+COLLECTFAST_ENABLED = True # False
 AWS_HEADERS = {
  'Cache-Control': 'max-age=0',
 }
