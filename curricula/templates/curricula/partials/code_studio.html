@@ -203,7 +203,11 @@
                             <h3>Student Instructions</h3>
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}
-                            {{ level.long_instructions|richtext_filters|safe }}
+                            {% if level.parsed_long_instructions %}
+                                {{ level.parsed_long_instructions|richtext_filters|safe }}
+                            {% else %}
+                                {{ level.long_instructions|richtext_filters|safe }}
+                            {% endif %}
                         </div>
 
                         <!-- Embed video if present -->
