@@ -396,6 +396,20 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
                     counter += 1
                     levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
+                # Use value of block-text attribute in long_instructions to build parsed_long_instructions,
+                # which replaces <xml></xml> with block-text, if present.
+                long_instructions = level.get('long_instructions')
+                if long_instructions:
+                    # Use single- or double-quotes as the delimiter for our block-text attribute.
+                    # Note: This means the value of block-text cannot have single- or double-quotes
+                    # in it.
+                    match = re.search(r"block-text=[\"\'](?P<block_text>[^\"\']+)[\"\']", long_instructions)
+                    if match and match.group('block_text'):
+                        block_text = match.group('block_text')
+                        parsed_long_instructions = re.sub(r"(<xml>.+</xml>)", block_text, long_instructions, 0, re.DOTALL)
+                        if parsed_long_instructions != long_instructions:
+                            level['parsed_long_instructions'] = parsed_long_instructions
+
                 levels[counter]['levels'].append(level)
 
             return levels
