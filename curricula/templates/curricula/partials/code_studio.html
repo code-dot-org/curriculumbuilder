@@ -19,9 +19,9 @@
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                             <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                <!-- TODO: Remove outer if statement here when -->
-                                    <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path and '2019' in level.path %}
+                                <<!-- TODO: Remove outer if statement here when -->
+                                    <!-- we want to roll out for all courses -->
+                                    {% if '2019' in level.path %}
                                         {% if level.assessment %}
                                             <i class=" fa-check-circle fa"></i>
                                         {% endif %}
@@ -114,8 +114,8 @@
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
                                     <!-- TODO: Remove outer if statement here when -->
-                                    <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path and '2019' in level.path %}
+                                    <!-- we want to roll out for all courses -->
+                                    {% if '2019' in level.path %}
                                         {% if level.assessment %}
                                             <i class="fa-check-circle fa"></i>
                                         {% endif %}
