@@ -752,6 +752,8 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 
 .level-link:after {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
     content: "\f08e";
 }
 

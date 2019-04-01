@@ -45,7 +45,7 @@
                     {% if level.teacher_markdown %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 
@@ -59,7 +59,7 @@
                     <!-- Student Overview Content -->
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}" markdown="1">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 
@@ -142,7 +142,7 @@
                     {% for level in chunk.levels %}
                     <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
 
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link fa">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
                         </a>
 
