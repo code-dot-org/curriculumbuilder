@@ -37,6 +37,17 @@
             {% endeditable %}
         {% endif %}
 
+        <!-- Assessment -->
+
+        {% if lesson.assessment %}
+            <h2>Assessment Opportunities</h2>
+            <div class="assessment">
+                {% editable lesson.assessment %}
+                    {{ lesson.assessment|richtext_filters|safe }}
+                {% endeditable %}
+            </div>
+        {% endif %}
+
         <h2>Agenda</h2>
         <div class="toc" id="toc{{ lesson|slugify }}">
             {% for activity in lesson.activity_set.all %}
@@ -79,17 +90,6 @@
                     <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-
-<!-- Assessment -->
-
-        {% if lesson.assessment %}
-            <h2>Assessment Opportunity</h2>
-            <div class="assessment">
-                {% editable lesson.assessment %}
-                    {{ lesson.assessment|richtext_filters|safe }}
-                {% endeditable %}
-            </div>
         {% endif %}
 
 <!-- Prep -->
