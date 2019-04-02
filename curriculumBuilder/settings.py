@@ -235,7 +235,8 @@ if os.environ.get('REDIS_URL', False):
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'default-django-cache',
         }
     }
 
@@ -534,7 +535,16 @@ FREEZE_INCLUDE_STATIC = False
 ######################
 # JACKFROST SETTINGS #
 ######################
+# Preloading metadata for AWS _dramatically_ slows down publish operations.
+# Specifically, it slows down any call to S3BotoStorage.exists for large
+# buckets. In turn, jackfrost uses `self.storage.exists` as part of the write
+# operation which is used for every publish. Disabling preloading here should
+# speed up publishing content by about an order of magnitude.  See
+# https://stackoverflow.com/a/21121924/1810460 for more details.
 JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+JACKFROST_STORAGE_KWARGS = {
+    'preload_metadata': False
+}
 JACKFROST_RENDERERS = (
     'curricula.jackfrost_renderers.CurriculumRenderer',
     'curricula.jackfrost_renderers.UnitRenderer',
