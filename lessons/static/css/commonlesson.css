@@ -741,19 +741,11 @@ th a:link, th a:visited, th a:hover, th a:active {
 */
 
 .level-link {
-    /*
-    margin: 5px 10px 5px 0;
-    padding: 5px;
-    border: 2px solid #cfc9de;
-    border-radius: 5px;
-    */
     font-size: .75em;
     float: right;
 }
 
-.level-link:after {
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
+.level-link-icon:before {
     content: "\f08e";
 }
 
