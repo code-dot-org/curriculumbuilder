@@ -52,7 +52,7 @@ function createTiplink(add, tipType, tipLink) {
     icon = "comments";
   } else if (tipType == 'assessment') {
     icon = "check-circle";
-  }  else if (tipType == 'content') {
+  } else if (tipType == 'content') {
     icon = "mortar-board";
   } else {
     icon = "warning";
