@@ -235,7 +235,8 @@ if os.environ.get('REDIS_URL', False):
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'default-django-cache',
         }
     }
 
