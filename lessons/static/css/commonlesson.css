@@ -365,12 +365,12 @@ html, body{
 }
 
 .admonition.assessment {
-    border: 2px solid #0094ca;
+    border: 2px solid #7665a0;
     background-color: white;
 }
 
 .admonition.assessment > p.admonition-title {
-    background-color: #0094ca!important;
+    background-color: #7665a0!important;
 }
 
 .tiplink {
@@ -395,7 +395,7 @@ html, body{
 }
 
 .tiplink-assessment a:link, .tiplink-assessment a:visited {
-    color: #0094ca;
+    color: #7665a0;
 }
 
 .say > .admonition-title, .guide > .admonition-title,
@@ -906,23 +906,6 @@ a.btn.btn-warning:visited {
     body {
         font-size: 20px;
     }
-}
-
-/* Assessment Icon on Code Studio Pull Through */
-
-.assessment-icon {
-    color: white;
-    padding: 10px;
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    right: 12.5px;
-    top: -25px;
-    font-size: 15px;
-}
-
-.assessment-icon .fa-circle{
-    color: #0094ca;
 }
 
 /* Mini Rubric Display */
