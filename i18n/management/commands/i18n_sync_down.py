@@ -3,6 +3,7 @@ import glob
 import os
 import subprocess
 
+from django.core import management
 from django.core.management.base import BaseCommand
 
 from i18n.management.utils import log, get_non_english_language_codes, get_models_to_sync
@@ -54,13 +55,6 @@ class Command(BaseCommand):
         # Compile Django translations
         management.call_command("compilemessages")
 
-        # Upload restored translation data to s3
-        print("Uploading translations")
-        for index, (locale, _) in enumerate(settings.LANGUAGES):
-            if locale == settings.LANGUAGE_CODE:
-                continue
-            for translation_path in glob.glob(os.path.join(translations_dir, locale, '*')):
-
     def upload_translations(self):
         """Upload restored translation data to s3"""
         source_paths = glob.glob(os.path.join(self.source_dir, '*'))
@@ -68,7 +62,6 @@ class Command(BaseCommand):
             ", ".join(map(os.path.basename, source_paths)))
         for locale in get_non_english_language_codes():
             for translation_path in glob.glob(os.path.join(self.translations_dir, locale, '*')):
->>>>>>> master
                 if not os.path.exists(translation_path):
                     log("Could not find %s to upload" % translation_path)
                     continue

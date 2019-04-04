@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 
+from django.core import management
 from django.core.management.base import BaseCommand
 
 from i18n.management.utils import log, get_models_to_sync
@@ -26,5 +27,10 @@ class Command(BaseCommand):
         # Gather strings for translation in html files.
         # For some reason makemessages won't create the locale/ directory but will create
         # the subdirectories
-        subprocess.call(["mkdir", "locale/"])
-        management.call_command("makemessages", "-l en")
+        template_string_path = "locale"
+        if not os.path.exists(template_string_path):
+            os.mkdir(template_string_path)
+        management.call_command("makemessages",
+                                "--locale", "en",
+                                "--exclude", "src")
+        log("Gathered template strings")
