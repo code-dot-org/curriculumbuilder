@@ -63,7 +63,7 @@ files: [
   # where translations live
   # e.g. "/resources/%two_letters_code%/%original_file_name%"
   #
-  "translation" : "/locale/%locale_with_underscore%/LC_MESSAGES/django.po",
+  "translation" : "/translations/%locale_with_underscore%/LC_MESSAGES/django.po",
 
   #
   # File type

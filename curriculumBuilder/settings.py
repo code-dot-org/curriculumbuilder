@@ -134,6 +134,11 @@ LANGUAGES = (
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
 
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'translations/'),
+)
+
+
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py

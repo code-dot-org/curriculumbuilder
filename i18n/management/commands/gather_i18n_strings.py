@@ -32,5 +32,6 @@ class Command(BaseCommand):
             os.mkdir(template_string_path)
         management.call_command("makemessages",
                                 "--locale", "en",
-                                "--exclude", "src")
+                                "--ignore", "src*",
+                                "--no-obsolete")
         log("Gathered template strings")
