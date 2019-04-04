@@ -32,6 +32,10 @@ class Internationalizable(models.Model):
         return instance
 
     @classmethod
+    def should_redact(cls):
+        return False
+
+    @classmethod
     def internationalizable_fields(cls):
         return []
 
@@ -116,3 +120,7 @@ class InternationalizablePage(Page, Internationalizable):
     @classmethod
     def internationalizable_fields(cls):
         return ['title', 'description', 'content']
+
+    @classmethod
+    def should_redact(cls):
+        return True

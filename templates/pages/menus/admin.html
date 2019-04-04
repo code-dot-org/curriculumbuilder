@@ -1,4 +1,4 @@
-{% load pages_tags i18n future staticfiles %}
+{% load pages_tags future staticfiles %}
 
 <ol>
     {% for page in page_branch %}
@@ -33,7 +33,7 @@
             </span>
             {% if page.perms.add and page.content_model != 'block' %}
                 <select class="addlist" id="addlink-{{ page.id }}">
-                    <option value="">{% trans "Add" %} ...</option>
+                    <option value="">Add ...</option>
                         {% if page.content_model == 'curriculum' %}
                             <option value="/admin/documentation/map/add/?parent={{ page.id }}">
                                 Map

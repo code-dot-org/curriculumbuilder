@@ -1,38 +1,47 @@
+# pylint: disable=missing-docstring,no-self-use
 import glob
 import os
 import subprocess
 
-from django.conf import settings
-from django.core import management
 from django.core.management.base import BaseCommand
-from i18n.utils import I18nFileWrapper, print_clear
+
+from i18n.management.utils import log, get_non_english_language_codes, get_models_to_sync
+from i18n.utils import I18nFileWrapper
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
-        source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
-        translations_dir = os.path.join(I18nFileWrapper.static_dir(), 'translations')
+    source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
+    translations_dir = os.path.join(I18nFileWrapper.static_dir(), 'translations')
 
-        # Download translations from crowdin
-        print("Downloading translations")
+    def download_translations(self):
+        """Download translations from crowdin"""
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
             "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
             "download"
         ])
 
-        # Restore translations from source
-        print("Restoring translations")
-        for index, (locale, _) in enumerate(settings.LANGUAGES):
-            if locale == settings.LANGUAGE_CODE:
-                continue
-            for source_path in glob.glob(os.path.join(source_dir, '*')):
-                filename = os.path.basename(source_path)
-                translation_path = os.path.join(translations_dir, locale, filename)
+    def restore_translations(self):
+        """Restore translations from source"""
+        # Only redacted content should be restored; otherwise, we're running a
+        # markdown formatter over content that may or may not be markdown.
+        models_to_restore = [
+            model for model in get_models_to_sync()
+            if model.should_redact()
+        ]
+        log("Restoring redacted translations for %s" %
+            ', '.join(model.__name__ for model in models_to_restore))
+        log("For %s" % ", ".join(get_non_english_language_codes()))
+        for locale in get_non_english_language_codes():
+            for model in models_to_restore:
+                filename = model.__name__ + ".json"
+                source_path = os.path.join(self.source_dir, filename)
+                translation_path = os.path.join(self.translations_dir, locale, filename)
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to restore" % translation_path)
                     continue
-                plugins = ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
-                print_clear("%s - restoring %s" % (locale, filename))
+                plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
+                plugins = ",".join(glob.glob(plugins_path))
                 subprocess.call([
                     'restore',
                     '-s', source_path,
@@ -51,10 +60,25 @@ class Command(BaseCommand):
             if locale == settings.LANGUAGE_CODE:
                 continue
             for translation_path in glob.glob(os.path.join(translations_dir, locale, '*')):
+
+    def upload_translations(self):
+        """Upload restored translation data to s3"""
+        source_paths = glob.glob(os.path.join(self.source_dir, '*'))
+        log("Uploading restored translations to S3: %s" %
+            ", ".join(map(os.path.basename, source_paths)))
+        for locale in get_non_english_language_codes():
+            for translation_path in glob.glob(os.path.join(self.translations_dir, locale, '*')):
+>>>>>>> master
                 if not os.path.exists(translation_path):
+                    log("Could not find %s to upload" % translation_path)
                     continue
                 filename = os.path.basename(translation_path)
-                print_clear("%s - uploading %s" % (locale, filename))
                 with open(translation_path) as translation_file:
-                    I18nFileWrapper.storage().save(os.path.join('translations', locale, filename), translation_file)
-            print_clear("%s - finished" % locale, end='\n')
+                    dest_path = os.path.join('translations', locale, filename)
+                    I18nFileWrapper.storage().save(dest_path, translation_file)
+
+    def handle(self, *args, **options):
+        log("I18n Sync Step 3 of 4: Download and process translations")
+        self.download_translations()
+        self.restore_translations()
+        self.upload_translations()

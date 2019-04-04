@@ -45,7 +45,7 @@ class IDE(Page, RichText, CloneableMixin):
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
-    def publish(self, children=False):
+    def publish(self, children=False, silent=False):
         if children:
             for block in self.blocks.all():
                 for result in block.publish():
@@ -53,10 +53,11 @@ class IDE(Page, RichText, CloneableMixin):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(IDE, self)
-                slack_message('slack/message.slack', {
-                    'message': 'published %s %s' % (self.content_model, self.title),
-                    'color': '#00adbc'
-                })
+                if not silent:
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s' % (self.content_model, self.title),
+                        'color': '#00adbc'
+                    })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
@@ -167,14 +168,15 @@ class Block(Page, RichText, CloneableMixin):
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
-    def publish(self, children=False):
+    def publish(self, children=False, silent=False):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Block, self)
-                slack_message('slack/message.slack', {
-                    'message': 'published %s %s' % (self.content_model, self.title),
-                    'color': '#00adbc'
-                })
+                if not silent:
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s' % (self.content_model, self.title),
+                        'color': '#00adbc'
+                    })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:
@@ -314,7 +316,7 @@ class Map(Page, RichText, CloneableMixin):
     def jackfrost_can_build(self):
         return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
 
-    def publish(self, children=False):
+    def publish(self, children=False, silent=False):
         if children:
             for page in self.children.all():
                 for result in page.map.publish(children=children):
@@ -322,10 +324,11 @@ class Map(Page, RichText, CloneableMixin):
         if self.jackfrost_can_build():
             try:
                 read, written = build_page_for_obj(Map, self)
-                slack_message('slack/message.slack', {
-                    'message': 'published %s %s' % (self.content_model, self.title),
-                    'color': '#00adbc'
-                })
+                if not silent:
+                    slack_message('slack/message.slack', {
+                        'message': 'published %s %s' % (self.content_model, self.title),
+                        'color': '#00adbc'
+                    })
                 yield json.dumps(written)
                 yield '\n'
             except Exception, e:

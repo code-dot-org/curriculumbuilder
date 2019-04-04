@@ -376,6 +376,20 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     def get_curriculum(self):
         return self.get_unit().curriculum
 
+    def parse_xml_block_text(self, str):
+        def replace(matchobj):
+            # Use single- or double-quotes as the delimiter for our block-text attribute.
+            # Note: This means the value of block-text cannot have single- or double-quotes
+            # in it.
+            match = re.search(r"block-text=[\"\'](?P<block_text>[^\"\']+)[\"\']", matchobj.group(0))
+            if match and match.group('block_text'):
+                block_text = match.group('block_text')
+                return block_text
+            else:
+                return matchobj.group(0)
+
+        return re.sub(r"(<xml>.+?</xml>)", replace, str, 0, re.DOTALL)
+
     def get_levels(self):
         if self.stage:
             raw_levels = self.stage.get('levels')
@@ -395,6 +409,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
                     last_progression = current_progression
                     counter += 1
                     levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
+
+                # Use value of block-text attribute in long_instructions to build parsed_long_instructions,
+                # which replaces <xml></xml> with block-text, if present.
+                long_instructions = level.get('long_instructions')
+                if long_instructions:
+                    level['parsed_long_instructions'] = self.parse_xml_block_text(long_instructions)
 
                 levels[counter]['levels'].append(level)
 
@@ -427,15 +447,16 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
         return can_build
 
-    def publish(self, children=False):
+    def publish(self, children=False, silent=False):
         if self.jackfrost_can_build():
             for url in self.jackfrost_urls():
                 try:
                     read, written = build_single(url)
-                    slack_message('slack/message.slack', {
-                        'message': 'published %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
+                    if not silent:
+                        slack_message('slack/message.slack', {
+                            'message': 'published %s %s' % (self.content_model, self.title),
+                            'color': '#00adbc'
+                        })
                     yield json.dumps(written)
                     yield '\n'
                 except Exception, e:
@@ -596,6 +617,10 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
     @classmethod
     def internationalizable_fields(cls):
         return ['name', 'content']
+
+    @classmethod
+    def should_redact(cls):
+        return True
 
     @classmethod
     def get_i18n_objects(cls):

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load i18n %}
 
 {% block meta_title %}{% trans "Home" %}{% endblock %}
 {% block title %}{% trans "Home" %}{% endblock %}
@@ -9,7 +8,6 @@
 {% endblock %}
 
 {% block main %}
-{% blocktrans %}
 <h2>Congratulations!</h2>
 <p>
     Welcome to your new Mezzanine powered website.
@@ -24,5 +22,4 @@
     <li><a href="http://mezzanine.jupo.org/docs/configuration.html#default-settings">Full list of settings</a></li>
     <li><a href="http://mezzanine.jupo.org/docs/deployment.html">Deploying to a production server</a></li>
 </ul>
-{% endblocktrans %}
 {% endblock %}

@@ -23,7 +23,7 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "/redacted/*.json",
+  "source" : "/upload/*.json",
 
   #
   # where translations live
@@ -83,6 +83,7 @@ files: [
       "es-MX": "es-mx",
       "it": "it-it",
       "th": "th-th",
+      "sk": "sk-sk",
     }
   }
  }

@@ -14,19 +14,19 @@
                     <!-- Header tabs -->
                     <ul>
                         <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
-                            {{ level.display_name|default:level.name }} <span class="level-icon"></span>
+                            {{ level.display_name|default:level.name }} <span class="level-icon fa"></span>
                         </li>
                         {% if level.teacher_markdown %}
                         <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                             <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                Teacher Overview
-                                <!-- TODO: Remove outer if statement here when -->
-                                    <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path and '2019' in level.path %}
+                                <<!-- TODO: Remove outer if statement here when -->
+                                    <!-- we want to roll out for all courses -->
+                                    {% if '2019' in level.path %}
                                         {% if level.assessment %}
-                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            <i class=" fa-check-circle fa"></i>
                                         {% endif %}
                                     {% endif %}
+                                Teacher Overview
                             </a>
                         </li>
                         {% endif %}
@@ -44,6 +44,7 @@
 
                         <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
+                            <span class="level-link-icon fa"></span>
                         </a>
 
                         <div class="teacher-markdown">
@@ -58,6 +59,7 @@
 
                         <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
+                            <span class="level-link-icon fa"></span>
                         </a>
 
                         <div class="instructions-markdown">
@@ -113,21 +115,18 @@
                         {% for level in chunk.levels %}
                             <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
                                 <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    <span class="level-icon"></span>
+                                    <!-- TODO: Remove outer if statement here when -->
+                                    <!-- we want to roll out for all courses -->
+                                    {% if '2019' in level.path %}
+                                        {% if level.assessment %}
+                                            <i class="fa-check-circle fa"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                    <span class="level-icon fa"></span>
                                     {% if level.bonus_level %}
                                         Extra
                                     {% else %}
                                         {{ level.position }}
-                                    {% endif %}
-                                    <!-- TODO: Remove outer if statement here when -->
-                                    <!-- we want to roll out for all courses not just CSD -->
-                                    {% if 'csd' in level.path and '2019' in level.path %}
-                                        {% if level.assessment %}
-                                            <span class="assessment-icon fa-stack fa-lg">
-                                                <i class="fa fa-circle fa-stack-1x fa-inverse"></i>
-                                                <i class="fa fa-check-circle fa-stack-1x "></i>
-                                            </span>
-                                        {% endif %}
                                     {% endif %}
                                 </a>
                             </li>
@@ -141,12 +140,13 @@
 
                         <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
                             View on Code Studio
+                            <span class="level-link-icon fa"></span>
                         </a>
 
                         <!-- TODO: Remove outer if statement here when -->
                         <!-- we want to roll out for all courses not just CSD -->
                         {% if 'csd' in level.path and '2019' in level.path %}
-                            {% if level.mini_rubric %}
+                            {% if level.mini_rubric == "true" %}
                                 <div class="admonition assessment">
                                     <p class="admonition-title">
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>
@@ -200,7 +200,11 @@
                             <h3>Student Instructions</h3>
                             {{ level.markdown|richtext_filters|safe }}
                             {{ level.markdown_instructions|richtext_filters|safe }}
-                            {{ level.long_instructions|richtext_filters|safe }}
+                            {% if level.parsed_long_instructions %}
+                                {{ level.parsed_long_instructions|richtext_filters|safe }}
+                            {% else %}
+                                {{ level.long_instructions|richtext_filters|safe }}
+                            {% endif %}
                         </div>
 
                         <!-- Embed video if present -->

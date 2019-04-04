@@ -1,22 +1,22 @@
-{% load i18n staticfiles %}
+{% load staticfiles %}
 <div id="editable-toolbar" method="POST" action="{% url "admin:logout" %}">
     {% url "admin:index" as admin_index_url %}
     {% url "admin:logout" as admin_logout_url %}
     {% url "logout" as accounts_logout_url %}
     <a id="editable-toolbar-toggle" href="#"></a>
-    <a href="{{ editable_obj.get_admin_url|default:admin_index_url }}">{% trans "Admin" %}</a>
+    <a href="{{ editable_obj.get_admin_url|default:admin_index_url }}">Admin</a>
     {% if lesson %}
-        <a href="{{ lesson.get_admin_url }}">{% trans "Lesson Admin" %}</a>
+        <a href="{{ lesson.get_admin_url }}">Lesson Admin</a>
     {% elif unit %}
-        <a href="{{ unit.get_admin_url }}">{% trans "Unit Admin" %}</a>
+        <a href="{{ unit.get_admin_url }}">Unit Admin</a>
     {% elif curriculum %}
-        <a href="{{ curriculum.get_admin_url }}">{% trans "Curriculum Admin" %}</a>
+        <a href="{{ curriculum.get_admin_url }}">Curriculum Admin</a>
     {% elif code_block %}
-        <a href="{{ code_block.get_admin_url }}">{% trans "Code Block Admin" %}</a>
+        <a href="{{ code_block.get_admin_url }}">Code Block Admin</a>
     {% elif ide %}
-        <a href="{{ ide.get_admin_url }}">{% trans "IDE Admin" %}</a>
+        <a href="{{ ide.get_admin_url }}">IDE Admin</a>
     {% endif %}
-    <a href="{{ accounts_logout_url|default:admin_logout_url }}?{{ REDIRECT_FIELD_NAME }}={{ request.path }}">{% trans "Log out" %}</a>
+    <a href="{{ accounts_logout_url|default:admin_logout_url }}?{{ REDIRECT_FIELD_NAME }}={{ request.path }}">Log out</a>
 </div>
 
 <img id="editable-loading" src="{% static "mezzanine/img/loadingAnimation.gif" %}">

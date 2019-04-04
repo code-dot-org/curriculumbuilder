@@ -122,6 +122,7 @@ USE_TZ = True
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
 LANGUAGES = (
@@ -129,6 +130,8 @@ LANGUAGES = (
     ('es-mx', _('Mexican Spanish')),
     ('it-it', _('Italian')),
     ('th-th', _('Thai')),
+    ('sk-sk', _('Slovak')),
+    (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
@@ -232,7 +235,8 @@ if os.environ.get('REDIS_URL', False):
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'default-django-cache',
         }
     }
 
@@ -268,10 +272,8 @@ INSTALLED_APPS = (
     "mezzanine.core",
     "mezzanine.generic",
     "mezzanine.pages",
-    # "mezzanine.blog",
     # "mezzanine.forms",
     # "mezzanine.galleries",
-    # "mezzanine.twitter",
     # "mezzanine.accounts",
     "mezzanine.mobile",
     # Third party apps
@@ -316,7 +318,8 @@ TEMPLATES = [{u'APP_DIRS': False,
                                           u'django.core.context_processors.request',
                                           u'django.core.context_processors.tz',
                                           u'mezzanine.conf.context_processors.settings',
-                                          u'mezzanine.pages.context_processors.page'),
+                                          u'mezzanine.pages.context_processors.page',
+                                          u'i18n.context_processors.language_code_do_translation'),
                   u'loaders': [(u'django.template.loaders.cached.Loader',
                                (u'django.template.loaders.filesystem.Loader',
                                 u'django.template.loaders.app_directories.Loader'))]}
@@ -532,7 +535,16 @@ FREEZE_INCLUDE_STATIC = False
 ######################
 # JACKFROST SETTINGS #
 ######################
+# Preloading metadata for AWS _dramatically_ slows down publish operations.
+# Specifically, it slows down any call to S3BotoStorage.exists for large
+# buckets. In turn, jackfrost uses `self.storage.exists` as part of the write
+# operation which is used for every publish. Disabling preloading here should
+# speed up publishing content by about an order of magnitude.  See
+# https://stackoverflow.com/a/21121924/1810460 for more details.
 JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+JACKFROST_STORAGE_KWARGS = {
+    'preload_metadata': False
+}
 JACKFROST_RENDERERS = (
     'curricula.jackfrost_renderers.CurriculumRenderer',
     'curricula.jackfrost_renderers.UnitRenderer',

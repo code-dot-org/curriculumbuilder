@@ -3,6 +3,13 @@
 {% load pages_tags mezzanine_tags i18n future staticfiles %}
 
 <head>
+    {% if LANGUAGE_CODE == LANGUAGE_CODE_DO_TRANSLATION %}
+        <script type="text/javascript">
+            var _jipt = [];
+            _jipt.push(['project', 'curriculumbuilder']);
+        </script>
+        <script type="text/javascript" src="//cdn.crowdin.com/jipt/jipt.js"></script>
+    {% endif %}
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
@@ -10,8 +17,7 @@
     <title>{% block meta_title %}Code.org CurriculumBuilder{% endblock %}</title>
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/v4-shims.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static "css/jquery-ui.min.css" %}">
 
     {% compress css %}
