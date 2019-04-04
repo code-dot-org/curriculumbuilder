@@ -1,4 +1,4 @@
-{% load i18n future staticfiles %}
+{% load future staticfiles %}
 {% comment 'removing togetherjs while I work on saving sort order' %}
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script type="text/javascript">
@@ -33,7 +33,7 @@
         <!-- Documentation -->
         {% url "django-admindocs-docroot" as docsroot %}
         {% if docsroot %}
-        <li><a href="{{ docsroot }}">{% trans 'Documentation' %}</a></li>
+        <li><a href="{{ docsroot }}">Documentation</a></li>
         {% endif %}
         <!-- Change Password -->
         {% url "admin:password_change" as password_change_url %}
@@ -42,7 +42,7 @@
         {% else %}
         <li><a href="{{ root_path }}password_change/">
         {% endif %}
-        {% trans 'Change password' %}</a></li>
+        Change password</a></li>
         <!-- Logout -->
         {% url "admin:logout" as logout_url %}
         {% if logout_url %}
@@ -50,7 +50,7 @@
         {% else %}
         <li><a href="{{ root_path }}logout/">
         {% endif %}
-        {% trans 'Log out' %}</a></li>
+        Log out</a></li>
         {% endblock %}
     </ul>
     {% endif %}
