@@ -678,13 +678,25 @@ Learning Objectives
 """
 
 
-class Objective(Orderable, CloneableMixin):
+class Objective(Orderable, Internationalizable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
 
     class Meta:
         order_with_respect_to = "lesson"
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Objective, cls).get_i18n_objects().select_related('lesson', 'lesson__unit')
+
+    @property
+    def should_be_translated(self):
+        return self.lesson and self.lesson.should_be_translated
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name']
 
     def __unicode__(self):
         return self.name
