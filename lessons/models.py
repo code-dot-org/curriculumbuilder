@@ -616,7 +616,7 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
 
     @classmethod
     def internationalizable_fields(cls):
-        return ['name', 'content']
+        return ['name', 'content', 'time']
 
     @classmethod
     def should_redact(cls):
