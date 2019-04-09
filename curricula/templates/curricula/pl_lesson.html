@@ -165,301 +165,41 @@
 
 {% endblock %}
 {% block footer_js %}
+    <script type="text/javascript">
+        var lesson_title = "{{ lesson.title|slugify }}";
 
-    {% if user.is_staff %}
-        <script src="{% static "js/lesson_admin.js" %}"></script>
-    {% endif %}
+        // Feedback Modal
+        var isFeedbackActive = false;
 
-    <!--<script src="{% static "js/lesson.js" %}"></script>-->
-
-    <script defer type="text/javascript">
-
-        // Table of Contents generation
-
-        $(window).on('load', function () {
-            $('#toc{{ lesson.title|slugify }}').toc({
-                'selectors': 'h2,h3', //elements to use as headings
-                'container': '#{{ lesson.title|slugify }}content', //element to find all selectors in
-                'exclude': '.stage_guide h2, .stage_guide h3', //selectors to exclude
-                'smoothScrolling': false, //enable or disable smooth scrolling on click
-                'prefix': '{{ lesson.title|slugify }}', //prefix for anchor tags and class names
-                'onHighlight': function (el) {
-                }, //called when a new section is highlighted
-                'highlightOnScroll': true, //add class to heading that is currently in focus
-                'highlightOffset': 100, //offset to trigger the next headline
-                'anchorName': function (i, heading, prefix) { //custom function for anchor name
-                    return prefix + i;
-                },
-                'headerText': function (i, heading, $heading) { //custom function building the header-item text
-                    return $heading.text();
-                },
-                'itemClass': function (i, heading, $heading, prefix) { // custom function for item class
-                    return $heading[0].tagName.toLowerCase();
+        $('#feedbackFrame').load(function () {
+            if ($(this).attr('src')) {
+                isFeedbackActive = !isFeedbackActive;
+                if (!isFeedbackActive) {
+                    $('#feedbackModal').modal('toggle');
                 }
-            });
+            }
         });
 
 
-        $(document).ready(function () {
+        $('#feedbackModal').on('shown.bs.modal', function () {
+            if (!isFeedbackActive) {
+                $(this).find('iframe').attr('src', "{{ lesson.feedback_link|safe }}&embedded=true");
+            }
+        });
 
-            // Only print the current day with title
+        // When printing, only show the current week instead of the full header agenda
+        $(function () {
             var day = $('.pacing-lesson.active').first().parent();
             day.removeClass('no_print');
             day.prev().removeClass('no_print');
-
-            // New Code Studio Integration
-            $('.stage_guide').each(function () {
-                var start = parseInt($(this).attr('data-start'));
-                var end = parseInt($(this).attr('data-end'));
-
-
-                if ($('.stage_guide_hidden').children().length > 0) {
-                    if (start) {
-                        var tab, tabs, chunk, panel, current_named, last_named;
-                        $(this).append('<div class="stage-chunk named-False always-on-False"><h3><i class="fa fa-desktop"></i> Code Studio levels</h3><ul></ul></div>');
-                        chunk = $(this).find('.stage-chunk');
-                        tabs = $(chunk).find('ul');
-                        if (end) {
-                            for (var i = start; i <= end; i++) {
-                                tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + i + ']');
-                                panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + i + ']');
-                                current_named = $(tab).data('named');
-
-                                // If this is a named level, or the first in an unnamed chunk, start a new chunk
-                                if (last_named == 'True' || last_named != current_named) {
-                                    $(this).append('<div class="stage-chunk named-False always-on-False"><ul></ul></div>');
-                                    chunk = $(chunk).next('.stage-chunk');
-                                    tabs = $(chunk).find('ul');
-                                }
-
-                                // If this is the first in an unnamed chunk, add "Levels" header
-                                if (last_named != current_named && current_named == 'False') {
-                                    $(tabs).append('<li class="chunk-header">Levels</li>');
-                                }
-
-                                $(tab).appendTo(tabs);
-                                $(panel).appendTo(chunk);
-                                if (current_named == 'True') {
-                                    $(chunk).removeClass("named-False always-on-False");
-                                    $(chunk).addClass("named-True always-on-True");
-                                }
-                                last_named = current_named;
-                            }
-                        } else {
-                            tab =  $('.stage_guide_hidden .stage-chunk li[data-level=' + start + ']');
-                            panel = $('.stage_guide_hidden .stage-chunk .level-panel[data-level=' + start + ']');
-
-                            if ($(tab).data('named') == 'True') {
-                                $(chunk).removeClass("named-False always-on-False");
-                                $(chunk).addClass("named-True always-on-True");
-                            } else {
-                                $(tabs).append('<li class="chunk-header">Levels</li>');
-                            }
-
-                            $(tab).appendTo(tabs);
-                            $(panel).appendTo(chunk);
-                        }
-                    } else {
-                        $(this).append('<h3><i class="fa fa-desktop"></i> Code Studio levels</h3>');
-                        $('.stage_guide_hidden .stage-chunk').appendTo(this);
-                    }
-                }
-            });
-
-            $('.stage_guide_hidden').remove();
-
-            $(".always-on-False").tabs({
-                collapsible: true,
-                active: false,
-                classes: { "ui-tabs-panel": "ui-corner-all"},
-                /*show: { effect: "blind", duration: 500 },
-                hide: { effect: "fade", duration: 500 },*/
-                activate: toggleCollapse
-            }).each(function() {
-                $(this).children(".ui-tabs-panel").first().addClass("collapsed");
-            });
-
-            $(".always-on-True").tabs({
-                collapsible: true,
-                classes: { "ui-tabs-panel": "ui-corner-all" },
-                /*show: { effect: "blind", duration: 500 },
-                hide: { effect: "fade", duration: 500 },*/
-                activate: toggleCollapse
-            });
-
-            // Strip answer key links
-            $('.key').html("<p><em>View on Code Studio to access answer key(s)</em></p>")
-
-            function toggleCollapse(event, ui) {
-                if ($(ui.newPanel).length === 0) {
-                    $(ui.oldPanel).addClass("collapsed");
-                    $(ui.oldPanel).siblings().removeClass("collapsed");
-                } else {
-                    $(ui.newPanel).removeClass("collapsed");
-                    $(ui.newPanel).siblings().removeClass("collapsed");
-                }
-
-            }
-
-            // add checkboxes to lists in the prep section
-            var count = 1;
-            $(".prep ul li:visible").each(function (li) {
-                $(this).before('<input type="checkbox" class="todo" name="' + (count++) + '"/>');
-            });
-
-            // read the current/previous setting
-            var $todos = $(".todo");
-            $todos.each(function () {
-                var todo = localStorage.getItem($(this).attr('name') + window.location.pathname);
-                if (todo && todo == "true") {
-                    $(this).prop('checked', todo);
-                }
-            });
-            $todos.change(function () {
-                localStorage.setItem($(this).attr("name") + window.location.pathname, $(this).prop('checked'));
-            });
-
-            // Settings toggles
-
-            // read the current/previous setting
-            $settings = $('.settings input');
-            $settings.each(function () {
-                var setting = localStorage.getItem($(this).attr('name'));
-                if (setting == undefined) {
-                    $(this).prop('checked', true);
-                } else if (setting == "true") {
-                    $(this).prop('checked', setting);
-                } else {
-                    $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
-                }
-            });
-            $settings.change(function () {
-                $('.admonition.' + $(this).attr('name')).toggle($(this).prop('checked'));
-                localStorage.setItem($(this).attr("name"), $(this).prop('checked'));
-            });
-
-            $('.tiplink i').click(function () {
-                var $the_tip = $($(this).parent().attr('href'));
-                $the_tip.parent().toggle(true);
-            });
-
-            // Add tooltip toggles to vocab
-            $('.vocab').each(function () {
-                $(this).attr('data-toggle', 'tooltip');
-                $(this).attr('data-placement', 'bottom');
-            });
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            });
-
-            // Convert streaming responses to formattable JSON
-            function parseResponse(responseText) {
-                var responses = responseText.split("\n");
-                var response = [];
-                for (var i in responses) {
-                    if (responses[i] != "") {
-                        response.push(JSON.parse(responses[i]));
-                    }
-                }
-                return response
-            }
-
-            // Publish button
-            $("#publish_this").click(function () {
-                $('#publish_this').html("Publishing...").removeClass('btn-warning btn-success').addClass('btn-primary');
-                var pk = $(this).attr('data-pk');
-                var type = $(this).attr('data-type');
-                $('#progress_spinner').addClass('fa fa-cog fa-spin');
-
-                // Switch to streaming results
-                var params = "pk=" + pk + "&type=" + type;
-                var client = new XMLHttpRequest();
-                client.open('GET', '/publish/?' + params, true);
-                client.setRequestHeader("Content-type", "application/json; charset=utf-8");
-                client.onprogress = function(){
-                    var response = parseResponse(this.responseText);
-                    $("#publish_results").text(JSON.stringify(response, null, 2));
-                    console.log(this.responseText);
-                };
-                client.upload.addEventListener('error', function(event){
-                    var response = parseResponse(this.responseText);
-                    $("#publish_this").addClass('btn-warning').text("Failed");
-                    $("#publish_results").text(JSON.stringify(response, null, 2));
-                    $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                });
-
-                client.addEventListener('readystatechange', function(e) {
-                    if (this.readyState == 4) {
-                        console.log(this.status);
-                        var response = parseResponse(this.responseText);
-                        if (this.status == 200) {
-                            $("#publish_this").addClass('btn-success').text("Success");
-                            $("#publish_results").text(JSON.stringify(response, null, 2));
-                            $("#publish_results").append('\nFinished');
-                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                        } else {
-                            $("#publish_this").addClass('btn-warning').text("Failed");
-                            $("#publish_results").text(JSON.stringify(response, null, 2));
-                            $("#publish_results").append('\nFailed');
-                            $('#progress_spinner').removeClass('fa fa-cog fa-spin');
-                        }
-                    }
-                });
-                client.send();
-            });
-
-            // Clone button
-            $("#clone_this").click(function () {
-            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
-            var pk = $(this).attr('data-pk');
-            console.log("pk: " + pk);
-            var type = $(this).attr('data-type');
-            console.log("type: " + type);
-            $('#clone_spinner').addClass('fa fa-cog fa-spin');
-
-            $.ajax({
-                 type: "POST",
-                 url: "/clone/",
-                 data: {pk: pk, type: type},
-                 timeout: 9999999
-            }).done(function (response) {
-                $("#clone_this").addClass('btn-success').text("Success");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-                if (response.hasOwnProperty('redirect_url')) {
-                    setTimeout(function () {
-                        window.location.href = response.redirect_url;
-                    }, 500);
-                }
-            }).fail(function (response) {
-                $("#clone_this").addClass('btn-warning').text("Failed");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-            });
         });
 
-            // Get Stage Details Button
-            $("#get_stage_details").click(function () {
-                $('#get_stage_details').html("Getting Stage Details...").removeClass('btn-warning btn-success').addClass('btn-primary');
-                var pk = $(this).attr('data-pk');
-                $('#stage_progress_spinner').addClass('fa fa-cog fa-spin');
-                $.ajax({
-                    type: "POST",
-                    url: "/get_stage_details/",
-                    data: {pk: pk},
-                    timeout: 9999999
-                }).done(function (response) {
-                    $("#get_stage_details").addClass('btn-success').text("Success");
-                    $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
-                    location.reload();
-                }).fail(function (response) {
-                    $("#get_stage_details").addClass('btn-warning').text("Failed");
-                    $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
-                    $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
-                });
-            });
-
-        });
     </script>
+
+    {% if user.is_staff %}
+    <script src="{% static "js/admin_menu.js" %}"></script>
+    {% endif %}
+
+    <script src="{% static "js/lesson.js" %}"></script>
 
 {% endblock %}

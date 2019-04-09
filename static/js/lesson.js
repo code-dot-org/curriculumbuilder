@@ -46,18 +46,6 @@ $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
-    // Convert streaming responses to formattable JSON
-    function parseResponse(responseText) {
-        var responses = responseText.split("\n");
-        var response = [];
-        for (var i in responses) {
-            if (responses[i] != "") {
-                response.push(JSON.parse(responses[i]));
-            }
-        }
-        return response
-    }
-
     // Strip answer key links
     $('.key').html("<p><em>View on Code Studio to access answer key(s)</em></p>")
 
