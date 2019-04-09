@@ -15,9 +15,9 @@
                 <button type="submit" class="save btn btn-primary">Save</button>
             </form>
             {% if unit %}
-            <h3><a href="unit_feedback/">View unit feedback</a></h3>
+            <h3><a href="{% url 'curriculum:unit_feedback' curriculum.slug unit.slug %}">View unit feedback</a></h3>
             {% endif %}
-            <h3><a href="/page_history/{{ page.pk }}/">View history</a></h3>
+            <h3><a href="{% url 'curriculum:page_history' page.pk %}">View history</a></h3>
 
             <h2>Publishing</h2>
             {% if page.jackfrost_can_build %}
