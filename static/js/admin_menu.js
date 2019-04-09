@@ -134,55 +134,56 @@ $(function () {
             }
         });
         pdf_client.send();
+    });
 
-        // Clone
-        $("#clone_this").click(function () {
-            $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
-            var pk = $(this).attr('data-pk');
-            var type = $(this).attr('data-type');
-            var children = $('#clone_children').prop('checked');
-            $('#clone_spinner').addClass('fa fa-cog fa-spin');
+    // Clone
+    $("#clone_this").click(function () {
+        $('#clone_this').html("Cloning...").removeClass('btn-warning btn-success').addClass('btn-primary');
+        var pk = $(this).attr('data-pk');
+        var type = $(this).attr('data-type');
+        var children = $('#clone_children').prop('checked');
+        $('#clone_spinner').addClass('fa fa-cog fa-spin');
 
-            $.ajax({
-                type: "POST",
-                url: "/clone/",
-                data: {pk: pk, type: type, children: children},
-                timeout: 9999999
-            }).done(function (response) {
-                $("#clone_this").addClass('btn-success').text("Success");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-                if (response.hasOwnProperty('redirect_url')) {
-                    setTimeout(function () {
-                        window.location.href = response.redirect_url;
-                    }, 500);
-                }
-            }).fail(function (response) {
-                $("#clone_this").addClass('btn-warning').text("Failed");
-                $("#clone_results").text(JSON.stringify(response, undefined, 2));
-                $('#clone_spinner').removeClass('fa fa-cog fa-spin');
-            });
+        $.ajax({
+            type: "POST",
+            url: "/clone/",
+            data: {pk: pk, type: type, children: children},
+            timeout: 9999999
+        }).done(function (response) {
+            $("#clone_this").addClass('btn-success').text("Success");
+            $("#clone_results").text(JSON.stringify(response, undefined, 2));
+            $('#clone_spinner').removeClass('fa fa-cog fa-spin');
+            if (response.hasOwnProperty('redirect_url')) {
+                setTimeout(function () {
+                    window.location.href = response.redirect_url;
+                }, 500);
+            }
+        }).fail(function (response) {
+            $("#clone_this").addClass('btn-warning').text("Failed");
+            $("#clone_results").text(JSON.stringify(response, undefined, 2));
+            $('#clone_spinner').removeClass('fa fa-cog fa-spin');
         });
+    });
 
-        // Get Code Studio Details
-        $("#get_stage_details").click(function () {
-            $('#get_stage_details').html("Getting Stage Details...").removeClass('btn-warning btn-success').addClass('btn-primary');
-            var pk = $(this).attr('data-pk');
-            $('#stage_progress_spinner').addClass('fa fa-cog fa-spin');
-            $.ajax({
-                type: "POST",
-                url: "/get_stage_details/",
-                data: {pk: pk},
-                timeout: 9999999
-            }).done(function (response) {
-                $("#get_stage_details").addClass('btn-success').text("Success");
-                $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
-                location.reload();
-            }).fail(function (response) {
-                $("#get_stage_details").addClass('btn-warning').text("Failed");
-                $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
-                $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
-            });
+    // Get Code Studio Details
+    $("#get_stage_details").click(function () {
+        $('#get_stage_details').html("Getting Stage Details...").removeClass('btn-warning btn-success').addClass('btn-primary');
+        var pk = $(this).attr('data-pk');
+        var type = $(this).attr('data-type');
+        $('#stage_progress_spinner').addClass('fa fa-cog fa-spin');
+        $.ajax({
+            type: "POST",
+            url: "/get_stage_details/",
+            data: {pk: pk, type: type},
+            timeout: 9999999
+        }).done(function (response) {
+            $("#get_stage_details").addClass('btn-success').text("Success");
+            $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
+            location.reload();
+        }).fail(function (response) {
+            $("#get_stage_details").addClass('btn-warning').text("Failed");
+            $("#stage_details_results").text(JSON.stringify(response, undefined, 2));
+            $('#stage_progress_spinner').removeClass('fa fa-cog fa-spin');
         });
     });
 });

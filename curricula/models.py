@@ -110,6 +110,19 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
         for i, unit in enumerate(self.unit_set.all().order_by('parent___order', '_order')):
             Unit.objects.filter(id=unit.id).update(number=i+1)
 
+    def get_levels_from_levelbuilder(self):
+        payload = {
+            'status': 200,
+            'stages': []
+        }
+
+        for lesson in self.lesson_set.all():
+            stage_payload = lesson.get_levels_from_levelbuilder()
+            payload['stages'].append(stage_payload)
+            if stage_payload['status'] != 200: payload['status'] = stage_payload['status']
+
+        return payload
+
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
         urls = [self.get_absolute_url(), self.get_standards_url(), self.get_standards_csv_url(),
@@ -348,6 +361,19 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         # Renumber lessons that are actually under the unit
         for i, lesson in enumerate(self.lesson_set.all().order_by('parent___order', '_order')):
             lessons.models.Lesson.objects.filter(id=lesson.id).update(number=i+1)
+
+    def get_levels_from_levelbuilder(self):
+        payload = {
+            'status': 200,
+            'stages': []
+        }
+
+        for lesson in self.lesson_set.all():
+            stage_payload = lesson.get_levels_from_levelbuilder()
+            payload['stages'].append(stage_payload)
+            if stage_payload['status'] != 200: payload['status'] = stage_payload['status']
+
+        return payload
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
