@@ -428,7 +428,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         else:
             try:
                 url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-                self.unit.stage_name, self.number)
+                    self.unit.stage_name, self.number)
                 response = urllib2.urlopen(url)
                 data = json.loads(response.read())
                 self.stage = data
