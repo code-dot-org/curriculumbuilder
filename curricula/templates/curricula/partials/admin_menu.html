@@ -26,7 +26,7 @@
                 </button><i id="progress_spinner"></i>
                 <input type="checkbox" name="lessons" id="include_lessons"> Include Children</input>
                 <pre id="publish_results"></pre>
-                {% if lessontype == "Unit" %}
+                {% if pagetype == "Unit" %}
                 <button class="btn btn-primary" id="publish_pdfs" data-pk="{{ page.pk }}" data-type="{{ lessontype }}">Publish PDFs</button><i id="progress_spinner_pdf" style="margin: 5px;"></i><br/>
                 <pre id="publish_results_pdf"></pre>
                 {% endif %}

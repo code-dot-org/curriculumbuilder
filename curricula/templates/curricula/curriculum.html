@@ -31,32 +31,7 @@
 
 {% block admin_link %}
 {% if user.is_staff %}
-    <div id="admin_edit" class="drawer drawer-right dw-xs-9 dw-sm-5 dw-md-3 fold" aria-labelledby="admin_edit">
-        <div class="drawer-controls">
-            <a href="#admin_edit" data-toggle="drawer" aria-foldedopen="false" aria-controls="admin_edit" class="btn btn-default btn-md"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i></a>
-        </div>
-        <div class="drawer-contents">
-            <div class="drawer-body">
-                <h2>Logging</h2>
-                    <form method="POST" action="." class="post-form">{% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="save btn btn-primary">Save Changelog or Feedback</button>
-                    </form>
-                <h2>Publishing</h2>
-                {% if curriculum.jackfrost_can_build %}
-                    <button class="btn btn-primary" id="publish_this" data-pk="{{ curriculum.pk }}" data-type="Curriculum">Publish</button><i id="progress_spinner"></i><br/>
-                    <input type="checkbox" name="lessons" id="include_lessons"> Include Units and Lessons</input>
-                    <pre id="publish_results"></pre>
-                {% else %}
-                    <em>Can't publish, check settings in admin</em>
-                {% endif %}
-                <h2>deepSpaceCopy</h2>
-                <button class="btn btn-primary" id="clone_this" data-pk="{{ curriculum.pk }}" data-type="Curriculum">Clone</button><i id="clone_spinner"></i><br/>
-                <input type="checkbox" name="children" id="clone_children"> Clone Children</input>
-                <pre id="clone_results"></pre>
-            </div>
-        </div>
-    </div>
+    {% include "curricula/partials/admin_menu.html" with page=curriculum pagetype="Curriculum" %}
 {% endif %}
 {% endblock %}
 
