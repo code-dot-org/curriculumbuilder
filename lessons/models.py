@@ -423,15 +423,20 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
             return
 
     def get_levels_from_levelbuilder(self):
-        try:
-            url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-            self.unit.stage_name, self.number)
-            response = urllib2.urlopen(url)
-            data = json.loads(response.read())
-            self.stage = data
-            self.save()
-        except Exception:
-            logger.warning("Couldn't get stage details for %s" % self)
+        if not hasattr(self.unit, 'stage_name'):
+            return {'error': 'No stage name for unit', 'status': 404}
+        else:
+            try:
+                url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
+                    self.unit.stage_name, self.number)
+                response = urllib2.urlopen(url)
+                data = json.loads(response.read())
+                self.stage = data
+                self.save()
+                return {'status': 200, 'success': 'true'}
+            except Exception, e:
+                logger.warning("Couldn't get stage details for %s" % self)
+                return {'status': 500, 'error': 'failed', 'exception': e.message}
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
