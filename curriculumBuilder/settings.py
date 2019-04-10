@@ -10,6 +10,8 @@ import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
 
+from i18n.utils import I18nFileWrapper
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ######################
@@ -135,7 +137,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'translations/'),
+    os.path.join(I18nFileWrapper.static_dir(), 'translations/'),
 )
 
 
