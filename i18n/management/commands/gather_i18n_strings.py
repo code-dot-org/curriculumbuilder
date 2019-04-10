@@ -34,4 +34,5 @@ class Command(BaseCommand):
                                 "--locale", "en",
                                 "--ignore", "src*",
                                 "--no-obsolete")
+        os.rename("locale/en/LC_MESSAGES/django.po", os.path.join(source_dir, "django.po"))
         log("Gathered template strings")
