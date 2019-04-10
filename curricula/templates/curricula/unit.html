@@ -84,8 +84,10 @@
         {% if unit.chapters %}
             {% for chapter in unit.chapters %}
 
+                {% block chapter_title %}
                 <div class="chapter">
                 <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
+                {% endblock %}
 
                 {% if chapter.questions %}
                     <div class="big_questions">
