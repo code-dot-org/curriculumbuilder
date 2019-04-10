@@ -79,13 +79,14 @@
                 {% endfor %}
             {% endif %}
         </div>
-
+        {% block chapter_overviews %}
         <div class="chapter_overviews">
         {% if unit.chapters %}
             {% for chapter in unit.chapters %}
 
+                <div class="chapter {{ chapter_class }}">
+
                 {% block chapter_title %}
-                <div class="chapter">
                 <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
                 {% endblock %}
 
@@ -272,6 +273,7 @@
         {% endif %}
 
         </div>
+        {% endblock %}
 
     </div>
 

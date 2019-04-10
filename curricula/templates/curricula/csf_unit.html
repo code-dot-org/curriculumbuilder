@@ -10,9 +10,14 @@
 
 {% endblock %}
 
+{% block chapter_overviews %}
+    {% with chapter_class="concept_group" %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
 {% block chapter_title %}
-    <div class="chapter concept_group">
-    <h1>{{ chapter.title }}</h1>
+    <h2>{{ chapter.title }}</h2>
 {% endblock %}
 
 {% comment %}Hide chapter commentary{% endcomment %}
