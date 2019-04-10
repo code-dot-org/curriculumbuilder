@@ -10,12 +10,6 @@
 
 {% endblock %}
 
-{% block chapter_overviews %}
-    {% with chapter_class="concept_group" %}
-        {{ block.super }}
-    {% endwith %}
-{% endblock %}
-
 {% block chapter_title %}
     <h2>{{ chapter.title }}</h2>
 {% endblock %}

@@ -87,7 +87,7 @@
                 <div class="chapter {{ chapter_class }}">
 
                 {% block chapter_title %}
-                <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
+                <h2>Chapter {{ chapter.number }}: {{ chapter.title }}</h2>
                 {% endblock %}
 
                 {% if chapter.questions %}
@@ -182,7 +182,6 @@
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-                </div>
                 {% block chapter_commentary %}
                 <details>
                     <summary>Chapter Commentary</summary>
@@ -192,6 +191,7 @@
                     {% endeditable %}
                 </details>
                 {% endblock %}
+                </div>
                 {% if not forloop.last %}<hr/>{% endif %}
             {% endfor %}
         {% else %}
