@@ -1,4 +1,15 @@
 {% extends "curricula/unit.html" %}
+
+{% comment %}Hide chapter label in header{% endcomment %}
+<!-- Header Bubbles -->
+
+{% block lessonnumber %}
+    <div class="unitnumber">{{ unit.header_corner|safe }}</div>
+
+    {% include "curricula/partials/csf_bubbles_header.html" with unit=unit %}
+
+{% endblock %}
+
 {% block chapter_title %}
     <div class="chapter concept-group">
     <h1>{{ chapter.title }}</h1>
