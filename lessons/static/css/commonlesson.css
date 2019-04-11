@@ -581,6 +581,12 @@ th a:link, th a:visited, th a:hover, th a:active {
     border: none;
 }
 
+.chapter_overviews .chapter {
+    border: 3px solid rgb(207, 201, 222);
+    padding: 20px;
+    border-radius: 4px;
+}
+
 .lesson_overview {
     display: inline-block;
     clear:both;

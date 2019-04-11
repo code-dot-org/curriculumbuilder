@@ -1,0 +1,15 @@
+{% extends "curricula/codestudiolesson.html" %}
+
+{% comment %}Hide chapter label in header{% endcomment %}
+<!-- Header Bubbles -->
+
+{% block lessonnumber %}
+    <div class="unitnumber">
+        <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}">{{ unit.header_corner|safe }}</a>
+    </div>
+
+    {% with lesson=parent|default_if_none:lesson %}
+        {% include "curricula/partials/csf_bubbles_header.html" with unit=unit lesson=lesson %}
+    {% endwith %}
+
+{% endblock %}

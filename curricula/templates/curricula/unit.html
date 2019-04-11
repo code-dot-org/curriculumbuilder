@@ -79,13 +79,16 @@
                 {% endfor %}
             {% endif %}
         </div>
-
+        {% block chapter_overviews %}
         <div class="chapter_overviews">
         {% if unit.chapters %}
             {% for chapter in unit.chapters %}
 
-                <div class="chapter">
-                <h1>Chapter {{ chapter.number }}: {{ chapter.title }}</h1>
+                <div class="chapter {{ chapter_class }}">
+
+                {% block chapter_title %}
+                <h2>Chapter {{ chapter.number }}: {{ chapter.title }}</h2>
+                {% endblock %}
 
                 {% if chapter.questions %}
                     <div class="big_questions">
@@ -179,8 +182,7 @@
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-                </div>
-
+                {% block chapter_commentary %}
                 <details>
                     <summary>Chapter Commentary</summary>
 
@@ -188,6 +190,8 @@
                     {{ chapter.content|richtext_filters|safe }}
                     {% endeditable %}
                 </details>
+                {% endblock %}
+                </div>
                 {% if not forloop.last %}<hr/>{% endif %}
             {% endfor %}
         {% else %}
@@ -269,6 +273,7 @@
         {% endif %}
 
         </div>
+        {% endblock %}
 
     </div>
 
