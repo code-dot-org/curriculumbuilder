@@ -23,19 +23,13 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "/upload/*.json",
+  "source" : "/upload/*",
 
   #
   # where translations live
   # e.g. "/resources/%two_letters_code%/%original_file_name%"
   #
-  "translation" : "/translations/%locale%/%original_file_name%",
-
-  #
-  # File type
-  # e.g. "json"
-  #
-  "type" : "json",
+  "translation" : "/translations/%locale_with_underscore%/LC_MESSAGES/%original_file_name%",
 
   #
   # The parameter "update_option" is optional. If it is not set, translations for changed strings will be lost. Useful for typo fixes and minor changes in source strings.
@@ -46,46 +40,11 @@ files: [
   # Map crowdin's language code to Django
   "languages_mapping": {
     "locale": {
-      "es-MX": "es_MX",
-      "it": "it",
-      "th": "th",
-    }
-  }
- },
- {
-  #
-  # Source files filter
-  # e.g. "/resources/en/*.json"
-  #
-  "source" : "/upload/*.po",
-
-  #
-  # where translations live
-  # e.g. "/resources/%two_letters_code%/%original_file_name%"
-  #
-  "translation" : "/translations/%locale_with_underscore%/LC_MESSAGES/django.po",
-
-  #
-  # File type
-  # e.g. "json"
-  #
-  "type" : "po",
-
-  #
-  # The parameter "update_option" is optional. If it is not set, translations for changed strings will be lost. Useful for typo fixes and minor changes in source strings.
-  # e.g. "update_as_unapproved" or "update_without_changes"
-  #
-  "update_option" : "update_without_changes",
-
-  # Map crowdin's language code to Django
-  "languages_mapping": {
-    "locale": {
-      "es-MX": "es-mx",
+      "es_MX": "es-mx",
       "it": "it-it",
       "th": "th-th",
       "sk": "sk-sk",
     }
   }
- }
-
+ },
 ]
