@@ -39,6 +39,11 @@
 {% block footer_js %}
     <script type="text/javascript">
     $(document).ready(function() {
+        // Remove sidebar if loaded in iFrame
+        if (window.self != window.top) {
+            $("#categories").hide();
+        }
+
         // Convert streaming responses to formattable JSON
         function parseResponse(responseText) {
             var responses = responseText.split("\n");
