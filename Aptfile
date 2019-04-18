@@ -1,3 +1,4 @@
 python-cairo
 https://artifacts.crowdin.com/repo/deb/crowdin.deb
 default-jre
+gettext
