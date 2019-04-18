@@ -3,6 +3,7 @@ import glob
 import os
 import subprocess
 
+from django.core import management
 from django.core.management.base import BaseCommand
 
 from i18n.management.utils import log, get_non_english_language_codes, get_models_to_sync
@@ -49,6 +50,10 @@ class Command(BaseCommand):
                     '-o', translation_path,
                     '-p', plugins
                 ])
+            print_clear("%s - finished" % locale, end='\n')
+
+        # Compile Django translations
+        management.call_command("compilemessages")
 
     def upload_translations(self):
         """Upload restored translation data to s3"""

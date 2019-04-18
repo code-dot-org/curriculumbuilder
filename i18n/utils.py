@@ -31,7 +31,9 @@ class I18nFileWrapper:
 
     @classmethod
     def _load_translations(cls, name, lang):
-        path = os.path.join("translations", lang, name + ".json")
+        # Construct the path for translations. Django requires some translations
+        # to exist in a LC_MESSAGES directory, so let's put them all there.
+        path = os.path.join("translations", lang, "LC_MESSAGES", name + ".json")
         translations = cache.get(path)
         if translations is None:
             try:

@@ -11,6 +11,7 @@ import dj_database_url
 from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+I18N_STATIC_DIR = os.path.join(BASE_DIR, "i18n", "static")
 
 ######################
 # MEZZANINE SETTINGS #
@@ -133,6 +134,11 @@ LANGUAGES = (
     ('sk-sk', _('Slovak')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
+
+LOCALE_PATHS = (
+    os.path.join(I18N_STATIC_DIR, 'translations/'),
+)
+
 
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
