@@ -37,13 +37,13 @@ files: [
   #
   "update_option" : "update_without_changes",
 
-  # Map crowdin's language code to Django
+  # Crowdin shortens languages without locale variation to just two characters,
+  # but we always want to use four
   "languages_mapping": {
-    "locale": {
-      "es_MX": "es-mx",
-      "it": "it-it",
-      "th": "th-th",
-      "sk": "sk-sk",
+    "locale_with_underscore": {
+      "it": "it_IT",
+      "th": "th_TH",
+      "sk": "sk_SK",
     }
   }
  },
