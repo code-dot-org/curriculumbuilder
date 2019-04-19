@@ -36,15 +36,5 @@ files: [
   # e.g. "update_as_unapproved" or "update_without_changes"
   #
   "update_option" : "update_without_changes",
-
-  # Crowdin shortens languages without locale variation to just two characters,
-  # but we always want to use four
-  "languages_mapping": {
-    "locale_with_underscore": {
-      "it": "it_IT",
-      "th": "th_TH",
-      "sk": "sk_SK",
-    }
-  }
  },
 ]
