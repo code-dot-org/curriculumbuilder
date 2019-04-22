@@ -36,14 +36,14 @@ files: [
   # e.g. "update_as_unapproved" or "update_without_changes"
   #
   "update_option" : "update_without_changes",
- },
 
- # For some reason, Crowdin lowercases locale_with_underscore for the
- # pseudo-language we use for in-context translation (and only that language),
- # so we coerce it here to xx_YY format like all the other languages.
+  # For some reason, Crowdin lowercases locale_with_underscore for the
+  # pseudo-language we use for in-context translation (and only that language),
+  # so we coerce it here to xx_YY format like all the other languages.
   "languages_mapping": {
     "locale_with_underscore": {
-      "in_tl": "in_TL",
+      "in": "in_TL",
     }
   }
+ }
 ]
