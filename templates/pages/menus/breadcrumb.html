@@ -1,13 +1,13 @@
-{% load i18n future pages_tags %}
+{% load future pages_tags %}
 
 {% if on_home %}
-<li>{% trans "Home" %}</li>
+<li>Home</li>
 {% else %}
 {% for page in page_branch %}
 
     {% if not has_home and page.is_primary and forloop.first %}
     <li id="breadcrumb-menu-home">
-        <a href="{% url "home" %}">{% trans "Home" %}</a>
+        <a href="{% url "home" %}">Home</a>
     </li>
     {% endif %}
 

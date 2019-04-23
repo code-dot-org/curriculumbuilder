@@ -6,6 +6,7 @@ import time
 from django.conf import settings
 from django.db import models
 from django.utils import translation
+from django.utils.translation import to_locale
 
 from mezzanine.pages.models import Page
 
@@ -28,7 +29,8 @@ class Internationalizable(models.Model):
         instance = super(Internationalizable, cls).from_db(*args)
         lang = translation.get_language()
         if lang and lang != settings.LANGUAGE_CODE:
-            instance.translate_to(lang)
+            locale = to_locale(lang)
+            instance.translate_to(locale)
         return instance
 
     @classmethod
