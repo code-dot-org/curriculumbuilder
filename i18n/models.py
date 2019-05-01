@@ -46,9 +46,16 @@ class Internationalizable(models.Model):
         return cls.objects
 
     @classmethod
+    def get_serializer(cls):
+        name = cls.__name__ + 'Serializer'
+        serializers = __import__('curricula.serializers', fromlist=[name])
+        return getattr(serializers, name, None)
+
+    @classmethod
     def gather_strings(cls):
         strings = {}
         objects = cls.get_i18n_objects()
+        Serializer = cls.get_serializer()
         total = objects.count()
         index = 0
         elapsed = 0
@@ -62,10 +69,13 @@ class Internationalizable(models.Model):
             if obj.should_be_translated:
                 key = obj.i18n_key
                 strings[key] = {}
+                serialized_obj = {}
+                if Serializer:
+                    serialized_obj = Serializer(obj).data
                 for field in cls.internationalizable_fields():
-                    string = getattr(obj, field)
+                    string = serialized_obj[field] if serialized_obj.has_key(field) else getattr(obj, field)
                     if string:
-                        strings[key][field] = getattr(obj, field)
+                        strings[key][field] = string
             end = time.time()
             elapsed += (end - start)
         print("%s: complete (%0.2f elapsed, %0.4f average)                       " % (cls.__name__, elapsed, (elapsed/total)))
