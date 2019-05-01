@@ -17,7 +17,7 @@
             <div class="btn-group" role="group">
             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                Last updated {{ changelog.first.revision.date_created|date:"n/j/y" }}
+                {% trans 'Last updated' %} {{ changelog.first.revision.date_created|date:"n/j/y" }}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
