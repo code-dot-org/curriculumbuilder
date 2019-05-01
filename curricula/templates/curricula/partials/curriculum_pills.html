@@ -1,4 +1,5 @@
- <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Unit Resources">
+{% load i18n %} 
+<div class="resource-nav btn-toolbar" role="toolbar" aria-label="Unit Resources">
     <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
         <a href="{{ curriculum.get_absolute_url }}standards/" class="btn" role="button">Standards</a>
         <a href="{{ curriculum.get_absolute_url }}vocab/" class="btn" role="button">Vocab</a>
