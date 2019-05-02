@@ -1,5 +1,6 @@
 {% load mezzanine_tags %}
 {% load staticfiles %}
+{% load i18n %}
 
 <!-- One Pager -->
 
@@ -8,7 +9,7 @@
         {% if optional %}
             <h1>Optional Lesson: {{ lesson.title }}</h1>
         {% else %}
-            <h1>Lesson {{ lesson.number }}: {{ lesson.title }}</h1>
+            <h1>{% trans 'Lesson' %} {{ lesson.number }}: {{ lesson.title }}</h1>
         {% endif %}
     {% endeditable %}
 
@@ -25,13 +26,13 @@
 <div class="together overview-page row">
 
     <div class="col-sm-7 left-col">
-        <h2>Overview</h2>
+        <h2>{% trans 'Overview' %}</h2>
         {% editable lesson.overview %}
             {{ lesson.overview|richtext_filters|safe }}
         {% endeditable %}
 
         {% if lesson.cs_content %}
-            <h2>Purpose</h2>
+            <h2>{% trans 'Purpose' %}</h2>
             {% editable lesson.cs_content %}
                 {{ lesson.cs_content|richtext_filters|safe }}
             {% endeditable %}
@@ -40,7 +41,7 @@
         <!-- Assessment -->
 
         {% if lesson.assessment %}
-            <h2>Assessment Opportunities</h2>
+            <h2>{% trans 'Assessment Opportunities' %}</h2>
             <div class="assessment">
                 {% editable lesson.assessment %}
                     {{ lesson.assessment|richtext_filters|safe }}
@@ -48,7 +49,7 @@
             </div>
         {% endif %}
 
-        <h2>Agenda</h2>
+        <h2>{% trans 'Agenda' %}</h2>
         <div class="toc" id="toc{{ lesson|slugify }}">
             {% for activity in lesson.activity_set.all %}
                 <h3>{{ activity }}</h3>
@@ -83,8 +84,8 @@
 <!-- Objectives -->
 
         {% if lesson.objective_set.count > 0 %}
-            <h2>Objectives</h2>
-            <h3>Students will be able to:</h3>
+            <h2>{% trans 'Objectives' %}</h2>
+            <h3>{% trans 'Students will be able to:' %}</h3>
             <ul>
                 {% for objective in lesson.objective_set.all %}
                     <li>{% editable objective.name %}{{ objective.name }}{% endeditable %}</li>
@@ -95,7 +96,7 @@
 <!-- Prep -->
 
         {% if lesson.prep %}
-            <h2>Preparation</h2>
+            <h2>{% trans 'Preparation' %}</h2>
             <div class="prep">
                 {% editable lesson.prep %}
                     {{ lesson.prep|richtext_filters|safe }}
@@ -106,9 +107,11 @@
 <!-- Resources -->
 
         {% if lesson.resources.count > 0 %}
-            <h2>Links</h2>
+            <h2>{% trans 'Links' %}</h2>
             <div class="alert alert-warning">
-                <strong>Heads Up!</strong> Please make a copy of any documents you plan to share with students.
+                {% blocktrans trimmed %}
+                    <strong>Heads Up!</strong> Please make a copy of any documents you plan to share with students.
+                {% endblocktrans %}
             </div>
             {% with lesson.resources.all as resources %}
                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
@@ -146,7 +149,7 @@
 <!-- Vocab -->
 
         {% if lesson.vocab.count > 0 %}
-            <h2>Vocabulary</h2>
+            <h2>{% trans 'Vocabulary' %}</h2>
             <ul>
                 {% for word in lesson.vocab.all %}
                     <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
@@ -157,7 +160,7 @@
 <!-- Introduced Code -->
 
         {% if lesson.blocks.count > 0 %}
-            <h2>Introduced Code</h2>
+            <h2>{% trans 'Introduced Code' %}</h2>
             <ul>
                 {% for block in lesson.blocks.all %}
                     <li><code class="block" style="background-color: {{ block.parent_cat.color }}">
@@ -170,7 +173,7 @@
 <!-- Support -->
 
         <div class="open_questions no_print">
-            <h2>Support</h2>
+            <h2>{% trans 'Support' %}</h2>
             {% if curriculum.auto_forum %}
                 <h3><a href="{{ lesson.forum_link }}" target="_blank">Lesson Forum</a></h3>
             {% endif %}
@@ -180,7 +183,7 @@
             {% endif %}
 
 
-            <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">Report a Bug</a></h3>
+            <h3><a href="{{ lesson.zendesk_link|safe }}" target="_blank">{% trans 'Report a Bug' %}</a></h3>
         
             {% if unit.questions %}
                 {{ unit.questions|richtext_filters|safe }}
