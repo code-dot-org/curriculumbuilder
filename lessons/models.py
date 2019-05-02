@@ -107,7 +107,7 @@ class Resource(Orderable, Internationalizable):
 
     @classmethod
     def internationalizable_fields(cls):
-        return ['name', 'url', 'dl_url']
+        return ['name', 'url', 'dl_url', 'type']
 
     @classmethod
     def get_i18n_objects(cls):
