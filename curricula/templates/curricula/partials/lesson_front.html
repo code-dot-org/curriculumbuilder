@@ -109,9 +109,8 @@
         {% if lesson.resources.count > 0 %}
             <h2>{% trans 'Links' %}</h2>
             <div class="alert alert-warning">
-                {% blocktrans trimmed %}
-                    <strong>Heads Up!</strong> Please make a copy of any documents you plan to share with students.
-                {% endblocktrans %}
+                {% trans '**Heads Up!** Please make a copy of any documents you plan to share with students.' as notice %}
+                {{ notice|richtext_filters|safe }}
             </div>
             {% with lesson.resources.all as resources %}
                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
