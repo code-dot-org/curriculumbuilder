@@ -1,6 +1,7 @@
 {% load mezzanine_tags %}
 {% load staticfiles %}
 {% load with_unit %}
+{% load i18n %}
 
 <div class="container">
     <div class="header printbackground">
@@ -22,7 +23,7 @@
 
             <div id="{{ lesson.title|slugify }}-content">
 
-                <h1>Teaching Guide</h1>
+                <h1>{% trans 'Teaching Guide' %}</h1>
 
                 {% for activity in lesson.activity_set.all %}
                     <div class="activity">
