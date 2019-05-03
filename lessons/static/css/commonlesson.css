@@ -365,12 +365,12 @@ html, body{
 }
 
 .admonition.assessment {
-    border: 2px solid #0094ca;
+    border: 2px solid #7665a0;
     background-color: white;
 }
 
 .admonition.assessment > p.admonition-title {
-    background-color: #0094ca!important;
+    background-color: #7665a0!important;
 }
 
 .tiplink {
@@ -395,7 +395,7 @@ html, body{
 }
 
 .tiplink-assessment a:link, .tiplink-assessment a:visited {
-    color: #0094ca;
+    color: #7665a0;
 }
 
 .say > .admonition-title, .guide > .admonition-title,
@@ -581,6 +581,12 @@ th a:link, th a:visited, th a:hover, th a:active {
     border: none;
 }
 
+.chapter_overviews .chapter {
+    border: 3px solid rgb(207, 201, 222);
+    padding: 20px;
+    border-radius: 4px;
+}
+
 .lesson_overview {
     display: inline-block;
     clear:both;
@@ -741,19 +747,11 @@ th a:link, th a:visited, th a:hover, th a:active {
 */
 
 .level-link {
-    /*
-    margin: 5px 10px 5px 0;
-    padding: 5px;
-    border: 2px solid #cfc9de;
-    border-radius: 5px;
-    */
     font-size: .75em;
     float: right;
 }
 
-.level-link:after {
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
+.level-link-icon:before {
     content: "\f08e";
 }
 
@@ -819,7 +817,9 @@ th a:link, th a:visited, th a:hover, th a:active {
 .type-FreeResponse .level-icon:before,
 .type-Multi .level-icon:before,
 .type-Match .level-icon:before,
-.type-Eval .level-icon:before{
+.type-Eval .level-icon:before,
+.type-LevelGroup .level-icon:before
+{
     content: "\f0ca";
 }
 
@@ -912,23 +912,6 @@ a.btn.btn-warning:visited {
     body {
         font-size: 20px;
     }
-}
-
-/* Assessment Icon on Code Studio Pull Through */
-
-.assessment-icon {
-    color: white;
-    padding: 10px;
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    right: 12.5px;
-    top: -25px;
-    font-size: 15px;
-}
-
-.assessment-icon .fa-circle{
-    color: #0094ca;
 }
 
 /* Mini Rubric Display */

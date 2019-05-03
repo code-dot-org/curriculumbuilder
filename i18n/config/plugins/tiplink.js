@@ -50,6 +50,8 @@ function createTiplink(add, tipType, tipLink) {
     icon = "lightbulb-o";
   } else if (tipType == 'discussion') {
     icon = "comments";
+  } else if (tipType == 'assessment') {
+    icon = "check-circle";
   } else if (tipType == 'content') {
     icon = "mortar-board";
   } else {

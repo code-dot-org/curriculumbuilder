@@ -731,12 +731,13 @@ def old_publish(request):
 def get_stage_details(request):
     try:
         pk = int(request.POST.get('pk'))
-        lesson = get_object_or_404(Lesson, pk=pk)
-        if not hasattr(lesson.unit, 'stage_name'):
-            payload = {'error': 'No stage name for unit', 'status': 404}
-        else:
-            lesson.get_levels_from_levelbuilder()
-            payload = {'success': 'true'}
+        page_type = request.POST.get('type')
+
+        klass = globals()[page_type]
+
+        obj = klass.objects.get(pk=pk)
+
+        payload = obj.get_levels_from_levelbuilder()
     except Exception, e:
         payload = {'status': 500, 'error': 'failed', 'exception': e.message}
     print payload

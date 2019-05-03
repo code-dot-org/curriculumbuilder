@@ -1,9 +1,11 @@
 <div class="lessons">
     {% if unit.chapters %}
         {% for chap in unit.chapters %}
+            {% block bubble_chapter_label %}
             <div class="lesson chapter">
                 Ch. {{ chap.number }}
             </div>
+            {% endblock %}
             {% for stage in chap.lessons %}
                 {% if stage.number < lesson.number %}
                     <div class="lesson finished">

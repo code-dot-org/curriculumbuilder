@@ -1,4 +1,4 @@
-{% load i18n future pages_tags %}
+{% load future pages_tags %}
 
 {% spaceless %}
 {% if page_branch %}
@@ -7,7 +7,7 @@
 	{% if not has_home and page.is_primary and forloop.first %}
 	<ul class="mobile-menu">
 		<li><a class="home" href="{% url "home" %}"
-			   id="tree-menu-home">{% trans "Home" %}</a></li>
+			   id="tree-menu-home">Home</a></li>
     {% endif %}
 
 		{% if page.is_current_or_ascendant and not page.is_current_child %}

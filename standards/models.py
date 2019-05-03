@@ -1,13 +1,15 @@
 from django.db import models
 from django.db.models import Count, Q
 
+from i18n.models import Internationalizable
+
 """
 Top level of a standards framework
 
 """
 
 
-class Framework(models.Model):
+class Framework(Internationalizable):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField()
@@ -19,6 +21,26 @@ class Framework(models.Model):
     @property
     def top_categories(self):
         return self.categories.top()
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return (
+            super(Framework, cls)
+            .get_i18n_objects()
+            .prefetch_related(
+                'standards',
+                'standards__opportunities',
+                'standards__opportunities__unit'
+            )
+        )
+
+    @property
+    def should_be_translated(self):
+        return any(standard.should_be_translated for standard in self.standards.all())
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'description']
 
 
 """
@@ -40,7 +62,7 @@ class CategoryQuerySet(models.QuerySet):
         return self.filter(standards__isnull=False).distinct()
 
 
-class Category(models.Model):
+class Category(Internationalizable):
     name = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
@@ -59,6 +81,26 @@ class Category(models.Model):
         return Standard.objects.filter(Q(category=self) | Q(category__parent=self))
 
     objects = CategoryQuerySet.as_manager()
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return (
+            super(Category, cls)
+            .get_i18n_objects()
+            .prefetch_related(
+                'standards',
+                'standards__opportunities',
+                'standards__opportunities__unit'
+            )
+        )
+
+    @property
+    def should_be_translated(self):
+        return any(standard.should_be_translated for standard in self.standards.all())
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'description']
 
 
 
@@ -81,7 +123,7 @@ A collection of grades to which a standard can belong
 """
 
 
-class GradeBand(models.Model):
+class GradeBand(Internationalizable):
     name = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -90,6 +132,26 @@ class GradeBand(models.Model):
     def __unicode__(self):
         return self.name
 
+    @classmethod
+    def get_i18n_objects(cls):
+        return (
+            super(GradeBand, cls)
+            .get_i18n_objects()
+            .prefetch_related(
+                'standards',
+                'standards__opportunities',
+                'standards__opportunities__unit'
+            )
+        )
+
+    @property
+    def should_be_translated(self):
+        return any(standard.should_be_translated for standard in self.standards.all())
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'description']
+
 
 """
 Standards
@@ -97,11 +159,11 @@ Standards
 """
 
 
-class Standard(models.Model):
+class Standard(Internationalizable):
     name = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    gradeband = models.ForeignKey(GradeBand)
+    gradeband = models.ForeignKey(GradeBand, related_name='standards')
     category = models.ForeignKey(Category, related_name='standards')
     framework = models.ForeignKey(Framework, blank=True, null=True, related_name='standards')
     slug = models.CharField(max_length=50, blank=True, null=True)
@@ -109,6 +171,22 @@ class Standard(models.Model):
     def __unicode__(self):
         # return self.slug
         return "%s: %s" % (self.slug, self.name)
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return (
+            super(Standard, cls)
+            .get_i18n_objects()
+            .prefetch_related('opportunities', 'opportunities__unit')
+        )
+
+    @property
+    def should_be_translated(self):
+        return any(lesson.should_be_translated for lesson in self.opportunities.all())
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name', 'description']
 
     class Meta:
         ordering = ['framework', 'category', 'slug']

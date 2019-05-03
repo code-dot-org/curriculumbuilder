@@ -376,6 +376,20 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
     def get_curriculum(self):
         return self.get_unit().curriculum
 
+    def parse_xml_block_text(self, str):
+        def replace(matchobj):
+            # Use single- or double-quotes as the delimiter for our block-text attribute.
+            # Note: This means the value of block-text cannot have single- or double-quotes
+            # in it.
+            match = re.search(r"block-text=[\"\'](?P<block_text>[^\"\']+)[\"\']", matchobj.group(0))
+            if match and match.group('block_text'):
+                block_text = match.group('block_text')
+                return block_text
+            else:
+                return matchobj.group(0)
+
+        return re.sub(r"(<xml>.+?</xml>)", replace, str, 0, re.DOTALL)
+
     def get_levels(self):
         if self.stage:
             raw_levels = self.stage.get('levels')
@@ -396,6 +410,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
                     counter += 1
                     levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
+                # Use value of block-text attribute in long_instructions to build parsed_long_instructions,
+                # which replaces <xml></xml> with block-text, if present.
+                long_instructions = level.get('long_instructions')
+                if long_instructions:
+                    level['parsed_long_instructions'] = self.parse_xml_block_text(long_instructions)
+
                 levels[counter]['levels'].append(level)
 
             return levels
@@ -403,15 +423,20 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
             return
 
     def get_levels_from_levelbuilder(self):
-        try:
-            url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-            self.unit.stage_name, self.number)
-            response = urllib2.urlopen(url)
-            data = json.loads(response.read())
-            self.stage = data
-            self.save()
-        except Exception:
-            logger.warning("Couldn't get stage details for %s" % self)
+        if not hasattr(self.unit, 'stage_name'):
+            return {'error': 'No stage name for unit', 'status': 404}
+        else:
+            try:
+                url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
+                    self.unit.stage_name, self.number)
+                response = urllib2.urlopen(url)
+                data = json.loads(response.read())
+                self.stage = data
+                self.save()
+                return {'status': 200, 'success': 'true'}
+            except Exception, e:
+                logger.warning("Couldn't get stage details for %s" % self)
+                return {'status': 500, 'error': 'failed', 'exception': e.message}
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
@@ -596,7 +621,7 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
 
     @classmethod
     def internationalizable_fields(cls):
-        return ['name', 'content']
+        return ['name', 'content', 'time']
 
     @classmethod
     def should_redact(cls):
@@ -658,13 +683,25 @@ Learning Objectives
 """
 
 
-class Objective(Orderable, CloneableMixin):
+class Objective(Orderable, Internationalizable, CloneableMixin):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
 
     class Meta:
         order_with_respect_to = "lesson"
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Objective, cls).get_i18n_objects().select_related('lesson', 'lesson__unit')
+
+    @property
+    def should_be_translated(self):
+        return self.lesson and self.lesson.should_be_translated
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['name']
 
     def __unicode__(self):
         return self.name

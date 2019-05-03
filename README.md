@@ -72,7 +72,7 @@ cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.
 
 ```
 source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
-python manage.py runserver_plus
+debug=true python manage.py runserver_plus
 ```
 
 http://localhost:8000

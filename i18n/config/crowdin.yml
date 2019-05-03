@@ -23,19 +23,13 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "/upload/*.json",
+  "source" : "/upload/*",
 
   #
   # where translations live
   # e.g. "/resources/%two_letters_code%/%original_file_name%"
   #
-  "translation" : "/translations/%locale%/%original_file_name%",
-
-  #
-  # File type
-  # e.g. "json"
-  #
-  "type" : "json",
+  "translation" : "/translations/%locale_with_underscore%/LC_MESSAGES/%original_file_name%",
 
   #
   # The parameter "update_option" is optional. If it is not set, translations for changed strings will be lost. Useful for typo fixes and minor changes in source strings.
@@ -43,13 +37,12 @@ files: [
   #
   "update_option" : "update_without_changes",
 
-  # Map crowdin's language code to Django
+  # For some reason, Crowdin lowercases locale_with_underscore for the
+  # pseudo-language we use for in-context translation (and only that language),
+  # so we coerce it here to xx_YY format like all the other languages.
   "languages_mapping": {
-    "locale": {
-      "es-MX": "es-mx",
-      "it": "it-it",
-      "th": "th-th",
-      "sk": "sk-sk",
+    "locale_with_underscore": {
+      "in": "in_TL",
     }
   }
  }

@@ -11,6 +11,7 @@ import dj_database_url
 from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+I18N_STATIC_DIR = os.path.join(BASE_DIR, "i18n", "static")
 
 ######################
 # MEZZANINE SETTINGS #
@@ -134,6 +135,11 @@ LANGUAGES = (
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
 
+LOCALE_PATHS = (
+    os.path.join(I18N_STATIC_DIR, 'translations/'),
+)
+
+
 # A boolean that turns on/off debug mode. When set to ``True``, stack traces
 # are displayed for error pages. Should always be set to ``False`` in
 # production. Best set to ``True`` in local_settings.py
@@ -235,7 +241,8 @@ if os.environ.get('REDIS_URL', False):
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'default-django-cache',
         }
     }
 
@@ -534,7 +541,16 @@ FREEZE_INCLUDE_STATIC = False
 ######################
 # JACKFROST SETTINGS #
 ######################
+# Preloading metadata for AWS _dramatically_ slows down publish operations.
+# Specifically, it slows down any call to S3BotoStorage.exists for large
+# buckets. In turn, jackfrost uses `self.storage.exists` as part of the write
+# operation which is used for every publish. Disabling preloading here should
+# speed up publishing content by about an order of magnitude.  See
+# https://stackoverflow.com/a/21121924/1810460 for more details.
 JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+JACKFROST_STORAGE_KWARGS = {
+    'preload_metadata': False
+}
 JACKFROST_RENDERERS = (
     'curricula.jackfrost_renderers.CurriculumRenderer',
     'curricula.jackfrost_renderers.UnitRenderer',

@@ -30,8 +30,26 @@ class I18nFileWrapper:
         return os.path.join(cls.i18n_dir(), 'static')
 
     @classmethod
+    def locale_dir(cls, locale_name):
+        """
+        Return the relative directory in which we expect translations to be
+        stored for the given locale name
+        """
+        return os.path.join("translations", locale_name, "LC_MESSAGES")
+
+    @classmethod
+    def locale_dir_absolute(cls, locale_name):
+        """
+        Return the absolute directory in which we expect translations to be
+        stored for the given locale name
+        """
+        return os.path.join(cls.static_dir(), "translations", locale_name, "LC_MESSAGES")
+
+    @classmethod
     def _load_translations(cls, name, lang):
-        path = os.path.join("translations", lang, name + ".json")
+        # Construct the path for translations. Django requires some translations
+        # to exist in a LC_MESSAGES directory, so let's put them all there.
+        path = os.path.join(cls.locale_dir(lang), name + ".json")
         translations = cache.get(path)
         if translations is None:
             try:
