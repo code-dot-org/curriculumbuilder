@@ -44,6 +44,22 @@
 {% endblock %}
 
 {% block main %}
+    <div class="together">
+    {% if unit %}
+        {% if unit.assessment_commentary %}
+        {% editable unit.assessment_commentary %}
+            {{ unit.assessment_commentary|richtext_filters|safe }}
+        {% endeditable %}
+        {% endif %}
+    {% else %}
+        {% if curriculum.assessment_commentary %}
+        {% editable curriculum.assessment_commentary %}
+            {{ curriculum.assessment_commentary|richtext_filters|safe }}
+        {% endeditable %}
+        {% endif %}
+    {% endif %}
+    </div>
+
     <div class="together standards row">
     <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> Expand All</button>
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> Collapse All</button>
