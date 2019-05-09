@@ -47,6 +47,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     gradeband = models.ForeignKey(GradeBand, blank=True, null=True, on_delete=models.SET_NULL)
     frameworks = models.ManyToManyField(Framework, blank=True, help_text='Standards frameworks aligned to')
+    assessment_commentary = RichTextField('Assessment Commentary', help_text="How this course approaches assessment",
+                              blank=True, null=True)
     version = models.IntegerField(choices=VERSION_CHOICES, default=NEXT)
     unit_numbering = models.BooleanField(default=True)
     auto_forum = models.BooleanField(default=False, help_text='Automatically generate forum links?')
@@ -61,6 +63,10 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     class Meta:
         verbose_name_plural = "curricula"
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Curriculum, cls).internationalizable_fields() + ['assessment_commentary']
 
     def __unicode__(self):
         return self.title
@@ -265,6 +271,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                                   help_text='Name of Code Studio script')
     questions = RichTextField('Support Details', help_text='Open questions or comments to add to all lessons in unit',
                               blank=True, null=True)
+    assessment_commentary = RichTextField('Assessment Commentary', help_text="How this unit approaches assessment",
+                              blank=True, null=True)
     show_calendar = models.BooleanField('Show Calendar', default=False, help_text='Show pacing guide calendar?')
     week_length = models.IntegerField('Days in a Week', default=5, blank=True, null=True,
                                       help_text='Controls the minimum lesson size in the pacing calendar.')
@@ -275,6 +283,10 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
     i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Unit, cls).internationalizable_fields() + ['assessment_commentary']
 
     def __unicode__(self):
         return self.title
