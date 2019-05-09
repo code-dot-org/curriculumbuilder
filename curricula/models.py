@@ -64,6 +64,10 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
     class Meta:
         verbose_name_plural = "curricula"
 
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Curriculum, cls).internationalizable_fields() + ['assessment_commentary']
+
     def __unicode__(self):
         return self.title
 
@@ -279,6 +283,10 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
     i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return super(Unit, cls).internationalizable_fields() + ['assessment_commentary']
 
     def __unicode__(self):
         return self.title
