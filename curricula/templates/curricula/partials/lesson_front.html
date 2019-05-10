@@ -62,12 +62,12 @@
 
 <!-- Sidebar -->
 
-        <h3><a href="{{ lesson.code_studio_link }}">View on Code Studio</a></h3>
+        <h3><a href="{{ lesson.code_studio_link }}">{% trans 'View on Code Studio' %}</a></h3>
 
 <!-- Anchor Standards -->
 
         {% if lesson.anchor_standards.all.count > 0 %}
-            <h2>Anchor Standard{% if lesson.anchor_standards.all.count > 1 %}s{% endif %}</h2>
+            <h2>{% trans 'Anchor Standards' %}</h2>
             {% with lesson.anchor_standards.all as standards %}
                 {% regroup standards by framework as standards_by_framework %}
                 {% for framework in standards_by_framework %}
@@ -196,7 +196,7 @@
                 {% endif %}
                 {% if curriculum.feedback_url %}
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal">
-                        Give us feedback!
+                        {% trans 'Give us feedback!' %}
                     </button>
                 {% endif %}
             {% endif %}
