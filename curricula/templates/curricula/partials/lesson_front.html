@@ -115,7 +115,7 @@
             {% with lesson.resources.all as resources %}
                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                 {% for audience in resources_by_audience %}
-                    <h3>For the {{ audience.grouper|yesno:"Students,Teacher" }}</h3>
+                    <h3>{{ audience.grouper|yesno:_("For the Students,For the Teacher") }}</h3>
                     <ul>
                         {% for resource in audience.list %}
                             <li>
