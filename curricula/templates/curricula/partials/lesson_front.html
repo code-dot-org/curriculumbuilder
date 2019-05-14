@@ -124,13 +124,13 @@
                                     {% if resource.gd %}
                                     <span class="dropdown resource-copy">
                                       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        Make a Copy
+                                        {% trans 'Make a Copy' %}
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <li><a href="{{ resource.gd_pdf }}">PDF</a></li>
-                                        <li><a href="{{ resource.gd_doc }}">Microsoft Word</a></li>
-                                        <li><a href="{{ resource.gd_copy }}" target="_blank">Google Docs</a></li>
+                                        <li><a href="{{ resource.gd_pdf }}">{% trans 'PDF' context '.pdf download link' %}</a></li>
+                                        <li><a href="{{ resource.gd_doc }}">{% trans 'Microsoft Word' context '.doc download link' %}</a></li>
+                                        <li><a href="{{ resource.gd_copy }}" target="_blank">{% trans 'Google Docs' %}</a></li>
                                       </ul>
                                     </span>
                                     {% endif %}
