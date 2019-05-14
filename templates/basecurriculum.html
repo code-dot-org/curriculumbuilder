@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles %}
+{% load pages_tags mezzanine_tags i18n future staticfiles tracking_pixel_url %}
 
 <head>
     {% if LANGUAGE_CODE == LANGUAGE_CODE_DO_TRANSLATION %}
@@ -82,6 +82,7 @@
     <div class="header printbackground">
         <div class="logo">
             <img src="{% static "images/logo.png" %}">
+            <img src='{{ request.path | tracking_pixel_url}}'>
         </div>
         {% block lessonnumber %}
         {% endblock %}
