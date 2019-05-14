@@ -47,6 +47,7 @@ class Internationalizable(models.Model):
 
     @classmethod
     def get_serializer(cls):
+        # Dynamic loading with https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
         name = cls.__name__ + 'Serializer'
         serializers = __import__('curricula.serializers', fromlist=[name])
         return getattr(serializers, name, None)
