@@ -52,7 +52,7 @@ Vocabulary
 """
 
 
-class Vocab(models.Model):
+class Vocab(Internationalizable):
     word = models.CharField(max_length=255)
     simpleDef = models.TextField()
     detailDef = models.TextField(blank=True, null=True)
@@ -61,6 +61,22 @@ class Vocab(models.Model):
     class Meta:
         ordering = ["word"]
         verbose_name_plural = "vocab words"
+
+    @property
+    def i18n_key(self):
+        return self.word
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['word', 'simpleDef', 'detailDef']
+
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Vocab, cls).get_i18n_objects()
+
+    @property
+    def should_be_translated(self):
+        return any(lesson.should_be_translated for lesson in self.lesson_set.all())
 
     def __unicode__(self):
         if self.mathy:
