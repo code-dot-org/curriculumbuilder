@@ -64,7 +64,7 @@ class Vocab(Internationalizable):
 
     @property
     def i18n_key(self):
-        return self.word
+        return slugify(self.get_untranslated_field('word'))
 
     @classmethod
     def internationalizable_fields(cls):
