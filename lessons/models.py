@@ -53,7 +53,7 @@ Vocabulary
 
 
 class Vocab(Internationalizable):
-    word = models.CharField(max_length=255)
+    word = models.CharField(unique=True, max_length=255)
     simpleDef = models.TextField()
     detailDef = models.TextField(blank=True, null=True)
     mathy = models.BooleanField(default=False)
