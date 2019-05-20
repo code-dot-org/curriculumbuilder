@@ -70,10 +70,6 @@ class Vocab(Internationalizable):
     def internationalizable_fields(cls):
         return ['word', 'simpleDef', 'detailDef']
 
-    @classmethod
-    def get_i18n_objects(cls):
-        return super(Vocab, cls).get_i18n_objects()
-
     @property
     def should_be_translated(self):
         return any(lesson.should_be_translated for lesson in self.lesson_set.all())
