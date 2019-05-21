@@ -791,6 +791,10 @@ th a:link, th a:visited, th a:hover, th a:active {
 }
 */
 
+.instructions-markdown .no-pullthrough {
+  display: none;
+}
+
 /* Concept Levels */
 
 /* Text */
