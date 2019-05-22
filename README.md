@@ -3,7 +3,7 @@ Code.org CurriculumBuilder
 An internal tool designed for Code.org curricula
 
 ### How to use CurriculumBuilder
-- For now, ask josh...
+- Go to the #curriculumbuilder-dev channel for support
 
 ### How to install Curriculum Builder locally on OS X
 
@@ -82,3 +82,26 @@ http://localhost:8000
 ```
 Make sure to ask JoshC to add you as an contributor to the repo
 ```
+
+### How does the deploy work on CurriculumBuilder
+
+CurriculumBuilder is actually two separate websites:
+* [codecurricula.com](codecurricula.com) - where curriculum writers edit the curriculum
+* [curriculum.code.org](curriculum.code.org) - where teachers access the curriculum
+
+When you add a feature to CurriculumBuilder by merging a commit your
+change will automatically be deployed to [codecurricula.com](codecurricula.com).
+You can watch the #curriculumbuilder channel to see when it gets deployed.
+
+In order for your change to show up on [curriculum.code.org](curriculum.code.org)
+all of the impacted curriculum must be republished. Developers should ask
+the curriculum team to republish their curriculum so that we don't accidentally
+ship a change to the curriculum that was not ready to go out.
+
+### Updating your local database
+
+To update your local database use the following command:
+```
+./manage.py migrate
+```
+
