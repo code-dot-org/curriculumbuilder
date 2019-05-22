@@ -98,10 +98,17 @@ all of the impacted curriculum must be republished. Developers should ask
 the curriculum team to republish their curriculum so that we don't accidentally
 ship a change to the curriculum that was not ready to go out.
 
-### Updating your local database
+### Updating your local database schema
 
-To update your local database use the following command:
+To update your local database schema use the following command:
 ```
 ./manage.py migrate
+```
+
+### Updating your local database contents
+
+```
+dropdb curriculumbuilder
+heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 ```
 
