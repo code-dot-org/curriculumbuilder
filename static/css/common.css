@@ -91,12 +91,10 @@ summary {
 .headercontent h1 {
     font-size: 50px;
     line-height: 1em;
-    margin: auto 20px;
 }
 
 .headercontent h1, .headercontent h2, .headercontent h3 {
-    margin-top: .125em;
-    margin-bottom: .25em;
+    margin: .125em 0px .25em 20px;
 }
 
 .headercontent {
