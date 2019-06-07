@@ -11,9 +11,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='vocab',
-            name='word',
-            field=models.CharField(unique=True, max_length=255),
+        migrations.AlterUniqueTogether(
+            name='vocab',
+            unique_together=('word', 'mathy'),
         ),
     ]
