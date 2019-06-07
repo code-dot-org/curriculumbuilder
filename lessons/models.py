@@ -72,7 +72,7 @@ class Vocab(Internationalizable):
 
     @property
     def should_be_translated(self):
-        return any(lesson.should_be_translated for lesson in self.lesson_set.all()) and not self.mathy
+        return not self.mathy and any(lesson.should_be_translated for lesson in self.lesson_set.all())
 
     def __unicode__(self):
         if self.mathy:
