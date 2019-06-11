@@ -317,7 +317,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     @classmethod
     def internationalizable_fields(cls):
-        return super(Lesson, cls).internationalizable_fields() + ['overview', 'short_title', 'cs_content', 'prep', 'keywords']
+        return super(Lesson, cls).internationalizable_fields() + ['overview', 'short_title', 'cs_content', 'prep']
 
     def __unicode__(self):
         return self.title

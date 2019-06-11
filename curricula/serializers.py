@@ -42,12 +42,11 @@ class LessonSerializer(serializers.ModelSerializer):
     student_resources = serializers.SerializerMethodField()
     vocab = serializers.SerializerMethodField()
     blocks = serializers.SerializerMethodField()
-    keywords = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
         fields = ('title', 'number', 'student_desc', 'teacher_desc',
-                  'student_resources', 'teacher_resources', 'vocab', 'blocks', 'keywords')
+                  'student_resources', 'teacher_resources', 'vocab', 'blocks')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -74,9 +73,6 @@ class LessonSerializer(serializers.ModelSerializer):
         blocks = obj.blocks.all()
         serializer = BlockSerializer(blocks, many=True)
         return serializer.data
-
-    def get_keywords(self, obj):
-        return [str(k) for k in obj.keywords.all()]
 
 
 class UnitSerializer(serializers.ModelSerializer):

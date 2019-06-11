@@ -46,17 +46,9 @@ class Internationalizable(models.Model):
         return cls.objects
 
     @classmethod
-    def get_serializer(cls):
-        # Dynamic loading with https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
-        name = cls.__name__ + 'Serializer'
-        serializers = __import__('curricula.serializers', fromlist=[name])
-        return getattr(serializers, name, None)
-
-    @classmethod
     def gather_strings(cls):
         strings = {}
         objects = cls.get_i18n_objects()
-        Serializer = cls.get_serializer()
         total = objects.count()
         index = 0
         elapsed = 0
@@ -70,13 +62,10 @@ class Internationalizable(models.Model):
             if obj.should_be_translated:
                 key = obj.i18n_key
                 strings[key] = {}
-                serialized_obj = {}
-                if Serializer:
-                    serialized_obj = Serializer(obj).data
                 for field in cls.internationalizable_fields():
-                    string = serialized_obj[field] if serialized_obj.has_key(field) else getattr(obj, field)
+                    string = getattr(obj, field)
                     if string:
-                        strings[key][field] = string
+                        strings[key][field] = getattr(obj, field)
             end = time.time()
             elapsed += (end - start)
         print("%s: complete (%0.2f elapsed, %0.4f average)                       " % (cls.__name__, elapsed, (elapsed/total)))
