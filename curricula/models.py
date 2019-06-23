@@ -296,6 +296,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
         return self.i18n_ready
 
     @property
+    def express_or_pre2019(self):
+        return (self.title == "Express" or self.title == "Pre Express") and self.curriculum.slug == 'csf-19'
+
     def has_resource_pdf(self):
         return self.curriculum.slug not in ['csf-19', 'csf-18', 'csf-1718', 'hoc']
 
