@@ -7,7 +7,10 @@
       {% if unit.vocab_count > 0 %}<a href="{{ unit.get_vocab_url }}" class="btn" role="button">{% trans 'Vocab' context 'Vocabulary' %}</a>{% endif %}
       {% if unit.block_count > 0 %}<a href="{{ unit.get_blocks_url }}" class="btn" role="button">{% trans 'Code Documentation' %}</a>{% endif %}
       <a href="{{ unit.get_resources_url }}" class="btn" role="button">{% trans 'Other Resources' %}</a>
-      <a href="{{ unit.get_pdf_url }}" class="btn" role="button">{% trans 'Lessons PDF' %}</a>
+        {# Removing lessons PDF link from Express and Pre- Express 2019 until we can fix it #}
+        {% if not unit.express_or_pre2019 %}
+        <a href="{{ unit.get_pdf_url }}" class="btn" role="button">{% trans 'Lessons PDF' %}</a>
+        {% endif %}
         {# Removing handouts PDF link from CSF until we can fix it #}
         {% if unit.has_resource_pdf %}
         <a href="{{ unit.get_resources_pdf_url }}" class="btn" role="button">{% trans 'Handouts PDF' %}</a>
