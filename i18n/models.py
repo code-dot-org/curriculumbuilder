@@ -77,7 +77,7 @@ class Internationalizable(models.Model):
 
     @property
     def i18n_key(self):
-        return self.pk
+        return str(self.pk)
 
     def get_untranslated_field(self, field):
         if field in self._untranslated_values:
