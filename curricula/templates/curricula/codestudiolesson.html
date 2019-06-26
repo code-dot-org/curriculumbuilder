@@ -129,16 +129,16 @@
 
 {% if lesson.standards.count > 0 %}
 <div class="standards">
-    <h2>Standards Alignment</h2>
-    <h4><a href="{{ curriculum.get_standards_url }}">View full course alignment</a></h4>
+    <h2>{% trans "Standards Alignment" %}</h2>
+    <h4><a href="{{ curriculum.get_standards_url }}">{% trans "View full course alignment" %}</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
 {% endif %}
 
 {% if lesson.opportunity_standards.count > 0 %}
 <div class="standards">
-    <h2>Cross-curricular Opportunities</h2>
-    <p>This list represents opportunities in this lesson to support standards in other content areas.</p>
+    <h2>{% trans "Cross-curricular Opportunities" %}</h2>
+    <p>{% trans "This list represents opportunities in this lesson to support standards in other content areas." %}</p>
     {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
 </div>
 {% endif %}
