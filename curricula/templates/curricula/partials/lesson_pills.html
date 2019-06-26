@@ -3,10 +3,7 @@
 <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Lesson Resources">
     <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
         <a href="{{ unit.get_absolute_url }}" class="btn" role="button">{% trans 'Unit Overview' %}</a>
-        {# Removing lessons PDF link from Express and Pre Express 2019 until we can fix it #}
-        {% if not unit.express_or_pre2019 %}
         <a href="{{ unit.get_pdf_url }}" class="btn" role="button">{% trans 'All Lessons PDF' %}</a>
-        {% endif %}
         {# Removing handouts PDF link from CSF until we can fix it #}
         {% if unit.has_resource_pdf %}
         <a href="{{ unit.get_resources_pdf_url }}" class="btn" role="button">{% trans 'All Handouts PDF' %}</a>
