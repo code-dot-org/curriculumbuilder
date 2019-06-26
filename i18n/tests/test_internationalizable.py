@@ -1,21 +1,9 @@
 from unittest2 import TestCase
 
 from django.core.cache import cache
-from django.db import models
 from django.utils import translation
 
-from i18n.models import Internationalizable
-
-class TestModel(Internationalizable):
-    """
-    Minimal implementation of a Django model that supports internationalization
-    """
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-
-    @classmethod
-    def internationalizable_fields(cls):
-        return ['title', 'description']
+from i18n.tests.models import TestModel
 
 class InternationalizableTestCase(TestCase):
     """
