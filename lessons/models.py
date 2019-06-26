@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
@@ -137,9 +138,9 @@ class Resource(Orderable, Internationalizable):
         else:
           formatted = "%s - %s" % (self.name, self.type)
         if self.dl_url:
-          formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+          formatted = "%s (<a href='%s' class='print_link'>%s</a>)" % (formatted, self.dl_url, _("download"))
         elif self.gd:
-          formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.gd_pdf())
+          formatted = "%s (<a href='%s' class='print_link'>%s</a>)" % (formatted, self.gd_pdf(), _("download"))
         '''
         if self.type:
             return "%s - %s" % (self.name, self.type)
@@ -154,7 +155,7 @@ class Resource(Orderable, Internationalizable):
         if self.type:
             formatted = "%s - %s" % (formatted, self.type)
         if self.dl_url:
-            formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+            formatted = "%s (<a href='%s' class='print_link'>%s</a>)" % (formatted, self.dl_url, _("download"))
 
         # Moving this to the template to allow for more formatting
         # elif self.gd:
@@ -174,7 +175,7 @@ class Resource(Orderable, Internationalizable):
         if self.type:
             formatted = "%s - %s" % (formatted, self.type)
         if self.dl_url:
-            formatted = "%s (<a href='%s' class='print_link'>download</a>)" % (formatted, self.dl_url)
+            formatted = "%s (<a href='%s' class='print_link'>%s</a>)" % (formatted, self.dl_url, _("download"))
         return formatted
 
     def formatted_md(self):
