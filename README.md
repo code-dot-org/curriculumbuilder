@@ -119,4 +119,8 @@ If you have an account and are a superuser, you can create new CurriculumBuilder
 1. Log in at [codecurricula.com/admin](codecurricula.com/admin). Choose the "admin" interface.
 2. Choose the "Users" option in the left-hand navigation menu, or go to [codecurricula.com/admin/auth/user/](codecurricula.com/admin/auth/user/). Here, you can view, update, and create users.
 3. Use the "Add user" button to create a new user.
-4. If you need this new user for local development purposes, [update your local database contents](https://github.com/mrjoshida/curriculumbuilder#updating-your-local-database-contents).
+4. Set the user's permissions:
+  * All users need to have `www.codecurricula.com` added to their site permissions.
+  * All staff members will need "staff status" set to true.
+  * Curriculum writers need to be added to the "author" group.
+5. If you need this new user for local development purposes, [update your local database contents](https://github.com/mrjoshida/curriculumbuilder#updating-your-local-database-contents).
