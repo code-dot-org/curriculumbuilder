@@ -77,7 +77,9 @@ class I18nFileWrapper:
     def get_translated_field(cls, name, i18n_key, field, lang):
         translations = cls._load_translations(name, lang)
         try:
-            return translations[i18n_key][field]
+            # Always use keys to access the translations dict, since it's
+            # loaded from JSON
+            return translations[str(i18n_key)][str(field)]
         except KeyError:
             # Could not find the specified string in the translation file,
             # possibly just because the string is new and has not yet been
