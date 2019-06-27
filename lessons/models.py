@@ -18,6 +18,7 @@ from django.contrib.auth.models import User
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField, KeywordsField
+from mezzanine.generic.models import Keyword as BaseKeyword
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.tasks import build_single
 from jsonfield import JSONField
@@ -46,6 +47,31 @@ allowed_attrs = bleach.ALLOWED_ATTRIBUTES
 allowed_attrs['*'] = ['style', 'id', 'class', 'alt', 'src', 'width', 'height', 'type']
 allowed_styles = ['background-color', 'color', 'font-family', 'font-size', 'font-style', 'font-width',
                   'strike-through', 'text-align', 'text-decoration']
+
+
+"""
+Keyword
+
+"""
+
+
+class MyKeyword(BaseKeyword, Internationalizable):
+
+    class Meta:
+        proxy = True
+
+    @property
+    def i18n_key(self):
+        return self.get_slug()
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['title']
+
+    @property
+    def should_be_translated(self):
+        return True
+
 
 """
 Vocabulary

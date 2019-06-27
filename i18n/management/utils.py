@@ -20,7 +20,7 @@ def should_sync_model(model):
     """
     is_internationalizable = issubclass(model, Internationalizable)
     is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
-    return is_internationalizable and is_not_proxy
+    return is_internationalizable
 
 def get_models_to_sync():
     """Retrieve all models that should be processed by the i18n sync"""
