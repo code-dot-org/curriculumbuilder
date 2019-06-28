@@ -55,7 +55,7 @@ Keyword
 """
 
 
-class MyKeyword(BaseKeyword, Internationalizable):
+class Keyword(BaseKeyword, Internationalizable):
 
     class Meta:
         proxy = True

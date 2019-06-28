@@ -8,19 +8,17 @@ from django.utils.translation import to_locale
 
 from django_slack import slack_message
 
-from i18n.models import Internationalizable
+from i18n.models import Internationalizable, InternationalizablePage
 
 
 def should_sync_model(model):
     """
     whether or not the given Django model is something the i18n sync should
     process. We care about models that:
-        - extend the Internationalizable model defined by this module
-        - are not proxy models (used by Django Admin for editing)
+        - directly extend the Internationalizable or InternationalizablePage
+          model defined by this module
     """
-    is_internationalizable = issubclass(model, Internationalizable)
-    is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
-    return is_internationalizable
+    return Internationalizable in model.__bases__ or InternationalizablePage in model.__bases__
 
 def get_models_to_sync():
     """Retrieve all models that should be processed by the i18n sync"""
