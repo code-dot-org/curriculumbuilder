@@ -13,6 +13,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
 from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
@@ -28,6 +29,7 @@ from django_slack import slack_message
 
 from curriculumBuilder import settings
 from i18n.models import Internationalizable, InternationalizablePage
+from i18n.utils import I18nFileWrapper
 
 from django_cloneable import CloneableMixin
 
@@ -348,6 +350,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     def __unicode__(self):
         return self.title
+
+    def translated_keywords(self):
+        lang = translation.get_language()
+        if lang and lang != settings.LANGUAGE_CODE:
+            locale = translation.to_locale(lang)
+            return [I18nFileWrapper.get_translated_field('Keyword', slugify(keyword), 'title', locale) for keyword in self.keywords.all()]
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)

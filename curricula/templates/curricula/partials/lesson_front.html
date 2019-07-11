@@ -15,7 +15,7 @@
 
     <div class="keywords">
         <h4>
-            {% for keyword in lesson.keywords.all %}
+            {% for keyword in lesson.translated_keywords %}
                 {% if not forloop.first %}| {% endif %}
                 {{ keyword }}
             {% endfor %}
