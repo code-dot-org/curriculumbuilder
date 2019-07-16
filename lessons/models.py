@@ -52,12 +52,13 @@ allowed_styles = ['background-color', 'color', 'font-family', 'font-size', 'font
 
 
 """
-Keyword
+I18nKeyword
 
+This is a proxy model for the Mezzanine Keyword class, which can't be easily extended.
 """
 
 
-class Keyword(BaseKeyword, Internationalizable):
+class I18nKeyword(BaseKeyword, Internationalizable):
 
     class Meta:
         proxy = True
@@ -359,7 +360,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         lang = translation.get_language()
         if lang and lang != settings.LANGUAGE_CODE:
             locale = translation.to_locale(lang)
-            return [I18nFileWrapper.get_translated_field('Keyword', slugify(keyword), 'title', locale) for keyword in self.keywords.all()]
+            return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) for keyword in self.keywords.all()]
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
