@@ -74,6 +74,10 @@ class Keyword(BaseKeyword, Internationalizable):
     def should_be_translated(self):
         return True
 
+    @property
+    def translate_proxy(self):
+        return True
+
 
 """
 Vocabulary
