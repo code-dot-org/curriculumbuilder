@@ -16,11 +16,11 @@ def should_sync_model(model):
     whether or not the given Django model is something the i18n sync should
     process. We care about models that:
         - extend the Internationalizable model defined by this module
-        - are not proxy models (used by Django Admin for editing)
+        - are not proxy models (unless the model explicitly opts in to translation)
     """
     is_internationalizable = issubclass(model, Internationalizable)
-    is_not_proxy = not model._meta.proxy # pylint: disable=protected-access
-    return is_internationalizable and is_not_proxy
+    should_skip = model._meta.proxy and not getattr(model, 'translate_proxy', False) # pylint: disable=protected-access
+    return is_internationalizable and not should_skip
 
 def get_models_to_sync():
     """Retrieve all models that should be processed by the i18n sync"""

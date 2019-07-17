@@ -200,11 +200,10 @@
                 {% for week in lessons_by_week %}
                     {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
                     {% for lesson in week.list %}
-                        {% keywords_for lesson as keywords %}
                         <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
                             <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
                             <h4>
-                            {% for keyword in keywords %}
+                            {% for keyword in lesson.translated_keywords %}
                                 {% if not forloop.first %}| {% endif %}
                                 {{ keyword }}
                             {% endfor %}

@@ -13,11 +13,13 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
 from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
 from mezzanine.generic.fields import CommentsField, KeywordsField
+from mezzanine.generic.models import Keyword as BaseKeyword
 from sortedm2m.fields import SortedManyToManyField
 from jackfrost.tasks import build_single
 from jsonfield import JSONField
@@ -27,6 +29,7 @@ from django_slack import slack_message
 
 from curriculumBuilder import settings
 from i18n.models import Internationalizable, InternationalizablePage
+from i18n.utils import I18nFileWrapper
 
 from django_cloneable import CloneableMixin
 
@@ -46,6 +49,36 @@ allowed_attrs = bleach.ALLOWED_ATTRIBUTES
 allowed_attrs['*'] = ['style', 'id', 'class', 'alt', 'src', 'width', 'height', 'type']
 allowed_styles = ['background-color', 'color', 'font-family', 'font-size', 'font-style', 'font-width',
                   'strike-through', 'text-align', 'text-decoration']
+
+
+"""
+I18nKeyword
+
+This is a proxy model for the Mezzanine Keyword class, which can't be easily extended.
+"""
+
+
+class I18nKeyword(BaseKeyword, Internationalizable):
+
+    class Meta:
+        proxy = True
+
+    @property
+    def i18n_key(self):
+        return self.get_slug()
+
+    @classmethod
+    def internationalizable_fields(cls):
+        return ['title']
+
+    @property
+    def should_be_translated(self):
+        return True
+
+    @property
+    def translate_proxy(self):
+        return True
+
 
 """
 Vocabulary
@@ -322,6 +355,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     def __unicode__(self):
         return self.title
+
+    def translated_keywords(self):
+        lang = translation.get_language()
+        if lang and lang != settings.LANGUAGE_CODE:
+            locale = translation.to_locale(lang)
+            return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) for keyword in self.keywords.all()]
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
