@@ -19,7 +19,7 @@ def should_sync_model(model):
         - are not proxy models (unless the model explicitly opts in to translation)
     """
     is_internationalizable = issubclass(model, Internationalizable)
-    should_skip = model._meta.proxy and not hasattr(model, 'translate_proxy') # pylint: disable=protected-access
+    should_skip = model._meta.proxy and not getattr(model, 'translate_proxy', False) # pylint: disable=protected-access
     return is_internationalizable and not should_skip
 
 def get_models_to_sync():
