@@ -4,6 +4,7 @@
 {% load static %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
 {% block meta_title %}{{ curriculum.title }} | {{ unit.title }}{% endblock %}
 
@@ -96,7 +97,7 @@
                     {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
                     {% for lesson in week.list %}
                         <div class="lesson_overview">
-                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{% trans 'Lesson' %} {{ lesson.number }}: {{ lesson.title }}</a></h3>
                             <h4>
                             {% keywords_for lesson as keywords %}
                             {% for keyword in keywords %}
