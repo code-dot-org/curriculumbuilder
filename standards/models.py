@@ -182,7 +182,7 @@ class Standard(Internationalizable):
 
     @property
     def should_be_translated(self):
-        return any(lesson.should_be_translated for lesson in self.opportunities.all())
+        return True
 
     @classmethod
     def internationalizable_fields(cls):
