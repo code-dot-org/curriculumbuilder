@@ -1,10 +1,11 @@
+{% load i18n %}
 
 <div class="together resource_list">
     <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
     <div>
     {% for lesson in unit.lessons %}
         {% if lesson.vocab.count > 0 %}
-            <h3><a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+            <h3><a href="{{ lesson.get_absolute_url }}">{% trans 'Lesson' %} {{ lesson.number }}: {{ lesson.title }}</a></h3>
             <div>
             <ul>
 
