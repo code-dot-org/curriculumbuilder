@@ -3,6 +3,7 @@
 {% load staticfiles %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
 {% block meta_title %}{{ curriculum.title }}{% endblock %}
 
@@ -59,12 +60,12 @@
 
 <!-- Sidebar -->
 
-        <h2>Units</h2>
+        <h2>{% trans 'Units' %}</h2>
         {% for unit in units %}
             <h3><a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}">{{ unit.long_name }}</a></h3>
             <p>
             {{ unit.description|truncatechars:160 }}
-            <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}"> more</a>
+            <a href="{% url 'curriculum:unit_view' curriculum.slug unit.slug %}" data-pdf-link="#unit{{ unit.number }}"> {% trans 'more' %}</a>
             </p>
         {% endfor %}
 
