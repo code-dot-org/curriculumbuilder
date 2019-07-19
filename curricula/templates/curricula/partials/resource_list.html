@@ -1,5 +1,6 @@
 
 {% load mezzanine_tags %}
+{% load i18n %}
 
 <div class="together resource_list">
     <h2><a href="{{ unit.get_absolute_url }}">{{ unit.long_name }}</a></h2>
@@ -10,24 +11,25 @@
             <thead>
             <tr>
                 <th colspan="2">
-                    <a href="{{ lesson.get_absolute_url }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a>
+                    <a href="{{ lesson.get_absolute_url }}">{% trans 'Lesson' %} {{ lesson.number }}: {{ lesson.title }}</a>
                 </th>
             </tr>
             </thead>
             <tr>
                 <td width="50%">
-                    <strong>Resources</strong>
+                    <strong>{% trans 'Resources' %}</strong>
                 </td>
                 <td width="50%">
-                    <strong>Prep</strong>
+                    <strong>{% trans 'Preparation' %}</strong>
                 </td>
             </tr>
             <tr>
             <td>
             {% with lesson.resources.all as resources %}
                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
+                {% with _('For the Students')|add:','|add:_('For the Teachers') as groups %}
                 {% for audience in resources_by_audience %}
-                    <p>For the {{ audience.grouper|yesno:"Students,Teacher" }}</p>
+                    <p>{{ audience.grouper|yesno:groups }}</p>
                     <ul>
                         {% for resource in audience.list %}
                             <li>
@@ -36,6 +38,7 @@
                         {% endfor %}
                     </ul>
                 {% endfor %}
+                {% endwith %}
             {% endwith %}
             </td>
             <td>{{ lesson.prep|richtext_filters|safe }}</td>
