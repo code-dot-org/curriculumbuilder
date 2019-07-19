@@ -360,7 +360,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
         lang = translation.get_language()
         if lang and lang != settings.LANGUAGE_CODE:
             locale = translation.to_locale(lang)
-            return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) for keyword in self.keywords.all()]
+            return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) or keyword for keyword in self.keywords.all()]
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
