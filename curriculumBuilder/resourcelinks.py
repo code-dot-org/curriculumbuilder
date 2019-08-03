@@ -27,15 +27,16 @@ class AttrTagPattern(Pattern):
       el.text = str(resource)
 
     except Resource.DoesNotExist:
-      print "slug not found, trying name"
       try:
         resource = Resource.objects.filter(name=el.text).first()
-        el.set('href', resource.fallback_url())
-        el.text = str(resource)
+        if resource:
+          el.set('href', resource.fallback_url())
+          el.text = str(resource)
+        else:
+          el.text = "<span class='text-danger'>resource %s not found</span>" % el.text
 
       except Resource.DoesNotExist:
-        print "couldn't find by name either!"
-        el.text = "Resource not found"
+        el.text = "<span class='text-danger'>resource %s not found</span>" % el.text
 
     for (key,val) in self.attrs.items():
       el.set(key,val)
