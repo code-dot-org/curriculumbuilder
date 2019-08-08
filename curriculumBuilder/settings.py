@@ -10,6 +10,8 @@ import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
 
+from urlparse import urlparse
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 I18N_STATIC_DIR = os.path.join(BASE_DIR, "i18n", "static")
 
@@ -421,26 +423,55 @@ CODEMIRROR_ADDON_CSS = {
 RICHTEXT_WIDGET_CLASS = 'codemirror.CodeMirrorTextarea'
 RICHTEXT_FILTER = 'mezzanine_pagedown.filters.custom'
 RICHTEXT_FILTERS = (RICHTEXT_FILTER,)
-RICHTEXT_ALLOWED_TAGS = ('a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'b', 'bdo', 'big',
-                         'blockquote', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd',
-                         'del', 'dfn', 'dir', 'div', 'display', 'dl', 'dt', 'em', 'fieldset', 'figure', 'font', 'footer', 'form',
-                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label',
-                         'legend', 'li', 'map', 'men', 'nav', 'object', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's', 'samp',
-                         'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table', 'tbody', 'td',
-                         'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr', 'summary', 'details')
-RICHTEXT_ALLOWED_STYLES = ('margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
-                           'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
-                           'data-pdf-link', 'data-lightbox', 'data-title', 'color', 'background', 'background-color')
-RICHTEXT_ALLOWED_ATTRIBUTES = (
-    'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
-    'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
-    'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'data', 'datetime', 'dir', 'disabled',
-    'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace', 'id',
-    'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple', 'name',
-    'nohref', 'noshade', 'nowrap', 'open', 'prompt', 'readonly', 'rel', 'rev', 'role','rows', 'rowspan',
-    'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src', 'start', 'style', 'summary',
-    'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'vspace', 'width',
-    'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start', 'data-end', 'aria-expanded')
+RICHTEXT_ALLOWED_TAGS = (
+    'a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'b', 'bdo', 'big', 'blockquote',
+    'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn',
+    'dir', 'div', 'display', 'dl', 'dt', 'em', 'fieldset', 'figure', 'font', 'footer', 'form', 'h1',
+    'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
+    'label', 'legend', 'li', 'map', 'men', 'nav', 'object', 'ol', 'optgroup', 'option', 'p', 'pre',
+    'q', 's', 'samp', 'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
+    'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr',
+    'summary', 'details'
+)
+RICHTEXT_ALLOWED_STYLES = (
+    'margin-top', 'margin-bottom', 'margin-left', 'margin-right', 'float', 'vertical-align',
+    'border', 'margin', 'width', 'height', 'max-width', 'padding', 'margin', 'style',
+    'data-pdf-link', 'data-lightbox', 'data-title', 'color', 'background', 'background-color'
+)
+
+def iframe_filter_domain(name, value):
+    """
+    We use iframes in curriculum descriptions to embed Google Docs containing
+    the lesson plans. We want to continue to allow iframes in general, but
+    restrict to only allow google docs.
+
+    If in the future we want to expand our usage of iframes to include other use
+    cases, those should be simililarly captured here.
+    """
+    if name in ('width', 'height', 'frameborder', 'style'):
+        return True
+
+    if name == "src":
+        url = urlparse(value)
+        return url.netloc and url.netloc == 'docs.google.com'
+
+    return False
+
+RICHTEXT_ALLOWED_ATTRIBUTES = {
+    '*': (
+        'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'axis', 'border',
+        'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'checked', 'cite', 'class',
+        'clear', 'cols', 'colspan', 'color', 'compact', 'coords', 'data', 'datetime', 'dir',
+        'disabled', 'enctype', 'for', 'frame', 'headers', 'height', 'href', 'hreflang', 'hspace',
+        'id', 'ismap', 'label', 'lang', 'longdesc', 'maxlength', 'media', 'method', 'multiple',
+        'name', 'nohref', 'noshade', 'nowrap', 'open', 'prompt', 'readonly', 'rel', 'rev', 'role',
+        'rows', 'rowspan', 'rules', 'scope', 'selected', 'shape', 'size', 'src', 'span', 'start',
+        'style', 'summary', 'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value',
+        'vspace', 'width', 'xml:lang', 'data-pdf-link', 'data-lightbox', 'data-title', 'data-start',
+        'data-end', 'aria-expanded'
+    ),
+    'iframe': iframe_filter_domain
+}
 PAGEDOWN_MARKDOWN_EXTENSIONS = (
     'curriculumBuilder.doclinks',
     'extra', 'codehilite', 'toc', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
