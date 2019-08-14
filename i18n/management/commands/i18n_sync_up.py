@@ -31,12 +31,11 @@ class Command(BaseCommand):
             filename = model.__name__ + ".json"
             source_path = os.path.join(self.source_dir, filename)
             destination_path = os.path.join(self.upload_dir, filename)
-            plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
-            plugins = ",".join(glob.glob(plugins_path))
+            plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins.js")
             subprocess.call([
                 "redact", source_path,
                 "-o", destination_path,
-                "-p", plugins
+                "-p", plugins_path
             ])
 
     @staticmethod
