@@ -3,6 +3,8 @@ from django.db.models import Count, Q
 
 from i18n.models import Internationalizable
 
+from itertools import chain
+
 """
 Top level of a standards framework
 
@@ -29,6 +31,10 @@ class Framework(Internationalizable):
             .get_i18n_objects()
             .prefetch_related(
                 'standards',
+                'standards__anchors',
+                'standards__anchors__unit',
+                'standards__lesson_set',
+                'standards__lesson_set__unit',
                 'standards__opportunities',
                 'standards__opportunities__unit'
             )
@@ -89,6 +95,10 @@ class Category(Internationalizable):
             .get_i18n_objects()
             .prefetch_related(
                 'standards',
+                'standards__anchors',
+                'standards__anchors__unit',
+                'standards__lesson_set',
+                'standards__lesson_set__unit',
                 'standards__opportunities',
                 'standards__opportunities__unit'
             )
@@ -139,6 +149,10 @@ class GradeBand(Internationalizable):
             .get_i18n_objects()
             .prefetch_related(
                 'standards',
+                'standards__anchors',
+                'standards__anchors__unit',
+                'standards__lesson_set',
+                'standards__lesson_set__unit',
                 'standards__opportunities',
                 'standards__opportunities__unit'
             )
@@ -177,12 +191,20 @@ class Standard(Internationalizable):
         return (
             super(Standard, cls)
             .get_i18n_objects()
-            .prefetch_related('opportunities', 'opportunities__unit')
+            .prefetch_related(
+                'anchors',
+                'anchors__unit',
+                'lesson_set',
+                'lesson_set__unit',
+                'opportunities',
+                'opportunities__unit'
+            )
         )
 
     @property
     def should_be_translated(self):
-        return True
+        related_lessons = set(chain(self.anchors.all(), self.lesson_set.all(), self.opportunities.all()))
+        return any(lesson.should_be_translated for lesson in related_lessons)
 
     @classmethod
     def internationalizable_fields(cls):
