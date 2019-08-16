@@ -109,6 +109,10 @@ class Vocab(Internationalizable):
     def should_be_translated(self):
         return not self.mathy and any(lesson.should_be_translated for lesson in self.lesson_set.all())
 
+    @classmethod
+    def get_i18n_objects(cls):
+        return super(Vocab, cls).get_i18n_objects().prefetch_related('lesson_set', 'lesson_set__unit')
+
     def __unicode__(self):
         if self.mathy:
             return "%s (math): %s" % (self.word, self.simpleDef)
