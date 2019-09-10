@@ -7,6 +7,7 @@ from django.db import migrations, models
 def move_week(apps, schema_editor):
     # We can't import the Person model directly as it may be a newer
     # version than this migration expects. We use the historical version.
+    # This is a comment-only change to trigger a Travis CI build.
     Lesson = apps.get_model('lessons', 'Lesson')
     for lesson in Lesson.objects.all():
         lesson.week = lesson.duration
