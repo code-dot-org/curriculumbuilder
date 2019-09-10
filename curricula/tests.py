@@ -9,6 +9,7 @@ class IframeDomainRestrictionTestCase(TestCase):
     """
 
     def test_allow_google_doc_iframes(self):
+        raise 'make sure travis fails when tests fail'
         richtext = '<iframe src="http://docs.google.com"></iframe>'
         self.assertEqual(richtext, richtext_filters(richtext))
 
