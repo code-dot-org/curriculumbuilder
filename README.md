@@ -41,19 +41,19 @@ virtualenv ~/.virtualenvs/cb
 source ~/.virtualenvs/cb/bin/activate
 ```
 
-5. install python dependencies
+5. work around pycurl installation problem (https://cscheng.info/2018/01/26/installing-pycurl-on-macos-high-sierra.html)
+```
+export PYCURL_SSL_LIBRARY=openssl
+export LDFLAGS="-L/usr/local/opt/openssl/lib" 
+export CPPFLAGS="-I/usr/local/opt/openssl/include"
+```
+to avoid future problems, also set these variables in your ~/.bashrc file.
 
+6. install python dependencies
 ```
 pip install -r requirements.txt
 ```
-
-6. work around pycurl problem (https://cscheng.info/2018/01/26/installing-pycurl-on-macos-high-sierra.html)
-
-```
-export PYCURL_SSL_LIBRARY=openssl
-pip uninstall pycurl
-pip install --install-option="--with-openssl" --install-option="--openssl-dir=/usr/local/opt/openssl" pycurl
-```
+if you are returning to this step to fix problems with pycurl, you may need to also add the `--no-cache-dir` flag.
 
 7. copy the db
 
@@ -84,7 +84,7 @@ debug=true python manage.py runserver_plus
 
 http://localhost:8000
 
-11. In order to create PRs 
+12. In order to create PRs 
 
 ```
 Make sure to ask JoshC to add you as an contributor to the repo
