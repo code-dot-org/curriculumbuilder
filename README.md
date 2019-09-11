@@ -68,7 +68,14 @@ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
 ```
 
-9. run the server
+9. run the tests
+
+```
+npm install
+./manage.py test
+```
+
+10. run the server
 
 ```
 source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
@@ -77,7 +84,7 @@ debug=true python manage.py runserver_plus
 
 http://localhost:8000
 
-10. In order to create PRs 
+11. In order to create PRs 
 
 ```
 Make sure to ask JoshC to add you as an contributor to the repo
