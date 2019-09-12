@@ -90,6 +90,15 @@ http://localhost:8000
 Make sure to ask JoshC to add you as an contributor to the repo
 ```
 
+11. measure test coverage
+```
+pip install -r requirements-dev.txt
+DJANGO_SETTINGS_MODULE=curriculumBuilder.settings debug=true coverage run ./manage.py test
+coverage report
+```
+If you run this often, it may be worth appending the `--keepdb` flag to make it run faster, 
+and temporarily disabling any tests which fail as a result.
+
 ### How does the deploy work on CurriculumBuilder
 
 CurriculumBuilder is actually two separate websites:
