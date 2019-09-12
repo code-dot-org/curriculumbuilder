@@ -1,0 +1,19 @@
+[run]
+
+source =
+    curricula
+    documentation
+    standards
+    templates
+    curriculumBuilder
+    lessons
+    i18n
+
+omit =
+    */__init__.py
+    */tests.py
+    */tests/*
+    */migrations/*
+
+plugins =
+    django_coverage_plugin

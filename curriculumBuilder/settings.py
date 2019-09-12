@@ -330,9 +330,10 @@ TEMPLATES = [{u'APP_DIRS': False,
                                           u'i18n.context_processors.language_code_do_translation'),
                   u'loaders': [(u'django.template.loaders.cached.Loader',
                                (u'django.template.loaders.filesystem.Loader',
-                                u'django.template.loaders.app_directories.Loader'))]}
+                                u'django.template.loaders.app_directories.Loader'))],
+                  u'debug': DEBUG
               }
-             ]
+            }]
 
 # List of middleware classes to use. Order is important; in the request phase,
 # these middleware classes will be applied in the order given, and in the
