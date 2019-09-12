@@ -87,7 +87,7 @@ def _restore(source_path, translated_data):
         json.dump(translated_data, translated)
         translated.flush()
         restore = subprocess.Popen([
-            "restore",
+            "node_modules/.bin/restore",
             "-s", source_path,
             "-r", translated.name,
             "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
@@ -97,7 +97,7 @@ def _restore(source_path, translated_data):
 
 def _redact(source_path):
     redact = subprocess.Popen([
-        "redact", source_path,
+        "node_modules/.bin/redact", source_path,
         "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
     ], stdout=subprocess.PIPE)
     redacted_json, err = redact.communicate()
@@ -106,13 +106,13 @@ def _redact(source_path):
 def _parse(source_path=None, source_json=None):
     if source_path:
         parse = subprocess.Popen([
-            "parse", source_path,
+            "node_modules/.bin/parse", source_path,
             "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
         ], stdout=subprocess.PIPE)
         parsed_json, err = parse.communicate()
     elif source_json:
         parse = subprocess.Popen([
-            "parse",
+            "node_modules/.bin/parse",
             "-p", ",".join(glob.glob(os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")))
         ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         parsed_json, err = parse.communicate(input=source_json)
