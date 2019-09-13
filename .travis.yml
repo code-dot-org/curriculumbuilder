@@ -24,4 +24,4 @@ before_script:
   - python manage.py migrate
 
 script:
-  - python manage.py test
+  - debug=true python manage.py test
