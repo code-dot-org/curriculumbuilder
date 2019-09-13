@@ -1,10 +1,16 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson
 
 class CurriculaRenderingTestCase(TestCase):
     def setUp(self):
+        user = User.objects.create_user(username='admin', password='12345')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='admin', password='12345')
+
         self.test_curriculum = Curriculum.objects.create(title="Test Curriculum", slug="test-curriculum")
         self.test_unit = Unit.objects.create(
             title="Test Unit",
