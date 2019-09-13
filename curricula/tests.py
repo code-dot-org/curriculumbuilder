@@ -20,3 +20,7 @@ class IframeDomainRestrictionTestCase(TestCase):
         # Will reject incomplete urls
         self.assertEqual('<iframe></iframe>',
                          richtext_filters('<iframe src="docs.google.com"></iframe>'))
+
+    def test_homepage(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
