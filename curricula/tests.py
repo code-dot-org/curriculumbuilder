@@ -21,6 +21,7 @@ class IframeDomainRestrictionTestCase(TestCase):
         self.assertEqual('<iframe></iframe>',
                          richtext_filters('<iframe src="docs.google.com"></iframe>'))
 
+class CurriculaRenderingTestCase(TestCase):
     def test_homepage(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
