@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from curricula.models import Curriculum, Unit
-from lessons.models import Lesson
+from lessons.models import Lesson, Resource
 
 
 class CurriculaRenderingTestCase(TestCase):
@@ -12,7 +12,7 @@ class CurriculaRenderingTestCase(TestCase):
         user.save()
         self.client.login(username='admin', password='12345')
 
-        self.test_curriculum = Curriculum.objects.create(title="Test Curriculum", slug="test-curriculum")
+        self.test_curriculum = Curriculum.objects.create(title="Test Curriculum", slug="test-curriculum", assessment_commentary="Assessment Commentary")
         self.test_unit = Unit.objects.create(
             title="Test Unit",
             parent=self.test_curriculum,
@@ -41,11 +41,39 @@ class CurriculaRenderingTestCase(TestCase):
             description="PL unit description",
             lesson_template_override="curricula/pl_lesson.html"
         )
-
-        self.test_lesson = Lesson.objects.create(title="Test Lesson", parent=self.test_unit, overview="Overview")
-        self.hoc_lesson = Lesson.objects.create(title="HoC Lesson", parent=self.hoc_unit)
-        self.csf_lesson = Lesson.objects.create(title="CSF Lesson", parent=self.csf_unit)
-        self.pl_lesson = Lesson.objects.create(title="PL Lesson", parent=self.pl_unit)
+        resource = Resource.objects.create(
+            name="Test Resource",
+            slug="test-resource",
+            student=True
+        )
+        self.test_lesson = Lesson.objects.create(
+            title="Test Lesson",
+            parent=self.test_unit,
+            overview="Overview",
+            prep="Prep"
+        )
+        self.test_lesson.resources.add(resource)
+        self.hoc_lesson = Lesson.objects.create(
+            title="HoC Lesson",
+            parent=self.hoc_unit,
+            overview="HoC Overview",
+            prep="Prep"
+        )
+        self.hoc_lesson.resources.add(resource)
+        self.csf_lesson = Lesson.objects.create(
+            title="CSF Lesson",
+            parent=self.csf_unit,
+            overview="CSF Overview",
+            prep="Prep"
+        )
+        self.csf_lesson.resources.add(resource)
+        self.pl_lesson = Lesson.objects.create(
+            title="PL Lesson",
+            parent=self.pl_unit,
+            overview="PL Overview",
+            prep="Prep"
+        )
+        self.pl_lesson.resources.add(resource)
 
     def test_homepage(self):
         response = self.client.get('/')
