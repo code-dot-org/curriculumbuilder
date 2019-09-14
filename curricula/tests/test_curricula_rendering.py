@@ -12,7 +12,20 @@ class CurriculaRenderingTestCase(TestCase):
         user.save()
         self.client.login(username='admin', password='12345')
 
-        self.test_curriculum = Curriculum.objects.create(title="Test Curriculum", slug="test-curriculum", assessment_commentary="Assessment Commentary")
+        self.test_curriculum = Curriculum.objects.create(
+            title="Test Curriculum",
+            slug="test-curriculum",
+            assessment_commentary="Assessment Commentary")
+        self.csf_curriculum = Curriculum.objects.create(
+            title="CSF Curriculum",
+            slug="csf-curriculum",
+            assessment_commentary="CSF Commentary",
+            unit_template_override='curricula/csf_unit.html')
+        self.pl_curriculum = Curriculum.objects.create(
+            title="PL Curriculum",
+            slug="pl-curriculum",
+            assessment_commentary="PL Commentary",
+            unit_template_override='curricula/pl_unit.html')
         self.test_unit = Unit.objects.create(
             title="Test Unit",
             parent=self.test_curriculum,
@@ -29,14 +42,14 @@ class CurriculaRenderingTestCase(TestCase):
         )
         self.csf_unit = Unit.objects.create(
             title="CSF Unit",
-            parent=self.test_curriculum,
+            parent=self.csf_curriculum,
             slug="csf-unit",
             description="CSF unit description",
             lesson_template_override="curricula/csf_lesson.html"
         )
         self.pl_unit = Unit.objects.create(
             title="PL Unit",
-            parent=self.test_curriculum,
+            parent=self.pl_curriculum,
             slug="pl-unit",
             description="PL unit description",
             lesson_template_override="curricula/pl_lesson.html"
@@ -86,11 +99,11 @@ class CurriculaRenderingTestCase(TestCase):
     def test_render_unit(self):
         response = self.client.get('/test-curriculum/test-unit/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/csf-unit/')
+        response = self.client.get('/csf-curriculum/csf-unit/')
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/hoc-unit/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/pl-unit/')
+        response = self.client.get('/pl-curriculum/pl-unit/')
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/test-unit/glance/')
         self.assertEqual(response.status_code, 200)
@@ -106,15 +119,17 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/test-unit/?pdf=1')
         self.assertEqual(response.status_code, 200)
+        response = self.client.get('/pl-curriculum/pl-unit/?pdf=1')
+        self.assertEqual(response.status_code, 200)
 
     def test_render_lesson(self):
         response = self.client.get('/test-curriculum/test-unit/1/')
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/hoc-unit/1/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/csf-unit/1/')
+        response = self.client.get('/csf-curriculum/csf-unit/1/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/pl-unit/1/')
+        response = self.client.get('/pl-curriculum/pl-unit/1/')
         self.assertEqual(response.status_code, 200)
 
     def test_render_lesson_with_levels(self):
