@@ -95,8 +95,6 @@ class CurriculaRenderingTestCase(TestCase):
     def test_render_curriculum(self):
         response = self.client.get('/test-curriculum/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/pdf')
-        self.assertEqual(response.status_code, 200)
 
     def test_render_unit(self):
         response = self.client.get('/test-curriculum/test-unit/')
@@ -115,8 +113,6 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/test-unit/resources/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/test-unit_resources.pdf')
-        self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/test-unit/objectives/')
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/test-unit/unit_feedback/')
@@ -128,8 +124,6 @@ class CurriculaRenderingTestCase(TestCase):
 
     def test_render_lesson(self):
         response = self.client.get('/test-curriculum/test-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        response = self.client.get('/test-curriculum/test-unit/1/pdf/')
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/test-curriculum/hoc-unit/1/')
         self.assertEqual(response.status_code, 200)
