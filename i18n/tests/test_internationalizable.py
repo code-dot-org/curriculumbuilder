@@ -10,8 +10,10 @@ class InternationalizableTestCase(TestCase):
     Basic tests for the Internationalizable abstract model
     """
     def setUp(self):
-        TestModel.objects.all().delete()
         self.test_model = TestModel(id=1, title="Test Title", description="Test Description").save()
+
+    def tearDown(self):
+        TestModel.objects.all().delete()
 
     def test_gather_strings(self):
         """
