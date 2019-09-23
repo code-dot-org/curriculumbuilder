@@ -13,15 +13,26 @@ class StandardInline(TabularDynamicInlineAdmin):
 
 class CategoryInline(TabularDynamicInlineAdmin):
     model = Category
-    verbose_name_plural = "Categories"
-    inlines = [StandardInline]
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    model = Category
+class CategoryResource(resources.ModelResource):
+    parent = fields.Field(column_name='parent', attribute='parent',
+                          widget=ForeignKeyWidget(Category, 'shortcode'))
+
+    class Meta:
+        model = Standard
+        fields = ('id', 'framework__slug', 'parent', 'type', 'shortcode', 'name', 'description')
+
+
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
     list_display = ('name', 'framework', 'parent', 'shortcode')
     list_filter = ('framework', 'parent')
-    inlines = [StandardInline]
+    inlines = [CategoryInline, StandardInline]
+
+    class Meta:
+        model = Category
+        fields = ('id', 'framework__slug', 'parent', 'type', 'shortcode', 'name', 'description')
 
 
 class FrameworkAdmin(admin.ModelAdmin):
@@ -30,42 +41,11 @@ class FrameworkAdmin(admin.ModelAdmin):
 
 
 class StandardResource(resources.ModelResource):
-    # category = fields.Field(column_name='category', attribute='shortcode',
-    #                         widget = ForeignKeyWidget(Category,'shortcode'))
-
-    '''
-    def before_import(self, dataset, dry_run, **kwargs):
-      i = 0
-      last = dataset.height - 1
-
-      while i <= last:
-
-        try:
-          gradeband = GradeBand.objects.get(shortcode=dataset.get_col(3)[0])
-        except GradeBand.DoesNotExist:
-          gradeband = GradeBand.objects.all()[0]
-
-        try:
-          category = Category.objects.get(name=dataset.get_col(4)[0])
-        except Category.DoesNotExist:
-          category = Category.objects.all()[0]
-
-        dataset.rpush((
-          dataset.get_col(1)[0],
-          dataset.get_col(2)[0],
-          gradeband.pk,
-          category.pk,
-          dataset.get_col(5)[0],
-          dataset.get_col(6)[0],
-        ))
-        i = i + 1
-    '''
-
     category = fields.Field(column_name='category', attribute='category',
-                            widget = ForeignKeyWidget(Category, 'name'))
-  
+                            widget=ForeignKeyWidget(Category, 'shortcode'))
+
     gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
-                             widget = ForeignKeyWidget(GradeBand, 'name'))
+                             widget=ForeignKeyWidget(GradeBand, 'name'))
 
     class Meta:
         model = Standard
