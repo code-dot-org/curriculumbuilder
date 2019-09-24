@@ -20,7 +20,7 @@ class CategoryResource(resources.ModelResource):
                           widget=ForeignKeyWidget(Category, 'shortcode'))
 
     class Meta:
-        model = Standard
+        model = Category
         fields = ('id', 'framework__slug', 'parent', 'type', 'shortcode', 'name', 'description')
 
 
