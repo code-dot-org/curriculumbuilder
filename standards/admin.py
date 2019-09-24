@@ -67,7 +67,7 @@ class FrameworkAdmin(admin.ModelAdmin):
 
 class StandardResource(resources.ModelResource):
     category = fields.Field(column_name='category', attribute='category',
-                            widget=ForeignKeyWidget(Category, 'shortcode'))
+                            widget=CategoryForeignKeyWidget(Category, 'shortcode'))
     gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
                              widget=ForeignKeyWidget(GradeBand, 'name'))
     framework = fields.Field(column_name='framework', attribute='framework',
