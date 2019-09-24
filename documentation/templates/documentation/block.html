@@ -94,7 +94,7 @@
 <script src="{% static "codemirror/mode/javascript/javascript.js" %}"></script>
 <script src="{% static "codemirror/mode/htmlmixed/htmlmixed.js" %}"></script>
 <script type="text/javascript">
-$(function() {
+$(window).on("load", function() {
   $('pre').each(function() {
 
         var $this = $(this);

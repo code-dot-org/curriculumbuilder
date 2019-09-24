@@ -1,5 +1,5 @@
 /*global CodeMirror*/
-$(function() {
+$(window).on("load", function() {
   $('pre').each(function() {
     var preElement = $(this);
     var code = dedent(preElement.text()).trim();
