@@ -7,6 +7,28 @@ from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInline
 from standards.models import Framework, Category, Standard, Grade, GradeBand
 
 
+# Need to override default django-import-export foreignkey widget
+# in order to lookup categories by both shortcode and framework
+# to account for duplicate shortcodes used across different frameworks
+
+class CategoryForeignKeyWidget(ForeignKeyWidget):
+    def get_queryset(self, value, row, *args, **kwargs):
+        print(row)
+        return self.model.objects.filter(
+            framework__slug__iexact=row["framework"],
+            shortcode__iexact=row["category"]
+        )
+
+
+class CategoryParentForeignKeyWidget(ForeignKeyWidget):
+    def get_queryset(self, value, row, *args, **kwargs):
+        print(row)
+        return self.model.objects.filter(
+            framework__slug__iexact=row["framework"],
+            shortcode__iexact=row["parent"]
+        )
+
+
 class StandardInline(TabularDynamicInlineAdmin):
     model = Standard
 
@@ -16,12 +38,15 @@ class CategoryInline(TabularDynamicInlineAdmin):
 
 
 class CategoryResource(resources.ModelResource):
+
     parent = fields.Field(column_name='parent', attribute='parent',
-                          widget=ForeignKeyWidget(Category, 'shortcode'))
+                          widget=CategoryParentForeignKeyWidget(Category, 'shortcode'))
+    framework = fields.Field(column_name='framework', attribute='framework',
+                             widget=ForeignKeyWidget(Framework, 'slug'))
 
     class Meta:
         model = Category
-        fields = ('id', 'framework__slug', 'parent', 'type', 'shortcode', 'name', 'description')
+        fields = ('id', 'framework', 'parent', 'type', 'shortcode', 'name', 'description')
 
 
 class CategoryAdmin(ImportExportModelAdmin):
@@ -43,13 +68,14 @@ class FrameworkAdmin(admin.ModelAdmin):
 class StandardResource(resources.ModelResource):
     category = fields.Field(column_name='category', attribute='category',
                             widget=ForeignKeyWidget(Category, 'shortcode'))
-
     gradeband = fields.Field(column_name='gradeband', attribute='gradeband',
                              widget=ForeignKeyWidget(GradeBand, 'name'))
+    framework = fields.Field(column_name='framework', attribute='framework',
+                             widget=ForeignKeyWidget(Framework, 'slug'))
 
     class Meta:
         model = Standard
-        fields = ('id', 'framework__slug', 'category', 'gradeband', 'shortcode', 'name', 'description')
+        fields = ('id', 'framework', 'category', 'gradeband', 'shortcode', 'name', 'description')
 
 
 class StandardAdmin(ImportExportModelAdmin):

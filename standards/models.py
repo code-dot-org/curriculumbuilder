@@ -77,7 +77,11 @@ class Category(Internationalizable):
     parent = models.ForeignKey('self', blank=True, null=True, related_name="children")
 
     def __unicode__(self):
-        return "%s %s: %s" % (self.framework.slug, self.shortcode, self.name)
+        # When importing via django-import-export, categories may be listed before the framework is assigned
+        if self.framework:
+            return "%s %s: %s" % (self.framework.slug, self.shortcode, self.name)
+        else:
+            return self.shortcode
 
     class Meta:
         ordering = ['framework', 'shortcode']
