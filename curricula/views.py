@@ -362,45 +362,6 @@ PDF rendering views
 '''
 
 
-# @login_required
-def lesson_pdf(request, slug, unit_slug, lesson_num):
-    buffer = StringIO()
-    c = pycurl.Curl()
-    c.setopt(c.WRITEDATA, buffer)
-
-    lesson = get_object_or_404(Lesson, unit__slug=unit_slug, unit__curriculum__slug=slug, number=lesson_num,
-                               parent__lesson__isnull=True)
-
-    try:
-        c.setopt(c.URL, get_url_for_pdf(request, lesson.get_absolute_url()) + "?pdf=true")
-        c.perform()
-        c.close()
-
-        compiled = buffer.getvalue()
-    except Exception, e:
-        logger.exception('PDF Curling Failed')
-        return HttpResponse('PDF Curling Failed', status=500)
-
-    if request.GET.get('html'):  # Allows testing the html output
-        response = HttpResponse(compiled)
-    else:
-        try:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
-        except Exception:
-            logger.exception('PDF Generation Failed')
-            return HttpResponse('PDF Generation Failed', status=500)
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'inline;filename=lesson.pdf'
-
-        slack_message('slack/message.slack', {
-            'message': 'created a PDF from %s %s lesson %s' % (slug, unit_slug, lesson_num),
-            'user': request.user.get_username(),
-        })
-
-    return response
-
-
 def unit_compiled(request, slug, unit_slug):
 
     curriculum = get_object_or_404(Curriculum, slug=slug)
