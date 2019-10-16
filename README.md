@@ -84,12 +84,6 @@ debug=true python manage.py runserver_plus
 
 http://localhost:8000
 
-12. In order to create PRs 
-
-```
-Make sure to ask JoshC to add you as an contributor to the repo
-```
-
 11. measure test coverage
 ```
 pip install -r requirements-dev.txt
