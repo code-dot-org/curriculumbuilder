@@ -41,41 +41,33 @@ virtualenv ~/.virtualenvs/cb
 source ~/.virtualenvs/cb/bin/activate
 ```
 
-5. work around pycurl installation problem (https://cscheng.info/2018/01/26/installing-pycurl-on-macos-high-sierra.html)
-```
-export PYCURL_SSL_LIBRARY=openssl
-export LDFLAGS="-L/usr/local/opt/openssl/lib" 
-export CPPFLAGS="-I/usr/local/opt/openssl/include"
-```
-to avoid future problems, also set these variables in your ~/.bashrc file.
-
-6. install python dependencies
+5. install python dependencies
 ```
 pip install -r requirements.txt
 ```
 if you are returning to this step to fix problems with pycurl, you may need to also add the `--no-cache-dir` flag.
 
-7. copy the db
+6. copy the db
 
 ```
 heroku login # need credentials from Josh C.
 heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 ```
 
-8. set up local_settings.py
+7. set up local_settings.py
 
 ```
 cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
 ```
 
-9. run the tests
+8. run the tests
 
 ```
 npm install
 ./manage.py test
 ```
 
-10. run the server
+9. run the server
 
 ```
 source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
@@ -83,6 +75,18 @@ debug=true python manage.py runserver_plus
 ```
 
 http://localhost:8000
+
+10. troubleshooting pycurl
+
+    There are two potential errors you can get which look very similar:
+
+  * `ImportError: pycurl: libcurl link-time ssl backend (openssl) is different from compile-time ssl backend (none/other)`
+    
+    solution: https://cscheng.info/2018/01/26/installing-pycurl-on-macos-high-sierra.html
+
+  * `ImportError: pycurl: libcurl link-time ssl backend (none/other) is different from compile-time ssl backend (openssl)`
+  
+    solution: https://gist.github.com/webinista/b4b6a4cf8f158431b2c5134630c2cbfe#gistcomment-3057612
 
 11. measure test coverage
 ```
