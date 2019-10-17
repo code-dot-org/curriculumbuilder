@@ -97,6 +97,34 @@ coverage report
 If you run this often, it may be worth appending the `--keepdb` flag to make it run faster, 
 and temporarily disabling any tests which fail as a result.
 
+### How to install Curriculum Builder locally on Ubuntu
+
+These instructions are a work in progress. 
+
+1. install dependencies
+```
+sudo apt-get install python-pip postgresql wkhtmltopdf 
+# some of these may be unneccessary
+sudo apt-get install libcurl4-openssl-dev libssl-dev postgresql-contrib
+sudo snap install --classic heroku
+```
+
+2. configure postgresql
+```
+sudo service postgresql start
+sudo -u postgres psql
+CREATE USER ubuntu;
+ALTER USER ubuntu SUPERUSER CREATEDB;
+```
+
+at this point I got stuck:
+```
+(cb) ip-10-0-0-19:~/cb (master)$ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
+pg_dump: server version: 9.6.15; pg_dump version: 9.5.19
+pg_dump: aborting because of server version mismatch
+# dropdb curriculumbuilder # to backtrack and try again
+```
+
 ### How does the deploy work on CurriculumBuilder
 
 CurriculumBuilder is actually two separate websites:
