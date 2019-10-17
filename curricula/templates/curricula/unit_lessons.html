@@ -4,6 +4,7 @@
 {% load static %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
 {% block meta_title %}{{ unit.curriculum }} | {{ unit.title }}{% endblock %}
 
@@ -75,7 +76,9 @@
                             <div class="lesson_overview
                                     {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
                                 <h3>
-                                    <a href="#U{{ unit.number }}L{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a>
+                                    <a href="#U{{ unit.number }}L{{ lesson.number }}">
+                                      {% blocktrans with lesson_number=lesson.number %}Lesson {{ lesson_number }}{% endblocktrans %}: {{ lesson.title }}
+                                    </a>
                                 </h3>
                                 <h4>
                                     {% for keyword in keywords %}
@@ -126,7 +129,9 @@
                     <div class="lesson_overview
                             {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
                         <h3>
-                            <a href="#U{{ unit.number }}L{{ lesson.number }}">Lesson {{ lesson.number }}: {{ lesson.title }}</a>
+                            <a href="#U{{ unit.number }}L{{ lesson.number }}">
+                              {% blocktrans with lesson_number=lesson.number %}Lesson {{ lesson_number }}{% endblocktrans %}: {{ lesson.title }}
+                            </a>
                         </h3>
                         <h4>
                             {% for keyword in keywords %}

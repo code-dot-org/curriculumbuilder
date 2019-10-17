@@ -4,6 +4,7 @@
 {% load static %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
 {% block meta_title %}{{ unit.curriculum }} | {{ unit.title }}{% endblock %}
 
@@ -114,7 +115,11 @@
                     {% for lesson in week.list %}
                         {% keywords_for lesson as keywords %}
                         <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
-                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h3>
+                              <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">
+                                {% blocktrans with lesson_number=lesson.number %}Lesson {{ lesson_number }}{% endblocktrans %}: {{ lesson.title }}
+                              </a>
+                            </h3>
                             <h4>
                             {% for keyword in keywords %}
                                 {% if not forloop.first %}| {% endif %}
@@ -201,7 +206,11 @@
                     {% if week.grouper != None %}<h2>Week {{ week.grouper }}</h2>{% endif %}
                     {% for lesson in week.list %}
                         <div class="lesson_overview {% for keyword in keywords %}{{ keyword|slugify }} {% endfor %}">
-                            <h3><a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">Lesson {{ lesson.number }}: {{ lesson.title }}</a></h3>
+                            <h3>
+                              <a href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">
+                                {% blocktrans with lesson_number=lesson.number %}Lesson {{ lesson_number }}{% endblocktrans %}: {{ lesson.title }}
+                              </a>
+                            </h3>
                             <h4>
                             {% for keyword in lesson.translated_keywords %}
                                 {% if not forloop.first %}| {% endif %}
