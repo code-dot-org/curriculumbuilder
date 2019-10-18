@@ -105,26 +105,48 @@
 {% endif %}
 
 {% if code_block.parameters.count > 0 %}
-    <div class="parameters">
-        <h2>Parameters</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th><th>Type</th><th>Required?</th><th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for parameter in code_block.parameters.all %}
-                <tr>
-                    <td>{{ parameter.name }}</td>
-                    <td>{{ parameter.type }}</td>
-                    <td><span class="required_param_{{ parameter.required }}"></span></td>
-                    <td>{{ parameter.description }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% if code_block.parent_ide.language == 'blockly' %}
+        <div class="parameters">
+            <h2>Parameters</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for parameter in code_block.parameters.all %}
+                    <tr>
+                        <td>{{ parameter.name }}</td>
+                        <td>{{ parameter.description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="parameters">
+            <h2>Parameters</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Type</th><th>Required?</th><th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for parameter in code_block.parameters.all %}
+                    <tr>
+                        <td>{{ parameter.name }}</td>
+                        <td>{{ parameter.type }}</td>
+                        <td><span class="required_param_{{ parameter.required }}"></span></td>
+                        <td>{{ parameter.description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% if code_block.return_value %}
