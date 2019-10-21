@@ -44,14 +44,13 @@ class Command(BaseCommand):
                 if not os.path.exists(translation_path):
                     log("Could not find %s to restore" % translation_path)
                     continue
-                plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
-                plugins = ",".join(glob.glob(plugins_path))
+                plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins.js")
                 subprocess.call([
                     'restore',
                     '-s', source_path,
                     '-r', translation_path,
                     '-o', translation_path,
-                    '-p', plugins
+                    '-p', plugins_path
                 ])
 
         # Compile Django translations
