@@ -6,7 +6,7 @@ from django.forms import TextInput, ModelForm
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
-from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
+from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin, OwnableAdmin
 from mezzanine.generic.fields import KeywordsField
 from mezzanine.pages.admin import PageAdmin
 from reversion.admin import VersionAdmin
@@ -403,12 +403,14 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
     fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
 
-class VocabAdmin(ImportExportModelAdmin):
+class VocabAdmin(ImportExportModelAdmin, OwnableAdmin):
     model = Vocab
 
     list_display = ('word', 'simpleDef')
     list_editable = ('word', 'simpleDef')
 
+    # don't show author dropdown when editing a vocab object
+    exclude = ('user',)
 
 class VocabResource(resources.ModelResource):
     class Meta:
