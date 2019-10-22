@@ -19,6 +19,24 @@ from standards.models import Standard
 from documentation.models import Block
 
 
+# When an admin view for a FilterableAdmin model is accessed,
+# use OwnableAdmin to filter down to those objects the user
+# owns, unless they are in the authors group.
+class FilterableAdmin(OwnableAdmin):
+    class Meta:
+        abstract = True
+
+    # don't show author dropdown when editing a vocab object
+    exclude = ('user',)
+
+    def get_queryset(self, request):
+        # authors' view should not be filtered by OwnableAdmin
+        if any(group.name == 'author' for group in request.user.groups.all()):
+            return super(OwnableAdmin, self).get_queryset(request)
+        else:
+            return super(FilterableAdmin, self).get_queryset(request)
+
+
 def publish(modeladmin, request, queryset):
     for obj in queryset:
         print obj
@@ -403,21 +421,12 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
     fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
 
-class VocabAdmin(ImportExportModelAdmin, OwnableAdmin):
+class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
     model = Vocab
 
     list_display = ('word', 'simpleDef')
     list_editable = ('word', 'simpleDef')
 
-    # don't show author dropdown when editing a vocab object
-    exclude = ('user',)
-
-    def get_queryset(self, request):
-        # authors' view should not be filtered by OwnableAdmin
-        if any(group.name == 'author' for group in request.user.groups.all()):
-            return super(OwnableAdmin, self).get_queryset(request)
-        else:
-            return super(VocabAdmin, self).get_queryset(request)
 
 class VocabResource(resources.ModelResource):
     class Meta:
