@@ -741,6 +741,11 @@ LOGGING = {
             'handlers': ['console', 'mail_admins', 'slack_admins'],
             'level': 'DEBUG',
             'propagate': True
+        },
+        'management_commands': {
+            'handlers': ['console', 'slack_admins'],
+            'level': 'ERROR',
+            'propagate': True
         }
     },
 }
