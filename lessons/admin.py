@@ -21,7 +21,7 @@ from documentation.models import Block
 
 # When an admin view for a FilterableAdmin model is accessed,
 # use OwnableAdmin to filter down to those objects the user
-# owns, unless they are in the authors group.
+# owns, unless they have permission to access all objects.
 class FilterableAdmin(OwnableAdmin):
     class Meta:
         abstract = True
@@ -30,11 +30,17 @@ class FilterableAdmin(OwnableAdmin):
     exclude = ('user',)
 
     def get_queryset(self, request):
-        # authors' view should not be filtered by OwnableAdmin
-        if any(group.name == 'author' for group in request.user.groups.all()):
+        if self.can_access_all(request):
+            # Do not filter the queryset
             return super(OwnableAdmin, self).get_queryset(request)
         else:
+            # Filter the queryset to objects owned by the current user
             return super(FilterableAdmin, self).get_queryset(request)
+
+    # Returns whether the user has permission to access all objects of this type.
+    def can_access_all(self, request):
+        # Abstract method, must be overridden by the subclass.
+        raise NotImplementedError
 
 
 def publish(modeladmin, request, queryset):
@@ -426,6 +432,9 @@ class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
 
     list_display = ('word', 'simpleDef')
     list_editable = ('word', 'simpleDef')
+
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_vocab')
 
 
 class VocabResource(resources.ModelResource):
