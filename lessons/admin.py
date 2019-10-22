@@ -412,6 +412,13 @@ class VocabAdmin(ImportExportModelAdmin, OwnableAdmin):
     # don't show author dropdown when editing a vocab object
     exclude = ('user',)
 
+    def get_queryset(self, request):
+        # authors' view should not be filtered by OwnableAdmin
+        if any(group.name == 'author' for group in request.user.groups.all()):
+            return super(OwnableAdmin, self).get_queryset(request)
+        else:
+            return super(VocabAdmin, self).get_queryset(request)
+
 class VocabResource(resources.ModelResource):
     class Meta:
         model = Vocab
