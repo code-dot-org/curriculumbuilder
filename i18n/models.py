@@ -50,6 +50,10 @@ class Internationalizable(models.Model):
         strings = {}
         objects = cls.get_i18n_objects()
         total = objects.count()
+        if total == 0:
+            print("%s: no internationalizable objects to gather from" % cls.__name__)
+            return strings
+
         index = 0
         elapsed = 0
         for obj in objects.all():
