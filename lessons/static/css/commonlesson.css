@@ -298,7 +298,7 @@ html, body{
 .toc a { color: #428bca; }
 .toc a:visited { color: #428bca; }
 
-.admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content, .admonition.assessment {
+.admonition.tip, .admonition.tip-center, .admonition.discussion, .admonition.content, .admonition.assessment, admonition.slide {
     margin: 40px 15px 15px 15px;
     padding: 10px;
     float: right;
@@ -327,7 +327,8 @@ html, body{
 .admonition.tip-center > .admonition-title,
 .admonition.discussion > .admonition-title,
 .admonition.content > .admonition-title,
-.admonition.assessment > .admonition-title {
+.admonition.assessment > .admonition-title,
+ admonition.slide > .admonition-title {
     color: white!important;
     font-size: 12pt;
     height: 30px;
@@ -370,6 +371,14 @@ html, body{
 }
 
 .admonition.assessment > p.admonition-title {
+    background-color: #7665a0!important;
+}
+
+.admonition.slide {
+    border: 2px solid #7665a0;
+}
+
+.admonition.slide > p.admonition-title {
     background-color: #7665a0!important;
 }
 
@@ -897,7 +906,7 @@ a.btn.btn-warning:visited {
 }
 
 @media only screen and (max-width : 480px) {
-    .admonition.tip, .admonition.discussion, .admonition.content, .admonition.assessment {
+    .admonition.tip, .admonition.discussion, .admonition.content, .admonition.assessment, .admonition.slide {
         text-align: inherit;
         width: 100%;
         margin: 40px 0 15px 0;

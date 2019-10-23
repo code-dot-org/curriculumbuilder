@@ -29,6 +29,8 @@ class TipTagPattern(Pattern):
       el.text = '<a href="#%s_%s"><i class="fa fa-lightbulb-o"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'discussion':
       el.text = '<a href="#%s_%s"><i class="fa fa-comments"></i></a>' % (tip_type, tip_link)
+    elif tip_type == 'slide':
+      el.text = '<a href="#%s_%s"><i class="fa fa-list-alt"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'assessment':
       el.text = '<a href="#%s_%s"><i class="fa fa-check-circle"></i></a>' % (tip_type, tip_link)
     elif tip_type == 'content':

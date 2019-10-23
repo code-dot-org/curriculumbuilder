@@ -90,6 +90,9 @@ class TipsProcessor(BlockProcessor):
     elif klass == 'discussion':
       new_title = 'Discussion Goal'
       icon = '<i class="fa fa-comments"></i>'
+    elif klass == 'slide':
+      new_title = 'Slide'
+      icon = '<i class="fa fa-list-alt"></i>'
     elif klass == 'assessment':
       new_title = 'Assessment Opportunity'
       icon = '<i class="fa fa-check-circle"></i>'
