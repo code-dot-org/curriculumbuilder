@@ -9,4 +9,4 @@ class Command(BaseCommand):
     See bin/sync_i18n.sh for context.
     """
     def handle(self, *args, **options):
-        log("WARNING: I18n Sync encountered an error")
+        log("ERROR: I18n Sync encountered a problem and did not complete")
