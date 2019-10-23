@@ -2,83 +2,37 @@ Code.org CurriculumBuilder
 =
 An internal tool designed for Code.org curricula
 
-### How to use CurriculumBuilder
+## How to use CurriculumBuilder
 - Go to the #curriculumbuilder-dev channel for support
 
-### How to install Curriculum Builder locally on OS X
+## How to install Curriculum Builder locally
+
+Install the dependencies for your specific operating system, then follow the rest of the **Common Setup Steps**.
+
+### Install Mac OS dependencies
+Only follow these steps if you are on Mac OS.
 
 1. install mac os x dependencies
 
   ```
   brew install openssl postgres heroku/brew/heroku Caskroom/cask/wkhtmltopdf
-  brew services start postgresql
   ```
 
-2. make sure you have python 2.7
+2. start postgresql
+```
+  brew services start postgresql
+```
+
+3. make sure you have python 2.7
 
   ```
   python -V # -> Python 2.7.10
   ```
-  if you don't, try installing it:
-  ```
-  brew install python@2
-  ```
-  And then run `python -V` again to make sure you now have version 2.7 installed. If you don't, stop here and try to get yourself onto this version of python before proceeding.
+  if you don't, try installing it via`brew install python@2`, and then run `python -V` again to make sure you now have version 2.7 installed. If you don't, stop here and try to get yourself onto this version of python before proceeding.
 
-3. clone repo
+#### Troubleshooting
 
-```
-git clone https://github.com/mrjoshida/curriculumbuilder.git
-cd curriculumbuilder
-```
-
-4. set up virtualenv (https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv)
-
-```
-pip install virtualenv
-mkdir ~/.virtualenvs
-virtualenv ~/.virtualenvs/cb
-source ~/.virtualenvs/cb/bin/activate
-```
-
-5. install python dependencies
-```
-pip install -r requirements.txt
-```
-if you are returning to this step to fix problems with pycurl, you may need to also add the `--no-cache-dir` flag.
-
-6. copy the db
-
-```
-heroku login # need credentials from Josh C.
-heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
-```
-
-7. set up local_settings.py
-
-```
-cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
-```
-
-8. run the tests
-
-```
-npm install
-./manage.py test
-```
-
-9. run the server
-
-```
-source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
-debug=true python manage.py runserver_plus
-```
-
-http://localhost:8000
-
-10. troubleshooting pycurl
-
-    There are two potential errors you can get which look very similar:
+If you run into problems with pycurl later, there are two potential errors you can get which look very similar:
 
   * `ImportError: pycurl: libcurl link-time ssl backend (openssl) is different from compile-time ssl backend (none/other)`
     
@@ -88,42 +42,91 @@ http://localhost:8000
   
     solution: https://gist.github.com/webinista/b4b6a4cf8f158431b2c5134630c2cbfe#gistcomment-3057612
 
-11. measure test coverage
+
+### Install Ubuntu 16 dependencies
+
+Only follow these steps if you are on Ubuntu / Linux.
+
+1. install Ubuntu dependencies
+```
+sudo apt-get install python-pip postgresql wkhtmltopdf libcurl4-openssl-dev libssl-dev
+sudo snap install --classic heroku
+```
+
+2. check versions
+```
+python -V # --> 2.7.x (not 3.x)
+psql -V # --> 11 or higher
+```
+If you do not have the right versions, stop here and try to fix them before proceeding.
+
+3. configure postgresql
+```
+sudo service postgresql start
+sudo -u postgres createuser -s $(whoami)
+```
+
+### Common Setup Steps
+Follow these steps whether you are on Mac OS or Ubuntu / Linux.
+
+1. clone repo
+
+```
+git clone https://github.com/mrjoshida/curriculumbuilder.git
+cd curriculumbuilder
+```
+
+2. set up virtualenv (https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv)
+
+```
+pip install virtualenv
+mkdir ~/.virtualenvs
+virtualenv ~/.virtualenvs/cb
+source ~/.virtualenvs/cb/bin/activate
+```
+
+3. install python dependencies
+```
+pip install -r requirements.txt
+```
+
+4. copy the db
+
+```
+heroku login # need a code.org login for heroku.com from an engineer or the accounts team
+heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
+```
+
+5. set up local_settings.py
+
+```
+cp curriculumBuilder/local_settings.py.example curriculumBuilder/local_settings.py
+```
+
+6. run the tests
+
+```
+npm install
+./manage.py test
+```
+
+7. run the server
+
+```
+source ~/.virtualenvs/cb/bin/activate # must be run once per shell window
+debug=true python manage.py runserver_plus
+```
+
+http://localhost:8000
+
+### measure test coverage
+If you want to measure test coverage, here is how to do it:
 ```
 pip install -r requirements-dev.txt
 DJANGO_SETTINGS_MODULE=curriculumBuilder.settings debug=true coverage run ./manage.py test
 coverage report
 ```
-If you run this often, it may be worth appending the `--keepdb` flag to make it run faster, 
-and temporarily disabling any tests which fail as a result.
-
-### How to install Curriculum Builder locally on Ubuntu
-
-These instructions are a work in progress. 
-
-1. install dependencies
-```
-sudo apt-get install python-pip postgresql wkhtmltopdf 
-# some of these may be unneccessary
-sudo apt-get install libcurl4-openssl-dev libssl-dev postgresql-contrib
-sudo snap install --classic heroku
-```
-
-2. configure postgresql
-```
-sudo service postgresql start
-sudo -u postgres psql
-CREATE USER ubuntu;
-ALTER USER ubuntu SUPERUSER CREATEDB;
-```
-
-at this point I got stuck:
-```
-(cb) ip-10-0-0-19:~/cb (master)$ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
-pg_dump: server version: 9.6.15; pg_dump version: 9.5.19
-pg_dump: aborting because of server version mismatch
-# dropdb curriculumbuilder # to backtrack and try again
-```
+If you run this often, it may be worth appending the `--keepdb` flag to make it run faster.
 
 ### How does the deploy work on CurriculumBuilder
 
