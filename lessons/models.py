@@ -133,7 +133,7 @@ Linked Resources
 """
 
 
-class Resource(Orderable, Internationalizable):
+class Resource(Orderable, Internationalizable, Ownable):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True, null=True)
     student = models.BooleanField('Student Facing', default=False)
@@ -153,6 +153,7 @@ class Resource(Orderable, Internationalizable):
 
     class Meta:
         ordering = ['name', ]
+        permissions = [('access_all_resources','Can access all resources')]
 
     @property
     def i18n_key(self):
@@ -308,7 +309,7 @@ Complete Lesson Page
 """
 
 
-class Lesson(InternationalizablePage, RichText, CloneableMixin):
+class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
     overview = RichTextField('Lesson Overview')
     short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
                                    max_length=64, blank=True, null=True)
@@ -346,6 +347,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin):
 
     class Meta:
         ordering = ["number"]
+        permissions = [('access_all_lessons', 'Can access all lessons')]
 
     @classmethod
     def get_i18n_objects(cls):
@@ -665,7 +667,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable, CloneableMixin, Internationalizable):
+class Activity(Orderable, CloneableMixin, Internationalizable, Ownable):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     keywords = KeywordsField()
@@ -677,6 +679,7 @@ class Activity(Orderable, CloneableMixin, Internationalizable):
         verbose_name_plural = "activities"
         order_with_respect_to = "lesson"
         unique_together = ('lesson', 'name')
+        permissions = [('access_all_activities', 'Can access all activities')]
 
     @classmethod
     def internationalizable_fields(cls):
@@ -742,13 +745,14 @@ Learning Objectives
 """
 
 
-class Objective(Orderable, Internationalizable, CloneableMixin):
+class Objective(Orderable, Internationalizable, CloneableMixin, Ownable):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
 
     class Meta:
         order_with_respect_to = "lesson"
+        permissions = [('access_all_objectives','Can access all objectives')]
 
     @classmethod
     def get_i18n_objects(cls):
