@@ -35,7 +35,7 @@ Curriculum
 """
 
 
-class Curriculum(InternationalizablePage, RichText, CloneableMixin):
+class Curriculum(InternationalizablePage, Page, RichText, CloneableMixin):
     CURRENT = 0
     NEXT = 1
     PAST = 2
@@ -262,7 +262,7 @@ Curricular Unit
 """
 
 
-class Unit(InternationalizablePage, RichText, CloneableMixin):
+class Unit(InternationalizablePage, Page, RichText, CloneableMixin):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
@@ -615,7 +615,7 @@ Unit Chapter
 """
 
 
-class Chapter(InternationalizablePage, RichText, CloneableMixin):
+class Chapter(InternationalizablePage, Page, RichText, CloneableMixin):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
