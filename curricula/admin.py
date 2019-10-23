@@ -8,7 +8,7 @@ from import_export.admin import ImportExportModelAdmin
 from reversion.admin import VersionAdmin
 
 from lessons.models import Lesson
-from lessons.admin import LessonForm
+from lessons.admin import LessonForm, FilterableAdmin
 
 from curricula.models import Curriculum, Unit, Chapter, Topic
 from standards.models import Standard
@@ -48,19 +48,26 @@ class TopicInline(TabularDynamicInlineAdmin):
     extra = 5
 
 
-class CurriculumAdmin(PageAdmin, VersionAdmin):
+class CurriculumAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     model = Curriculum
     verbose_name_plural = "Curricula"
     filter_horizontal = ('frameworks',)
     inlines = (TopicInline,)
 
+    def can_access_all(self, request):
+        return request.user.has_perm('curriculum.access_all_curricula')
 
-class UnitAdmin(PageAdmin, VersionAdmin):
+
+
+class UnitAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     model = Unit
     inlines = (TopicInline, )
 
+    def can_access_all(self, request):
+        return request.user.has_perm('curricula.access_all_units')
 
-class ChapterAdmin(PageAdmin):
+
+class ChapterAdmin(PageAdmin, FilterableAdmin):
     model = Chapter
     filter_horizontal = ('understandings',)
     inlines = (TopicInline,)
@@ -70,6 +77,9 @@ class ChapterAdmin(PageAdmin):
             'fields': ['title', 'status', 'content', 'questions', 'understandings'],
         }),
     )
+
+    def can_access_all(self, request):
+        return request.user.has_perm('curricula.access_all_chapters')
 
 
 '''
