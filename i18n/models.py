@@ -97,7 +97,7 @@ class Internationalizable(models.Model):
                     self._untranslated_values[field] = getattr(self, field)
                 setattr(self, field, translated)
 
-class InternationalizablePage(Internationalizable):
+class InternationalizablePage(Page, Internationalizable):
 
     class Meta:
         abstract = True
