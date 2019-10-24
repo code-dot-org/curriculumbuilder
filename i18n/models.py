@@ -56,7 +56,12 @@ class Internationalizable(models.Model):
 
         index = 0
         elapsed = 0
-        for obj in objects.all():
+        # Because this process is intended to be invoked from a management
+        # command, we don't care about caching the results of the queryset. In
+        # fact, in the case of large querysets that cache can have significant
+        # performance implications, so here we use iterator() to skip the
+        # cache.
+        for obj in objects.all().iterator():
             index += 1
             average = elapsed / index
             expected = elapsed + ((total - index) * average)
