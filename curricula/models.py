@@ -77,6 +77,9 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def can_access(self, request):
         return request.user.has_perm('curricula.access_all_curricula') or request.user.id == self.user_id
 
+    def can_add(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         if new_parent is not None:
             msg = 'Curriculum must be a top level object'
@@ -312,6 +315,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     def can_access(self, request):
         return request.user.has_perm('curricula.access_all_units') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
@@ -654,6 +660,9 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     def can_access(self, request):
         return request.user.has_perm('curricula.access_all_chapters') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
 
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
