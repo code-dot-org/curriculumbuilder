@@ -84,7 +84,7 @@ class ActivityInline(StackedDynamicInlineAdmin):
 
     keywords = KeywordsField()
 
-    exclude = ['ancestor', ]
+    exclude = ['ancestor', 'user',]
 
 
 class ResourceInline(TabularDynamicInlineAdmin):
