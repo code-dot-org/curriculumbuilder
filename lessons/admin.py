@@ -6,7 +6,7 @@ from django.forms import TextInput, ModelForm
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
-from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
+from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin, OwnableAdmin
 from mezzanine.generic.fields import KeywordsField
 from mezzanine.pages.admin import PageAdmin
 from reversion.admin import VersionAdmin
@@ -17,6 +17,30 @@ from lessons.models import Lesson, Objective, Prereq, Activity, Vocab, Resource,
 from curricula.models import Curriculum, Unit
 from standards.models import Standard
 from documentation.models import Block
+
+
+# When an admin view for a FilterableAdmin model is accessed,
+# use OwnableAdmin to filter down to those objects the user
+# owns, unless they have permission to access all objects.
+class FilterableAdmin(OwnableAdmin):
+    class Meta:
+        abstract = True
+
+    # don't show author dropdown when editing a vocab object
+    exclude = ('user',)
+
+    def get_queryset(self, request):
+        if self.can_access_all(request):
+            # Do not filter the queryset
+            return super(OwnableAdmin, self).get_queryset(request)
+        else:
+            # Filter the queryset to objects owned by the current user
+            return super(FilterableAdmin, self).get_queryset(request)
+
+    # Returns whether the user has permission to access all objects of this type.
+    def can_access_all(self, request):
+        # Abstract method, must be overridden by the subclass.
+        raise NotImplementedError
 
 
 def publish(modeladmin, request, queryset):
@@ -403,11 +427,14 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
     fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
 
-class VocabAdmin(ImportExportModelAdmin):
+class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
     model = Vocab
 
     list_display = ('word', 'simpleDef')
     list_editable = ('word', 'simpleDef')
+
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_vocab')
 
 
 class VocabResource(resources.ModelResource):
