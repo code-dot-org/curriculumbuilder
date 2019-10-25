@@ -399,7 +399,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     # temporary fix to override Ownable and allow inline editing of lessons
     def is_editable(self, request):
-        return super(Ownable, self).is_editable(request)
+        return request.user.has_perm('lessons.change_lesson')
 
     '''
     def get_number(self):
