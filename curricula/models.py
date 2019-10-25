@@ -90,8 +90,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         if new_parent is not None:
             msg = 'Curriculum must be a top level object'
             raise PageMoveException(msg)
-        if not self.can_access(request):
-            raise PageMoveException('Cannot move a curriculum you do not own')
+        if not request.user.has_perm('curricula.access_all_curricula'):
+            raise PageMoveException('You do not have permission to move curriculum')
 
     def get_absolute_url(self):
         return reverse('curriculum:curriculum_view', args=[self.slug])
