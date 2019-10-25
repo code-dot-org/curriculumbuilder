@@ -397,6 +397,10 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
                 return None
         return parent.unit
 
+    # temporary fix to override Ownable and allow inline editing of lessons
+    def is_editable(self, request):
+        return super(Ownable, self).is_editable(request)
+
     '''
     def get_number(self):
         order = 1
