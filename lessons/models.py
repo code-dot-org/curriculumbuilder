@@ -713,6 +713,11 @@ class Activity(Orderable, CloneableMixin, Internationalizable, Ownable):
                 logger.debug('Activity order changing! Activity %s, lesson %s' % (self.pk, self.lesson.pk))
         except:
             pass
+
+        # Supply default value for user_id when an Activity is created
+        # via InlineModelAdmin on the Lesson admin page.
+        self.user_id = self.user_id or self.lesson.user_id
+
         super(Activity, self).save(*args, **kwargs)
 
 
@@ -772,6 +777,11 @@ class Objective(Orderable, Internationalizable, CloneableMixin, Ownable):
     def save(self, *args, **kwargs):
         if not self.description:
             self.description = self.name
+
+        # Supply default value for user_id when an Objective is created
+        # via InlineModelAdmin on the Lesson admin page.
+        self.user_id = self.user_id or self.lesson.user_id
+
         super(Objective, self).save(*args, **kwargs)
 
 
