@@ -18,6 +18,7 @@ from django.contrib.auth.models import User
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
+from mezzanine.core.models import Ownable
 from mezzanine.generic.fields import CommentsField, KeywordsField
 from mezzanine.generic.models import Keyword as BaseKeyword
 from sortedm2m.fields import SortedManyToManyField
@@ -86,7 +87,7 @@ Vocabulary
 """
 
 
-class Vocab(Internationalizable):
+class Vocab(Internationalizable, Ownable):
     word = models.CharField(max_length=255)
     simpleDef = models.TextField()
     detailDef = models.TextField(blank=True, null=True)
