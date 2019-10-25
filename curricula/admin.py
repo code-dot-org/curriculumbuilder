@@ -55,7 +55,7 @@ class CurriculumAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     inlines = (TopicInline,)
 
     def can_access_all(self, request):
-        return request.user.has_perm('curriculum.access_all_curricula')
+        return request.user.has_perm('curricula.access_all_curricula')
 
 
 
