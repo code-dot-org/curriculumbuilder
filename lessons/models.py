@@ -96,6 +96,7 @@ class Vocab(Internationalizable):
         ordering = ["word"]
         verbose_name_plural = "vocab words"
         unique_together = ('word', 'mathy')
+        permissions = [('access_all_vocab', 'Can access all vocab')]
 
     @property
     def i18n_key(self):
