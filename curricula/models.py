@@ -90,6 +90,9 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         if new_parent is not None:
             msg = 'Curriculum must be a top level object'
             raise PageMoveException(msg)
+        # For Curriculum objects in particular, do not let users without
+        # access_all_curriculum permissions move a Curriculum, even if
+        # they own it.
         if not request.user.has_perm('curricula.access_all_curricula'):
             raise PageMoveException('You do not have permission to move curriculum')
 
