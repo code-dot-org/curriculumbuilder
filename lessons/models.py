@@ -376,6 +376,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def can_add(self, request):
         return self.can_access(request)
 
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):

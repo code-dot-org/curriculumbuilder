@@ -80,6 +80,12 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def can_add(self, request):
         return self.can_access(request)
 
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         if new_parent is not None:
             msg = 'Curriculum must be a top level object'
@@ -317,6 +323,12 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return request.user.has_perm('curricula.access_all_units') or request.user.id == self.user_id
 
     def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
         return self.can_access(request)
 
     def can_move(self, request, new_parent):
@@ -662,6 +674,12 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return request.user.has_perm('curricula.access_all_chapters') or request.user.id == self.user_id
 
     def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
         return self.can_access(request)
 
     def can_move(self, request, new_parent):
