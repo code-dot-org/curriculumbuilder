@@ -21,6 +21,8 @@ from django_slack import slack_message
 
 from django_cloneable import CloneableMixin
 
+from mezzanine.core.models import Ownable
+
 from standards.models import Standard, GradeBand, Category, Framework
 from documentation.models import Map
 import lessons.models
@@ -35,7 +37,7 @@ Curriculum
 """
 
 
-class Curriculum(InternationalizablePage, RichText, CloneableMixin):
+class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     CURRENT = 0
     NEXT = 1
     PAST = 2
@@ -63,6 +65,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin):
 
     class Meta:
         verbose_name_plural = "curricula"
+        permissions = [('access_all_curricula', 'Can access all curricula')]
 
     @classmethod
     def internationalizable_fields(cls):
@@ -262,7 +265,7 @@ Curricular Unit
 """
 
 
-class Unit(InternationalizablePage, RichText, CloneableMixin):
+class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
@@ -283,6 +286,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin):
                                                 help_text='Override default lesson template,'
                                                           'eg curricula/pl_lesson.html')
     i18n_ready = models.BooleanField(default=False, help_text="Ready for internationalization")
+
+    class Meta:
+        permissions = [('access_all_units', 'Can access all units')]
 
     @classmethod
     def internationalizable_fields(cls):
@@ -615,7 +621,7 @@ Unit Chapter
 """
 
 
-class Chapter(InternationalizablePage, RichText, CloneableMixin):
+class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField('Number', blank=True, null=True)
     questions = RichTextField(blank=True, null=True, help_text="md list of big questions")
@@ -624,6 +630,7 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin):
 
     class Meta:
         order_with_respect_to = "parent"
+        permissions = [('access_all_chapters','Can access all chapters')]
 
     @classmethod
     def internationalizable_fields(cls):

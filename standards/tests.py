@@ -7,6 +7,7 @@ import io
 
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson
@@ -19,9 +20,11 @@ class StandardsViewsTestCase(TestCase):
         # simple test suite, but until we have some kind of test factory
         # library this is what we have to do.
         # TODO simplify this if we ever set up a test factory.
-        self.test_curriculum = Curriculum.objects.create(title="Test Curriculum")
-        self.test_unit = Unit.objects.create(title="Test Unit", parent=self.test_curriculum)
-        self.test_lesson = Lesson.objects.create(title="Test Lesson", parent=self.test_unit)
+        user = User.objects.create_user(username='user', password='12345')
+        user.save()
+        self.test_curriculum = Curriculum.objects.create(title="Test Curriculum", user=user)
+        self.test_unit = Unit.objects.create(title="Test Unit", parent=self.test_curriculum, user=user)
+        self.test_lesson = Lesson.objects.create(title="Test Lesson", parent=self.test_unit, user=user)
         self.test_framework = Framework.objects.create(
             name="Test Framework",
             slug="test_framework",

@@ -15,77 +15,80 @@ class CurriculaRenderingTestCase(TestCase):
         self.test_curriculum = Curriculum.objects.create(
             title="Test Curriculum",
             slug="test-curriculum",
-            assessment_commentary="Assessment Commentary")
+            assessment_commentary="Assessment Commentary",
+            user=user)
         self.csf_curriculum = Curriculum.objects.create(
             title="CSF Curriculum",
             slug="csf-curriculum",
             assessment_commentary="CSF Commentary",
-            unit_template_override='curricula/csf_unit.html')
+            unit_template_override='curricula/csf_unit.html',
+            user=user)
         self.pl_curriculum = Curriculum.objects.create(
             title="PL Curriculum",
             slug="pl-curriculum",
             assessment_commentary="PL Commentary",
-            unit_template_override='curricula/pl_unit.html')
+            unit_template_override='curricula/pl_unit.html',
+            user=user)
         self.test_unit = Unit.objects.create(
             title="Test Unit",
             parent=self.test_curriculum,
             slug="test-unit",
             description="Test unit description",
-            show_calendar=True
-        )
+            show_calendar=True,
+            user=user)
         self.hoc_unit = Unit.objects.create(
             title="HoC Unit",
             parent=self.test_curriculum,
             slug="hoc-unit",
             description="Hoc unit description",
-            lesson_template_override="curricula/hoc_lesson.html"
-        )
+            lesson_template_override="curricula/hoc_lesson.html",
+            user=user)
         self.csf_unit = Unit.objects.create(
             title="CSF Unit",
             parent=self.csf_curriculum,
             slug="csf-unit",
             description="CSF unit description",
-            lesson_template_override="curricula/csf_lesson.html"
-        )
+            lesson_template_override="curricula/csf_lesson.html",
+            user=user)
         self.pl_unit = Unit.objects.create(
             title="PL Unit",
             parent=self.pl_curriculum,
             slug="pl-unit",
             description="PL unit description",
-            lesson_template_override="curricula/pl_lesson.html"
-        )
+            lesson_template_override="curricula/pl_lesson.html",
+            user=user)
         resource = Resource.objects.create(
             name="Test Resource",
             slug="test-resource",
-            student=True
-        )
+            student=True,
+            user=user)
         self.test_lesson = Lesson.objects.create(
             title="Test Lesson",
             parent=self.test_unit,
             overview="Overview",
-            prep="Prep"
-        )
+            prep="Prep",
+            user=user)
         self.test_lesson.resources.add(resource)
         self.hoc_lesson = Lesson.objects.create(
             title="HoC Lesson",
             parent=self.hoc_unit,
             overview="HoC Overview",
-            prep="Prep"
-        )
+            prep="Prep",
+            user=user)
         self.hoc_lesson.resources.add(resource)
         self.csf_lesson = Lesson.objects.create(
             title="CSF Lesson",
             parent=self.csf_unit,
             overview="CSF Overview",
-            prep="Prep"
-        )
+            prep="Prep",
+            user=user)
         self.csf_lesson.resources.add(resource)
         self.pl_lesson = Lesson.objects.create(
             title="PL Lesson",
             parent=self.pl_unit,
             overview="PL Overview",
-            prep="Prep"
-        )
+            prep="Prep",
+            user=user)
         self.pl_lesson.resources.add(resource)
 
     def test_homepage(self):
