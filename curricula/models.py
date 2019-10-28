@@ -74,10 +74,27 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def __unicode__(self):
         return self.title
 
+    def can_access(self, request):
+        return request.user.has_perm('curricula.access_all_curricula') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         if new_parent is not None:
             msg = 'Curriculum must be a top level object'
             raise PageMoveException(msg)
+        # For Curriculum objects in particular, do not let users without
+        # access_all_curricula permissions move a Curriculum, even if
+        # they own it.
+        if not request.user.has_perm('curricula.access_all_curricula'):
+            raise PageMoveException('You do not have permission to move curriculum')
 
     def get_absolute_url(self):
         return reverse('curriculum:curriculum_view', args=[self.slug])
@@ -305,11 +322,28 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def has_resource_pdf(self):
         return self.curriculum.slug not in ['csf-18', 'csf-1718', 'hoc']
 
+    def can_access(self, request):
+        return request.user.has_perm('curricula.access_all_units') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not parent_type == 'curriculum':
             msg = 'Unit must live directly under a curriculum'
             raise PageMoveException(msg)
+        if not self.can_access(request):
+            raise PageMoveException('Cannot move a unit you do not own')
+        if not Page.get_content_model(new_parent).can_access(request):
+            raise PageMoveException('Cannot move a unit to a curriculum you do not own')
+
 
     def get_absolute_url(self):
         return reverse('curriculum:unit_view', args=[self.curriculum.slug, self.slug])
@@ -639,11 +673,27 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def __unicode__(self):
         return self.title
 
+    def can_access(self, request):
+        return request.user.has_perm('curricula.access_all_chapters') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not parent_type == 'unit':
             msg = 'Chapter must live directly under a unit'
             raise PageMoveException(msg)
+        if not self.can_access(request):
+            raise PageMoveException('Cannot move a chapter you do not own')
+        if not Page.get_content_model(new_parent).can_access(request):
+            raise PageMoveException('Cannot move a chapter to a unit you do not own')
 
     def get_absolute_url(self):
         return reverse('curriculum:chapter_view', args=[self.unit.curriculum.slug, self.unit.slug, self.number])

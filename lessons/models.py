@@ -370,12 +370,29 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
             locale = translation.to_locale(lang)
             return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) or keyword for keyword in self.keywords.all()]
 
+    def can_access(self, request):
+        return request.user.has_perm('lessons.access_all_lessons') or request.user.id == self.user_id
+
+    def can_add(self, request):
+        return self.can_access(request)
+
+    def can_change(self, request):
+        return self.can_access(request)
+
+    def can_delete(self, request):
+        return self.can_access(request)
+
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):
             print "no unit here"
             msg = 'Lesson cannot live under a %s' % parent_type
             raise PageMoveException(msg)
+        if not self.can_access(request):
+            raise PageMoveException('Cannot move a lesson you do not own')
+        if not Page.get_content_model(new_parent).can_access(request):
+            raise PageMoveException('Cannot move a lesson to a parent you do not own')
+
 
     def get_absolute_url(self):
         # Check if this is the child of a lesson, and therefore optional

@@ -60,7 +60,7 @@ class ObjectiveInline(TabularDynamicInlineAdmin):
     }
 
 
-class ObjectiveAdmin(admin.ModelAdmin):
+class ObjectiveAdmin(FilterableAdmin):
     model = Objective
     fields = ['name', 'lesson']
     verbose_name = "Objective"
@@ -69,6 +69,8 @@ class ObjectiveAdmin(admin.ModelAdmin):
     list_editable = ('name',)
     list_filter = ('lesson__curriculum', 'lesson__unit')
 
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_objectives')
 
 class PrereqInline(StackedDynamicInlineAdmin):
     model = Prereq
@@ -299,7 +301,7 @@ class LessonForm(ModelForm):
             self.fields['blocks'].queryset = Block.objects.all().select_related('parent_ide')
 
 
-class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
+class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin, FilterableAdmin):
     form = LessonForm
 
     actions = [publish]
@@ -339,6 +341,9 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin):
         return super(LessonAdmin, self).get_queryset(request).select_related('parent', 'page_ptr') \
             .prefetch_related('standards', 'opportunity_standards',
                               'vocab', 'resources', 'activity_set')
+
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_lessons')
 
 
 '''
@@ -413,7 +418,7 @@ class ResourceResource(resources.ModelResource):
         return list(resource_lessons)
 
 
-class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
+class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin, FilterableAdmin):
     
     resource_class = ResourceResource
 
@@ -425,6 +430,9 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin):
     list_filter = ('lessons__curriculum',)
     inlines = [LessonResourceInline]
     fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
+
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_resources')
 
 
 class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
@@ -442,7 +450,7 @@ class VocabResource(resources.ModelResource):
         model = Vocab
 
 
-class ActivityAdmin(CompareVersionAdmin):
+class ActivityAdmin(CompareVersionAdmin, FilterableAdmin):
     class Meta:
         model = Activity
 
@@ -458,6 +466,9 @@ class ActivityAdmin(CompareVersionAdmin):
 
     curriculum.admin_order_field = 'lesson__curriculum'
     unit.admin_order_field = 'lesson__unit'
+
+    def can_access_all(self, request):
+        return request.user.has_perm('lessons.access_all_activities')
 
 
 class AnnotationAdmin(CompareVersionAdmin):
