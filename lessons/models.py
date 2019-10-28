@@ -741,6 +741,10 @@ class Activity(Orderable, CloneableMixin, Internationalizable, Ownable):
 
         super(Activity, self).save(*args, **kwargs)
 
+    # temporary fix to override Ownable and allow inline editing of activities
+    def is_editable(self, request):
+        return request.user.has_perm('lessons.change_activity')
+
 
 """
 Prerequisite Skills
