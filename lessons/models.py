@@ -82,6 +82,27 @@ class I18nKeyword(BaseKeyword, Internationalizable):
 
 
 """
+Filterable
+
+"""
+
+
+class Filterable(Ownable):
+    class Meta:
+        abstract = True
+
+    # Helper method which should return true if the object is either owned by
+    # the user, or the user has permission to access all objects of this type.
+    def can_access(self, request):
+        raise NotImplementedError
+
+    # Restrict in-line editing of the object, overriding behavior defined here:
+    # http://mezzanine.jupo.org/docs/_modules/mezzanine/core/models.html#Ownable
+    def is_editable(self, request):
+        raise NotImplementedError
+
+
+"""
 Vocabulary
 
 """
@@ -309,7 +330,7 @@ Complete Lesson Page
 """
 
 
-class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
+class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     overview = RichTextField('Lesson Overview')
     short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
                                    max_length=64, blank=True, null=True)
@@ -414,9 +435,8 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Ownable):
                 return None
         return parent.unit
 
-    # temporary fix to override Ownable and allow inline editing of lessons
     def is_editable(self, request):
-        return request.user.has_perm('lessons.change_lesson')
+        return self.can_access(request) and request.user.has_perm('lessons.change_lesson')
 
     '''
     def get_number(self):
@@ -688,7 +708,7 @@ Activities that compose a lesson
 """
 
 
-class Activity(Orderable, CloneableMixin, Internationalizable, Ownable):
+class Activity(Orderable, CloneableMixin, Internationalizable, Filterable):
     name = models.CharField(max_length=255)
     content = RichTextField('Activity Content')
     keywords = KeywordsField()
@@ -741,9 +761,11 @@ class Activity(Orderable, CloneableMixin, Internationalizable, Ownable):
 
         super(Activity, self).save(*args, **kwargs)
 
-    # temporary fix to override Ownable and allow inline editing of activities
+    def can_access(self, request):
+        return request.user.has_perm('lessons.access_all_activities') or request.user.id == self.user_id
+
     def is_editable(self, request):
-        return request.user.has_perm('lessons.change_activity')
+        return self.can_access(request) and request.user.has_perm('lessons.change_activity')
 
 
 """
