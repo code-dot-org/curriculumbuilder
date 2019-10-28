@@ -108,7 +108,7 @@ Vocabulary
 """
 
 
-class Vocab(Internationalizable, Ownable):
+class Vocab(Internationalizable, Filterable):
     word = models.CharField(max_length=255)
     simpleDef = models.TextField()
     detailDef = models.TextField(blank=True, null=True)
@@ -147,6 +147,12 @@ class Vocab(Internationalizable, Ownable):
             self.detailDef = self.simpleDef
         super(Vocab, self).save(*args, **kwargs)
 
+    def can_access(self, request):
+        return request.user.has_perm('lessons.access_all_vocab') or request.user.id == self.user_id
+
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('lessons.change_vocab')
+
 
 """
 Linked Resources
@@ -154,7 +160,7 @@ Linked Resources
 """
 
 
-class Resource(Orderable, Internationalizable, Ownable):
+class Resource(Orderable, Internationalizable, Filterable):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, blank=True, null=True)
     student = models.BooleanField('Student Facing', default=False)
@@ -322,6 +328,12 @@ class Resource(Orderable, Internationalizable, Ownable):
                 self.slug = '%s-%d' % (self.slug[:250], x)
 
         super(Resource, self).save(*args, **kwargs)
+
+    def can_access(self, request):
+        return request.user.has_perm('lessons.access_all_resources') or request.user.id == self.user_id
+
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('lessons.change_resource')
 
 
 """
@@ -797,7 +809,7 @@ Learning Objectives
 """
 
 
-class Objective(Orderable, Internationalizable, CloneableMixin, Ownable):
+class Objective(Orderable, Internationalizable, CloneableMixin, Filterable):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lesson = models.ForeignKey(Lesson)
@@ -830,6 +842,12 @@ class Objective(Orderable, Internationalizable, CloneableMixin, Ownable):
         self.user_id = self.user_id or self.lesson.user_id
 
         super(Objective, self).save(*args, **kwargs)
+
+    def can_access(self, request):
+        return request.user.has_perm('lessons.access_all_objectives') or request.user.id == self.user_id
+
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('lessons.change_objective')
 
 
 """
