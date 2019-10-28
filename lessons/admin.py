@@ -72,6 +72,13 @@ class ObjectiveAdmin(FilterableAdmin):
     def can_access_all(self, request):
         return request.user.has_perm('lessons.access_all_objectives')
 
+    def save_form(self, request, form, change):
+        lesson_id = form.cleaned_data['lesson'].id
+        lesson = Lesson.objects.get(id=lesson_id)
+        if not lesson.can_access(request):
+            raise Exception('You can only add an objective to a lesson you own')
+        return super(ObjectiveAdmin, self).save_form(request, form, change)
+
 class PrereqInline(StackedDynamicInlineAdmin):
     model = Prereq
     verbose_name = "Prerequisite"
@@ -469,6 +476,13 @@ class ActivityAdmin(CompareVersionAdmin, FilterableAdmin):
 
     def can_access_all(self, request):
         return request.user.has_perm('lessons.access_all_activities')
+
+    def save_form(self, request, form, change):
+        lesson_id = form.cleaned_data['lesson'].id
+        lesson = Lesson.objects.get(id=lesson_id)
+        if not lesson.can_access(request):
+            raise Exception('You can only add an activity to a lesson you own')
+        return super(ActivityAdmin, self).save_form(request, form, change)
 
 
 class AnnotationAdmin(CompareVersionAdmin):
