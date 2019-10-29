@@ -9,44 +9,46 @@
         </div>
         <div class="drawer-body">
 
-            <h2>Add to Log</h2>
-            <form method="POST" action="." class="post-form">{% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="save btn btn-primary">Save</button>
-            </form>
-            {% if unit %}
-            <h3><a href="{% url 'curriculum:unit_feedback' curriculum.slug unit.slug %}">View unit feedback</a></h3>
-            {% endif %}
-            <h3><a href="{% url 'curriculum:page_history' page.pk %}">View history</a></h3>
-
-            <h2>Publishing</h2>
-            {% if page.jackfrost_can_build %}
-                <button class="btn btn-primary" id="publish_this" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">
-                    Publish
-                </button><i id="progress_spinner"></i>
-                <input type="checkbox" name="lessons" id="include_lessons"> Include Children</input>
-                <pre id="publish_results"></pre>
-                {% if pagetype == "Unit" %}
-                <button class="btn btn-primary" id="publish_pdfs" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">Publish PDFs</button><i id="progress_spinner_pdf" style="margin: 5px;"></i><br/>
-                <pre id="publish_results_pdf"></pre>
+            {% if can_administer %}
+                <h2>Add to Log</h2>
+                <form method="POST" action="." class="post-form">{% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="save btn btn-primary">Save</button>
+                </form>
+                {% if unit %}
+                <h3><a href="{% url 'curriculum:unit_feedback' curriculum.slug unit.slug %}">View unit feedback</a></h3>
                 {% endif %}
-            {% else %}
-                <em>Can't publish, check settings in admin</em>
+                <h3><a href="{% url 'curriculum:page_history' page.pk %}">View history</a></h3>
+
+                <h2>Publishing</h2>
+                {% if page.jackfrost_can_build %}
+                    <button class="btn btn-primary" id="publish_this" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">
+                        Publish
+                    </button><i id="progress_spinner"></i>
+                    <input type="checkbox" name="lessons" id="include_lessons"> Include Children</input>
+                    <pre id="publish_results"></pre>
+                    {% if pagetype == "Unit" %}
+                    <button class="btn btn-primary" id="publish_pdfs" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">Publish PDFs</button><i id="progress_spinner_pdf" style="margin: 5px;"></i><br/>
+                    <pre id="publish_results_pdf"></pre>
+                    {% endif %}
+                {% else %}
+                    <em>Can't publish, check settings in admin</em>
+                {% endif %}
+
+                <h2>deepSpaceCopy</h2>
+                <button class="btn btn-primary" id="clone_this" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">Clone</button>
+                <input type="checkbox" name="children" id="clone_children"> Clone Children</input>
+                <i id="clone_spinner"></i><br/>
+                {% comment %} ToDo: add ability to clone into a different parent {% endcomment %}
+                <pre id="clone_results"></pre>
+
+                <h2>Code Studio</h2>
+                <button class="btn btn-primary" id="get_stage_details" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">
+                    Get Code Studio Stage Details
+                </button>
+                <i id="stage_progress_spinner"></i>
+                <pre id="stage_details_results"></pre>
             {% endif %}
-
-            <h2>deepSpaceCopy</h2>
-            <button class="btn btn-primary" id="clone_this" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">Clone</button>
-            <input type="checkbox" name="children" id="clone_children"> Clone Children</input>
-            <i id="clone_spinner"></i><br/>
-            {% comment %} ToDo: add ability to clone into a different parent {% endcomment %}
-            <pre id="clone_results"></pre>
-
-            <h2>Code Studio</h2>
-            <button class="btn btn-primary" id="get_stage_details" data-pk="{{ page.pk }}" data-type="{{ pagetype }}">
-                Get Code Studio Stage Details
-            </button>
-            <i id="stage_progress_spinner"></i>
-            <pre id="stage_details_results"></pre>
 
             {% if pagetype == "Lesson" %}
             <h2>Resources</h2>
