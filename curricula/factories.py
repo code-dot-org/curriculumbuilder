@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from factory import Sequence, PostGenerationMethodCall
+from factory import Sequence, PostGenerationMethodCall, SubFactory
 from factory.django import DjangoModelFactory
 
 from curricula.models import Curriculum
@@ -20,3 +20,4 @@ class CurriculumFactory(DjangoModelFactory):
     title = Sequence(lambda n: "Test Curriculum %03d" % n)
     slug = Sequence(lambda n: "test-curriculum-%03d" % n)
     assessment_commentary = "Assessment Commentary"
+    user = SubFactory('curricula.factories.UserFactory')

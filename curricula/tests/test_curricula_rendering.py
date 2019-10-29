@@ -15,15 +15,13 @@ class CurriculaRenderingTestCase(TestCase):
         self.user = user
         self.client.login(username=user.username, password='password')
 
-        self.test_curriculum = CurriculumFactory(slug="test-curriculum", user=user)
+        self.test_curriculum = CurriculumFactory(slug="test-curriculum")
         self.csf_curriculum = CurriculumFactory(
             slug="csf-curriculum",
-            unit_template_override='curricula/csf_unit.html',
-            user=user)
+            unit_template_override='curricula/csf_unit.html')
         self.pl_curriculum = CurriculumFactory(
             slug="pl-curriculum",
-            unit_template_override='curricula/pl_unit.html',
-            user=user)
+            unit_template_override='curricula/pl_unit.html')
         self.test_unit = Unit.objects.create(
             title="Test Unit",
             parent=self.test_curriculum,
