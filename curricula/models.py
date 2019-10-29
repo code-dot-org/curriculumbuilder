@@ -37,6 +37,7 @@ Curriculum
 """
 
 
+# TODO(dave): make this implement lessons.models.Filterable
 class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     CURRENT = 0
     NEXT = 1
@@ -95,6 +96,9 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         # they own it.
         if not request.user.has_perm('curricula.access_all_curricula'):
             raise PageMoveException('You do not have permission to move curriculum')
+
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('curricula.change_curriculum')
 
     def get_absolute_url(self):
         return reverse('curriculum:curriculum_view', args=[self.slug])
@@ -282,6 +286,7 @@ Curricular Unit
 """
 
 
+# TODO(dave): make this implement lessons.models.Filterable
 class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     curriculum = models.ForeignKey(Curriculum, blank=True, null=True)
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
@@ -344,6 +349,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         if not Page.get_content_model(new_parent).can_access(request):
             raise PageMoveException('Cannot move a unit to a curriculum you do not own')
 
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('curricula.change_unit')
 
     def get_absolute_url(self):
         return reverse('curriculum:unit_view', args=[self.curriculum.slug, self.slug])
@@ -655,6 +662,7 @@ Unit Chapter
 """
 
 
+# TODO(dave): make this implement lessons.models.Filterable
 class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     number = models.IntegerField('Number', blank=True, null=True)
@@ -694,6 +702,9 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
             raise PageMoveException('Cannot move a chapter you do not own')
         if not Page.get_content_model(new_parent).can_access(request):
             raise PageMoveException('Cannot move a chapter to a unit you do not own')
+
+    def is_editable(self, request):
+        return self.can_access(request) and request.user.has_perm('curricula.change_chapter')
 
     def get_absolute_url(self):
         return reverse('curriculum:chapter_view', args=[self.unit.curriculum.slug, self.unit.slug, self.number])
