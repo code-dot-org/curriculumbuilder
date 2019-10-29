@@ -4,6 +4,8 @@ from django.contrib.auth.models import User, Permission
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson, Resource
 
+from curricula.factories import CurriculumFactory
+
 
 class CurriculaRenderingTestCase(TestCase):
     def setUp(self):
@@ -13,7 +15,7 @@ class CurriculaRenderingTestCase(TestCase):
         user.save()
         self.client.login(username='admin', password='12345')
 
-        self.test_curriculum = Curriculum.objects.create(
+        self.test_curriculum = CurriculumFactory(
             title="Test Curriculum",
             slug="test-curriculum",
             assessment_commentary="Assessment Commentary",
