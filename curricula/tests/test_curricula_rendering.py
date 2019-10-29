@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Permission
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson, Resource
 
-from curricula.factories import UserFactory, CurriculumFactory
+from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
 
 
 class CurriculaRenderingTestCase(TestCase):
@@ -22,34 +22,19 @@ class CurriculaRenderingTestCase(TestCase):
         self.pl_curriculum = CurriculumFactory(
             slug="pl-curriculum",
             unit_template_override='curricula/pl_unit.html')
-        self.test_unit = Unit.objects.create(
-            title="Test Unit",
-            parent=self.test_curriculum,
-            slug="test-unit",
-            description="Test unit description",
-            show_calendar=True,
-            user=user)
-        self.hoc_unit = Unit.objects.create(
-            title="HoC Unit",
+        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit")
+        self.hoc_unit = UnitFactory(
             parent=self.test_curriculum,
             slug="hoc-unit",
-            description="Hoc unit description",
-            lesson_template_override="curricula/hoc_lesson.html",
-            user=user)
-        self.csf_unit = Unit.objects.create(
-            title="CSF Unit",
+            lesson_template_override="curricula/hoc_lesson.html")
+        self.csf_unit = UnitFactory(
             parent=self.csf_curriculum,
             slug="csf-unit",
-            description="CSF unit description",
-            lesson_template_override="curricula/csf_lesson.html",
-            user=user)
-        self.pl_unit = Unit.objects.create(
-            title="PL Unit",
+            lesson_template_override="curricula/csf_lesson.html")
+        self.pl_unit = UnitFactory(
             parent=self.pl_curriculum,
             slug="pl-unit",
-            description="PL unit description",
-            lesson_template_override="curricula/pl_lesson.html",
-            user=user)
+            lesson_template_override="curricula/pl_lesson.html")
         resource = Resource.objects.create(
             name="Test Resource",
             slug="test-resource",
