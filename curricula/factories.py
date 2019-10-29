@@ -1,7 +1,17 @@
-from factory import Sequence
+from django.contrib.auth.models import User
+
+from factory import Sequence, PostGenerationMethodCall
 from factory.django import DjangoModelFactory
 
 from curricula.models import Curriculum
+
+
+class UserFactory(DjangoModelFactory):
+    class Meta:
+        model = User
+
+    username = Sequence(lambda n: "user_%d" % n)
+    password = PostGenerationMethodCall('set_password', 'password')
 
 class CurriculumFactory(DjangoModelFactory):
     class Meta:

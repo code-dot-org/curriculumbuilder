@@ -4,16 +4,16 @@ from django.contrib.auth.models import User, Permission
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson, Resource
 
-from curricula.factories import CurriculumFactory
+from curricula.factories import UserFactory, CurriculumFactory
 
 
 class CurriculaRenderingTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='admin', password='12345')
-        self.user = user
+        user = UserFactory()
         user.is_staff = True
         user.save()
-        self.client.login(username='admin', password='12345')
+        self.user = user
+        self.client.login(username=user.username, password='password')
 
         self.test_curriculum = CurriculumFactory(slug="test-curriculum", user=user)
         self.csf_curriculum = CurriculumFactory(
@@ -133,6 +133,7 @@ class CurriculaRenderingTestCase(TestCase):
     def test_lesson_admin_menu(self):
         response = self.client.get('/test-curriculum/test-unit/1/')
         self.assertEqual(response.status_code, 200)
+        # print(response.content)
         self.assertIn('admin_edit', response.content)
         self.assertNotIn('deepSpaceCopy', response.content)
         response = self.client.get('/test-curriculum/hoc-unit/1/')
@@ -144,6 +145,7 @@ class CurriculaRenderingTestCase(TestCase):
         self.user.user_permissions.add(permission)
         permission = Permission.objects.get(codename='access_all_lessons')
         self.user.user_permissions.add(permission)
+        self.user.save()
 
         # Copy button appears in admin menu for users with sufficient permissions
         response = self.client.get('/test-curriculum/test-unit/1/')
