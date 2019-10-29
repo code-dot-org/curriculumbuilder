@@ -5,6 +5,7 @@ from curricula.models import Curriculum, Unit
 from lessons.models import Lesson, Resource
 
 from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
+from lessons.factories import LessonFactory
 
 
 class CurriculaRenderingTestCase(TestCase):
@@ -40,33 +41,13 @@ class CurriculaRenderingTestCase(TestCase):
             slug="test-resource",
             student=True,
             user=user)
-        self.test_lesson = Lesson.objects.create(
-            title="Test Lesson",
-            parent=self.test_unit,
-            overview="Overview",
-            prep="Prep",
-            user=user)
+        self.test_lesson = LessonFactory(parent=self.test_unit)
         self.test_lesson.resources.add(resource)
-        self.hoc_lesson = Lesson.objects.create(
-            title="HoC Lesson",
-            parent=self.hoc_unit,
-            overview="HoC Overview",
-            prep="Prep",
-            user=user)
+        self.hoc_lesson = LessonFactory(parent=self.hoc_unit)
         self.hoc_lesson.resources.add(resource)
-        self.csf_lesson = Lesson.objects.create(
-            title="CSF Lesson",
-            parent=self.csf_unit,
-            overview="CSF Overview",
-            prep="Prep",
-            user=user)
+        self.csf_lesson = LessonFactory(parent=self.csf_unit)
         self.csf_lesson.resources.add(resource)
-        self.pl_lesson = Lesson.objects.create(
-            title="PL Lesson",
-            parent=self.pl_unit,
-            overview="PL Overview",
-            prep="Prep",
-            user=user)
+        self.pl_lesson = LessonFactory(parent=self.pl_unit)
         self.pl_lesson.resources.add(resource)
 
     def test_homepage(self):
