@@ -318,9 +318,16 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin, FilterableAdm
     filter_horizontal = ('standards', 'opportunity_standards', 'vocab', 'blocks')
 
     def get_fieldsets(self, request, obj=None):
+        # In the admin UI, the login_required field is named "Hidden". Use the
+        # access_all permission to exclude partners from editing this field.
+        if self.can_access_all(request):
+            status_fields = ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged',)
+        else:
+            status_fields = ('status', 'week', 'duration', 'pacing_weight', 'unplugged',)
+
         fieldsets = (
             (None, {
-                'fields': ['title', 'short_title', ('status', 'login_required', 'week', 'duration', 'pacing_weight', 'unplugged'), 'image',
+                'fields': ['title', 'short_title', status_fields, 'image',
                            'overview', 'keywords', ('description', 'gen_description')],
             }),
             ('Assessment', {
