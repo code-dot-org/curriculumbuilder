@@ -90,7 +90,6 @@ class CurriculaRenderingTestCase(TestCase):
     def test_lesson_admin_menu(self):
         response = self.client.get('/test-curriculum/test-unit/1/')
         self.assertEqual(response.status_code, 200)
-        # print(response.content)
         self.assertIn('admin_edit', response.content)
         self.assertNotIn('deepSpaceCopy', response.content)
         response = self.client.get('/test-curriculum/hoc-unit/1/')
