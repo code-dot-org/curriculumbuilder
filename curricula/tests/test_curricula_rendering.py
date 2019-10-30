@@ -101,7 +101,6 @@ class CurriculaRenderingTestCase(TestCase):
         self.user.user_permissions.add(permission)
         permission = Permission.objects.get(codename='access_all_lessons')
         self.user.user_permissions.add(permission)
-        self.user.save()
 
         # Copy button appears in admin menu for users with sufficient permissions
         response = self.client.get('/test-curriculum/test-unit/1/')
