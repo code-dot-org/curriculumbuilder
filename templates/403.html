@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <title>403</title>
     <script type="text/javascript">
-    window.location = "https://code.org/educate";
+        {% if request.user.is_staff %}
+            window.location = "/admin";
+        {% else %}
+            {% comment %} avoid redirect loops for non-staff users {% endcomment %}
+            window.location = "https://code.org/educate";
+        {% endif %}
     </script>
 </head>
 <body>
