@@ -1,95 +1,46 @@
 from django.test import TestCase
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 
-from curricula.models import Curriculum, Unit
-from lessons.models import Lesson, Resource
+from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
+from lessons.factories import LessonFactory, ResourceFactory
 
 
 class CurriculaRenderingTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='admin', password='12345')
-        self.user = user
+        user = UserFactory()
         user.is_staff = True
         user.save()
-        self.client.login(username='admin', password='12345')
+        self.user = user
+        self.client.login(username=user.username, password='password')
 
-        self.test_curriculum = Curriculum.objects.create(
-            title="Test Curriculum",
-            slug="test-curriculum",
-            assessment_commentary="Assessment Commentary",
-            user=user)
-        self.csf_curriculum = Curriculum.objects.create(
-            title="CSF Curriculum",
+        self.test_curriculum = CurriculumFactory(slug="test-curriculum")
+        self.csf_curriculum = CurriculumFactory(
             slug="csf-curriculum",
-            assessment_commentary="CSF Commentary",
-            unit_template_override='curricula/csf_unit.html',
-            user=user)
-        self.pl_curriculum = Curriculum.objects.create(
-            title="PL Curriculum",
+            unit_template_override='curricula/csf_unit.html')
+        self.pl_curriculum = CurriculumFactory(
             slug="pl-curriculum",
-            assessment_commentary="PL Commentary",
-            unit_template_override='curricula/pl_unit.html',
-            user=user)
-        self.test_unit = Unit.objects.create(
-            title="Test Unit",
-            parent=self.test_curriculum,
-            slug="test-unit",
-            description="Test unit description",
-            show_calendar=True,
-            user=user)
-        self.hoc_unit = Unit.objects.create(
-            title="HoC Unit",
+            unit_template_override='curricula/pl_unit.html')
+        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit")
+        self.hoc_unit = UnitFactory(
             parent=self.test_curriculum,
             slug="hoc-unit",
-            description="Hoc unit description",
-            lesson_template_override="curricula/hoc_lesson.html",
-            user=user)
-        self.csf_unit = Unit.objects.create(
-            title="CSF Unit",
+            lesson_template_override="curricula/hoc_lesson.html")
+        self.csf_unit = UnitFactory(
             parent=self.csf_curriculum,
             slug="csf-unit",
-            description="CSF unit description",
-            lesson_template_override="curricula/csf_lesson.html",
-            user=user)
-        self.pl_unit = Unit.objects.create(
-            title="PL Unit",
+            lesson_template_override="curricula/csf_lesson.html")
+        self.pl_unit = UnitFactory(
             parent=self.pl_curriculum,
             slug="pl-unit",
-            description="PL unit description",
-            lesson_template_override="curricula/pl_lesson.html",
-            user=user)
-        resource = Resource.objects.create(
-            name="Test Resource",
-            slug="test-resource",
-            student=True,
-            user=user)
-        self.test_lesson = Lesson.objects.create(
-            title="Test Lesson",
-            parent=self.test_unit,
-            overview="Overview",
-            prep="Prep",
-            user=user)
+            lesson_template_override="curricula/pl_lesson.html")
+        resource = ResourceFactory()
+        self.test_lesson = LessonFactory(parent=self.test_unit)
         self.test_lesson.resources.add(resource)
-        self.hoc_lesson = Lesson.objects.create(
-            title="HoC Lesson",
-            parent=self.hoc_unit,
-            overview="HoC Overview",
-            prep="Prep",
-            user=user)
+        self.hoc_lesson = LessonFactory(parent=self.hoc_unit)
         self.hoc_lesson.resources.add(resource)
-        self.csf_lesson = Lesson.objects.create(
-            title="CSF Lesson",
-            parent=self.csf_unit,
-            overview="CSF Overview",
-            prep="Prep",
-            user=user)
+        self.csf_lesson = LessonFactory(parent=self.csf_unit)
         self.csf_lesson.resources.add(resource)
-        self.pl_lesson = Lesson.objects.create(
-            title="PL Lesson",
-            parent=self.pl_unit,
-            overview="PL Overview",
-            prep="Prep",
-            user=user)
+        self.pl_lesson = LessonFactory(parent=self.pl_unit)
         self.pl_lesson.resources.add(resource)
 
     def test_homepage(self):
