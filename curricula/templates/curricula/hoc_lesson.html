@@ -124,14 +124,16 @@
                     <h2>deepSpaceCopy</h2>
                     <button class="btn btn-primary" id="clone_this" data-pk="{{ lesson.pk }}" data-type="Lesson">Clone</button><i id="clone_spinner"></i><br/>
                     <pre id="clone_results"></pre>
-                    <h2>Code Studio</h2>
-                    <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
-                        Get Code Studio Stage Details
-                    </button>
-                    <i id="stage_progress_spinner"></i>
-                    <pre id="stage_details_results"></pre>
                 </div>
             {% endif %}
+            <div class="drawer-body">
+                <h2>Code Studio</h2>
+                <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                    Get Code Studio Stage Details
+                </button>
+                <i id="stage_progress_spinner"></i>
+                <pre id="stage_details_results"></pre>
+            </div>
             <div class="drawer-body">
                 <h2>Resources</h2>
                 <ul>
