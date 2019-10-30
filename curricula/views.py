@@ -248,6 +248,9 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
     changelog = Version.objects.get_for_object(lesson).filter(revision__user__username=settings.CHANGELOG_USER)
 
+    # disable admin controls if user cannot edit inline
+    can_administer = lesson.is_editable(request)
+
     if lesson.unit.lesson_template_override:
         template = lesson.unit.lesson_template_override
     else:
@@ -255,7 +258,8 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
 
     return render(request, template,
                   {'curriculum': lesson.curriculum, 'unit': lesson.unit, 'chapter': chapter, 'lesson': lesson,
-                   'pdf': pdf, 'parent': parent, 'optional': optional, 'form': form, 'changelog': changelog})
+                   'pdf': pdf, 'parent': parent, 'optional': optional, 'form': form, 'changelog': changelog,
+                   'can_administer': can_administer})
 
 
 def lesson_markdown(request, slug, unit_slug, lesson_num):

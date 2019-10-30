@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from curricula.models import Curriculum, Unit
 from lessons.models import Lesson, Resource
@@ -8,6 +8,7 @@ from lessons.models import Lesson, Resource
 class CurriculaRenderingTestCase(TestCase):
     def setUp(self):
         user = User.objects.create_user(username='admin', password='12345')
+        self.user = user
         user.is_staff = True
         user.save()
         self.client.login(username='admin', password='12345')
@@ -134,6 +135,31 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get('/pl-curriculum/pl-unit/1/')
         self.assertEqual(response.status_code, 200)
+
+    def test_lesson_admin_menu(self):
+        response = self.client.get('/test-curriculum/test-unit/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('admin_edit', response.content)
+        self.assertNotIn('deepSpaceCopy', response.content)
+        response = self.client.get('/test-curriculum/hoc-unit/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('admin_edit', response.content)
+        self.assertNotIn('deepSpaceCopy', response.content)
+
+        permission = Permission.objects.get(codename='change_lesson')
+        self.user.user_permissions.add(permission)
+        permission = Permission.objects.get(codename='access_all_lessons')
+        self.user.user_permissions.add(permission)
+
+        # Copy button appears in admin menu for users with sufficient permissions
+        response = self.client.get('/test-curriculum/test-unit/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('admin_edit', response.content)
+        self.assertIn('deepSpaceCopy', response.content)
+        response = self.client.get('/test-curriculum/hoc-unit/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('admin_edit', response.content)
+        self.assertIn('deepSpaceCopy', response.content)
 
     def test_render_lesson_with_levels(self):
         stage = {

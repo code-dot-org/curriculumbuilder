@@ -78,32 +78,33 @@
             <div class="drawer-heading">
                 <h2 class="drawer-title">Settings</h2>
             </div>
-            <div class="drawer-body">
-                <div class="checkbox settings">
-                    <label>
-                        <input type="checkbox" name="say">
-                        Show "Say" Prompts
-                    </label>
+            {% if can_administer %}
+                <div class="drawer-body">
+                    <div class="checkbox settings">
+                        <label>
+                            <input type="checkbox" name="say">
+                            Show "Say" Prompts
+                        </label>
+                    </div>
+                    <div class="checkbox settings">
+                        <label>
+                            <input type="checkbox" name="tip">
+                            Show Teaching Tips
+                        </label>
+                    </div>
+                    <div class="checkbox settings">
+                        <label>
+                            <input type="checkbox" name="discussion">
+                            Show Discussion Goals
+                        </label>
+                    </div>
+                    <div class="checkbox settings">
+                        <label>
+                            <input type="checkbox" name="content">
+                            Show Content Corners
+                        </label>
+                    </div>
                 </div>
-                <div class="checkbox settings">
-                    <label>
-                        <input type="checkbox" name="tip">
-                        Show Teaching Tips
-                    </label>
-                </div>
-                <div class="checkbox settings">
-                    <label>
-                        <input type="checkbox" name="discussion">
-                        Show Discussion Goals
-                    </label>
-                </div>
-                <div class="checkbox settings">
-                    <label>
-                        <input type="checkbox" name="content">
-                        Show Content Corners
-                    </label>
-                </div>
-            </div>
                 <div class="drawer-body">
                     <h2>Add to Log</h2>
                         <form method="POST" action="." class="post-form">{% csrf_token %}
@@ -123,27 +124,32 @@
                     <h2>deepSpaceCopy</h2>
                     <button class="btn btn-primary" id="clone_this" data-pk="{{ lesson.pk }}" data-type="Lesson">Clone</button><i id="clone_spinner"></i><br/>
                     <pre id="clone_results"></pre>
-                    <h2>Code Studio</h2>
-                    <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
-                        Get Code Studio Stage Details
-                    </button>
-                    <i id="stage_progress_spinner"></i>
-                    <pre id="stage_details_results"></pre>
-                    <h2>Resources</h2>
-                    <ul>
-                        {% for resource in lesson.resources.all %}
-                            <li>{{ resource }}</li>
-                            <kbd draggable="true"
-                                 ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
-                        {% endfor %}
-                    </ul>
-                    <h2>Vocab</h2>
-                    {% for vocab in lesson.vocab.all %}
-                        <li>{{ vocab.word }}</li>
-                        <kbd draggable="true"
-                             ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
-                    {% endfor %}
                 </div>
+            {% endif %}
+            <div class="drawer-body">
+                <h2>Code Studio</h2>
+                <button class="btn btn-primary" id="get_stage_details" data-pk="{{ lesson.pk }}" data-type="Lesson">
+                    Get Code Studio Stage Details
+                </button>
+                <i id="stage_progress_spinner"></i>
+                <pre id="stage_details_results"></pre>
+            </div>
+            <div class="drawer-body">
+                <h2>Resources</h2>
+                <ul>
+                    {% for resource in lesson.resources.all %}
+                        <li>{{ resource }}</li>
+                        <kbd draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
+                    {% endfor %}
+                </ul>
+                <h2>Vocab</h2>
+                {% for vocab in lesson.vocab.all %}
+                    <li>{{ vocab.word }}</li>
+                    <kbd draggable="true"
+                         ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
+                {% endfor %}
+            </div>
             <ul class="drawer-nav">
             </ul>
         </div>
