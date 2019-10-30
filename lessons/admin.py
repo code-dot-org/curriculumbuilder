@@ -436,10 +436,12 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin, FilterableAdmin):
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
     list_filter = ('lessons__curriculum',)
     inlines = [LessonResourceInline]
-    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
     def can_access_all(self, request):
         return request.user.has_perm('lessons.access_all_resources')
+
+    def get_fields(self, request, obj=None):
+        return ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
 
 class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
