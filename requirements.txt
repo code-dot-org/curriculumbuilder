@@ -5,7 +5,7 @@ Mezzanine==4.1.0
 Pillow==3.0.0
 Pygments==2.0.2
 SQLAlchemy==1.0.5
-Werkzeug==0.10.4
+Werkzeug==0.15.3
 #beautifulsoup4==4.4.0
 beautifulsoup4==4.4.1
 bleach==1.4.2
