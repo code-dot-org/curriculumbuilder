@@ -57,11 +57,38 @@ class CurriculumAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     def can_access_all(self, request):
         return request.user.has_perm('curricula.access_all_curricula')
 
+    def get_fieldsets(self, request, obj=None):
 
+        # Use the access_all permission to exclude partners from editing fields
+        # they don't need or we don't want them to have.
+        # Filtered options: 'status', ('publish_date', 'expiry_date'), 'ancestor',
+        # 'forum_url', 'forum_vars', 'i18n_ready', 'in_menus', 'login_required', 'in_sitemap'
+        # TODO: Only super admins should have in_sitemap as an option. It removes the curriculum from the Pages List
+        if self.can_access_all(request):
+            general_fields = ['title', 'status', ('publish_date', 'expiry_date'), 'content', 'ancestor',
+                              'gradeband', 'assessment_commentary', 'version', 'unit_numbering', 'auto_forum',
+                              'support_script', 'display_questions','feedback_url', 'feedback_vars',
+                              'unit_template_override','canonical_slug', 'frameworks', 'in_menus', 'login_required']
+            meta_data_fields = ['_meta_title', 'slug', ('description', 'gen_description'), 'keywords', 'in_sitemap']
+        else:
+            general_fields = ['title', 'content',
+                              'gradeband', 'assessment_commentary', 'unit_numbering',
+                              'unit_template_override', 'canonical_slug', 'frameworks']
+            meta_data_fields = ['_meta_title', 'slug', ('description', 'gen_description'), 'keywords']
+
+        fieldsets = (
+            (None, {
+                'fields': general_fields
+            }),
+            ('Meta data', {
+                'fields': meta_data_fields,
+                'classes': ('collapse-closed',)})
+        )
+        return fieldsets
 
 class UnitAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     model = Unit
-    inlines = (TopicInline, )
+    inlines = (TopicInline,)
 
     def can_access_all(self, request):
         return request.user.has_perm('curricula.access_all_units')
