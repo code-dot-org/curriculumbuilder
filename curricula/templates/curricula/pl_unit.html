@@ -28,7 +28,7 @@
 
 {% block admin_link %}
 {% if user.is_staff %}
-    {% include "curricula/partials/admin_menu.html" with page=unit pagetype="Unit" %}
+    {% include "curricula/partials/admin_menu.html" with page=unit pagetype="Unit" can_administer=can_administer %}
 {% endif %}
 {% endblock %}
 

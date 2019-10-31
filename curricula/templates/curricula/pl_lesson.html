@@ -69,7 +69,7 @@
 <!-- Admin Toolbox -->
 {% block admin_link %}
 {% if user.is_staff %}
-    {% include "curricula/partials/admin_menu.html" with page=lesson pagetype="Lesson" %}
+    {% include "curricula/partials/admin_menu.html" with page=lesson pagetype="Lesson" can_administer=can_administer %}
 {% endif %}
 {% endblock %}
 
