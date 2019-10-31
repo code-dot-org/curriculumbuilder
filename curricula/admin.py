@@ -67,8 +67,17 @@ class UnitAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
         return request.user.has_perm('curricula.access_all_units')
 
     def get_fieldsets(self, request, obj=None):
-        fieldsets = super(UnitAdmin, self).get_fieldsets(request, obj)
-        print(fieldsets)
+        fieldsets = (
+            (None, {
+                'fields': ['title', 'status', ('publish_date', 'expiry_date'), 'content', 'ancestor',
+                           'disable_numbering', 'number', 'stage_name', 'questions', 'assessment_commentary',
+                           'show_calendar', 'week_length', 'forum_url', 'forum_vars', 'lesson_template_override',
+                           'i18n_ready', 'in_menus', 'login_required']
+            }),
+            ('Meta data', {
+                'fields': ['_meta_title', 'slug', ('description', 'gen_description'), 'keywords', 'in_sitemap'],
+                'classes': ('collapse-closed',)})
+        )
         return fieldsets
 
 
