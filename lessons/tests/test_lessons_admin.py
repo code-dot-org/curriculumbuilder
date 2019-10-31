@@ -39,3 +39,20 @@ class LessonsAdminTestCase(TestCase):
         self.assertIn('Add resource', response.content)
         self.assertIn('Download URL', response.content)
         self.assertIn('Force I18n', response.content, 'privileged field should be visible')
+
+    def test_render_add_lesson(self):
+        permission = Permission.objects.get(codename='add_lesson')
+        self.user.user_permissions.add(permission)
+
+        response = self.client.get('/admin/lessons/lesson/add/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Add lesson', response.content)
+        self.assertNotIn('Hide from listings', response.content, 'privileged field should not be visible')
+
+        permission = Permission.objects.get(codename='access_all_lessons')
+        self.user.user_permissions.add(permission)
+
+        response = self.client.get('/admin/lessons/lesson/add/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Add lesson', response.content)
+        self.assertIn('Hide from listings', response.content, 'privileged field should be visible')
