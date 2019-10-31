@@ -91,10 +91,8 @@ class CurriculaRenderingTestCase(TestCase):
         self.assert_admin_menu('/test-curriculum/test-unit/1/', False)
         self.assert_admin_menu('/test-curriculum/hoc-unit/1/', False)
 
-        permission = Permission.objects.get(codename='change_lesson')
-        self.user.user_permissions.add(permission)
-        permission = Permission.objects.get(codename='access_all_lessons')
-        self.user.user_permissions.add(permission)
+        self.add_permission(self.user, 'change_lesson')
+        self.add_permission(self.user, 'access_all_lessons')
 
         # Copy button appears in admin menu for users with sufficient permissions
         self.assert_admin_menu('/test-curriculum/test-unit/1/', True)
@@ -109,6 +107,9 @@ class CurriculaRenderingTestCase(TestCase):
         else:
             self.assertNotIn('deepSpaceCopy', response.content)
 
+    def add_permission(self, user, codename):
+        permission = Permission.objects.get(codename=codename)
+        user.user_permissions.add(permission)
 
     def test_render_lesson_with_levels(self):
         stage = {
