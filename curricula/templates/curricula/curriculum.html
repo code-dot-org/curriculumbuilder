@@ -32,7 +32,7 @@
 
 {% block admin_link %}
 {% if user.is_staff %}
-    {% include "curricula/partials/admin_menu.html" with page=curriculum pagetype="Curriculum" %}
+    {% include "curricula/partials/admin_menu.html" with page=curriculum pagetype="Curriculum" can_administer=can_administer %}
 {% endif %}
 {% endblock %}
 

@@ -107,8 +107,12 @@ def curriculum_view(request, slug):
 
     changelog = Version.objects.get_for_object(curriculum).filter(revision__user__username=settings.CHANGELOG_USER)
 
+    # disable admin controls if user cannot edit inline
+    can_administer = curriculum.is_editable(request)
+
     return render(request, 'curricula/curriculum.html', {'curriculum': curriculum, 'pdf': pdf, 'units': units,
-                                                         'form': form, 'changelog': changelog})
+                                                         'form': form, 'changelog': changelog,
+                                                         'can_administer': can_administer})
 
 
 # @login_required
