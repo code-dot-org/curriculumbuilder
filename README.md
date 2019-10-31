@@ -49,7 +49,7 @@ Only follow these steps if you are on Ubuntu / Linux.
 
 1. install Ubuntu dependencies
 ```
-sudo apt-get install python-pip postgresql wkhtmltopdf libcurl4-openssl-dev libssl-dev
+sudo apt-get install python-pip postgresql wkhtmltopdf libcurl4-openssl-dev libssl-dev libpq-dev
 sudo snap install --classic heroku
 ```
 
