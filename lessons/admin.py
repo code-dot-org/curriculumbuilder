@@ -436,10 +436,19 @@ class ResourceAdmin(AjaxSelectAdmin, ImportExportModelAdmin, FilterableAdmin):
     list_editable = ('type', 'student', 'gd', 'url', 'dl_url')
     list_filter = ('lessons__curriculum',)
     inlines = [LessonResourceInline]
-    fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug', 'force_i18n']
 
     def can_access_all(self, request):
         return request.user.has_perm('lessons.access_all_resources')
+
+    def get_fields(self, request, obj=None):
+        fields = ['name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug']
+
+        # Use access_all permissions as a proxy for admin privileges, to
+        # exclude non-admins (such as partners) from editing certain fields.
+        if self.can_access_all(request):
+            fields.append('force_i18n')
+
+        return fields
 
 
 class VocabAdmin(ImportExportModelAdmin, FilterableAdmin):
