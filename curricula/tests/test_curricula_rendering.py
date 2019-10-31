@@ -87,9 +87,32 @@ class CurriculaRenderingTestCase(TestCase):
         response = self.client.get('/pl-curriculum/pl-unit/1/')
         self.assertEqual(response.status_code, 200)
 
-    def test_lesson_admin_menu(self):
+    def test_render_curriculum_admin_menu(self):
+        self.assert_admin_menu('/test-curriculum/', False)
+        self.assert_admin_menu('/pl-curriculum/', False)
+
+        self.add_permission(self.user, 'change_curriculum')
+        self.add_permission(self.user, 'access_all_curricula')
+
+        # Copy button appears in admin menu for users with sufficient permissions
+        self.assert_admin_menu('/test-curriculum/', True)
+        self.assert_admin_menu('/pl-curriculum/', True)
+
+    def test_render_unit_admin_menu(self):
+        self.assert_admin_menu('/test-curriculum/test-unit/', False)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/', False)
+
+        self.add_permission(self.user, 'change_unit')
+        self.add_permission(self.user, 'access_all_units')
+
+        # Copy button appears in admin menu for users with sufficient permissions
+        self.assert_admin_menu('/test-curriculum/test-unit/', True)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/', True)
+
+    def test_render_lesson_admin_menu(self):
         self.assert_admin_menu('/test-curriculum/test-unit/1/', False)
         self.assert_admin_menu('/test-curriculum/hoc-unit/1/', False)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/1/', False)
 
         self.add_permission(self.user, 'change_lesson')
         self.add_permission(self.user, 'access_all_lessons')
@@ -97,6 +120,7 @@ class CurriculaRenderingTestCase(TestCase):
         # Copy button appears in admin menu for users with sufficient permissions
         self.assert_admin_menu('/test-curriculum/test-unit/1/', True)
         self.assert_admin_menu('/test-curriculum/hoc-unit/1/', True)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/1/', True)
 
     def assert_admin_menu(self, path, with_copy_button):
         response = self.client.get(path)
