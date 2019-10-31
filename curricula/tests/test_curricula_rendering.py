@@ -88,14 +88,8 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_lesson_admin_menu(self):
-        response = self.client.get('/test-curriculum/test-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertNotIn('deepSpaceCopy', response.content)
-        response = self.client.get('/test-curriculum/hoc-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertNotIn('deepSpaceCopy', response.content)
+        self.assert_admin_menu('/test-curriculum/test-unit/1/', False)
+        self.assert_admin_menu('/test-curriculum/hoc-unit/1/', False)
 
         permission = Permission.objects.get(codename='change_lesson')
         self.user.user_permissions.add(permission)
@@ -103,14 +97,18 @@ class CurriculaRenderingTestCase(TestCase):
         self.user.user_permissions.add(permission)
 
         # Copy button appears in admin menu for users with sufficient permissions
-        response = self.client.get('/test-curriculum/test-unit/1/')
+        self.assert_admin_menu('/test-curriculum/test-unit/1/', True)
+        self.assert_admin_menu('/test-curriculum/hoc-unit/1/', True)
+
+    def assert_admin_menu(self, path, with_copy_button):
+        response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertIn('admin_edit', response.content)
-        self.assertIn('deepSpaceCopy', response.content)
-        response = self.client.get('/test-curriculum/hoc-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertIn('deepSpaceCopy', response.content)
+        if with_copy_button:
+            self.assertIn('deepSpaceCopy', response.content)
+        else:
+            self.assertNotIn('deepSpaceCopy', response.content)
+
 
     def test_render_lesson_with_levels(self):
         stage = {
