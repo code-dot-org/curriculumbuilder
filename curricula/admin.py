@@ -66,6 +66,11 @@ class UnitAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
     def can_access_all(self, request):
         return request.user.has_perm('curricula.access_all_units')
 
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super(UnitAdmin, self).get_fieldsets(request, obj)
+        print(fieldsets)
+        return fieldsets
+
 
 class ChapterAdmin(PageAdmin, FilterableAdmin):
     model = Chapter
