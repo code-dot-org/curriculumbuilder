@@ -146,6 +146,9 @@ def unit_view(request, slug, unit_slug):
 
     changelog = Version.objects.get_for_object(unit).filter(revision__user__username=settings.CHANGELOG_USER)
 
+    # disable admin controls if user cannot edit inline
+    can_administer = unit.is_editable(request)
+
     if pdf:
         if curriculum.unit_template_override == 'curricula/pl_unit.html':
             template = 'curricula/pl_unit_lessons.html'
@@ -158,7 +161,7 @@ def unit_view(request, slug, unit_slug):
             template = 'curricula/unit.html'
 
     return render(request, template, {'curriculum': curriculum, 'unit': unit, 'pdf': pdf,
-                                      'form': form, 'changelog': changelog})
+                                      'form': form, 'changelog': changelog, 'can_administer': can_administer})
 
 
 def unit_at_a_glance(request, slug, unit_slug):
