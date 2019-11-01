@@ -91,6 +91,9 @@ class CurriculaRenderingTestCase(TestCase):
         self.assert_admin_menu('/test-curriculum/', False)
         self.assert_admin_menu('/pl-curriculum/', False)
 
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
         self.add_permission(self.user, 'change_curriculum')
         self.add_permission(self.user, 'access_all_curricula')
 
@@ -102,6 +105,9 @@ class CurriculaRenderingTestCase(TestCase):
         self.assert_admin_menu('/test-curriculum/test-unit/', False)
         self.assert_admin_menu('/pl-curriculum/pl-unit/', False)
 
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
         self.add_permission(self.user, 'change_unit')
         self.add_permission(self.user, 'access_all_units')
 
@@ -114,6 +120,9 @@ class CurriculaRenderingTestCase(TestCase):
         self.assert_admin_menu('/test-curriculum/hoc-unit/1/', False)
         self.assert_admin_menu('/pl-curriculum/pl-unit/1/', False)
 
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
         self.add_permission(self.user, 'change_lesson')
         self.add_permission(self.user, 'access_all_lessons')
 
