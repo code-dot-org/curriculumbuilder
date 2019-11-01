@@ -122,14 +122,16 @@ class CurriculaRenderingTestCase(TestCase):
         self.assert_admin_menu('/test-curriculum/hoc-unit/1/', True)
         self.assert_admin_menu('/pl-curriculum/pl-unit/1/', True)
 
-    def assert_admin_menu(self, path, with_copy_button):
+    def assert_admin_menu(self, path, with_admin_controls):
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertIn('admin_edit', response.content)
-        if with_copy_button:
+        if with_admin_controls:
             self.assertIn('deepSpaceCopy', response.content)
+            self.assertIn('Get Code Studio Stage Details', response.content)
         else:
             self.assertNotIn('deepSpaceCopy', response.content)
+            self.assertNotIn('Get Code Studio Stage Details', response.content)
 
     def add_permission(self, user, codename):
         permission = Permission.objects.get(codename=codename)
