@@ -87,30 +87,64 @@ class CurriculaRenderingTestCase(TestCase):
         response = self.client.get('/pl-curriculum/pl-unit/1/')
         self.assertEqual(response.status_code, 200)
 
-    def test_lesson_admin_menu(self):
-        response = self.client.get('/test-curriculum/test-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertNotIn('deepSpaceCopy', response.content)
-        response = self.client.get('/test-curriculum/hoc-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertNotIn('deepSpaceCopy', response.content)
+    def test_render_curriculum_admin_menu(self):
+        self.assert_admin_menu('/test-curriculum/', False)
+        self.assert_admin_menu('/pl-curriculum/', False)
 
-        permission = Permission.objects.get(codename='change_lesson')
-        self.user.user_permissions.add(permission)
-        permission = Permission.objects.get(codename='access_all_lessons')
-        self.user.user_permissions.add(permission)
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
+        self.add_permission(self.user, 'change_curriculum')
+        self.add_permission(self.user, 'access_all_curricula')
 
         # Copy button appears in admin menu for users with sufficient permissions
-        response = self.client.get('/test-curriculum/test-unit/1/')
+        self.assert_admin_menu('/test-curriculum/', True)
+        self.assert_admin_menu('/pl-curriculum/', True)
+
+    def test_render_unit_admin_menu(self):
+        self.assert_admin_menu('/test-curriculum/test-unit/', False)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/', False)
+
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
+        self.add_permission(self.user, 'change_unit')
+        self.add_permission(self.user, 'access_all_units')
+
+        # Copy button appears in admin menu for users with sufficient permissions
+        self.assert_admin_menu('/test-curriculum/test-unit/', True)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/', True)
+
+    def test_render_lesson_admin_menu(self):
+        self.assert_admin_menu('/test-curriculum/test-unit/1/', False)
+        self.assert_admin_menu('/test-curriculum/hoc-unit/1/', False)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/1/', False)
+
+        # Supply one combination of permissions which give the user access
+        # to the admin controls in this menu. Other combinations, such as
+        # when a partner views a page they own, are not covered by this test.
+        self.add_permission(self.user, 'change_lesson')
+        self.add_permission(self.user, 'access_all_lessons')
+
+        # Copy button appears in admin menu for users with sufficient permissions
+        self.assert_admin_menu('/test-curriculum/test-unit/1/', True)
+        self.assert_admin_menu('/test-curriculum/hoc-unit/1/', True)
+        self.assert_admin_menu('/pl-curriculum/pl-unit/1/', True)
+
+    def assert_admin_menu(self, path, with_admin_controls):
+        response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertIn('admin_edit', response.content)
-        self.assertIn('deepSpaceCopy', response.content)
-        response = self.client.get('/test-curriculum/hoc-unit/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin_edit', response.content)
-        self.assertIn('deepSpaceCopy', response.content)
+        if with_admin_controls:
+            self.assertIn('deepSpaceCopy', response.content)
+            self.assertIn('Get Code Studio Stage Details', response.content)
+        else:
+            self.assertNotIn('deepSpaceCopy', response.content)
+            self.assertNotIn('Get Code Studio Stage Details', response.content)
+
+    def add_permission(self, user, codename):
+        permission = Permission.objects.get(codename=codename)
+        user.user_permissions.add(permission)
 
     def test_render_lesson_with_levels(self):
         stage = {
