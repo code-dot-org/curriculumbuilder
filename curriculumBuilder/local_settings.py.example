@@ -7,8 +7,13 @@ DEBUG = True
 
 SLACK_BACKEND = 'django_slack.backends.DisabledBackend'
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-STATIC_URL = '/static/'
+# The following lines must be absent for unit tests to pass on linux,
+# but may need to be present for local changes to CSS to be visible in 
+# the browser.
+#
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATIC_URL = '/static/'
+
 COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
 
 CACHES = {
