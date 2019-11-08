@@ -427,9 +427,9 @@ RICHTEXT_ALLOWED_TAGS = (
     'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn',
     'dir', 'div', 'display', 'dl', 'dt', 'em', 'fieldset', 'figure', 'font', 'footer', 'form', 'h1',
     'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd',
-    'label', 'legend', 'li', 'map', 'men', 'nav', 'object', 'ol', 'optgroup', 'option', 'p', 'pre',
-    'q', 's', 'samp', 'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
-    'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr',
+    'label', 'legend', 'li', 'map', 'men', 'nav', 'ol', 'optgroup', 'option', 'p', 'pre', 'q', 's',
+    'samp', 'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table',
+    'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', '', 'ul', 'var', 'wbr',
     'summary', 'details'
 )
 RICHTEXT_ALLOWED_STYLES = (
