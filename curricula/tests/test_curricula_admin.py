@@ -32,7 +32,7 @@ class CurriculaAdminTestCase(TestCase):
         self.assertNotIn('Ancestor', response.content, 'privileged field should not be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
 
-        permission = Permission.objects.get(codename='access_all_resources')
+        permission = Permission.objects.get(codename='access_all_curricula')
         self.user.user_permissions.add(permission)
 
         response = self.client.get('/admin/curricula/curriculum/add/')
@@ -52,7 +52,7 @@ class CurriculaAdminTestCase(TestCase):
         self.assertNotIn('Forum url', response.content, 'privileged field should not be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
 
-        permission = Permission.objects.get(codename='access_all_lessons')
+        permission = Permission.objects.get(codename='access_all_units')
         self.user.user_permissions.add(permission)
 
         response = self.client.get('/admin/curricula/unit/add/')
