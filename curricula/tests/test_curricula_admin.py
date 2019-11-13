@@ -29,7 +29,7 @@ class CurriculaAdminTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Add curriculum', response.content)
         self.assertIn('Frameworks', response.content)
-        self.assertNotIn('Ancestor', response.content, 'privileged field should be visible')
+        self.assertNotIn('Ancestor', response.content, 'privileged field should not be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
 
         permission = Permission.objects.get(codename='access_all_resources')
@@ -49,7 +49,7 @@ class CurriculaAdminTestCase(TestCase):
         response = self.client.get('/admin/curricula/unit/add/')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Add unit', response.content)
-        self.assertNotIn('Ancestor', response.content, 'privileged field should be visible')
+        self.assertNotIn('Ancestor', response.content, 'privileged field should not be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
 
         permission = Permission.objects.get(codename='access_all_lessons')
