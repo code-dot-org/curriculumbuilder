@@ -27,7 +27,7 @@ class CurriculaAdminTestCase(TestCase):
 
         response = self.client.get('/admin/curricula/curriculum/add/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Change curriculum', response.content)
+        self.assertIn('Add curriculum', response.content)
         self.assertIn('Frameworks', response.content)
         self.assertNotIn('Ancestor', response.content, 'privileged field should be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
@@ -37,7 +37,7 @@ class CurriculaAdminTestCase(TestCase):
 
         response = self.client.get('/admin/curricula/curriculum/add/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Change curriculum', response.content)
+        self.assertIn('Add curriculum', response.content)
         self.assertIn('Frameworks', response.content)
         self.assertIn('Ancestor', response.content, 'privileged field should be visible')
         self.assertIn('Show in menus', response.content, 'privileged field should be visible')
@@ -48,7 +48,7 @@ class CurriculaAdminTestCase(TestCase):
 
         response = self.client.get('/admin/curricula/unit/add/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Change unit', response.content)
+        self.assertIn('Add unit', response.content)
         self.assertNotIn('Ancestor', response.content, 'privileged field should be visible')
         self.assertNotIn('Show in menus', response.content, 'privileged field should not be visible')
 
@@ -57,6 +57,6 @@ class CurriculaAdminTestCase(TestCase):
 
         response = self.client.get('/admin/curricula/unit/add/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Change unit', response.content)
+        self.assertIn('Add unit', response.content)
         self.assertIn('Ancestor', response.content, 'privileged field should be visible')
         self.assertIn('Show in menus', response.content, 'privileged field should be visible')
