@@ -1,10 +1,16 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from factory import Sequence, PostGenerationMethodCall, SubFactory
 from factory.django import DjangoModelFactory
 
-from curricula.models import Curriculum, Unit
+from curricula.models import Curriculum, Unit, Chapter
 
+
+class GroupFactory(DjangoModelFactory):
+    class Meta:
+        model = Group
+
+    name = Sequence(lambda n: "group_%d" % n)
 
 class UserFactory(DjangoModelFactory):
     class Meta:
@@ -29,4 +35,13 @@ class UnitFactory(DjangoModelFactory):
     title = Sequence(lambda n: "Test Unit %03d" % n)
     slug = Sequence(lambda n: "test-unit-%03d" % n)
     description = "unit description"
+    user = SubFactory('curricula.factories.UserFactory')
+
+class ChapterFactory(DjangoModelFactory):
+    class Meta:
+        model = Chapter
+
+    title = Sequence(lambda n: "Test Chatper %03d" % n)
+    slug = Sequence(lambda n: "test-chapter-%03d" % n)
+    description = "chapter description"
     user = SubFactory('curricula.factories.UserFactory')
