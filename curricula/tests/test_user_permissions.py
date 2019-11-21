@@ -28,13 +28,13 @@ class UserPermissionsTestCase(TestCase):
         self.author_user = author_user
 
         # Create curriculum, unit, chapter, lesson
-        self.partner_curriculum = CurriculumFactory(user=partner_user, slug="partner-curriculum")
-        self.partner_unit = UnitFactory(user=partner_user, parent=self.partner_curriculum, slug="partner-unit")
+        self.partner_curriculum = CurriculumFactory(user=partner_user)
+        self.partner_unit = UnitFactory(user=partner_user, parent=self.partner_curriculum)
         self.partner_chapter = ChapterFactory(user=partner_user, parent=self.partner_unit)
         self.partner_lesson = LessonFactory(user=partner_user, parent=self.partner_unit)
 
-        self.author_curriculum = CurriculumFactory(user=author_user, slug="author-curriculum")
-        self.author_unit = UnitFactory(user=author_user, parent=self.author_curriculum, slug="author-unit")
+        self.author_curriculum = CurriculumFactory(user=author_user)
+        self.author_unit = UnitFactory(user=author_user, parent=self.author_curriculum)
         self.author_chapter = ChapterFactory(user=author_user, parent=self.author_unit)
         self.author_lesson = LessonFactory(user=author_user, parent=self.author_unit)
 
