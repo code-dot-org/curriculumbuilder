@@ -198,6 +198,24 @@ class UserFactory(DjangoModelFactory):
     username = Sequence(lambda n: "user_%d" % n)
     password = PostGenerationMethodCall('set_password', 'password')
 
+    @post_generation
+    def is_staff(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            self.is_staff = extracted
+
+    @post_generation
+    def group(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            self.groups.add(extracted)
+
 class CurriculumFactory(DjangoModelFactory):
     class Meta:
         model = Curriculum

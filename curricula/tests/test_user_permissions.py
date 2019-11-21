@@ -1,7 +1,5 @@
 from django.test import TestCase
 
-from django.contrib.auth.models import Permission
-
 from lessons.factories import LessonFactory
 from curricula.factories import CurriculumFactory, UnitFactory, ChapterFactory, UserFactory, GroupFactory
 
@@ -11,20 +9,12 @@ class UserPermissionsTestCase(TestCase):
     def setUp(self):
         # Create user groups with permissions
         author_group = GroupFactory.create(type='author')
-
         partner_group = GroupFactory.create(type='partner')
 
         # Set up users
-        partner_user = UserFactory()
-        partner_user.is_staff = True
-        partner_group.user_set.add(partner_user)
-        partner_user.save()
+        partner_user = UserFactory.create(is_staff=True, group=partner_group)
         self.partner_user = partner_user
-
-        author_user = UserFactory()
-        author_user.is_staff = True
-        author_group.user_set.add(author_user)
-        author_user.save()
+        author_user = UserFactory.create(is_staff=True, group=author_group)
         self.author_user = author_user
 
         # Create curriculum, unit, chapter, lesson
