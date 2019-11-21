@@ -42,6 +42,5 @@ class ChapterFactory(DjangoModelFactory):
         model = Chapter
 
     title = Sequence(lambda n: "Test Chatper %03d" % n)
-    slug = Sequence(lambda n: "test-chapter-%03d" % n)
     description = "chapter description"
     user = SubFactory('curricula.factories.UserFactory')

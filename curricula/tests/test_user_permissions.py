@@ -20,187 +20,132 @@ class UserPermissionsTestCase(TestCase):
         partner_group.user_set.add(partner_user)
         partner_user.save()
         self.partner_user = partner_user
-        self.assertTrue(self.client.login(username=partner_user.username, password='password'))
 
         author_user = UserFactory()
         author_user.is_staff = True
         author_group.user_set.add(author_user)
         author_user.save()
         self.author_user = author_user
-        self.assertTrue(self.client.login(username=author_user.username, password='password'))
 
         # Create curriculum, unit, chapter, lesson
         self.partner_curriculum = CurriculumFactory(user=partner_user, slug="partner-curriculum")
         self.partner_unit = UnitFactory(user=partner_user, parent=self.partner_curriculum, slug="partner-unit")
-        self.partner_chapter = ChapterFactory(user=partner_user, parent=self.partner_unit, slug="partner-chapter")
+        self.partner_chapter = ChapterFactory(user=partner_user, parent=self.partner_unit)
         self.partner_lesson = LessonFactory(user=partner_user, parent=self.partner_unit)
 
         self.author_curriculum = CurriculumFactory(user=author_user, slug="author-curriculum")
         self.author_unit = UnitFactory(user=author_user, parent=self.author_curriculum, slug="author-unit")
-        self.author_chapter = ChapterFactory(user=author_user, parent=self.author_unit, slug="author-chapter")
+        self.author_chapter = ChapterFactory(user=author_user, parent=self.author_unit)
         self.author_lesson = LessonFactory(user=author_user, parent=self.author_unit)
+
+    def assert_editable_by(self, object, user, editable):
+        request = self.client.get('')
+        request.user = user
+        self.assertEqual(object.is_editable(request), editable)
 
     # is_editable
     def test_partner_curriculum_is_editable_by_partner(self):
-        request = self.client.get('/partner-curriculum/')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_curriculum.is_editable(request))
+        self.assert_editable_by(self.partner_curriculum, self.partner_user, True)
 
     def test_partner_curriculum_is_editable_by_author(self):
-        request = self.client.get('/partner-curriculum/')
-        request.user = self.author_user
-        self.assertTrue(self.partner_curriculum.is_editable(request))
+        self.assert_editable_by(self.partner_curriculum, self.author_user, True)
 
     def test_author_curriculum_is_not_editable_by_partner(self):
-        request = self.client.get('/author-curriculum/')
-        request.user = self.partner_user
-        self.assertFalse(self.author_curriculum.is_editable(request))
+        self.assert_editable_by(self.author_curriculum, self.partner_user, False)
 
     def test_author_curriculum_is_editable_by_author(self):
-        request = self.client.get('/author-curriculum/')
-        request.user = self.author_user
-        self.assertTrue(self.author_curriculum.is_editable(request))
+        self.assert_editable_by(self.author_curriculum, self.author_user, True)
 
     def test_partner_unit_is_editable_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_unit.is_editable(request))
+        self.assert_editable_by(self.partner_unit, self.partner_user, True)
 
     def test_partner_unit_is_editable_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/')
-        request.user = self.author_user
-        self.assertTrue(self.partner_unit.is_editable(request))
+        self.assert_editable_by(self.partner_unit, self.author_user, True)
 
     def test_author_unit_is_not_editable_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/')
-        request.user = self.partner_user
-        self.assertFalse(self.author_unit.is_editable(request))
+        self.assert_editable_by(self.author_unit, self.partner_user, False)
 
     def test_author_unit_is_editable_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/')
-        request.user = self.author_user
-        self.assertTrue(self.author_unit.is_editable(request))
+        self.assert_editable_by(self.author_unit, self.author_user, True)
 
     def test_partner_lesson_is_editable_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/1')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_lesson.is_editable(request))
+        self.assert_editable_by(self.partner_lesson, self.partner_user, True)
 
     def test_partner_lesson_is_editable_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/1')
-        request.user = self.author_user
-        self.assertTrue(self.partner_lesson.is_editable(request))
+        self.assert_editable_by(self.partner_lesson, self.author_user, True)
 
     def test_author_lesson_is_not_editable_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/1')
-        request.user = self.partner_user
-        self.assertFalse(self.author_lesson.is_editable(request))
+        self.assert_editable_by(self.author_lesson, self.partner_user, False)
 
     def test_author_lesson_is_editable_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/1')
-        request.user = self.author_user
-        self.assertTrue(self.author_lesson.is_editable(request))
+        self.assert_editable_by(self.author_lesson, self.author_user, True)
 
     def test_partner_chapter_is_editable_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/ch1')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_chapter.is_editable(request))
+        self.assert_editable_by(self.partner_chapter, self.partner_user, True)
 
     def test_partner_chapter_is_editable_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/ch1')
-        request.user = self.author_user
-        self.assertTrue(self.partner_chapter.is_editable(request))
+        self.assert_editable_by(self.partner_chapter, self.author_user, True)
 
     def test_author_chapter_is_not_editable_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/ch1')
-        request.user = self.partner_user
-        self.assertFalse(self.author_chapter.is_editable(request))
+        self.assert_editable_by(self.author_chapter, self.partner_user, False)
 
     def test_author_chapter_is_editable_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/ch1')
-        request.user = self.author_user
-        self.assertTrue(self.author_chapter.is_editable(request))
+        self.assert_editable_by(self.author_chapter, self.author_user, True)
+
+
+    def assert_accessible_by(self, object, user, editable):
+        request = self.client.get('')
+        request.user = user
+        self.assertEqual(object.can_access(request), editable)
 
     # can_access
     def test_partner_curriculum_is_accessible_by_partner(self):
-        request = self.client.get('/partner-curriculum/')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_curriculum.can_access(request))
+        self.assert_accessible_by(self.partner_curriculum, self.partner_user, True)
 
     def test_partner_curriculum_is_accessible_by_author(self):
-        request = self.client.get('/partner-curriculum/')
-        request.user = self.author_user
-        self.assertTrue(self.partner_curriculum.can_access(request))
+        self.assert_accessible_by(self.partner_curriculum, self.author_user, True)
 
     def test_author_curriculum_is_not_accessible_by_partner(self):
-        request = self.client.get('/author-curriculum/')
-        request.user = self.partner_user
-        self.assertFalse(self.author_curriculum.can_access(request))
+        self.assert_accessible_by(self.author_curriculum, self.partner_user, False)
 
     def test_author_curriculum_is_accessible_by_author(self):
-        request = self.client.get('/author-curriculum/')
-        request.user = self.author_user
-        self.assertTrue(self.author_curriculum.can_access(request))
+        self.assert_accessible_by(self.author_curriculum, self.author_user, True)
 
     def test_partner_unit_is_accessible_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_unit.can_access(request))
+        self.assert_accessible_by(self.partner_unit, self.partner_user, True)
 
     def test_partner_unit_is_accessible_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/')
-        request.user = self.author_user
-        self.assertTrue(self.partner_unit.can_access(request))
+        self.assert_accessible_by(self.partner_unit, self.author_user, True)
 
     def test_author_unit_is_not_accessible_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/')
-        request.user = self.partner_user
-        self.assertFalse(self.author_unit.can_access(request))
+        self.assert_accessible_by(self.author_unit, self.partner_user, False)
 
     def test_author_unit_is_accessible_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/')
-        request.user = self.author_user
-        self.assertTrue(self.author_unit.can_access(request))
+        self.assert_accessible_by(self.author_unit, self.author_user, True)
 
     def test_partner_lesson_is_accessible_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/1')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_lesson.can_access(request))
+        self.assert_accessible_by(self.partner_lesson, self.partner_user, True)
 
     def test_partner_lesson_is_accessible_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/1')
-        request.user = self.author_user
-        self.assertTrue(self.partner_lesson.can_access(request))
+        self.assert_accessible_by(self.partner_lesson, self.author_user, True)
 
     def test_author_lesson_is_not_accessible_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/1')
-        request.user = self.partner_user
-        self.assertFalse(self.author_lesson.can_access(request))
+        self.assert_accessible_by(self.author_lesson, self.partner_user, False)
 
     def test_author_lesson_is_accessible_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/1')
-        request.user = self.author_user
-        self.assertTrue(self.author_lesson.can_access(request))
+        self.assert_accessible_by(self.author_lesson, self.author_user, True)
 
     def test_partner_chapter_is_accessible_by_partner(self):
-        request = self.client.get('/partner-curriculum/partner-unit/ch1')
-        request.user = self.partner_user
-        self.assertTrue(self.partner_chapter.is_editable(request))
+        self.assert_accessible_by(self.partner_chapter, self.partner_user, True)
 
     def test_partner_chapter_is_accessible_by_author(self):
-        request = self.client.get('/partner-curriculum/partner-unit/ch1')
-        request.user = self.author_user
-        self.assertTrue(self.partner_chapter.is_editable(request))
+        self.assert_accessible_by(self.partner_chapter, self.author_user, True)
 
     def test_author_chapter_is_not_accessible_by_partner(self):
-        request = self.client.get('/author-curriculum/author-unit/ch1')
-        request.user = self.partner_user
-        self.assertFalse(self.author_chapter.is_editable(request))
+        self.assert_accessible_by(self.author_chapter, self.partner_user, False)
 
     def test_author_chapter_is_accessible_by_author(self):
-        request = self.client.get('/author-curriculum/author-unit/ch1')
-        request.user = self.author_user
-        self.assertTrue(self.author_chapter.is_editable(request))
+        self.assert_accessible_by(self.author_chapter, self.author_user, True)
 
     def create_author_group(self):
         author_group = GroupFactory(name="author")
