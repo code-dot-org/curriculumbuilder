@@ -9,7 +9,7 @@ urlpatterns = patterns('curricula.views',
 
                        # Allow viewing concept documentations without the /documentation/ prefix
                        # so links work on both curriculumbuilder and docs.code.org
-                       url(r'^(?P<slug>concepts.*)/$', documentation_views.map_view, name="map_view"),
+                       url(r'^(?P<slug>/docs/concepts.*)/$', documentation_views.map_view, name="map_view"),
 
                        # Ajax endpoints
                        # Todo: fix Page history view
