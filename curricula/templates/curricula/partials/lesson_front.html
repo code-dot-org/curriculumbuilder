@@ -143,7 +143,7 @@
                 {% endwith %}
             {% endwith %}
         {% endif %}
-        {% if user.is_staff %}
+        {% if user.is_superuser %}
             <a href="/admin/lessons/lesson_resources/add/?lesson={{ lesson.pk }}" target="_blank">Add a
                 resource</a>{% endif %}
 
