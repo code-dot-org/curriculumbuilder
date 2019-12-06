@@ -310,9 +310,11 @@ class Map(Page, RichText, CloneableMixin):
     def get_children(self):
         return Map.objects.filter(parent=self).all()
 
+    # If you are on curriculum.code.org you need /documentation at the start of a map url
     def get_absolute_url_for_curriculum_code_org_map_menu(self):
         return '/documentation/%s/' % self.slug
 
+    # If you are on studio.code.org you need /docs at the start of a map url
     def get_absolute_url_for_studio_code_org_map_menu(self):
         return '/docs/%s/' % self.slug
 
