@@ -3,7 +3,12 @@
     {% if m.list|length > 0 %}
     <ul>
         {% for sub in m.list %}
-            <li><a href="{{ sub.get_absolute_url }}">{{ sub.title }}</a></li>
+            {% if request.get_host == 'curriculum.code.org' or request.get_host == 'localhost:8000' %}
+                <li><a href="{{ sub.get_absolute_url_for_curriculum_code_org_map_menu }}">{{ sub.title }}</a></li>
+            {% endif %}
+            {% if request.get_host == 'studio.code.org' %}
+                <li><a href="{{ sub.get_absolute_url_for_studio_code_org_map_menu }}">{{ sub.title }}</a></li>
+            {% endif %}
             {% regroup sub.get_children by parent as sub_menu %}
             {% include "documentation/partials/map_menu.html" with map_menu=sub_menu %}
         {% endfor %}

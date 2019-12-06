@@ -310,7 +310,10 @@ class Map(Page, RichText, CloneableMixin):
     def get_children(self):
         return Map.objects.filter(parent=self).all()
 
-    def get_absolute_url(self):
+    def get_absolute_url_for_curriculum_code_org_map_menu(self):
+        return '/documentation/%s/' % self.slug
+
+    def get_absolute_url_for_studio_code_org_map_menu(self):
         return '/docs/%s/' % self.slug
 
     def get_published_url(self):
