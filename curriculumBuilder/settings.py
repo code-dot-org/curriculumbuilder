@@ -746,6 +746,11 @@ LOGGING = {
             'handlers': ['console', 'slack_admins'],
             'level': 'ERROR',
             'propagate': True
+        },
+        'documentation': {
+            'handlers': ['console', 'slack_admins'],
+            'level': 'INFO',
+            'propagate': True
         }
     },
 }
