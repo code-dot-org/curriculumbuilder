@@ -310,9 +310,6 @@ class Map(Page, RichText, CloneableMixin):
     def get_children(self):
         return Map.objects.filter(parent=self).all()
 
-    def get_absolute_url(self):
-        return '/docs/%s/' % self.slug
-
     def get_published_url(self):
         return '//docs.code.org%s' % self.get_absolute_url()
 
