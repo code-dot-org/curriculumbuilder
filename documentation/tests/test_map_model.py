@@ -14,8 +14,10 @@ class MapModelTestCase(TestCase):
         self.assertIn(self.myChildMap, self.myMap.get_children())
 
     def test_get_absolute_url_for_host(self):
-        result = get_absolute_url_for_host(self.myMap, 'codecurricula.com')
+        result = get_absolute_url_for_host(self.myMap, 'curriculum.code.org')
         self.assertEqual(result, '/documentation/concepts/myConcept/')
+        result1 = get_absolute_url_for_host(self.myMap, 'codecurricula.com')
+        self.assertEqual(result1, '/documentation/concepts/myConcept/')
         result2 = get_absolute_url_for_host(self.myMap, 'studio.code.org')
         self.assertEqual(result2, '/docs/concepts/myConcept/')
         result3 = get_absolute_url_for_host(self.myMap, 'docs.code.org')
