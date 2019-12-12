@@ -36,6 +36,7 @@ tokenizeTiplink.locator = locateTiplink;
 function createTiplink(add, tipType, tipLink) {
   const element = {
     type: 'paragraph',
+    className: 'icon-paragraph',
     children: [],
     data: {
       hProperties: {

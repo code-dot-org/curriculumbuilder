@@ -389,6 +389,7 @@ html, body{
     margin-left: -20px;
     clear: left;
     display: block;
+    position: absolute;
 }
 
 .tiplink-tip a:link, .tiplink-tip a:visited {
