@@ -1,10 +1,11 @@
+{% load documentation_extras %}
 
 {% for m in map_menu %}
     {% if m.list|length > 0 %}
     <ul>
         {% for sub in m.list %}
-            <li><a href="{{ sub.get_absolute_url }}">{{ sub.title }}</a></li>
-            {% regroup sub.children.all by parent as sub_menu %}
+            <li><a href="{{ sub|get_absolute_url_for_host:request.get_host }}">{{ sub.title }}</a></li>
+            {% regroup sub.get_children by parent as sub_menu %}
             {% include "documentation/partials/map_menu.html" with map_menu=sub_menu %}
         {% endfor %}
     </ul>
