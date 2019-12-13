@@ -42,9 +42,9 @@ class IDEAdmin(PageAdmin, VersionAdmin):
         }),
     )
 
-    # Override the "view on site" button to use local /documentation/ instead of docs.code.org path
+    # Override the "view on site" button to use local /docs/ instead of docs.code.org path
     def view_on_site(self, obj):
-        return '/documentation%s' % obj.get_absolute_url()
+        return '/docs%s' % obj.get_absolute_url()
 
 
 class BlockForm(ModelForm):
@@ -99,9 +99,9 @@ class BlockAdmin(PageAdmin, VersionAdmin):
         models.CharField: {'widget': Textarea(attrs={'rows': 2})},
     }
 
-    # Override the "view on site" button to use local /documentation/ instead of docs.code.org path
+    # Override the "view on site" button to use local /docs/ instead of docs.code.org path
     def view_on_site(self, obj):
-        return '/documentation%s' % obj.get_absolute_url()
+        return '/docs%s' % obj.get_absolute_url()
 
 
 class MapAdmin(PageAdmin, VersionAdmin):
