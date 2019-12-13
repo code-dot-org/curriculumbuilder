@@ -16,7 +16,3 @@ class MapModelTestCase(TestCase):
     def test_get_absolute_url_for_host(self):
         result = get_absolute_url_for_host(self.myMap, 'testserver')
         self.assertEqual(result, '/docs/concepts/myConcept/')
-        result2 = get_absolute_url_for_host(self.myMap, 'localhost:8000')
-        self.assertEqual(result2, '/docs/concepts/myConcept/')
-        result3 = get_absolute_url_for_host(self.myMap, 'www.codecurricula.com')
-        self.assertEqual(result3, '/docs/concepts/myConcept/')
