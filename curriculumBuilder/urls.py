@@ -23,8 +23,6 @@ from gong import views as gong_views
 
 from i18n.urls import i18n_patterns_no_default_language_prefix
 
-from .views import redirect_docs
-
 admin.autodiscover()
 
 # Add the urlpatterns for any custom Django applications here.
@@ -110,7 +108,7 @@ urlpatterns += patterns('',
     url(r'^admin_keywords_submit/$', generic_views.admin_keywords_submit, name='admin_keywords_submit'),
     url("^None/$", views.index),  # Dealing with JackFrost bug
     url(r'^docs/', include('documentation.urls', namespace="documentation")),
-    url(r'^documentation/', redirect_docs),
+    url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 )
 
