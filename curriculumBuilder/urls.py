@@ -107,7 +107,6 @@ urlpatterns += patterns('',
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url(r'^admin_keywords_submit/$', generic_views.admin_keywords_submit, name='admin_keywords_submit'),
     url("^None/$", views.index),  # Dealing with JackFrost bug
-    url(r'^docs/', include('documentation.urls', namespace="documentation")),
     url(r'^documentation/', include('documentation.urls', namespace="documentation")),
     url(r'^standards/', include('standards.urls', namespace="standards")),
 )
