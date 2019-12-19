@@ -36,7 +36,7 @@ class IDE(Page, RichText, CloneableMixin):
         return '/%s/' % self.slug
 
     def get_published_url(self):
-        return '//docs.code.org/%s/' % self.slug
+        return '//studio.code.org/docs/%s/' % self.slug
 
     def jackfrost_urls(self):
         urls = ["/documentation%s" % self.get_absolute_url()]
@@ -159,7 +159,7 @@ class Block(Page, RichText, CloneableMixin):
         return '/%s/%s/' % (self.parent_ide.slug, self.slug)
 
     def get_published_url(self):
-        return '//docs.code.org/%s/%s/' % (self.parent_ide.slug, self.slug)
+        return '//studio.code.org/docs/%s/%s/' % (self.parent_ide.slug, self.slug)
 
     def jackfrost_urls(self):
         urls = ["/documentation%s" % self.get_absolute_url(), "/documentation%sembed/" % self.get_absolute_url()]
@@ -307,7 +307,7 @@ class Map(Page, RichText, CloneableMixin):
         return False
 
     def get_published_url(self):
-        return '//docs.code.org%s' % self.get_absolute_url()
+        return '//studio.code.org/docs%s' % self.get_absolute_url()
 
     def jackfrost_urls(self):
         urls = ["/documentation%s" % self.get_absolute_url()]
