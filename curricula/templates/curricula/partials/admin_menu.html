@@ -65,7 +65,7 @@
                     <kbd draggable="true"
                      ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
                 {% endfor %}
-                <h3><a href="{% url 'curriculum:lesson_markdown' curriculum.slug unit.slug lesson.number %}">Generate Student Facing Lesson Plan</a></h3>
+                <h3><a href="{% url 'curriculum:lesson_markdown' curriculum.slug unit.slug lesson.number %}" target="_blank">Generate Student Facing Lesson Plan</a></h3>
             {% endif %}
         </div>
         <ul class="drawer-nav">
