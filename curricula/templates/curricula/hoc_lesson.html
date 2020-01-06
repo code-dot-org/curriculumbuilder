@@ -192,7 +192,7 @@
 
 <div id="{{ lesson.title|slugify }}content">
 
-    <h1>Teaching Guide</h1>
+  <h1>{% trans 'Teaching Guide' %}</h1>
 
     {% for activity in lesson.activity_set.all %}
         <div class="activity">
