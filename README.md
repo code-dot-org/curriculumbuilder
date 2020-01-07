@@ -72,7 +72,7 @@ Follow these steps whether you are on Mac OS or Ubuntu / Linux.
 1. clone repo
 
 ```
-git clone https://github.com/mrjoshida/curriculumbuilder.git
+git clone https://github.com/code-dot-org/curriculumbuilder.git
 cd curriculumbuilder
 ```
 
