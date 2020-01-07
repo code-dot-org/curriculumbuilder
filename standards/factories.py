@@ -31,6 +31,7 @@ class CategoryFactory(DjangoModelFactory):
     description = "A wonderful standard"
     type = Sequence(lambda n: "category-%03d" % n)
     framework = SubFactory('standards.factories.FrameworkFactory')
+    # Need to set parent to none on subfactory so that we don't end up with infinite recursion
     parent = SubFactory('standards.factories.CategoryFactory', parent=None)
 
 class FrameworkFactory(DjangoModelFactory):
