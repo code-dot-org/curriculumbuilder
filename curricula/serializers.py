@@ -34,12 +34,10 @@ class BlockSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         return obj.get_published_url()
 
-class StandardsSerializer(serializers.ModelSerializer):
-    url = serializers.SerializerMethodField()
-
+class StandardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Standard
-        fields = ('organization', 'org_id', 'description', 'concept')
+        fields = ('name', 'shortcode', 'description', 'category', 'framework', 'slug')
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
