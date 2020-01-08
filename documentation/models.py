@@ -306,6 +306,13 @@ class Map(Page, RichText, CloneableMixin):
     def overridden(self):
         return False
 
+    # Returns Map instead of Page so that we can use get_absolute_url to get the correct link
+    def get_children(self):
+        return Map.objects.filter(parent=self).all()
+
+    def get_map_menu_url(self):
+        return '/docs%s' % self.get_absolute_url()
+
     def get_published_url(self):
         return '//studio.code.org/docs%s' % self.get_absolute_url()
 
