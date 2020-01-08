@@ -47,12 +47,11 @@ class LessonSerializer(serializers.ModelSerializer):
     student_resources = serializers.SerializerMethodField()
     vocab = serializers.SerializerMethodField()
     blocks = serializers.SerializerMethodField()
-    standards = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
         fields = ('title', 'number', 'student_desc', 'teacher_desc',
-                  'student_resources', 'teacher_resources', 'vocab', 'blocks', 'standards')
+                  'student_resources', 'teacher_resources', 'vocab', 'blocks')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -78,11 +77,6 @@ class LessonSerializer(serializers.ModelSerializer):
     def get_blocks(self, obj):
         blocks = obj.blocks.all()
         serializer = BlockSerializer(blocks, many=True)
-        return serializer.data
-
-    def get_standards(self, obj):
-        standards = obj.standards.all()
-        serializer = StandardSerializer(standards, many=True)
         return serializer.data
 
 class UnitSerializer(serializers.ModelSerializer):
