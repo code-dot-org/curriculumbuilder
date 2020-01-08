@@ -43,6 +43,15 @@ class DocumentationRenderingTestCase(TestCase):
         self.assertEqual(response2.status_code, 200)
         self.assertIn('myCategory', response2.content)
         self.assertIn('myBlock', response2.content)
+        response = self.client.get('/docs/mylab/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Try it out', response.content)
+        self.assertIn('myCategory', response.content)
+        self.assertIn('myBlock', response.content)
+        response2 = self.client.get('/docs/mylab/myBlock/')
+        self.assertEqual(response2.status_code, 200)
+        self.assertIn('myCategory', response2.content)
+        self.assertIn('myBlock', response2.content)
 
     def test_render_maps(self):
         response = self.client.get('/documentation/concepts/')
