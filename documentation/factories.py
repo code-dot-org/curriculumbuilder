@@ -1,7 +1,7 @@
 from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
 
-from documentation.models import Map, Block, IDE
+from documentation.models import Map, Block, IDE, Category
 
 class MapFactory(DjangoModelFactory):
     class Meta:
@@ -25,3 +25,10 @@ class IDEFactory(DjangoModelFactory):
 
     title = Sequence(lambda n: "IDE %03d" % n)
     slug = Sequence(lambda n: "%03d" % n)
+
+class CategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = Category
+
+    name = Sequence(lambda n: "Category %03d" % n)
+    parent_ide = SubFactory('documentation.factories.IDEFactory')
