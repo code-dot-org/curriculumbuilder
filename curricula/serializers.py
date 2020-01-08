@@ -35,10 +35,18 @@ class BlockSerializer(serializers.ModelSerializer):
         return obj.get_published_url()
 
 class StandardSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
+    framework = serializers.SerializerMethodField()
 
     class Meta:
         model = Standard
         fields = ('name', 'shortcode', 'description', 'category', 'framework', 'slug')
+
+    def get_category(self, obj):
+        return obj.category.name
+
+    def get_framework(self, obj):
+        return obj.framework.slug
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
