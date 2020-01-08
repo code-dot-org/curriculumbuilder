@@ -3,7 +3,7 @@ from django.test import TestCase
 from curricula.factories import CurriculumFactory, UnitFactory
 from lessons.factories import LessonFactory
 
-from documentation.factories import IDEFactory, BlockFactory, CategoryFactory
+from documentation.factories import IDEFactory, BlockFactory, CategoryFactory, MapFactory
 
 
 class DocumentationRenderingTestCase(TestCase):
@@ -17,6 +17,9 @@ class DocumentationRenderingTestCase(TestCase):
 
         self.test_lesson = LessonFactory(title="My Lesson", parent=self.test_unit)
         self.test_lesson.blocks.add(self.myBlock)
+
+        self.myConcept = MapFactory(slug="concepts", title="Concepts")
+        self.myMap = MapFactory(slug="concepts/myMap", title="My Map", parent=self.myConcept)
 
     def test_render_course_blocks_page(self):
         response = self.client.get('/test-curriculum/code/')
@@ -40,3 +43,12 @@ class DocumentationRenderingTestCase(TestCase):
         self.assertEqual(response2.status_code, 200)
         self.assertIn('myCategory', response2.content)
         self.assertIn('myBlock', response2.content)
+
+    def test_render_maps(self):
+        response = self.client.get('/documentation/concepts/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Concepts', response.content)
+        response2 = self.client.get('/documentation/concepts/myMap/')
+        self.assertEqual(response2.status_code, 200)
+        self.assertIn('My Map', response2.content)
+        self.assertIn('Concepts', response2.content)
