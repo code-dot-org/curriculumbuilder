@@ -20,15 +20,15 @@ class StandardsAdminTestCase(TestCase):
         siteperms.sites.add(site)
 
     def render_add(self, type):
-        response = self.client.get('/admin/standards/' + type + '/add/')
+        response = self.client.get('/admin/standards/%s/add/' % type)
         self.assertEqual(response.status_code, 403)
 
-        permission = Permission.objects.get(content_type__app_label='standards', codename='add_' + type)
+        permission = Permission.objects.get(content_type__app_label='standards', codename='add_%s' % type)
         self.user.user_permissions.add(permission)
 
-        response = self.client.get('/admin/standards/' + type + '/add/')
+        response = self.client.get('/admin/standards/%s/add/' % type)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Add ' + type, response.content)
+        self.assertIn('Add %s' % type, response.content)
 
     def test_render_add_category(self):
         self.render_add('category')

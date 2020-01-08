@@ -19,15 +19,15 @@ class DocumentationAdminTestCase(TestCase):
         siteperms.sites.add(site)
 
     def render_add(self, type):
-        response = self.client.get('/admin/documentation/'+type+'/add/')
+        response = self.client.get('/admin/documentation/%s/add/' % type)
         self.assertEqual(response.status_code, 403)
 
-        permission = Permission.objects.get(codename='add_'+type)
+        permission = Permission.objects.get(codename='add_%s' % type)
         self.user.user_permissions.add(permission)
 
-        response = self.client.get('/admin/documentation/'+type+'/add/')
+        response = self.client.get('/admin/documentation/%s/add/' % type)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Add '+type, response.content)
+        self.assertIn('Add %s' % type, response.content)
 
     def test_render_add_ide(self):
         self.render_add('ide')
