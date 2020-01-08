@@ -105,6 +105,29 @@ class UnitSerializer(serializers.ModelSerializer):
         serializer = LessonSerializer(lessons, many=True, context=self.context)
         return serializer.data
 
+class UnitLessonsSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Unit
+        fields = ('title', 'slug', 'lessons')
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+class LessonStandardsSerializer(serializers.ModelSerializer):
+    standards = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lesson
+        fields = ('title', 'number', 'standards')
+
+    def get_standards(self, obj):
+        standards = obj.standards.all()
+        serializer = StandardSerializer(standards, many=True)
+        return serializer.data
 
 class CurriculumSerializer(serializers.ModelSerializer):
     units = serializers.SerializerMethodField()
