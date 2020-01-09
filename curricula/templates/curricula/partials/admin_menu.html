@@ -51,20 +51,21 @@
             {% endif %}
 
             {% if pagetype == "Lesson" %}
-            <h2>Resources</h2>
-            <ul>
-                {% for resource in page.resources.all %}
-                    <li>{{ resource }}</li>
+                <h2>Resources</h2>
+                <ul>
+                    {% for resource in page.resources.all %}
+                        <li>{{ resource }}</li>
+                        <kbd draggable="true"
+                            ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
+                    {% endfor %}
+                </ul>
+                <h2>Vocab</h2>
+                {% for vocab in page.vocab.all %}
+                    <li>{{ vocab.word }}</li>
                     <kbd draggable="true"
-                         ondragstart="event.dataTransfer.setData('text/plain', '{{ resource.md_tag }}')">{{ resource.md_tag }}</kbd>
-                {% endfor %}
-            </ul>
-            <h2>Vocab</h2>
-            {% for vocab in page.vocab.all %}
-                <li>{{ vocab.word }}</li>
-                <kbd draggable="true"
                      ondragstart="event.dataTransfer.setData('text/plain', '[v {{ vocab.word }}]')">[v {{ vocab.word }}]</kbd>
-            {% endfor %}
+                {% endfor %}
+                <h3><a href="{% url 'curriculum:lesson_markdown' curriculum.slug unit.slug lesson.number %}" target="_blank">Generate Student Facing Lesson Plan</a></h3>
             {% endif %}
         </div>
         <ul class="drawer-nav">

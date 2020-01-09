@@ -6,8 +6,12 @@ from multiurl import ContinueResolving
 from mezzanine.pages.models import Page
 
 from models import IDE, Block, Map
-from curricula.models import Curriculum
 
+
+def index(request):
+    ides = IDE.objects.all()
+    maps = Map.objects.all()
+    return render(request, 'documentation/index.html', {'ides': ides, 'maps': maps})
 
 def ide_view(request, slug):
     try:

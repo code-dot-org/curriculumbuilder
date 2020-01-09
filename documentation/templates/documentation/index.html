@@ -1,0 +1,51 @@
+{% extends "basecurriculum.html" %}
+
+{% load staticfiles %}
+{% load mezzanine_tags %}
+{% load keyword_tags %}
+
+{% block meta_title %}Documentation{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable page.title %}{{ page.title }}{% endeditable %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/lesson.css" %}">
+{% endblock %}
+
+{% block header_title %}
+    <h1>Documentation</h1>
+{% endblock %}
+
+{% block main %}
+    <h2>IDEs</h2>
+    {% for ide in ides %}
+    <ul class="together">
+        <li><h3><a href="{{ide.slug}}">{{ide.title}}</a></h3></li>
+    </ul>
+    {% endfor %}
+
+    <h2><a href="/docs/concepts">Concepts</a></h2>
+    <div id="categories">
+        {% block categories %}
+            <ul class="category_list">
+            {% regroup maps by parent as map_menu %}
+            {% include "documentation/partials/map_menu.html" with map_menu=map_menu %}
+            </ul>
+        {% endblock %}
+    </div>
+
+{% endblock %}
