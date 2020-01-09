@@ -6,7 +6,7 @@ TIPLINK_RE = r'(?:^|\n)?([\w\-]+)!!!\ ?([\w\-]+)?'
 
 class TipLinksExtensions(Extension):
   def extendMarkdown(self, md, md_globals):
-    tiplink_tag = TipTagPattern(TIPLINK_RE, 'div', {})
+    tiplink_tag = TipTagPattern(TIPLINK_RE, 'span', {})
     md.inlinePatterns.add('tiplink', tiplink_tag, '_begin')
 
 class TipTagPattern(Pattern):
