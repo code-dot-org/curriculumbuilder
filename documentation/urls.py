@@ -5,6 +5,7 @@ from documentation import views
 
 urlpatterns = [
     multiurl(
+        url(r'^$', views.index, name='index'),
         url(r'^(?P<slug>.*)/$', views.map_view, name="map_view"),
 
         # Assumes that all IDEs with docs end in lab to avoid routing conflicts with curriculum routes
