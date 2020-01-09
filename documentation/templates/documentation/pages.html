@@ -28,7 +28,7 @@
 {% page_menu "pages/menus/tree.html" %}
         <h1>{{ curriculum.title }} {{ type }}</h1>
         {% for page in pages %}
-            <h2><a href="/documentation/{{ curriculum.slug }}/{{ page.slug }}">{{ page.title }}</a></h2>
+            <h2><a href="/docs/{{ curriculum.slug }}/{{ page.slug }}">{{ page.title }}</a></h2>
         {% endfor %}
     </div>
 {% endblock %}
