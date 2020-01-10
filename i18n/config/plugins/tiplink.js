@@ -60,7 +60,7 @@ function createTiplink(add, tipType, tipLink) {
     icon = "warning";
   }
 
-  const child = add{
+  const child = add({
     type: 'link',
     url: `#${tipType}_${tipLink}`,
     children: []
