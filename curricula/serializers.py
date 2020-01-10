@@ -2,7 +2,7 @@ import json
 from rest_framework import serializers
 
 from curricula.models import Unit, Curriculum
-from lessons.models import Lesson, Resource, Vocab, Annotation
+from lessons.models import Lesson, Resource, Vocab, Annotation, Standard
 from documentation.models import Block
 
 
@@ -34,6 +34,19 @@ class BlockSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         return obj.get_published_url()
 
+class StandardSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
+    framework = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Standard
+        fields = ('name', 'shortcode', 'description', 'category', 'framework', 'slug')
+
+    def get_category(self, obj):
+        return obj.category.name
+
+    def get_framework(self, obj):
+        return obj.framework.slug
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
@@ -74,7 +87,6 @@ class LessonSerializer(serializers.ModelSerializer):
         serializer = BlockSerializer(blocks, many=True)
         return serializer.data
 
-
 class UnitSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
     student_desc = serializers.SerializerMethodField()
@@ -95,6 +107,29 @@ class UnitSerializer(serializers.ModelSerializer):
         serializer = LessonSerializer(lessons, many=True, context=self.context)
         return serializer.data
 
+class UnitLessonsSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Unit
+        fields = ('title', 'slug', 'lessons')
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+class LessonStandardsSerializer(serializers.ModelSerializer):
+    standards = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lesson
+        fields = ('title', 'number', 'standards')
+
+    def get_standards(self, obj):
+        standards = obj.standards.all()
+        serializer = StandardSerializer(standards, many=True)
+        return serializer.data
 
 class CurriculumSerializer(serializers.ModelSerializer):
     units = serializers.SerializerMethodField()
