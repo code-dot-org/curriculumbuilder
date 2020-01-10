@@ -39,13 +39,11 @@ class DocumentationRenderingTestCase(TestCase):
         self.assertIn('IDEs', response.content)
         self.assertIn('My IDE', response.content)
         self.assertIn('Concepts', response.content)
-        self.assertIn('My Map', response.content)
         response2 = self.client.get('/docs/')
         self.assertEqual(response2.status_code, 200)
         self.assertIn('IDEs', response2.content)
         self.assertIn('My IDE', response2.content)
         self.assertIn('Concepts', response2.content)
-        self.assertIn('My Map', response2.content)
 
     def test_render_ide_blocks(self):
         response = self.client.get('/documentation/mylab/')
