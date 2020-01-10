@@ -39,13 +39,5 @@
     {% endfor %}
 
     <h2><a href="/docs/concepts">Concepts</a></h2>
-    <div id="categories">
-        {% block categories %}
-            <ul class="category_list">
-            {% regroup maps by parent as map_menu %}
-            {% include "documentation/partials/map_menu.html" with map_menu=map_menu %}
-            </ul>
-        {% endblock %}
-    </div>
 
 {% endblock %}
