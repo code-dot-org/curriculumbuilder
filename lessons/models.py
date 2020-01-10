@@ -893,6 +893,7 @@ class Annotation(models.Model):
 Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
 Lesson._meta.get_field('login_required').help_text = "Hide from listings and prevent be publishing."
 Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be updated during publish."
+Resource._meta.get_field('gd').help_text = "Only check this box for a google doc (Not google presentation, spreadsheet, etc)"
 
 reversion.register(Activity, follow=('lesson', ))
 reversion.register(Objective, follow=('lesson', ))
