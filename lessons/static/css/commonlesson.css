@@ -386,7 +386,6 @@ html, body{
     width: 20px;
     font-size: 15px;
     clear: left;
-    display: inline;
 }
 
 .tiplink-tip a:link, .tiplink-tip a:visited {
