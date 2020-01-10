@@ -9,7 +9,7 @@ from standards.factories import StandardFactory, FrameworkFactory, CategoryFacto
 class StandardsRenderingTestCase(TestCase):
     def setUp(self):
         self.test_curriculum = CurriculumFactory(slug="test-curriculum")
-        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit")
+        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit", stage_name="test-stage-name")
 
         self.test_framework = FrameworkFactory()
         self.test_category = CategoryFactory()
@@ -31,3 +31,15 @@ class StandardsRenderingTestCase(TestCase):
         # Standards Alignment header only shows if there are standards
         self.assertIn('Standards Alignment', response.content)
         self.assertIn('Test Standard', response.content)
+
+    def test_metadata_for_course(self):
+        response = self.client.get('/metadata/course/test-curriculum.json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_metadata_for_unit(self):
+        response = self.client.get('/metadata/test-stage-name.json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_standards_metadata_for_unit(self):
+        response = self.client.get('/metadata/test-stage-name/standards.json')
+        self.assertEqual(response.status_code, 200)

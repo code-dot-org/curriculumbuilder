@@ -1074,6 +1074,16 @@ def stage_element(request, stage, format=None):
     serializer = UnitSerializer(unit)
     return Response(serializer.data)
 
+@api_view(['GET', ])
+def stage_standards(request, stage, format=None):
+    try:
+        unit = Unit.objects.get(login_required=False, status=2, stage_name=stage)
+    except MultipleObjectsReturned:
+        logger.exception("Warning - found multiple units referencing the stage %s" % stage)
+        unit = Unit.objects.filter(login_required=False, status=2, stage_name=stage).first()
+
+    serializer = UnitLessonsSerializer(unit)
+    return Response(serializer.data)
 
 @api_view(['GET', ])
 def api_root(request, format=None):
