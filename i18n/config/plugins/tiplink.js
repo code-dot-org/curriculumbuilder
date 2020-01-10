@@ -34,6 +34,17 @@ tokenizeTiplink.notInLink = true;
 tokenizeTiplink.locator = locateTiplink;
 
 function createTiplink(add, tipType, tipLink) {
+  const element = {
+    type: 'paragraph',
+    children: [],
+    data: {
+      hProperties: {
+        className: `tiplink tiplink-${tipType}`,
+      },
+    },
+  }
+
+
   let icon;
   if (tipType == 'tip') {
     icon = "lightbulb-o";
@@ -49,11 +60,11 @@ function createTiplink(add, tipType, tipLink) {
     icon = "warning";
   }
 
-  const element = {
+  const child = add{
     type: 'link',
     url: `#${tipType}_${tipLink}`,
     children: []
-  }
+  }, element);
 
   add({
     type: 'emphasis',
@@ -64,7 +75,7 @@ function createTiplink(add, tipType, tipLink) {
         className: `fa fa-${icon}`
       },
     },
-  }, element)
+  }, child)
 
   return add(element);
 }
