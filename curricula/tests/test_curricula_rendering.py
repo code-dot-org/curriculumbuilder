@@ -170,5 +170,5 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_metadata_for_unit(self):
-        response = self.client.get('/metadata/test-stage-name.json')
+        response = self.client.get('/metadata/test-unit.json')
         self.assertEqual(response.status_code, 200)
