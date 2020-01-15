@@ -108,7 +108,7 @@ class UnitLessonsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('title', 'slug', 'lessons')
+        fields = ('stage_name', 'lessons')
 
     def get_lessons(self, obj):
         lessons = obj.lessons
