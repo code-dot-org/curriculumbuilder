@@ -47,19 +47,43 @@ def by_curriculum_csv(request, slug):
     response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % curriculum.slug
 
     writer = csv.writer(response, encoding='utf-8')
-    writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
-                     'standard framework', 'standard', 'category', 'description', 'cross curricular opportunity'])
+    writer.writerow([
+        'curriculum',
+        'unit',
+        'lesson #',
+        'lesson name',
+        'standard framework',
+        'standard',
+        'category',
+        'description',
+        'cross curricular opportunity'
+    ])
     for unit in curriculum.units:
         for lesson in unit.lessons:
             for standard in lesson.standards.all():
-                writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                                 standard.framework.slug,
-                                 standard.shortcode,
-                                 standard.category.name, standard.name, False])
+                writer.writerow([
+                    curriculum.slug,
+                    unit.slug,
+                    'lesson %d' % lesson.number,
+                    lesson.title,
+                    standard.framework.slug,
+                    standard.shortcode,
+                    standard.category.name,
+                    standard.name,
+                    False
+                ])
             for standard in lesson.opportunity_standards.all():
-                writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                                 standard.framework.slug,
-                                  standard.shortcode, standard.category.name, standard.name, True])
+                writer.writerow([
+                    curriculum.slug,
+                    unit.slug,
+                    'lesson %d' % lesson.number,
+                    lesson.title,
+                    standard.framework.slug,
+                    standard.shortcode,
+                    standard.category.name,
+                    standard.name,
+                    True
+                ])
     return response
 
 
@@ -87,15 +111,42 @@ def by_unit_csv(request, slug, unit_slug):
     response['Content-Disposition'] = 'attachment; filename="%s_%s_standards.csv"' % (curriculum.slug, unit.slug)
 
     writer = csv.writer(response, encoding='utf-8')
-    writer.writerow(['curriculum', 'unit', 'lesson #', 'lesson name',
-                     'standard framework', 'standard', 'category', 'description', 'cross curricular opportunity'])
+    writer.writerow([
+        'curriculum',
+        'unit',
+        'lesson #',
+        'lesson name',
+        'standard framework',
+        'standard',
+        'category',
+        'description',
+        'cross curricular opportunity'
+    ])
     for lesson in unit.lessons:
         for standard in lesson.standards.all():
-            writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                             standard.framework.slug, standard.shortcode, standard.category.name, standard.name, 'false'])
+            writer.writerow([
+                curriculum.slug,
+                unit.slug,
+                'lesson %d' % lesson.number,
+                lesson.title,
+                standard.framework.slug,
+                standard.shortcode,
+                standard.category.name,
+                standard.name,
+                'false'
+            ])
         for standard in lesson.opportunity_standards.all():
-            writer.writerow([curriculum.slug, unit.slug, 'lesson %d' % lesson.number, lesson.title,
-                             standard.framework.slug, standard.shortcode, standard.category.name, standard.name, 'true'])
+            writer.writerow([
+                curriculum.slug,
+                unit.slug,
+                'lesson %d' % lesson.number,
+                lesson.title,
+                standard.framework.slug,
+                standard.shortcode,
+                standard.category.name,
+                standard.name,
+                'true'
+            ])
     return response
 
 
