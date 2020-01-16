@@ -172,3 +172,10 @@ class CurriculaRenderingTestCase(TestCase):
     def test_metadata_for_unit(self):
         response = self.client.get('/metadata/test-stage-name.json')
         self.assertEqual(response.status_code, 200)
+
+    def test_get_pdf_url(self):
+        en_url = self.csf_unit.get_pdf_url()
+        with translation.override('es-mx'):
+            es_url = self.csf_unit.get_pdf_url()
+        with translation.override('hi-in'):
+            hi_url = self.csf_unit.get_pdf_url()

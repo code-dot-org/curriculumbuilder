@@ -133,6 +133,14 @@ LANGUAGES = (
     ('th-th', _('Thai')),
     ('sk-sk', _('Slovak')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
+    ('hi-in', _('Hindi'))
+)
+
+LANGUAGE_GENERATE_PDF = (
+    'es-mx',
+    'it-it',
+    'th-th',
+    'sk-sk',
 )
 
 LOCALE_PATHS = (

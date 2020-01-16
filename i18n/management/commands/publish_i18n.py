@@ -19,7 +19,8 @@ class Command(BaseCommand):
     ]
 
     language_codes = [
-        language_code for language_code, _ in settings.LANGUAGES
+        (language_code, language_code in settings.LANGUAGE_GENERATE_PDF)
+        for language_code, _ in settings.LANGUAGES
         if language_code != settings.LANGUAGE_CODE
     ]
 
@@ -29,7 +30,11 @@ class Command(BaseCommand):
         that define them
         """
         log("Models to publish: %s" % ', '.join(model.__name__ for model in self.models))
-        log("Languages to publish: %s" % ', '.join(self.language_codes))
+        log("Languages to publish: %s" % ', '.
+                join(language_code for (language_code, _) in self.language_codes))
+        log("Languages to publish PDFs: %s" % ', '.
+                join(language_code for (language_code, publish_pdf)
+                    in self.language_codes if publish_pdf))
 
         total_elapsed_time = 0
         for model_index, model in enumerate(self.models):
@@ -44,11 +49,11 @@ class Command(BaseCommand):
                 if not obj.should_be_translated:
                     continue
 
-                for language_code in self.language_codes:
+                for language_code, publish_pdf in self.language_codes:
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    if hasattr(obj, 'publish_pdfs'):
+                    if publish_pdf and hasattr(obj, 'publish_pdfs'):
                         list(obj.publish_pdfs(silent=True))
                 success_count += 1
 
@@ -60,7 +65,7 @@ class Command(BaseCommand):
                 success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
             ))
 
-        log("Publishing %s models in %s languages finished in %s (average of ~%s per language" % (
+        log("Publishing %s models in %s languages finished in %s (average of ~%s per language)" % (
             len(self.models), len(self.language_codes),
             datetime.timedelta(seconds=int(total_elapsed_time)),
             datetime.timedelta(seconds=int(total_elapsed_time/len(self.language_codes)))
