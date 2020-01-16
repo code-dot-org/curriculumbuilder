@@ -32,14 +32,6 @@ class StandardsRenderingTestCase(TestCase):
         self.assertIn('Standards Alignment', response.content)
         self.assertIn('Test Standard', response.content)
 
-    def test_metadata_for_course(self):
-        response = self.client.get('/metadata/course/test-curriculum.json')
-        self.assertEqual(response.status_code, 200)
-
-    def test_metadata_for_unit(self):
-        response = self.client.get('/metadata/test-stage-name.json')
-        self.assertEqual(response.status_code, 200)
-
     def test_standards_metadata_for_unit(self):
         response = self.client.get('/metadata/test-stage-name/standards.json')
         self.assertEqual(response.status_code, 200)
