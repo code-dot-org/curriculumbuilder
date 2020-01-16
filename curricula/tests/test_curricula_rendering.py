@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import Permission
+from django.utils import translation
 
 from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
 from lessons.factories import LessonFactory, ResourceFactory
