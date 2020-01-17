@@ -48,7 +48,7 @@ class Command(BaseCommand):
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    if hasattr(obj, 'publish_pdfs'):
+                    if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
                         list(obj.publish_pdfs(silent=True))
                 success_count += 1
 
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
             ))
 
-        log("Publishing %s models in %s languages finished in %s (average of ~%s per language" % (
+        log("Publishing %s models in %s languages finished in %s (average of ~%s per language)" % (
             len(self.models), len(self.language_codes),
             datetime.timedelta(seconds=int(total_elapsed_time)),
             datetime.timedelta(seconds=int(total_elapsed_time/len(self.language_codes)))

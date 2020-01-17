@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import Permission
+from django.utils import translation
 
 from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
 from lessons.factories import LessonFactory, ResourceFactory
@@ -172,3 +173,13 @@ class CurriculaRenderingTestCase(TestCase):
     def test_metadata_for_unit(self):
         response = self.client.get('/metadata/test-stage-name.json')
         self.assertEqual(response.status_code, 200)
+
+    def test_get_pdf_url(self):
+        en_url = self.csf_unit.get_pdf_url()
+        with translation.override('es-mx'):
+            es_url = self.csf_unit.get_pdf_url()
+        with translation.override('hi-in'):
+            hi_url = self.csf_unit.get_pdf_url()
+        self.assertEqual('/csf-curriculum/csf-unit.pdf', en_url)
+        self.assertEqual('/es-mx/csf-curriculum/csf-unit.pdf', es_url)
+        self.assertEqual('/csf-curriculum/csf-unit.pdf', hi_url)

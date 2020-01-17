@@ -10,6 +10,8 @@ from django.db.models import Count, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils import translation
+from django.utils.translation import get_language
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
@@ -104,7 +106,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return reverse('curriculum:curriculum_view', args=[self.slug])
 
     def get_pdf_url(self):
-        return reverse('curriculum:curriculum_pdf', args=[self.slug])
+        language = get_language()
+        if (language != 'en-us' and language not in settings.LANGUAGE_GENERATE_PDF):
+            language = settings.LANGUAGE_CODE
+        with translation.override(language):
+            return reverse('curriculum:curriculum_pdf', args=[self.slug])
 
     def get_json_url(self):
         return reverse('curriculum:curriculum_element', args=[self.slug])
@@ -359,7 +365,11 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return reverse('curriculum:unit_compiled', args=[self.curriculum.slug, self.slug])
 
     def get_pdf_url(self):
-        return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
+        language = get_language()
+        if (language != 'en-us' and language not in settings.LANGUAGE_GENERATE_PDF):
+            language = settings.LANGUAGE_CODE
+        with translation.override(language):
+            return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_json_url(self):
         return reverse('curriculum:stage_element', args=[self.stage_name])
