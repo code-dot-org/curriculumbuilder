@@ -180,3 +180,6 @@ class CurriculaRenderingTestCase(TestCase):
             es_url = self.csf_unit.get_pdf_url()
         with translation.override('hi-in'):
             hi_url = self.csf_unit.get_pdf_url()
+        self.assertEqual('/csf-curriculum/csf-unit.pdf', en_url)
+        self.assertEqual('/es-mx/csf-curriculum/csf-unit.pdf', es_url)
+        self.assertEqual('/csf-curriculum/csf-unit.pdf', hi_url)
