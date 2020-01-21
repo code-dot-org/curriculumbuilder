@@ -23,7 +23,7 @@ urlpatterns = patterns('curricula.views',
                        # JSON Metadata
                        url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
                        url(r'^metadata/course/(?P<slug>[-\w]+).json$', views.curriculum_element, name="curriculum_element"),
-                       url(r'^metadata/(?P<stage>[-\w]+)/standards.json$', views.stage_standards, name="stage_standards"),
+                       url(r'^metadata/(?P<unit_name>[-\w]+)/standards.json$', views.unit_standards, name="unit_standards"),
 
                        # Curriculum URLs
                        url(r'^(?P<slug>[-\w]+)/$', views.curriculum_view, name='curriculum_view'),

@@ -298,7 +298,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
-    stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
+    unit_name = models.CharField('Script', max_length=255, blank=True, db_column='stage_name', null=True,
                                   help_text='Name of Code Studio script')
     questions = RichTextField('Support Details', help_text='Open questions or comments to add to all lessons in unit',
                               blank=True, null=True)
@@ -372,7 +372,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
             return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_json_url(self):
-        return reverse('curriculum:stage_element', args=[self.stage_name])
+        return reverse('curriculum:stage_element', args=[self.unit_name])
 
     def get_resources_pdf_url(self):
         return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
@@ -561,7 +561,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     @property
     def support_script(self):
-        return "https://studio.code.org/s/%s-support" % getattr(self, 'stage_name', self.slug)
+        return "https://studio.code.org/s/%s-support" % getattr(self, 'unit_name', self.slug)
 
     @property
     def header_corner(self):
@@ -615,8 +615,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         except:
             self.number = self.curriculum.units.count() + 1
 
-        if not self.stage_name:
-            self.stage_name = "%s%d" % (self.curriculum.slug, self.number)
+        if not self.unit_name:
+            self.unit_name = "%s%d" % (self.curriculum.slug, self.number)
 
         super(Unit, self).save(*args, **kwargs)
 

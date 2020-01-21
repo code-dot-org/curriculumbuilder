@@ -21,7 +21,7 @@ class CurriculaRenderingTestCase(TestCase):
         self.pl_curriculum = CurriculumFactory(
             slug="pl-curriculum",
             unit_template_override='curricula/pl_unit.html')
-        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit", stage_name="test-stage-name")
+        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit", unit_name="test-unit-name")
         self.hoc_unit = UnitFactory(
             parent=self.test_curriculum,
             slug="hoc-unit",
@@ -171,7 +171,7 @@ class CurriculaRenderingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_metadata_for_unit(self):
-        response = self.client.get('/metadata/test-stage-name.json')
+        response = self.client.get('/metadata/test-unit-name.json')
         self.assertEqual(response.status_code, 200)
 
     def test_get_pdf_url(self):
