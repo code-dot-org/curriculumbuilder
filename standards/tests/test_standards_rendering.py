@@ -9,7 +9,7 @@ from standards.factories import StandardFactory, FrameworkFactory, CategoryFacto
 class StandardsRenderingTestCase(TestCase):
     def setUp(self):
         self.test_curriculum = CurriculumFactory(slug="test-curriculum")
-        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit", stage_name="test-stage-name")
+        self.test_unit = UnitFactory(parent=self.test_curriculum, slug="test-unit", unit_name="test-unit-name")
 
         self.test_framework = FrameworkFactory()
         self.test_category = CategoryFactory()
@@ -33,5 +33,5 @@ class StandardsRenderingTestCase(TestCase):
         self.assertIn('Test Standard', response.content)
 
     def test_standards_metadata_for_unit(self):
-        response = self.client.get('/metadata/test-stage-name/standards.json')
+        response = self.client.get('/metadata/test-unit-name/standards.json')
         self.assertEqual(response.status_code, 200)

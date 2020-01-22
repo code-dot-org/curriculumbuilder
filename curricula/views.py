@@ -1064,23 +1064,23 @@ def unit_element(request, slug, unit_slug, format=None):
 
 
 @api_view(['GET', ])
-def stage_element(request, stage, format=None):
+def unit_element(request, unit_name, format=None):
     try:
-        unit = Unit.objects.get(login_required=False, status=2, stage_name=stage)
+        unit = Unit.objects.get(login_required=False, status=2, unit_name=unit_name)
     except MultipleObjectsReturned:
-        logger.exception("Warning - found multiple units referencing the stage %s" % stage)
-        unit = Unit.objects.filter(login_required=False, status=2, stage_name=stage).first()
+        logger.exception("Warning - found multiple units referencing the unit_name %s" % stage)
+        unit = Unit.objects.filter(login_required=False, status=2, unit_name=unit_name).first()
 
     serializer = UnitSerializer(unit)
     return Response(serializer.data)
 
 @api_view(['GET', ])
-def stage_standards(request, stage, format=None):
+def unit_standards(request, unit_name, format=None):
     try:
-        unit = Unit.objects.get(login_required=False, status=2, stage_name=stage)
+        unit = Unit.objects.get(login_required=False, status=2, unit_name=unit_name)
     except MultipleObjectsReturned:
-        logger.exception("Warning - found multiple units referencing the stage %s" % stage)
-        unit = Unit.objects.filter(login_required=False, status=2, stage_name=stage).first()
+        logger.exception("Warning - found multiple units referencing the unit %s" % unit_name)
+        unit = Unit.objects.filter(login_required=False, status=2, unit_name=unit_name).first()
 
     serializer = UnitLessonsSerializer(unit)
     return Response(serializer.data)
