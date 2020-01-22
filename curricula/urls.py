@@ -21,7 +21,7 @@ urlpatterns = patterns('curricula.views',
                        url(r'^resolve_feedback/$', views.resolve_feedback, name='resolve_feedback'),
 
                        # JSON Metadata
-                       url(r'^metadata/(?P<stage>[-\w]+).json$', views.stage_element, name="stage_element"),
+                       url(r'^metadata/(?P<unit_name>[-\w]+).json$', views.unit_element, name="unit_element"),
                        url(r'^metadata/course/(?P<slug>[-\w]+).json$', views.curriculum_element, name="curriculum_element"),
                        url(r'^metadata/(?P<unit_name>[-\w]+)/standards.json$', views.unit_standards, name="unit_standards"),
 

@@ -372,7 +372,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
             return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_json_url(self):
-        return reverse('curriculum:stage_element', args=[self.unit_name])
+        return reverse('curriculum:unit_element', args=[self.unit_name])
 
     def get_resources_pdf_url(self):
         return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
