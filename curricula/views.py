@@ -1068,7 +1068,7 @@ def stage_element(request, stage, format=None):
     try:
         unit = Unit.objects.get(login_required=False, status=2, unit_name=stage)
     except MultipleObjectsReturned:
-        logger.exception("Warning - found multiple units referencing the stage %s" % stage)
+        logger.exception("Warning - found multiple units referencing the unit_name %s" % stage)
         unit = Unit.objects.filter(login_required=False, status=2, unit_name=stage).first()
 
     serializer = UnitSerializer(unit)
