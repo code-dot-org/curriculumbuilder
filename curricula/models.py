@@ -476,7 +476,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
                 except Exception, e:
                     yield json.dumps(e.message)
                     yield '\n'
-                    logger.exception('Failed to publish %s' % self)
+                    logger.exception(u'Failed to publish %s' % self)
 
     def publish_pdfs(self, silent=False, *args, **kwargs):
         if self.jackfrost_can_build():
