@@ -141,7 +141,6 @@ LANGUAGES = (
     ('ko-kr', _('Korean')),
     ('ms-my', _('Malay')),
     ('nl-nl', _('Dutch')),
-    ('pl-pl', _('Polish')),
     ('ru-ru', _('Russian')),
     ('sk-sk', _('Slovak')),
     ('sv-se', _('Swedish')),
