@@ -32,6 +32,7 @@ class Command(BaseCommand):
         log("Languages to publish: %s" % ', '.join(self.language_codes))
 
         total_elapsed_time = 0
+        total_pdf_generation_time = 0
         for model_index, model in enumerate(self.models):
             name = model.__name__
             log("Publishing %s (%s/%s)" % (name, model_index + 1, len(self.models)))
@@ -49,7 +50,10 @@ class Command(BaseCommand):
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
                     if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
+                        pdf_generation_start_time = time.time()
                         list(obj.publish_pdfs(silent=True))
+                        pdf_generation_end_time = time.time()
+                        total_pdf_generation_time += (pdf_generation_end_time - pdf_generation_start_time)
                 success_count += 1
 
             end_time = time.time()
@@ -60,10 +64,13 @@ class Command(BaseCommand):
                 success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
             ))
 
-        log("Publishing %s models in %s languages finished in %s (average of ~%s per language)" % (
+        total_non_pdf_generation_time = total_elapsed_time - total_pdf_generation_time
+        log("Publishing %s models in %s languages took %s total, %s not including PDF generation (average of ~%s per language). PDF generation took %s" % (
             len(self.models), len(self.language_codes),
             datetime.timedelta(seconds=int(total_elapsed_time)),
-            datetime.timedelta(seconds=int(total_elapsed_time/len(self.language_codes)))
+            datetime.timedelta(seconds=int(total_non_pdf_generation_time)),
+            datetime.timedelta(seconds=int(total_non_pdf_generation_time/len(self.language_codes))),
+            datetime.timedelta(seconds=int(total_pdf_generation_time))
         ))
 
     def handle(self, *args, **options):
