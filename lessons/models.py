@@ -537,12 +537,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
             return
 
     def get_levels_from_levelbuilder(self):
-        if not hasattr(self.unit, 'stage_name'):
-            return {'error': 'No stage name for unit', 'status': 404}
+        if not hasattr(self.unit, 'unit_name'):
+            return {'error': 'No unit name for unit', 'status': 404}
         else:
             try:
                 url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-                    self.unit.stage_name, self.number)
+                    self.unit.unit_name, self.number)
                 response = urllib2.urlopen(url)
                 data = json.loads(response.read())
                 self.stage = data
@@ -605,7 +605,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
         # Don't try to get stage data on every save.
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-            self.unit.stage_name, self.number)
+            self.unit.unit_name, self.number)
             response = urllib2.urlopen(url)
             data = json.loads(response.read())
             self.stage = data
@@ -696,7 +696,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     @property
     def code_studio_link(self):
         return "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
-            self.unit.stage_name, self.number)
+            self.unit.unit_name, self.number)
 
     @property
     def changelog(self):

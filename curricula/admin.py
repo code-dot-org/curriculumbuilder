@@ -102,13 +102,13 @@ class UnitAdmin(PageAdmin, VersionAdmin, FilterableAdmin):
         # TODO: Only super admins should have in_sitemap as an option. It removes the curriculum from the Pages List
         if self.can_access_all(request):
             general_fields = ['title', 'status', ('publish_date', 'expiry_date'), 'content', 'ancestor',
-                           'disable_numbering', 'number', 'stage_name', 'questions', 'assessment_commentary',
+                           'disable_numbering', 'number', 'unit_name', 'questions', 'assessment_commentary',
                            'show_calendar', 'week_length', 'forum_url', 'forum_vars', 'lesson_template_override',
                            'i18n_ready', 'in_menus', 'login_required']
             meta_data_fields = ['_meta_title', 'slug', ('description', 'gen_description'), 'keywords', 'in_sitemap']
         else:
             general_fields = ['title', 'content',
-                           'disable_numbering', 'number', 'stage_name', 'questions', 'assessment_commentary',
+                           'disable_numbering', 'number', 'unit_name', 'questions', 'assessment_commentary',
                            'show_calendar', 'week_length', 'lesson_template_override']
             meta_data_fields = ['_meta_title', 'slug', ('description', 'gen_description'), 'keywords']
 

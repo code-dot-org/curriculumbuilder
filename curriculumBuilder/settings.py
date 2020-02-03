@@ -127,12 +127,29 @@ LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
 LANGUAGES = (
+    ('ar-sa', _('Arabic')),
+    ('de-de', _('German')),
     ('en-us', _('English')),
     ('es-mx', _('Mexican Spanish')),
+    ('fr-fr', _('French')),
+    ('hi-in', _('Hindi')),
     ('it-it', _('Italian')),
-    ('th-th', _('Thai')),
+    ('ja-jp', _('Japanese')),
+    ('ko-kr', _('Korean')),
+    ('ru-ru', _('Russian')),
     ('sk-sk', _('Slovak')),
+    ('th-th', _('Thai')),
+    ('tr-tr', _('Turkish')),
+    ('zh-cn', _('Simplified Chinese')),
+    ('zh-tw', _('Traditional Chinese')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
+)
+
+LANGUAGE_GENERATE_PDF = (
+    'es-mx',
+    'it-it',
+    'sk-sk',
+    'th-th',
 )
 
 LOCALE_PATHS = (
