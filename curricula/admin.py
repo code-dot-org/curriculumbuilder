@@ -147,6 +147,9 @@ class UnitStandardsForm(ModelForm):
     class Meta:
         model = Unit
         fields = ('title',)
+        help_texts = {
+            'title': "To have these changes reflected in Code Studio, import them <a href='https://studio.code.org/admin/standards' target='_blank'>here</a>.",
+        }
 
 
 class UnitStandards(Unit):
