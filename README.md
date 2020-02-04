@@ -161,7 +161,7 @@ heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 
 If you have an account and are a superuser, you can create new CurriculumBuilder users by doing the following:
 
-1. Log in at [codecurricula.com/admin](https://codecurricula.com/admin). Choose the "admin" interface.
+1. Log in at [codecurricula.com/admin](http://codecurricula.com/admin). Choose the "admin" interface.
 2. Choose the "Users" option in the left-hand navigation menu, or go to [codecurricula.com/admin/auth/user/](codecurricula.com/admin/auth/user/). Here, you can view, update, and create users.
 3. Use the "Add user" button to create a new user.
 4. Set the user's permissions:
