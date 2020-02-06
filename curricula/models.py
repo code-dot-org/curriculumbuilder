@@ -166,7 +166,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return urls
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        if not can_build:
+            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
+        return can_build
 
     def publish(self, children=False, silent=False):
         if children:
@@ -454,46 +458,31 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def pdf_urls(self):
         return [self.get_pdf_url(), self.get_resources_pdf_url()]
 
-    def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+    def yield_urls_content(self, urls, slack_message_prefix, silent):
+        if self.jackfrost_can_build():
+            for url in urls:
+                read, written = build_single(url)
+                if not silent:
+                    slack_message('slack/message.slack', {
+                        'message': '%s %s %s %s' % (slack_message_prefix, self.content_model, self.title, url),
+                        'color': '#00adbc'
+                    })
+                yield json.dumps(written)
+                yield '\n'
+        else:
+            raise RuntimeError('Unable to generate content: jackfrost cannot build')
 
     def publish(self, children=False, silent=False):
         if children:
             for lesson in self.lesson_set.all():
                 for result in lesson.publish():
                     yield result
-        if self.jackfrost_can_build():
-            for url in self.jackfrost_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published %s %s %s' % (self.content_model, self.title, url),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception(u'Failed to publish %s' % self)
+        for content in self.yield_urls_content(self.jackfrost_urls(), 'generated html page: ', silent):
+            yield content
 
     def publish_pdfs(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            for url in self.pdf_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published PDF for %s %s' % (self.content_model, self.title),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception('Failed to publish PDF %s' % self)
+        for content in self.yield_urls_content(self.pdf_urls(), 'generated pdf page: ', silent):
+            yield content
 
     def publish_json(self, silent=False, *args, **kwargs):
         if self.jackfrost_can_build():
