@@ -49,7 +49,8 @@ class Command(BaseCommand):
                     translation.activate(language_code)
                     if hasattr(obj, 'publish'):
                         list(obj.publish(silent=True))
-                    if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
+                    # Temporary hack to turn off PDF generation while still directing users to the translated pdfs if they exist
+                    if False and language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
                         pdf_generation_start_time = time.time()
                         list(obj.publish_pdfs(silent=True))
                         pdf_generation_end_time = time.time()
