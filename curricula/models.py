@@ -31,6 +31,8 @@ import lessons.models
 
 from i18n.models import InternationalizablePage
 
+import traceback
+
 logger = logging.getLogger(__name__)
 
 """
@@ -466,47 +468,42 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return can_build
 
     def yield_urls_content(self, urls, slack_message_prefix, silent):
-        if self.jackfrost_can_build():
-            for url in urls:
-                read, written = build_single(url)
-                if not silent:
-                    slack_message('slack/message.slack', {
-                        'message': '%s %s %s %s' % (slack_message_prefix, self.content_model, self.title, url),
-                        'color': '#00adbc'
-                    })
-                yield json.dumps(written)
-                yield '\n'
-        else:
-            raise RuntimeError('Unable to generate content: jackfrost cannot build')
+        try:
+            if self.jackfrost_can_build():
+                for url in urls:
+                    read, written = build_single(url)
+                    if not silent:
+                        slack_message('slack/message.slack', {
+                            'message': '%s %s %s %s' % (slack_message_prefix, self.content_model, self.title, url),
+                            'color': '#00adbc'
+                        })
+                    yield json.dumps(written)
+                    yield '\n'
+            else:
+                raise RuntimeError('Unable to generate content: jackfrost cannot build')
+     # normally we would bubble up exception to the caller before logging,
+     # but since generators are evaluated lazily this is impossible and we
+     # log here
+        except Exception, e:
+            logger.exception("Error obtaining content for urls %s: %s" % (urls, traceback.format_exc()))
+            raise
+
 
     def publish(self, children=False, silent=False):
         if children:
             for lesson in self.lesson_set.all():
                 for result in lesson.publish():
                     yield result
-        for content in self.yield_urls_content(self.jackfrost_urls(), 'generated html page: ', silent):
+        for content in self.yield_urls_content(self.jackfrost_urls(), 'published html page: ', silent):
             yield content
 
     def publish_pdfs(self, silent=False, *args, **kwargs):
-        for content in self.yield_urls_content(self.pdf_urls(), 'generated pdf page: ', silent):
+        for content in self.yield_urls_content(self.pdf_urls(), 'published pdf: ', silent):
             yield content
 
     def publish_json(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            url = self.get_json_url()
-            try:
-                read, written = build_single(url)
-                if not silent:
-                    slack_message('slack/message.slack', {
-                        'message': 'published JSON for %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield json.dumps(e.message)
-                yield '\n'
-                logger.exception('Failed to publish JSON %s' % self)
+        for content in self.yield_urls_content([self.get_json_url()], 'published JSON: ', silent):
+            yield content
 
     def get_standards(self):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
