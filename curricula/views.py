@@ -650,53 +650,6 @@ def clone(request):
 
         return HttpResponse(e.message, content_type='application/json', status=500)
 
-
-@staff_member_required
-def old_publish(request):
-    try:
-        pk = int(request.POST.get('pk'))
-
-        page_type = request.POST.get('type')
-
-        if request.POST.get('lessons') == 'true':
-            children = True
-        else:
-            children = False
-
-        klass = globals()[page_type]
-
-        obj = klass.objects.get(pk=pk)
-
-        if request.POST.get('pdf') == 'true':
-            payload = obj.publish_pdfs()
-        else:
-            payload = obj.publish(children=children)
-
-        attachments = [
-            {
-                'color': '#00adbc',
-                'title': 'URL',
-                'text': obj.get_absolute_url(),
-            },
-            {
-                'color': '#00adbc',
-                'title': 'Publishing Details',
-                'text': json.dumps(payload),
-            },
-        ]
-
-        slack_message('slack/message.slack', {
-            'message': 'published %s %s' % (page_type, obj.title),
-            'user': request.user,
-        }, attachments)
-
-    except Exception, e:
-        payload = {'status': 500, 'error': 'failed', 'exception': e.message}
-        logger.exception('Publishing failed')
-
-    return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
-
-
 @staff_member_required
 def get_stage_details(request):
     try:
