@@ -170,7 +170,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def jackfrost_can_build(self):
         can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
         if not can_build:
-            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
                 % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
         return can_build
 
@@ -463,7 +463,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def jackfrost_can_build(self):
         can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
         if not can_build:
-            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
                 % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
         return can_build
 
@@ -722,7 +722,11 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return order
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
+        return can_build
 
     @property
     def unit(self):
