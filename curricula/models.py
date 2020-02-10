@@ -166,10 +166,10 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return urls
 
     def jackfrost_can_build(self):
-        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
         if not can_build:
-            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
-                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
+            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
         return can_build
 
     def publish(self, children=False, silent=False):
@@ -457,6 +457,13 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     def pdf_urls(self):
         return [self.get_pdf_url(), self.get_resources_pdf_url()]
+
+    def jackfrost_can_build(self):
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        if not can_build:
+            logger.error('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
+        return can_build
 
     def yield_urls_content(self, urls, slack_message_prefix, silent):
         if self.jackfrost_can_build():
