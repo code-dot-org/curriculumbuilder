@@ -34,10 +34,10 @@
     <h2>IDEs</h2>
     {% for ide in ides %}
     <ul class="together">
-        <li><h3><a href="{{ide.slug}}">{{ide.title}}</a></h3></li>
+        <li><h3><a href={{ide.get_relative_url}}>{{ide.title}}</a></h3></li>
     </ul>
     {% endfor %}
 
-    <h2><a href="/docs/concepts">Concepts</a></h2>
+    <h2><a href="/docs/concepts/">Concepts</a></h2>
 
 {% endblock %}
