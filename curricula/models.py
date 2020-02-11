@@ -468,9 +468,10 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return can_build
 
     def yield_urls_content(self, urls, slack_message_prefix, silent):
-        try:
-            if self.jackfrost_can_build():
-                for url in urls:
+        if self.jackfrost_can_build():
+            failed_urls = []
+            for url in urls:
+                try:
                     read, written = build_single(url)
                     if not silent:
                         slack_message('slack/message.slack', {
@@ -479,15 +480,13 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
                         })
                     yield json.dumps(written)
                     yield '\n'
-            else:
-                raise RuntimeError('Unable to generate content: jackfrost cannot build')
-     # normally we would bubble up exception to the caller before logging,
-     # but since generators are evaluated lazily this is impossible and we
-     # log here
-        except Exception, e:
-            logger.exception("Error obtaining content for urls %s: %s" % (urls, traceback.format_exc()))
-            raise
-
+                except Exception, e:
+                    logger.exception("Error obtaining content for url %s: %s" % (url, traceback.format_exc()))
+                    failed_urls.append(url)
+            if len(failed_urls) > 0:
+                raise RuntimeError("Error obtaining content for %d out of %d urls: %s" % (len(failed_urls), len(urls), failed_urls))
+        else:
+            raise RuntimeError('Unable to generate content: jackfrost cannot build')
 
     def publish(self, children=False, silent=False):
         if children:
