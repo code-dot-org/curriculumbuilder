@@ -114,6 +114,10 @@ class MapAdmin(PageAdmin, VersionAdmin):
         }),
     )
 
+    # Override the "view on site" button to use local /docs/ instead of slug which does not have /docs
+    def view_on_site(self, obj):
+        return '/docs%s' % obj.get_absolute_url()
+
 
 class BlockDocForm(ModelForm):
     class Meta:
