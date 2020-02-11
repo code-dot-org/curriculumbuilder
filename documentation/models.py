@@ -35,6 +35,9 @@ class IDE(Page, RichText, CloneableMixin):
     def get_absolute_url(self):
         return '/%s/' % self.slug
 
+    def get_relative_url(self):
+        return '%s/' % self.slug
+
     def get_published_url(self):
         return '//studio.code.org/docs/%s/' % self.slug
 
