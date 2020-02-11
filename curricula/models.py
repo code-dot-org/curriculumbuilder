@@ -31,6 +31,8 @@ import lessons.models
 
 from i18n.models import InternationalizablePage
 
+import traceback
+
 logger = logging.getLogger(__name__)
 
 """
@@ -166,7 +168,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return urls
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
+        return can_build
 
     def publish(self, children=False, silent=False):
         if children:
@@ -455,62 +461,48 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return [self.get_pdf_url(), self.get_resources_pdf_url()]
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
+        return can_build
+
+    def yield_urls_content(self, urls, slack_message_prefix, silent):
+        if self.jackfrost_can_build():
+            failed_urls = []
+            for url in urls:
+                try:
+                    read, written = build_single(url)
+                    if not silent:
+                        slack_message('slack/message.slack', {
+                            'message': '%s %s %s %s' % (slack_message_prefix, self.content_model, self.title, url),
+                            'color': '#00adbc'
+                        })
+                    yield json.dumps(written)
+                    yield '\n'
+                except Exception, e:
+                    logger.exception("Error obtaining content for url %s: %s" % (url, traceback.format_exc()))
+                    failed_urls.append(url)
+            if len(failed_urls) > 0:
+                raise RuntimeError("Error obtaining content for %d out of %d urls: %s" % (len(failed_urls), len(urls), failed_urls))
+        else:
+            raise RuntimeError('Unable to generate content: jackfrost cannot build')
 
     def publish(self, children=False, silent=False):
         if children:
             for lesson in self.lesson_set.all():
                 for result in lesson.publish():
                     yield result
-        if self.jackfrost_can_build():
-            for url in self.jackfrost_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published %s %s %s' % (self.content_model, self.title, url),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception(u'Failed to publish %s' % self)
+        for content in self.yield_urls_content(self.jackfrost_urls(), 'published html page: ', silent):
+            yield content
 
     def publish_pdfs(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            for url in self.pdf_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published PDF for %s %s' % (self.content_model, self.title),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception('Failed to publish PDF %s' % self)
+        for content in self.yield_urls_content(self.pdf_urls(), 'published pdf: ', silent):
+            yield content
 
     def publish_json(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            url = self.get_json_url()
-            try:
-                read, written = build_single(url)
-                if not silent:
-                    slack_message('slack/message.slack', {
-                        'message': 'published JSON for %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield json.dumps(e.message)
-                yield '\n'
-                logger.exception('Failed to publish JSON %s' % self)
+        for content in self.yield_urls_content([self.get_json_url()], 'published JSON: ', silent):
+            yield content
 
     def get_standards(self):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
@@ -729,7 +721,11 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return order
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
+        return can_build
 
     @property
     def unit(self):

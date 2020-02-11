@@ -19,6 +19,7 @@ from django.core.files.base import ContentFile
 
 # from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
+import traceback
 import pdfkit
 import pycurl
 import logging
@@ -388,43 +389,39 @@ def unit_compiled(request, slug, unit_slug):
 
 # @login_required
 def unit_pdf(request, slug, unit_slug):
-
-    buffer = StringIO()
-    c = pycurl.Curl()
-    c.setopt(c.WRITEDATA, buffer)
-
-    unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
-
     try:
+        buffer = StringIO()
+        c = pycurl.Curl()
+        c.setopt(c.WRITEDATA, buffer)
+
+        unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
+
         c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
         print unit.get_compiled_url()
         c.perform()
 
         c.close()
         compiled = buffer.getvalue()
-    except Exception:
-        logger.exception('PDF Curling Failed')
-        return HttpResponse('PDF Curling Failed', status=500)
 
-    if request.GET.get('html'):  # Allows testing the html output
-        response = HttpResponse(compiled)
-    else:
-        try:
+        if request.GET.get('html'):  # Allows testing the html output
+            response = HttpResponse(compiled)
+        else:
             pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
-        except Exception:
-            logger.exception('PDF Generation Failed')
-            return HttpResponse('PDF Generation Failed', status=500)
 
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
 
-        ip = get_real_ip(request)
-        slack_message('slack/message.slack', {
-            'message': 'created a PDF from %s %s' % (slug, unit_slug),
-            'user': request.user.get_username() or ip,
-        })
+            ip = get_real_ip(request)
+            slack_message('slack/message.slack', {
+                'message': 'created a PDF from %s %s' % (slug, unit_slug),
+                'user': request.user.get_username() or ip,
+            })
+            return response
+    except Exception, e:
+        error_message = 'Building Unit PDF Failed: %s' % (traceback.format_exc())
+        logger.exception(error_message)
+        return HttpResponse(error_message, status=500)
 
-    return response
 
 
 def unit_pjspdf(request, slug, unit_slug):
@@ -597,16 +594,17 @@ def publish(request):
             'user': request.user,
         })
 
+
+        response = StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
+
+        # Necessary for nginx to accept streaming response
+
+        response['X-Accel-Buffering'] = 'no'
+
+        return response
     except Exception, e:
-        logger.exception('Publishing failed')
-
+        logger.exception('Publishing failed : %s' % (traceback.format_exc()))
         return HttpResponse(e.message, content_type='application/json', status=500)
-
-    response = StreamingHttpResponse(pub_func(children), content_type='text/event-stream')
-
-    # Necessary for nginx to accept streaming response
-    response['X-Accel-Buffering'] = 'no'
-    return response
 
 
 @staff_member_required
@@ -651,53 +649,6 @@ def clone(request):
         logger.exception('Cloning failed')
 
         return HttpResponse(e.message, content_type='application/json', status=500)
-
-
-@staff_member_required
-def old_publish(request):
-    try:
-        pk = int(request.POST.get('pk'))
-
-        page_type = request.POST.get('type')
-
-        if request.POST.get('lessons') == 'true':
-            children = True
-        else:
-            children = False
-
-        klass = globals()[page_type]
-
-        obj = klass.objects.get(pk=pk)
-
-        if request.POST.get('pdf') == 'true':
-            payload = obj.publish_pdfs()
-        else:
-            payload = obj.publish(children=children)
-
-        attachments = [
-            {
-                'color': '#00adbc',
-                'title': 'URL',
-                'text': obj.get_absolute_url(),
-            },
-            {
-                'color': '#00adbc',
-                'title': 'Publishing Details',
-                'text': json.dumps(payload),
-            },
-        ]
-
-        slack_message('slack/message.slack', {
-            'message': 'published %s %s' % (page_type, obj.title),
-            'user': request.user,
-        }, attachments)
-
-    except Exception, e:
-        payload = {'status': 500, 'error': 'failed', 'exception': e.message}
-        logger.exception('Publishing failed')
-
-    return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
-
 
 @staff_member_required
 def get_stage_details(request):
