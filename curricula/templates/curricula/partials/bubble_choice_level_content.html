@@ -1,0 +1,178 @@
+{% load mezzanine_tags no_autoplay level_link level_embed %}
+
+<!-- Body panels -->
+<div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+                            View on Code Studio
+                            <span class="level-link-icon fa"></span>
+                        </a>
+                        {% if level.mini_rubric == "true" %}
+                            <div class="admonition assessment">
+                                <p class="admonition-title">
+                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    Assessment Opportunities
+                                </p>
+                                <div class="rubric-key-concept">
+                                    <span class="rubric-header">Key Concepts:</span>
+                                    <p>
+                                        {{ level.rubric_key_concept|richtext_filters|safe }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span class="rubric-header">Assessment Criteria:</span>
+                                    <details class="rubric-performance-level">
+                                        <summary>Extensive Evidence</summary>
+                                        <p>
+                                            {{ level.rubric_performance_level_1|richtext_filters|safe }}
+                                        </p>
+                                    </details>
+                                    <details class="rubric-performance-level">
+                                        <summary>Convincing Evidence</summary>
+                                        <p>
+                                            {{ level.rubric_performance_level_2|richtext_filters|safe }}
+                                        </p>
+                                    </details>
+                                    <details class="rubric-performance-level">
+                                        <summary>Limited Evidence</summary>
+                                        <p>
+                                            {{ level.rubric_performance_level_3|richtext_filters|safe }}
+                                        </p>
+                                    </details>
+                                    <details class="rubric-performance-level">
+                                        <summary>No Evidence</summary>
+                                        <p>
+                                            {{ level.rubric_performance_level_4|richtext_filters|safe }}
+                                        </p>
+                                    </details>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if level.teacher_markdown %}
+                            <div class="teacher-markdown admonition tip">
+                            <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+                                {{ level.teacher_markdown|richtext_filters|safe }}
+                            </div>
+                        {% endif %}
+
+                        <div class="instructions-markdown" markdown="1">
+                            <h3>Student Instructions</h3>
+                            {{ level.markdown|richtext_filters|safe }}
+                            {{ level.markdown_instructions|richtext_filters|safe }}
+                            {% if level.parsed_long_instructions %}
+                                {{ level.parsed_long_instructions|richtext_filters|safe }}
+                            {% else %}
+                                {{ level.long_instructions|richtext_filters|safe }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+<!-- Body panels -->
+{% for sublevel in level.sublevels %}
+<div id="level-expando-{{ lesson.number }}-{{ 1 }}" class="level-panel" data-level="{{ 1 }}">
+    <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+        View on Code Studio
+        <span class="level-link-icon fa"></span>
+    </a>
+    {% if sublevel.mini_rubric == "true" %}
+        <div class="admonition assessment">
+            <p class="admonition-title">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                Assessment Opportunities
+            </p>
+            <div class="rubric-key-concept">
+                <span class="rubric-header">Key Concepts:</span>
+                <p>
+                    {{ sublevel.rubric_key_concept|richtext_filters|safe }}
+                </p>
+            </div>
+            <div>
+                <span class="rubric-header">Assessment Criteria:</span>
+                <details class="rubric-performance-level">
+                    <summary>Extensive Evidence</summary>
+                    <p>
+                        {{ sublevel.rubric_performance_level_1|richtext_filters|safe }}
+                    </p>
+                </details>
+                <details class="rubric-performance-level">
+                    <summary>Convincing Evidence</summary>
+                    <p>
+                        {{ sublevel.rubric_performance_level_2|richtext_filters|safe }}
+                    </p>
+                </details>
+                <details class="rubric-performance-level">
+                    <summary>Limited Evidence</summary>
+                    <p>
+                        {{ sublevel.rubric_performance_level_3|richtext_filters|safe }}
+                    </p>
+                </details>
+                <details class="rubric-performance-level">
+                    <summary>No Evidence</summary>
+                    <p>
+                        {{ sublevel.rubric_performance_level_4|richtext_filters|safe }}
+                    </p>
+                </details>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if sublevel.teacher_markdown %}
+        <div class="teacher-markdown admonition tip">
+        <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+            {{ sublevel.teacher_markdown|richtext_filters|safe }}
+        </div>
+    {% endif %}
+
+    <div class="instructions-markdown" markdown="1">
+        <h3>Student Instructions</h3>
+        {{ sublevel.markdown|richtext_filters|safe }}
+        {{ sublevel.markdown_instructions|richtext_filters|safe }}
+        {% if sublevel.parsed_long_instructions %}
+            {{ sublevel.parsed_long_instructions|richtext_filters|safe }}
+        {% else %}
+            {{ sublevel.long_instructions|richtext_filters|safe }}
+        {% endif %}
+    </div>
+
+    <!-- Embed video if present -->
+    {% if sublevel.type == "StandaloneVideo" and not pdf%}
+    <div class="level-video">
+        <iframe allowfullscreen="" frameborder="0" height="480" src="{{ sublevel.video_youtube|no_autoplay }}" width="853"></iframe>
+        <p><a href="{{ sublevel.video_download }}">Download Video</a></p>
+    </div>
+    {% endif %}
+
+    <!-- Curriculum Reference level -->
+    {% if sublevel.type == "LevelGroup" %}
+    <div class="level-group">
+        <p>
+            This level is an assessment or survey with multiple questions.
+            To view this level click the "View on Code Studio" link.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Curriculum Reference level -->
+    {% if sublevel.reference and not pdf %}
+    <div class="curriculum-reference">
+        <iframe frameborder="0" class="map-embed" src="{{ sublevel.reference|level_embed }}" width="100%" height="500"></iframe>
+    </div>
+    {% endif %}
+
+    <!-- Include contained levels for predictions -->
+    {% if sublevel.contained_levels %}
+        <div class="contained">
+            {% for contained in sublevel.contained_levels %}
+                {{ contained.markdown_instructions|richtext_filters|safe }}
+                {{ contained.long_instructions|richtext_filters|safe }}
+                <div class="question">
+                    {{ contained.questions.0.text|richtext_filters|safe }}
+                </div>
+                {% for answer in contained.answers %}
+                    <div class="answer">{{ answer.text|richtext_filters|safe }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endfor %}
