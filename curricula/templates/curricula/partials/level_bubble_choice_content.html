@@ -1,0 +1,24 @@
+{% load mezzanine_tags no_autoplay level_link level_embed %}
+
+<!-- Body panels -->
+<div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
+    <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+        View on Code Studio
+        <span class="level-link-icon fa"></span>
+    </a>
+
+    {% include "curricula/partials/level_contents.html" with level=level %}
+</div>
+
+<!-- Body panels -->
+{% for sublevel in level.sublevels %}
+<div id="level-expando-{{ lesson.number }}-{{ 1 }}" class="level-panel" data-level="{{ 1 }}">
+    <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+        View on Code Studio
+        <span class="level-link-icon fa"></span>
+    </a>
+
+    {% include "curricula/partials/level_contents.html" with level=sublevel %}
+
+</div>
+{% endfor %}
