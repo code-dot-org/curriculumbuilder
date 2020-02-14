@@ -21,8 +21,10 @@
                                 {% endif %}
                         </li>
                         {% if level.type == "BubbleChoice" %}
-
-                            {% include "curricula/partials/level_bubble_choice_header.html" with level=level lesson=lesson unit=unit %}
+                            {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
+                            {% for sublevel in level.sublevels %}
+                                {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=sublevel %}
+                            {% endfor %}
 
                         {% else %}
                             {% if level.teacher_markdown %}
@@ -42,7 +44,13 @@
 
                     <!-- Body panels -->
                     {% if level.type == "BubbleChoice" %}
-                            {% include "curricula/partials/level_bubble_choice_content.html" with level=level lesson=lesson unit=unit %}
+                         <!-- Body panels -->
+                        {% include "curricula/partials/level_contents.html" with level=level %}
+
+                        <!-- Body panels -->
+                        {% for sublevel in level.sublevels %}
+                            {% include "curricula/partials/level_contents.html" with level=sublevel %}
+                        {% endfor %}
                     {% else %}
                         <!-- Teacher Overview Content -->
                         {% if level.teacher_markdown %}
@@ -61,52 +69,7 @@
                         {% endif %}
 
                         <!-- Student Overview Content -->
-                        <div id="level-expando-{{ lesson.number }}-{{ level.position }}-sfmd" class="level-panel" data-level="{{ level.position }}" markdown="1">
-
-                            <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
-                                View on Code Studio
-                                <span class="level-link-icon fa"></span>
-                            </a>
-
-                            <div class="instructions-markdown">
-
-                                {{ level.markdown|richtext_filters|safe }}
-                                {{ level.markdown_instructions|richtext_filters|safe }}
-                                {{ level.long_instructions|richtext_filters|safe }}
-
-                            </div>
-
-                            <!-- Embed video if present -->
-                            {% if level.type == "StandaloneVideo" and not pdf%}
-                            <div class="level-video">
-                                <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
-                                <p><a href="{{ level.video_download }}">Download Video</a></p>
-                            </div>
-                            {% endif %}
-
-                            <!-- Curriculum Reference levels -->
-                            {% if level.reference and not pdf %}
-                            <div class="curriculum-reference">
-                                <iframe frameborder="0" class="map-embed" src="{{ level.reference|level_embed }}" width="100%" height="500"></iframe>
-                            </div>
-                            {% endif %}
-
-                            <!-- Include contained levels for predictions -->
-                            {% if level.contained_levels %}
-                                <div class="contained">
-                                    {% for contained in level.contained_levels %}
-                                        {{ contained.markdown_instructions|richtext_filters|safe }}
-                                        {{ contained.long_instructions|richtext_filters|safe }}
-                                        <div class="question">
-                                            {{ contained.questions.0.text|richtext_filters|safe }}
-                                        </div>
-                                        {% for answer in contained.answers %}
-                                            <div class="answer">{{ answer.text|richtext_filters|safe }}</div>
-                                        {% endfor %}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
+                        {% include "curricula/partials/level_sfmd_contents.html" with lesson=lesson level=level %}
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -121,33 +84,14 @@
                             {{ chunk.progression|default:"Levels" }}
                         </li>
                         {% for level in chunk.levels %}
-                            <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
-                                <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
-                                    {% if level.assessment %}
-                                        <i class="fa-check-circle fa"></i>
-                                    {% endif %}
-                                    <span class="level-icon fa"></span>
-                                    {% if level.bonus_level %}
-                                        Extra
-                                    {% else %}
-                                        {{ level.position }}
-                                    {% endif %}
-                                </a>
-                            </li>
+                            {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
                         {% endfor %}
                         <li class="level-expando-tip">(click tabs to see student view)</li>
                     </ul>
 
                     <!-- Body panels -->
                     {% for level in chunk.levels %}
-                    <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
-                        <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
-                            View on Code Studio
-                            <span class="level-link-icon fa"></span>
-                        </a>
-
                         {% include "curricula/partials/level_contents.html" with level=level %}
-                    </div>
                     {% endfor %}
                 </div>
             {% endif %}
