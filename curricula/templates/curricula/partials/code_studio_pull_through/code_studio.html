@@ -21,9 +21,9 @@
                                 {% endif %}
                         </li>
                         {% if level.type == "BubbleChoice" %}
-                            {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
+                            {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
                             {% for sublevel in level.sublevels %}
-                                {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=sublevel %}
+                                {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=sublevel %}
                             {% endfor %}
 
                         {% else %}
@@ -45,11 +45,11 @@
                     <!-- Body panels -->
                     {% if level.type == "BubbleChoice" %}
                          <!-- Body panels -->
-                        {% include "curricula/partials/level_contents.html" with level=level %}
+                        {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=level %}
 
                         <!-- Body panels -->
                         {% for sublevel in level.sublevels %}
-                            {% include "curricula/partials/level_contents.html" with level=sublevel %}
+                            {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=sublevel %}
                         {% endfor %}
                     {% else %}
                         <!-- Teacher Overview Content -->
@@ -69,7 +69,7 @@
                         {% endif %}
 
                         <!-- Student Overview Content -->
-                        {% include "curricula/partials/level_sfmd_contents.html" with lesson=lesson level=level %}
+                        {% include "curricula/partials/code_studio_pull_through/level_sfmd_contents.html" with lesson=lesson level=level %}
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -84,14 +84,14 @@
                             {{ chunk.progression|default:"Levels" }}
                         </li>
                         {% for level in chunk.levels %}
-                            {% include "curricula/partials/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
+                            {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
                         {% endfor %}
                         <li class="level-expando-tip">(click tabs to see student view)</li>
                     </ul>
 
                     <!-- Body panels -->
                     {% for level in chunk.levels %}
-                        {% include "curricula/partials/level_contents.html" with level=level %}
+                        {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=level %}
                     {% endfor %}
                 </div>
             {% endif %}
