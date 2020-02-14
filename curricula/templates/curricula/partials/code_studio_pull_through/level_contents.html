@@ -27,6 +27,9 @@
         {% else %}
             {{ level.long_instructions|richtext_filters|safe }}
         {% endif %}
+        {% if level.description %}
+            {{ level.description|richtext_filters|safe }}
+        {% endif %}
     </div>
 
     <!-- Embed video if present -->
