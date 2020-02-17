@@ -23,7 +23,7 @@
                         {% if level.type == "BubbleChoice" %}
                             {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
                             {% for sublevel in level.sublevels %}
-                                {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=sublevel %}
+                                {% include "curricula/partials/code_studio_pull_through/level_numbered_tab_sublevel.html" with unit=unit lesson=lesson level=level sublevel=sublevel %}
                             {% endfor %}
 
                         {% else %}
@@ -49,7 +49,7 @@
 
                         <!-- Body panels -->
                         {% for sublevel in level.sublevels %}
-                            {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=sublevel %}
+                            {% include "curricula/partials/code_studio_pull_through/level_contents_sublevel.html" with level=level sublevel=sublevel %}
                         {% endfor %}
                     {% else %}
                         <!-- Teacher Overview Content -->
