@@ -380,6 +380,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def get_json_url(self):
         return reverse('curriculum:unit_element', args=[self.unit_name])
 
+    def get_json_standards_url(self):
+        return reverse('curriculum:unit_standards', args=[self.unit_name])
+
     def get_resources_pdf_url(self):
         return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
 
@@ -452,9 +455,17 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
-                self.get_vocab_url(), self.get_standards_url(), self.get_standards_csv_url(),
-                self.get_compiled_url(), self.get_json_url()]
+        urls = [
+            self.get_absolute_url(),
+            self.get_resources_url(),
+            self.get_blocks_url(),
+            self.get_vocab_url(),
+            self.get_standards_url(),
+            self.get_standards_csv_url(),
+            self.get_compiled_url(),
+            self.get_json_url(),
+            self.get_json_standards_url()
+        ]
         return urls
 
     def pdf_urls(self):
