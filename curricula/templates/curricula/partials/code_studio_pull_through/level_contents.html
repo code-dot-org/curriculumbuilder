@@ -69,4 +69,8 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    {% if level.type == "BubbleChoice" %}
+       {% include "curricula/partials/code_studio_pull_through/level_bubble_choice_parent.html" with level=level %}
+    {% endif %}
 </div>

@@ -1,0 +1,17 @@
+<div>
+    <p>{{level.description}}</p>
+    <br/>
+    <strong>Choose from the following activities:</strong>
+    {% for sublevel in level.sublevels %}
+        <div class="sublevel-info">
+            <img src="{{sublevel.thumbnail_url}}" width="150" class="sublevel-thumbnail"/>
+            <div>
+                <div class="sublevel-bubble-and-name">
+                    <div class="sublevel-progress-bubble">{{sublevel.letter}}</div>
+                    <span>{{sublevel.display_name}}</span>
+                </div>
+                <p>{{sublevel.description}}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
