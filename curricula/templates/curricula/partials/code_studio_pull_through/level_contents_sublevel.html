@@ -2,7 +2,7 @@
 
 
 <div id="level-expando-{{ lesson.number }}-{{ level.position }}-{{ sublevel.position }}" class="level-panel" data-level="{{ sublevel.letter }}">
-    <a href="{{ sublevel.path|level_link }}" target="_blank" class="level-link">
+    <a href="{{ level.path|sublevel_link }}{{sublevel.position}}" target="_blank" class="level-link">
         View on Code Studio
         <span class="level-link-icon fa"></span>
     </a>
