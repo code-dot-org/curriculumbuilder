@@ -510,19 +510,26 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
 
             levels = []  # To store levels organized by logical chunk
             counter = 0
+            last_kind = raw_levels[0].get('type')
             last_type = raw_levels[0].get('named_level')
             last_progression = raw_levels[0].get('progression')
             levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
             for level in raw_levels:
 
+                current_kind = level.get('type')
                 current_type = level.get('named_level')
                 current_progression = level.get('progression')
-                if last_type != current_type or last_progression != current_progression:
+                if current_kind == 'BubbleChoice' or last_kind == 'BubbleChoice' or last_type != current_type or last_progression != current_progression:
+                    last_kind = current_kind
                     last_type = current_type
                     last_progression = current_progression
                     counter += 1
-                    levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
+                    if last_kind == 'BubbleChoice':
+                        levels.insert(counter, {'named': level.get('display_name'), 'progression': level.get('display_name'), 'levels': []})
+                    else :
+                        levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
+
 
                 # Use value of block-text attribute in long_instructions to build parsed_long_instructions,
                 # which replaces <xml></xml> with block-text, if present.
