@@ -1,0 +1,41 @@
+{% load mezzanine_tags no_autoplay level_link level_embed %}
+
+<div class="admonition assessment">
+    <p class="admonition-title">
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        Assessment Opportunities
+    </p>
+    <div class="rubric-key-concept">
+        <span class="rubric-header">Key Concepts:</span>
+        <p>
+            {{ level.rubric_key_concept|richtext_filters|safe }}
+        </p>
+    </div>
+    <div>
+        <span class="rubric-header">Assessment Criteria:</span>
+        <details class="rubric-performance-level">
+            <summary>Extensive Evidence</summary>
+            <p>
+                {{ level.rubric_performance_level_1|richtext_filters|safe }}
+            </p>
+        </details>
+        <details class="rubric-performance-level">
+            <summary>Convincing Evidence</summary>
+            <p>
+                {{ level.rubric_performance_level_2|richtext_filters|safe }}
+            </p>
+        </details>
+        <details class="rubric-performance-level">
+            <summary>Limited Evidence</summary>
+            <p>
+                {{ level.rubric_performance_level_3|richtext_filters|safe }}
+            </p>
+        </details>
+        <details class="rubric-performance-level">
+            <summary>No Evidence</summary>
+            <p>
+                {{ level.rubric_performance_level_4|richtext_filters|safe }}
+            </p>
+        </details>
+    </div>
+</div>

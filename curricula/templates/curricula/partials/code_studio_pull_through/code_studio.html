@@ -1,0 +1,100 @@
+{% load mezzanine_tags no_autoplay level_link level_embed %}
+
+<div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
+
+    {% with lesson.get_levels as stage %}
+        {% for chunk in stage %}
+
+            <!-- Named Levels get their own row -->
+            {% if chunk.named %}
+                {% for level in chunk.levels %}
+
+                <div class="stage-chunk named-{{ chunk.named }} always-on-{% if level.teacher_markdown %}True{% else %}False{% endif %}">
+
+                    <!-- Header tabs -->
+                    <ul>
+                        <li class="chunk-header type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                            {{ level.display_name|default:level.name }}
+                            <span class="level-icon fa"></span>
+                                {% if level.assessment %}
+                                    <i class=" fa-check-circle fa"></i>
+                                {% endif %}
+                        </li>
+                        {% if level.type == "BubbleChoice" %}
+                            {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
+                            {% for sublevel in level.sublevels %}
+                                {% include "curricula/partials/code_studio_pull_through/level_numbered_tab_sublevel.html" with unit=unit lesson=lesson level=level sublevel=sublevel %}
+                            {% endfor %}
+
+                        {% else %}
+                            {% if level.teacher_markdown %}
+                                <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                                    <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
+                                        Teacher Overview
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="level-bubble {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
+                                <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-sfmd">
+                                    Student Overview
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                    <!-- Body panels -->
+                    {% if level.type == "BubbleChoice" %}
+                         <!-- Body panels -->
+                        {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=level %}
+
+                        <!-- Body panels -->
+                        {% for sublevel in level.sublevels %}
+                            {% include "curricula/partials/code_studio_pull_through/level_contents_sublevel.html" with level=level sublevel=sublevel %}
+                        {% endfor %}
+                    {% else %}
+                        <!-- Teacher Overview Content -->
+                        {% if level.teacher_markdown %}
+                        <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}" markdown="1">
+
+                            <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
+                                View on Code Studio
+                                <span class="level-link-icon fa"></span>
+                            </a>
+
+                            <div class="teacher-markdown">
+                                {{ level.teacher_markdown|richtext_filters|safe }}
+                            </div>
+
+                        </div>
+                        {% endif %}
+
+                        <!-- Student Overview Content -->
+                        {% include "curricula/partials/code_studio_pull_through/level_sfmd_contents.html" with lesson=lesson level=level %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            <!-- Unnamed Levels are grouped in a row together -->
+            {% else %}
+                <div class="stage-chunk named-{{ chunk.named }} always-on-False">
+
+                    <!-- Header tabs -->
+                    <ul>
+                        <li class="chunk-header">
+                            {{ chunk.progression|default:"Levels" }}
+                        </li>
+                        {% for level in chunk.levels %}
+                            {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
+                        {% endfor %}
+                        <li class="level-expando-tip">(click tabs to see student view)</li>
+                    </ul>
+
+                    <!-- Body panels -->
+                    {% for level in chunk.levels %}
+                        {% include "curricula/partials/code_studio_pull_through/level_contents.html" with level=level %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+</div>

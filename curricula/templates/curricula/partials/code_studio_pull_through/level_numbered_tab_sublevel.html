@@ -1,0 +1,9 @@
+<li class="level-bubble type-{{ sublevel.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-{{ sublevel.position }}-tab" data-level="{{ sublevel.letter }}" data-named="{{ sublevel.named_level }}">
+    <a href="#level-expando-{{ lesson.number }}-{{ level.position }}-{{ sublevel.position }}">
+        {% if level.assessment %}
+            <i class="fa-check-circle fa"></i>
+        {% endif %}
+        <span class="level-icon fa"></span>
+        {{ level.position }}{{ sublevel.letter }}
+    </a>
+</li>
