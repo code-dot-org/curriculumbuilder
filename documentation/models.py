@@ -35,11 +35,14 @@ class IDE(Page, RichText, CloneableMixin):
     def get_absolute_url(self):
         return '/%s/' % self.slug
 
+    def get_relative_url(self):
+        return '%s/' % self.slug
+
     def get_published_url(self):
         return '//studio.code.org/docs/%s/' % self.slug
 
     def jackfrost_urls(self):
-        urls = ["/documentation%s" % self.get_absolute_url()]
+        urls = ["/documentation%s" % self.get_absolute_url(), "/docs%s" % self.get_absolute_url()]
         return urls
 
     def jackfrost_can_build(self):
@@ -162,7 +165,7 @@ class Block(Page, RichText, CloneableMixin):
         return '//studio.code.org/docs/%s/%s/' % (self.parent_ide.slug, self.slug)
 
     def jackfrost_urls(self):
-        urls = ["/documentation%s" % self.get_absolute_url(), "/documentation%sembed/" % self.get_absolute_url()]
+        urls = ["/documentation%s" % self.get_absolute_url(), "/documentation%sembed/" % self.get_absolute_url(), "/docs%s" % self.get_absolute_url(), "/docs%sembed/" % self.get_absolute_url()]
         return urls
 
     def jackfrost_can_build(self):
@@ -317,7 +320,7 @@ class Map(Page, RichText, CloneableMixin):
         return '//studio.code.org/docs%s' % self.get_absolute_url()
 
     def jackfrost_urls(self):
-        urls = ["/documentation%s" % self.get_absolute_url()]
+        urls = ["/documentation%s" % self.get_absolute_url(), "/docs%s" % self.get_absolute_url()]
         return urls
 
     def jackfrost_can_build(self):

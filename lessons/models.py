@@ -510,19 +510,26 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
 
             levels = []  # To store levels organized by logical chunk
             counter = 0
+            last_kind = raw_levels[0].get('type')
             last_type = raw_levels[0].get('named_level')
             last_progression = raw_levels[0].get('progression')
             levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
 
             for level in raw_levels:
 
+                current_kind = level.get('type')
                 current_type = level.get('named_level')
                 current_progression = level.get('progression')
-                if last_type != current_type or last_progression != current_progression:
+                if current_kind == 'BubbleChoice' or last_kind == 'BubbleChoice' or last_type != current_type or last_progression != current_progression:
+                    last_kind = current_kind
                     last_type = current_type
                     last_progression = current_progression
                     counter += 1
-                    levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
+                    if last_kind == 'BubbleChoice':
+                        levels.insert(counter, {'named': level.get('display_name'), 'progression': level.get('display_name'), 'levels': []})
+                    else :
+                        levels.insert(counter, {'named': last_type, 'progression': last_progression, 'levels': []})
+
 
                 # Use value of block-text attribute in long_instructions to build parsed_long_instructions,
                 # which replaces <xml></xml> with block-text, if present.
@@ -537,12 +544,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
             return
 
     def get_levels_from_levelbuilder(self):
-        if not hasattr(self.unit, 'stage_name'):
-            return {'error': 'No stage name for unit', 'status': 404}
+        if not hasattr(self.unit, 'unit_name'):
+            return {'error': 'No unit name for unit', 'status': 404}
         else:
             try:
                 url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-                    self.unit.stage_name, self.number)
+                    self.unit.unit_name, self.number)
                 response = urllib2.urlopen(url)
                 data = json.loads(response.read())
                 self.stage = data
@@ -605,7 +612,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
         # Don't try to get stage data on every save.
         try:
             url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
-            self.unit.stage_name, self.number)
+            self.unit.unit_name, self.number)
             response = urllib2.urlopen(url)
             data = json.loads(response.read())
             self.stage = data
@@ -696,7 +703,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     @property
     def code_studio_link(self):
         return "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
-            self.unit.stage_name, self.number)
+            self.unit.unit_name, self.number)
 
     @property
     def changelog(self):
@@ -893,6 +900,7 @@ class Annotation(models.Model):
 Lesson._meta.get_field('login_required').verbose_name = 'Hidden'
 Lesson._meta.get_field('login_required').help_text = "Hide from listings and prevent be publishing."
 Lesson._meta.get_field('status').help_text = "With draft chosen this lesson will not be updated during publish."
+Resource._meta.get_field('gd').help_text = "Only check this box for a google doc (Not google presentation, spreadsheet, etc)"
 
 reversion.register(Activity, follow=('lesson', ))
 reversion.register(Objective, follow=('lesson', ))

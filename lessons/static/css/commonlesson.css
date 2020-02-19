@@ -931,8 +931,6 @@ details.rubric-performance-level {
     margin-top: 5px;
 }
 
-
-
 .rubric-header {
     font-weight: bold;
 }
@@ -940,3 +938,35 @@ details.rubric-performance-level {
 div.rubric-key-concept p {
     margin: 5px;
 }
+
+/* Bubble Choice */
+.sublevel-progress-bubble {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 2px solid gray;
+    border-radius: 15px;
+    text-align: center;
+    margin-right: 10px;
+    line-height: 15px;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.sublevel-thumbnail {
+    margin: 10px;
+}
+
+.sublevel-info {
+    display: flex;
+}
+
+.sublevel-bubble-and-name {
+    display: flex;
+    margin: 10px;
+}
+
+.sublevel-info p {
+    margin: 10px;
+}
+

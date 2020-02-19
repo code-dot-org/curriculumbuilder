@@ -1,7 +1,7 @@
 from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
 
-from lessons.models import Lesson, Resource
+from lessons.models import Lesson, Resource, Activity
 
 class LessonFactory(DjangoModelFactory):
     class Meta:
@@ -21,3 +21,12 @@ class ResourceFactory(DjangoModelFactory):
     slug = Sequence(lambda n: "test-resource-%03d" % n)
     student = True
     user = SubFactory('curricula.factories.UserFactory')
+
+class ActivityFactory(DjangoModelFactory):
+    class Meta:
+        model = Activity
+
+    name = Sequence(lambda n: "Test Activity %03d" % n)
+    content = Sequence(lambda n: "activity-content-%03d" % n)
+    user = SubFactory('curricula.factories.UserFactory')
+    lesson = SubFactory('lessons.factories.LessonFactory')

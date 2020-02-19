@@ -10,6 +10,8 @@ from django.db.models import Count, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils import translation
+from django.utils.translation import get_language
 
 from mezzanine.pages.models import Page, RichText, Orderable, PageMoveException
 from mezzanine.core.fields import RichTextField
@@ -28,6 +30,8 @@ from documentation.models import Map
 import lessons.models
 
 from i18n.models import InternationalizablePage
+
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +108,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return reverse('curriculum:curriculum_view', args=[self.slug])
 
     def get_pdf_url(self):
-        return reverse('curriculum:curriculum_pdf', args=[self.slug])
+        language = get_language()
+        if (language != 'en-us' and language not in settings.LANGUAGE_GENERATE_PDF):
+            language = settings.LANGUAGE_CODE
+        with translation.override(language):
+            return reverse('curriculum:curriculum_pdf', args=[self.slug])
 
     def get_json_url(self):
         return reverse('curriculum:curriculum_element', args=[self.slug])
@@ -160,7 +168,11 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return urls
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
+        return can_build
 
     def publish(self, children=False, silent=False):
         if children:
@@ -292,7 +304,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     ancestor = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     disable_numbering = models.BooleanField(default=False, help_text="Override to disable unit numbering")
     number = models.IntegerField('Number', blank=True, null=True)
-    stage_name = models.CharField('Script', max_length=255, blank=True, null=True,
+    unit_name = models.CharField('Script', max_length=255, blank=True, db_column='stage_name', null=True,
                                   help_text='Name of Code Studio script')
     questions = RichTextField('Support Details', help_text='Open questions or comments to add to all lessons in unit',
                               blank=True, null=True)
@@ -359,10 +371,17 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return reverse('curriculum:unit_compiled', args=[self.curriculum.slug, self.slug])
 
     def get_pdf_url(self):
-        return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
+        language = get_language()
+        if (language != 'en-us' and language not in settings.LANGUAGE_GENERATE_PDF):
+            language = settings.LANGUAGE_CODE
+        with translation.override(language):
+            return reverse('curriculum:unit_pdf', args=[self.curriculum.slug, self.slug])
 
     def get_json_url(self):
-        return reverse('curriculum:stage_element', args=[self.stage_name])
+        return reverse('curriculum:unit_element', args=[self.unit_name])
+
+    def get_json_standards_url(self):
+        return reverse('curriculum:unit_standards', args=[self.unit_name])
 
     def get_resources_pdf_url(self):
         return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
@@ -436,71 +455,65 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     # Return publishable urls for JackFrost
     def jackfrost_urls(self):
-        urls = [self.get_absolute_url(), self.get_resources_url(), self.get_blocks_url(),
-                self.get_vocab_url(), self.get_standards_url(), self.get_standards_csv_url(),
-                self.get_compiled_url(), self.get_json_url()]
+        urls = [
+            self.get_absolute_url(),
+            self.get_resources_url(),
+            self.get_blocks_url(),
+            self.get_vocab_url(),
+            self.get_standards_url(),
+            self.get_standards_csv_url(),
+            self.get_compiled_url(),
+            self.get_json_url(),
+            self.get_json_standards_url()
+        ]
         return urls
 
     def pdf_urls(self):
         return [self.get_pdf_url(), self.get_resources_pdf_url()]
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required and not self.curriculum.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s self.curriculum.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required, self.curriculum.login_required))
+        return can_build
+
+    def yield_urls_content(self, urls, slack_message_prefix, silent):
+        if self.jackfrost_can_build():
+            failed_urls = []
+            for url in urls:
+                try:
+                    read, written = build_single(url)
+                    if not silent:
+                        slack_message('slack/message.slack', {
+                            'message': '%s %s %s %s' % (slack_message_prefix, self.content_model, self.title, url),
+                            'color': '#00adbc'
+                        })
+                    yield json.dumps(written)
+                    yield '\n'
+                except Exception, e:
+                    logger.exception("Error obtaining content for url %s: %s" % (url, traceback.format_exc()))
+                    failed_urls.append(url)
+            if len(failed_urls) > 0:
+                raise RuntimeError("Error obtaining content for %d out of %d urls: %s" % (len(failed_urls), len(urls), failed_urls))
+        else:
+            raise RuntimeError('Unable to generate content: jackfrost cannot build')
 
     def publish(self, children=False, silent=False):
         if children:
             for lesson in self.lesson_set.all():
                 for result in lesson.publish():
                     yield result
-        if self.jackfrost_can_build():
-            for url in self.jackfrost_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published %s %s %s' % (self.content_model, self.title, url),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception('Failed to publish %s' % self)
+        for content in self.yield_urls_content(self.jackfrost_urls(), 'published html page: ', silent):
+            yield content
 
     def publish_pdfs(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            for url in self.pdf_urls():
-                try:
-                    read, written = build_single(url)
-                    if not silent:
-                        slack_message('slack/message.slack', {
-                            'message': 'published PDF for %s %s' % (self.content_model, self.title),
-                            'color': '#00adbc'
-                        })
-                    yield json.dumps(written)
-                    yield '\n'
-                except Exception, e:
-                    yield json.dumps(e.message)
-                    yield '\n'
-                    logger.exception('Failed to publish PDF %s' % self)
+        for content in self.yield_urls_content(self.pdf_urls(), 'published pdf: ', silent):
+            yield content
 
     def publish_json(self, silent=False, *args, **kwargs):
-        if self.jackfrost_can_build():
-            url = self.get_json_url()
-            try:
-                read, written = build_single(url)
-                if not silent:
-                    slack_message('slack/message.slack', {
-                        'message': 'published JSON for %s %s' % (self.content_model, self.title),
-                        'color': '#00adbc'
-                    })
-                yield json.dumps(written)
-                yield '\n'
-            except Exception, e:
-                yield json.dumps(e.message)
-                yield '\n'
-                logger.exception('Failed to publish JSON %s' % self)
+        for content in self.yield_urls_content([self.get_json_url()], 'published JSON: ', silent):
+            yield content
 
     def get_standards(self):
         # ToDo: run the standards queries once and place all the querysets in a dict for later use
@@ -551,7 +564,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     @property
     def support_script(self):
-        return "https://studio.code.org/s/%s-support" % getattr(self, 'stage_name', self.slug)
+        return "https://studio.code.org/s/%s-support" % getattr(self, 'unit_name', self.slug)
 
     @property
     def header_corner(self):
@@ -605,8 +618,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         except:
             self.number = self.curriculum.units.count() + 1
 
-        if not self.stage_name:
-            self.stage_name = "%s%d" % (self.curriculum.slug, self.number)
+        if not self.unit_name:
+            self.unit_name = "%s%d" % (self.curriculum.slug, self.number)
 
         super(Unit, self).save(*args, **kwargs)
 
@@ -719,7 +732,11 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return order
 
     def jackfrost_can_build(self):
-        return settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        can_build = settings.ENABLE_PUBLISH and self.status == 2 and not self.login_required
+        if not can_build:
+            logger.warn('jackfrost_can_build returns %s. settings.ENABLE_PUBLISH: %s self.status: %s self.login_required: %s' \
+                % (can_build, settings.ENABLE_PUBLISH, self.status, self.login_required))
+        return can_build
 
     @property
     def unit(self):

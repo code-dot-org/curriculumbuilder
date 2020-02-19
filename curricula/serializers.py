@@ -35,15 +35,11 @@ class BlockSerializer(serializers.ModelSerializer):
         return obj.get_published_url()
 
 class StandardSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
     framework = serializers.SerializerMethodField()
 
     class Meta:
         model = Standard
-        fields = ('name', 'shortcode', 'description', 'category', 'framework', 'slug')
-
-    def get_category(self, obj):
-        return obj.category.name
+        fields = ('shortcode', 'framework')
 
     def get_framework(self, obj):
         return obj.framework.slug
@@ -94,7 +90,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('title', 'number', 'slug', 'stage_name', 'student_desc', 'teacher_desc', 'lessons')
+        fields = ('title', 'number', 'slug', 'unit_name', 'student_desc', 'teacher_desc', 'lessons')
 
     def get_teacher_desc(self, obj):
         return obj.content
@@ -112,7 +108,7 @@ class UnitLessonsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('title', 'slug', 'lessons')
+        fields = ('unit_name', 'lessons')
 
     def get_lessons(self, obj):
         lessons = obj.lessons
