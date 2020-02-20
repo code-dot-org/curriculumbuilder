@@ -383,12 +383,9 @@ html, body{
 }
 
 .tiplink {
-    float: left;
     width: 20px;
     font-size: 15px;
-    margin-left: -20px;
     clear: left;
-    display: block;
 }
 
 .tiplink-tip a:link, .tiplink-tip a:visited {
