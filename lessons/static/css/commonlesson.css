@@ -443,14 +443,6 @@ html, body{
     padding-left: 10px;
 }
 
-.say .tiplink, .guide .tiplink, .slides .tiplink {
-    margin-left: -35px;
-}
-
-.say ul .tiplink, .guide ul .tiplink, .slides ul .tiplink {
-    margin-left: -55px;
-}
-
 table { border-spacing: 0; }
 
 
