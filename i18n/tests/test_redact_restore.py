@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from past.builtins import basestring
 import glob
 import json
 import os
@@ -59,11 +60,11 @@ EN_FR = {
 
 def _translate(data):
     if isinstance(data, dict):
-        return {key: _translate(data[key]) for key in data.keys()}
+        return {key: _translate(data[key]) for key in list(data.keys())}
     elif isinstance(data, list):
         return [_translate(datum) for datum in data]
     elif isinstance(data, basestring):
-        for en, fr in EN_FR.iteritems():
+        for en, fr in EN_FR.items():
             data = re.sub(r"\b{}\b".format(en), fr, data)
         return data
     else:
@@ -153,7 +154,7 @@ def _annotate(left, right):
 
     See http://ddt.readthedocs.io/en/latest/api.html#ddt.ddt
     """
-    return [NamedList(key, [left[key], right[key]]) for key in left.keys()]
+    return [NamedList(key, [left[key], right[key]]) for key in list(left.keys())]
 
 class NamedList(list):
     def __init__(self, name, *args):
@@ -189,7 +190,7 @@ class RedactRestoreTestCase(TestCase):
         # versions have the same fields, and check each field pairwise against
         # both source and redacted.
         self.assertEqual(set(source.keys()), set(restored.keys()))
-        for key in source.keys():
+        for key in list(source.keys()):
             with self.subTest(key=key):
                 # no matter the changes made in the redaction, translation, and
                 # restoration process, the restored data should still produce
