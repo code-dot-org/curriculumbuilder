@@ -1,3 +1,4 @@
+from __future__ import print_function
 import json
 from rest_framework import serializers
 
@@ -214,7 +215,7 @@ class AnnotationSerializer(serializers.Serializer):
             instance.range_startOffset = ranges.startOffset
             instance.range_endOffset = ranges.endOffset
         except KeyError:
-            print "No ranges array passed to AnnotationSerializer."
+            print("No ranges array passed to AnnotationSerializer.")
 
         instance.save()
         return instance
@@ -235,6 +236,6 @@ class AnnotationSerializer(serializers.Serializer):
             annotation['range_startOffset'] = ranges.startOffset
             annotation['range_endOffset'] = ranges.endOffset
         except KeyError:
-            print "No ranges array passed to AnnotationSerializer."
+            print("No ranges array passed to AnnotationSerializer.")
 
         return Annotation.objects.create(**annotation)

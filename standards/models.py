@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.db import models
 from django.db.models import Count, Q
 
@@ -242,7 +243,7 @@ class Standard(Internationalizable):
         try:
             category = self.category
         except:
-            print "Couldn't find category"
+            print("Couldn't find category")
             return
 
         while not hasattr(category, 'framework'):

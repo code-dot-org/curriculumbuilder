@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os, time, re
 from datetime import datetime, timedelta
 
@@ -234,15 +235,15 @@ def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
         form = ChangelogForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            print "trying it"
+            print("trying it")
             with reversion.create_revision():
                 if form.cleaned_data['teacher_facing']:
                     changelog_user = User.objects.get(username=settings.CHANGELOG_USER)
                 else:
                     changelog_user = User.objects.get(username=settings.FEEDBACK_USER)
-                    print 'not teacher facing'
+                    print('not teacher facing')
 
-                print changelog_user
+                print(changelog_user)
 
                 lesson.save()
 
@@ -397,7 +398,7 @@ def unit_pdf(request, slug, unit_slug):
         unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
 
         c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
-        print unit.get_compiled_url()
+        print(unit.get_compiled_url())
         c.perform()
 
         c.close()
@@ -440,10 +441,10 @@ def unit_pjspdf(request, slug, unit_slug):
     req = Request(url, json.dumps(data), headers)
     response = urlopen(req)
     results = response.read()
-    print '\nresponse status code'
-    print response.code
-    print '\nresponse headers (pay attention to pjsc-* headers)'
-    print response.headers
+    print('\nresponse status code')
+    print(response.code)
+    print('\nresponse headers (pay attention to pjsc-* headers)')
+    print(response.headers)
 
     memoryPDF = StringIO(results)
     localPDF = PdfFileReader(memoryPDF)
@@ -663,7 +664,7 @@ def get_stage_details(request):
         payload = obj.get_levels_from_levelbuilder()
     except Exception, e:
         payload = {'status': 500, 'error': 'failed', 'exception': e.message}
-    print payload
+    print(payload)
     return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
 
 
@@ -754,12 +755,12 @@ class CompareHistoryView(HistoryCompareDetailView):
             for activity in obj.activity_set.all():
                 activity_1 = related1.get_for_object(activity).first()
                 activity_2 = related2.get_for_object(activity).first()
-                print "related obj"
-                print activity
-                print "related_v1"
-                print activity_1
-                print "related_v2"
-                print activity_2
+                print("related obj")
+                print(activity)
+                print("related_v1")
+                print(activity_1)
+                print("related_v2")
+                print(activity_2)
                 if activity_1 and activity_2:
                     compared, fields = self.compare(activity, activity_1, activity_2)
                     compare_data.append(compared)
@@ -940,8 +941,8 @@ def arduino(request, command, format=None):
 
 @never_cache
 def proxy_api(request, api_type, api_args):
-    print api_type
-    print api_args
+    print(api_type)
+    print(api_args)
     if api_type == 'weather':
         content_type = 'application/json'
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
@@ -949,15 +950,15 @@ def proxy_api(request, api_type, api_args):
                     "(select woeid from geo.places(1) where text = '%s')" % api_args
         yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
         result = urlopen(yql_url).read()
-        print result
+        print(result)
 
         try:
             data = json.loads(result)
             data = data['query']['results']['channel']['item']['condition']
-            print data
+            print(data)
         except:
             data = {'error': 'failed'}
-            print data
+            print(data)
 
         data = json.dumps(data)
     if api_type == 'temperature':
@@ -967,7 +968,7 @@ def proxy_api(request, api_type, api_args):
                     "(select woeid from geo.places(1) where text = '%s')" % api_args
         yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
         result = urlopen(yql_url).read()
-        print result
+        print(result)
 
         try:
             data = json.loads(result)
@@ -975,7 +976,7 @@ def proxy_api(request, api_type, api_args):
             data = "%sF" % data
         except:
             data = 'error'
-            print data
+            print(data)
 
     return HttpResponse(data, content_type=content_type)
 

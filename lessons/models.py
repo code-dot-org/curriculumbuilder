@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 import itertools
 import datetime
@@ -418,7 +419,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):
-            print "no unit here"
+            print("no unit here")
             msg = 'Lesson cannot live under a %s' % parent_type
             raise PageMoveException(msg)
         if not self.can_access(request):

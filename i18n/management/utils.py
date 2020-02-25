@@ -1,6 +1,7 @@
 """
 Helper methods for use during the i18n sync process
 """
+from __future__ import print_function
 import django.apps
 
 from django.conf import settings

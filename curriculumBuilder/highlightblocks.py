@@ -1,3 +1,4 @@
+from __future__ import print_function
 from markdown.util import etree
 from markdown.extensions import Extension
 from markdown.blockprocessors import BlockProcessor
@@ -24,17 +25,17 @@ class HighlightBlocksProcessor(BlockProcessor):
 
   def test(self, parent, block):
     sibling = self.lastChild(parent)
-    print GUIDE_RE.search(block)
+    print(GUIDE_RE.search(block))
     return GUIDE_RE.search(block)
 
   def run(self, parent, blocks):
-    print ''
-    print 'running'
-    print ''
+    print('')
+    print('running')
+    print('')
     sibling = self.lastChild(parent)
     block = blocks.pop(0)
     m = GUIDE_RE.search(block)
-    print m
+    print(m)
     if m:
       block = block[m.end() + 1:]  # removes the first line
       div = etree.SubElement(parent, 'div')

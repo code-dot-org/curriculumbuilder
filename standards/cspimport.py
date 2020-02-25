@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 
 cspframework = {}
@@ -415,18 +416,18 @@ for k,v in cspframework.iteritems():
 # import eus as top level categories
 for k, v in eus.iteritems():
   eu = Category.objects.get_or_create(framework=framework, name=v, description=v, shortcode=k, type='EU')
-  print eu
+  print(eu)
 
 # import los as second level categories, under the appropriate eu
 for k, v in los.iteritems():
   eu = Category.objects.get(framework=framework, shortcode=re.match('\A[1-9].[1-9]', k).group(0))
   lo = Category.objects.get_or_create(framework=framework, name=v, description=v, shortcode=k, type='LO', parent=eu)
-  print lo
+  print(lo)
 
 # import eks as standards under the appropriate lo
 for k, v in eks.iteritems():
   gradeband = GradeBand.objects.get(name='9-12')
   lo = Category.objects.get(framework=framework, shortcode=re.match('\A[1-9].[1-9].[1-9]', k).group(0))
   ek = Standard.objects.get_or_create(framework=framework, name=v, description=v, shortcode=k, category=lo, gradeband=gradeband)
-  print ek
+  print(ek)
   
