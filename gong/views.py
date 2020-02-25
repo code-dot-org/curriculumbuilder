@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 import json
 
@@ -10,7 +11,7 @@ from rest_framework.views import Response
 
 from django_slack import slack_message
 
-from models import Record
+from .models import Record
 
 logger = logging.getLogger(__name__)
 

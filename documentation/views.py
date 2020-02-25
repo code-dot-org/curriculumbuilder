@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound, HttpResponseServerError
 
@@ -5,7 +6,7 @@ from multiurl import ContinueResolving
 
 from mezzanine.pages.models import Page
 
-from models import IDE, Block, Map
+from .models import IDE, Block, Map
 
 
 def index(request):
