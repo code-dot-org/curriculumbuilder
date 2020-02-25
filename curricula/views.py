@@ -418,7 +418,7 @@ def unit_pdf(request, slug, unit_slug):
                 'user': request.user.get_username() or ip,
             })
             return response
-    except Exception, e:
+    except Exception as e:
         error_message = 'Building Unit PDF Failed: %s' % (traceback.format_exc())
         logger.exception(error_message)
         return HttpResponse(error_message, status=500)
@@ -603,7 +603,7 @@ def publish(request):
         response['X-Accel-Buffering'] = 'no'
 
         return response
-    except Exception, e:
+    except Exception as e:
         logger.exception('Publishing failed : %s' % (traceback.format_exc()))
         return HttpResponse(e.message, content_type='application/json', status=500)
 
@@ -646,7 +646,7 @@ def clone(request):
 
         return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))
 
-    except Exception, e:
+    except Exception as e:
         logger.exception('Cloning failed')
 
         return HttpResponse(e.message, content_type='application/json', status=500)
@@ -662,7 +662,7 @@ def get_stage_details(request):
         obj = klass.objects.get(pk=pk)
 
         payload = obj.get_levels_from_levelbuilder()
-    except Exception, e:
+    except Exception as e:
         payload = {'status': 500, 'error': 'failed', 'exception': e.message}
     print(payload)
     return HttpResponse(json.dumps(payload), content_type='application/json', status=payload.get('status', 200))

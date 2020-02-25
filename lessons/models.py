@@ -556,7 +556,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
                 self.stage = data
                 self.save()
                 return {'status': 200, 'success': 'true'}
-            except Exception, e:
+            except Exception as e:
                 logger.warning("Couldn't get stage details for %s" % self)
                 return {'status': 500, 'error': 'failed', 'exception': e.message}
 
@@ -586,7 +586,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
                         })
                     yield json.dumps(written)
                     yield '\n'
-                except Exception, e:
+                except Exception as e:
                     yield json.dumps(e.message)
                     yield '\n'
                     logger.exception('Failed to publish %s' % url)

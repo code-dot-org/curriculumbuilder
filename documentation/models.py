@@ -63,7 +63,7 @@ class IDE(Page, RichText, CloneableMixin):
                     })
                 yield json.dumps(written)
                 yield '\n'
-            except Exception, e:
+            except Exception as e:
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
@@ -182,7 +182,7 @@ class Block(Page, RichText, CloneableMixin):
                     })
                 yield json.dumps(written)
                 yield '\n'
-            except Exception, e:
+            except Exception as e:
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
@@ -341,7 +341,7 @@ class Map(Page, RichText, CloneableMixin):
                     })
                 yield json.dumps(written)
                 yield '\n'
-            except Exception, e:
+            except Exception as e:
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
