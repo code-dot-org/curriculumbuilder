@@ -127,30 +127,12 @@ LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
 LANGUAGES = (
-    ('ar-sa', _('Arabic')),
-    ('de-de', _('German')),
     ('en-us', _('English')),
-    ('el-gr', _('Greek')),
     ('es-mx', _('Mexican Spanish')),
-    ('fr-fr', _('French')),
     ('hi-in', _('Hindi')),
-    ('hu-hu', _('Hungarian')),
-    ('id-id', _('Indonesian')),
     ('it-it', _('Italian')),
-    ('ja-jp', _('Japanese')),
-    ('ko-kr', _('Korean')),
-    ('ms-my', _('Malay')),
-    ('nl-nl', _('Dutch')),
-    ('ru-ru', _('Russian')),
     ('sk-sk', _('Slovak')),
-    ('sv-se', _('Swedish')),
     ('th-th', _('Thai')),
-    ('tr-tr', _('Turkish')),
-    ('uk-ua', _('Ukranian')),
-    ('ur-pk', _('Urdu')),
-    ('vi-vn', _('Vietnamese')),
-    ('zh-cn', _('Simplified Chinese')),
-    ('zh-tw', _('Traditional Chinese')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
 )
 
