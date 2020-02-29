@@ -534,7 +534,8 @@ PHANTOMJS_KEY = os.environ.get('PHANTOMJS_KEY')
 AWS_QUERYSTRING_AUTH = False
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = 'cdo-curriculum'
+AWS_SESSION_TOKEN = os.environ.get('AWS_SESSION_TOKEN')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME') or 'cdo-curriculum'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
 AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
@@ -545,11 +546,11 @@ AWS_HEADERS = {
 AWS_BASE_URL = 'http://cdo-curriculum.s3-website-us-east-1.amazonaws.com'
 
 STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+STATICFILES_STORAGE = 'helpers.s3utils.StaticRootS3BotoStorage'
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
 MEDIAFILES_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'curriculumBuilder.s3utils.MediaRootS3BotoStorage'
+DEFAULT_FILE_STORAGE = 'helpers.s3utils.MediaRootS3BotoStorage'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
 I18N_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
@@ -585,7 +586,7 @@ FREEZE_INCLUDE_STATIC = False
 # operation which is used for every publish. Disabling preloading here should
 # speed up publishing content by about an order of magnitude.  See
 # https://stackoverflow.com/a/21121924/1810460 for more details.
-JACKFROST_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+JACKFROST_STORAGE = 'helpers.s3utils.S3Boto3StorageSTS'
 JACKFROST_STORAGE_KWARGS = {
     'preload_metadata': False
 }
@@ -660,7 +661,7 @@ CELERY_TIMEZONE = 'America/Los_Angeles'
 # COMPRESS SETTINGS #
 #####################
 
-COMPRESS_STORAGE = 'curriculumBuilder.s3utils.StaticRootS3BotoStorage'
+COMPRESS_STORAGE = 'helpers.s3utils.StaticRootS3BotoStorage'
 COMPRESS_URL = STATIC_URL
 
 ##################

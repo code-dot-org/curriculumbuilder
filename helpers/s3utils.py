@@ -1,4 +1,5 @@
 from storages.backends.s3boto import S3BotoStorage, S3BotoStorageFile
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
 # MediaRootS3BotoStorage  = lambda: S3BotoStorage(location='media')
@@ -60,3 +61,7 @@ StaticRootS3BotoStorage = lambda: S3BotoStorageSafe(location='static')
 StaticStagingS3BotoStorage = lambda: S3BotoStorageSafe(location='static_staging')
 MediaRootS3BotoStorage = lambda: S3BotoStorageSafe(location='media', file_overwrite=False)
 CurriculumRootS3BotoStorage = lambda: S3BotoStorageSafe(location='curriculum')
+
+class S3Boto3StorageSTS(S3Boto3Storage):
+  access_key = False
+  secret_key = False

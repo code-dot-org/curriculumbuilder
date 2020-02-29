@@ -17,6 +17,7 @@ from mezzanine.core.views import edit
 from django.core.files.storage import get_storage_class, FileSystemStorage, default_storage
 from django.core.files.base import ContentFile
 
+from helpers import pdfUtils
 # from wkhtmltopdf import WKHtmlToPdf
 from cStringIO import StringIO
 import traceback
@@ -386,43 +387,26 @@ def unit_compiled(request, slug, unit_slug):
 
     return render(request, template, {'curriculum': curriculum, 'unit': unit})
 
-
 # @login_required
 def unit_pdf(request, slug, unit_slug):
     try:
-        buffer = StringIO()
-        c = pycurl.Curl()
-        c.setopt(c.WRITEDATA, buffer)
-
         unit = get_object_or_404(Unit, curriculum__slug=slug, slug=unit_slug)
+        url = get_url_for_pdf(request, unit.get_compiled_url(), True)
+        pdf = pdfUtils.get_pdf_for_url(url)
 
-        c.setopt(c.URL, get_url_for_pdf(request, unit.get_compiled_url(), True))
-        print unit.get_compiled_url()
-        c.perform()
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
 
-        c.close()
-        compiled = buffer.getvalue()
-
-        if request.GET.get('html'):  # Allows testing the html output
-            response = HttpResponse(compiled)
-        else:
-            pdf = pdfkit.from_string(compiled.decode('utf8'), False, options=settings.WKHTMLTOPDF_CMD_OPTIONS, configuration=pdfkit_config)
-
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'inline;filename=unit%s.pdf' % unit.number
-
-            ip = get_real_ip(request)
-            slack_message('slack/message.slack', {
-                'message': 'created a PDF from %s %s' % (slug, unit_slug),
-                'user': request.user.get_username() or ip,
-            })
-            return response
+        ip = get_real_ip(request)
+        slack_message('slack/message.slack', {
+            'message': 'created a PDF from %s %s' % (slug, unit_slug),
+            'user': request.user.get_username() or ip,
+        })
+        return response
     except Exception, e:
         error_message = 'Building Unit PDF Failed: %s' % (traceback.format_exc())
         logger.exception(error_message)
         return HttpResponse(error_message, status=500)
-
-
 
 def unit_pjspdf(request, slug, unit_slug):
 
