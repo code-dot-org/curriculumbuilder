@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 import logging
 import json
@@ -189,7 +190,7 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
                     })
                 yield json.dumps(written)
                 yield '\n'
-            except Exception, e:
+            except Exception as e:
                 yield json.dumps(e.message)
                 yield '\n'
                 logger.exception('Failed to publish %s' % self)
@@ -491,7 +492,7 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
                         })
                     yield json.dumps(written)
                     yield '\n'
-                except Exception, e:
+                except Exception as e:
                     logger.exception("Error obtaining content for url %s: %s" % (url, traceback.format_exc()))
                     failed_urls.append(url)
             if len(failed_urls) > 0:

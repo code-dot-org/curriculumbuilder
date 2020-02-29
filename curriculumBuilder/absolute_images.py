@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from urlparse import urljoin
+from urllib.parse import urljoin
 import urllib2
 
 from markdown import Extension

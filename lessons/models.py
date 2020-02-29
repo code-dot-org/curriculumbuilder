@@ -1,11 +1,12 @@
+from __future__ import print_function
 import re
 import itertools
 import datetime
-import urllib2
+import urllib.request
 import logging
 import json
 import bleach
-from urlparse import urlparse
+from urllib.parse import urlparse
 # from copy import copy, deepcopy
 from django.conf import settings
 from django.db import models
@@ -418,7 +419,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     def can_move(self, request, new_parent):
         parent_type = getattr(new_parent, 'content_model', None)
         if not (parent_type == 'lesson' or parent_type == 'chapter' or parent_type == 'unit'):
-            print "no unit here"
+            print("no unit here")
             msg = 'Lesson cannot live under a %s' % parent_type
             raise PageMoveException(msg)
         if not self.can_access(request):
@@ -555,7 +556,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
                 self.stage = data
                 self.save()
                 return {'status': 200, 'success': 'true'}
-            except Exception, e:
+            except Exception as e:
                 logger.warning("Couldn't get stage details for %s" % self)
                 return {'status': 500, 'error': 'failed', 'exception': e.message}
 
@@ -585,7 +586,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
                         })
                     yield json.dumps(written)
                     yield '\n'
-                except Exception, e:
+                except Exception as e:
                     yield json.dumps(e.message)
                     yield '\n'
                     logger.exception('Failed to publish %s' % url)

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import operator
 import json
 
@@ -11,6 +12,7 @@ from rest_framework.response import Response
 from curricula.models import Curriculum, Unit
 from standards.models import *
 from standards.serializers import *
+from functools import reduce
 
 
 def index(request):
@@ -191,7 +193,7 @@ def nested_standard_list(request, curriculum_slug, framework_slug=None):
     standards = Standard.objects.filter(reduce(operator.and_, query_list)).order_by('shortcode')
 
     for standard in standards:
-        print standard.shortcode
+        print(standard.shortcode)
         serializer = NestedStandardSerializer(standard, context={'curriculum': curriculum})
         serialized[standard.shortcode] = serializer.data
 
@@ -220,7 +222,7 @@ def nested_category_list(request, curriculum_slug, framework_slug=None):
     categories = Category.objects.filter(reduce(operator.and_, query_list)).order_by('shortcode')
 
     for category in categories:
-        print category.shortcode
+        print(category.shortcode)
         serializer = NestedCategorySerializer(category, context={'curriculum': curriculum})
         serialized[category.shortcode] = serializer.data
 

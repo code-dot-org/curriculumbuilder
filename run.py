@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 from waitress import serve
-from curriculumBuilder import wsgi
+from .curriculumBuilder import wsgi
 
 # touch app-initialized
 open('/tmp/app-initialized', 'w').close()
