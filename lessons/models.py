@@ -2,11 +2,11 @@ from __future__ import print_function
 import re
 import itertools
 import datetime
-import urllib2
+import urllib.request
 import logging
 import json
 import bleach
-from urlparse import urlparse
+from urllib.parse import urlparse
 # from copy import copy, deepcopy
 from django.conf import settings
 from django.db import models

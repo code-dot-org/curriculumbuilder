@@ -8,7 +8,7 @@ import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
 
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 I18N_STATIC_DIR = os.path.join(BASE_DIR, "i18n", "static")
