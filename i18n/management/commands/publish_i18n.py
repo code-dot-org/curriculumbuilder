@@ -51,10 +51,13 @@ class Command(BaseCommand):
                         list(obj.publish(silent=True))
                     # Temporary hack to turn off PDF generation while still directing users to the translated pdfs if they exist
                     if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
-                        pdf_generation_start_time = time.time()
-                        list(obj.publish_pdfs(silent=True))
-                        pdf_generation_end_time = time.time()
-                        total_pdf_generation_time += (pdf_generation_end_time - pdf_generation_start_time)
+                        try:
+                          pdf_generation_start_time = time.time()
+                          list(obj.publish_pdfs(silent=True))
+                          pdf_generation_end_time = time.time()
+                          total_pdf_generation_time += (pdf_generation_end_time - pdf_generation_start_time)
+                        except:
+                          log("PDF publishing failed %s in %s" % (obj.slug, language_code))
                 success_count += 1
 
             end_time = time.time()
