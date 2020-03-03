@@ -289,7 +289,7 @@ INSTALLED_APPS = (
     # "mezzanine.forms",
     # "mezzanine.galleries",
     # "mezzanine.accounts",
-    "mezzanine.mobile",
+    # "mezzanine.mobile", # deprecated
     # Third party apps
     "mezzanine_pagedown",
     # "csvimport.app.CSVImportConf",
