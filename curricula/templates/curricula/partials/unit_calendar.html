@@ -15,7 +15,9 @@
                          style="{% if lesson.pacing_weight != None %}flex-grow: {{ lesson.pacing_weight }}; {% endif %}
                                  flex-basis: {{ unit.lesson_width }}%">
                         <span class="lesson-number">{{ lesson.number|stringformat:"02d" }}</span>
-                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">{{ lesson.title }}</a>
+                        <a class="lesson-title" href="{% url 'curriculum:lesson_view' curriculum.slug unit.slug lesson.number %}">
+                            {{ lesson.short_title|default:lesson.title }}
+                        </a>
                         <span class="lesson-icon fa"></span>
                     </div>
                 {% endfor %}
