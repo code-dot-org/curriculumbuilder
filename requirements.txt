@@ -1,18 +1,17 @@
 # uwsgi
 lxml==3.4.4
-Django==1.8.1
-Mezzanine==4.1.0
+Django==1.8.2
+Mezzanine==4.3.1
 Pillow==3.0.0
 Pygments==2.0.2
 SQLAlchemy==1.0.5
 Werkzeug==0.15.3
 #beautifulsoup4==4.4.0
-beautifulsoup4==4.4.1
-bleach==1.4.2
-# bleach==2.0.0
+beautifulsoup4==4.8.2
+bleach==3.1.1
 boto==2.38.0
 celery==3.1.23
-chardet==2.3.0
+chardet==3.0.4
 collectfast==0.2.3
 data-importer==2.2.1
 diff-match-patch==20121119
@@ -46,7 +45,7 @@ djangorestframework-recursive==0.1.1
 docutils
 #dryscrape
 factory-boy==2.12.0
-filebrowser-safe==0.4.1
+filebrowser-safe==0.5.0
 future==0.15.2
 -e git://github.com/mrjoshida/django-csvimport.git@master#egg=django_csvimport
 -e git://github.com/mrjoshida/grappelli-nested-inlines.git@master#egg=grappelli_nested_inlines
@@ -55,7 +54,7 @@ future==0.15.2
 # -e git://github.com/mrjoshida/django-codemirror-widget.git@master#egg=django_codemirror_widget
 -e git://github.com/mrjoshida/django-jackfrost.git@master#egg=django-jackfrost
 -e git://github.com/mrjoshida/django_cloneable.git@master#egg=django_cloneable
-grappelli-safe==0.4.2
+grappelli-safe==0.5.2
 gunicorn==19.6.0
 html5lib==0.999999
 # html5lib==0.999999999
@@ -64,7 +63,7 @@ jsonfield==1.0.3
 # Markdown==2.6.2
 -e git://github.com/mrjoshida/Python-Markdown.git@master#egg=Markdown
 markdown-newtab==0.1.0
-messytables==0.14.5
+messytables==0.15.2
 mezzanine-pagedown==0.8
 newrelic==2.96.0.80
 oauthlib==1.0.3
