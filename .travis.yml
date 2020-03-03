@@ -19,7 +19,7 @@ install:
   - npm install
 
 before_script:
-  - export PATH="$PATH:./node_modules/.bin:./.heroku/vendor/bin"
+  - export PATH="$PATH:$PYTHONPATH:$(pwd):./node_modules/.bin:./.heroku/vendor/bin"
   - psql -c 'create database curriculumbuilder;' -U postgres
   - python manage.py migrate
 
