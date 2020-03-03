@@ -60,8 +60,6 @@ class NewTabExtension(Extension):
             NewTabAutomailPattern(AUTOMAIL_RE, md)
 
 
-def makeExtension(configs=None):
+def makeExtension(**kwargs):
     """Loads the extension."""
-    if configs is None:
-        configs = {}
-    return NewTabExtension(configs=configs)
+    return NewTabExtension(**kwargs)

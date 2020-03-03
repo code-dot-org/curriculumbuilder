@@ -73,5 +73,5 @@ class DocLinksExtensions(Extension):
         md.inlinePatterns.add('block', doc_tag, '_begin')
 
 
-def makeExtension(configs=[]):
-    return DocLinksExtensions(configs=configs)
+def makeExtension(**kwargs):
+    return DocLinksExtensions(**kwargs)

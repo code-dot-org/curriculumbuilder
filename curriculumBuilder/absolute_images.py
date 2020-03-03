@@ -45,6 +45,6 @@ class AbsoluteImagesTreeprocessor(Treeprocessor):
         return True
 
 
-def makeExtension(configs=[]):
+def makeExtension(**kwargs):
     """ Return an instance of the AbsoluteImagesExtension """
-    return AbsoluteImagesExtension(configs=configs)
+    return AbsoluteImagesExtension(**kwargs)
