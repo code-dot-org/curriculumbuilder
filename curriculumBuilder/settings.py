@@ -446,7 +446,7 @@ RICHTEXT_ALLOWED_STYLES = (
     'data-pdf-link', 'data-lightbox', 'data-title', 'color', 'background', 'background-color'
 )
 
-def iframe_filter_domain(name, value):
+def iframe_filter_domain(tag, attr, value):
     """
     We use iframes in curriculum descriptions to embed Google Docs containing
     the lesson plans. We want to continue to allow iframes in general, but
@@ -455,10 +455,10 @@ def iframe_filter_domain(name, value):
     If in the future we want to expand our usage of iframes to include other use
     cases, those should be simililarly captured here.
     """
-    if name in ('width', 'height', 'frameborder', 'style'):
+    if attr in ('width', 'height', 'frameborder', 'style'):
         return True
 
-    if name == "src":
+    if attr == "src":
         url = urlparse(value)
         return url.netloc and url.netloc == 'docs.google.com'
 
