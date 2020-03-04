@@ -1,4 +1,5 @@
 from storages.backends.s3boto import S3BotoStorage, S3BotoStorageFile
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
 # MediaRootS3BotoStorage  = lambda: S3BotoStorage(location='media')
@@ -60,3 +61,21 @@ StaticRootS3BotoStorage = lambda: S3BotoStorageSafe(location='static')
 StaticStagingS3BotoStorage = lambda: S3BotoStorageSafe(location='static_staging')
 MediaRootS3BotoStorage = lambda: S3BotoStorageSafe(location='media', file_overwrite=False)
 CurriculumRootS3BotoStorage = lambda: S3BotoStorageSafe(location='curriculum')
+
+# This class is needed for the development_server script to be able to access
+# AWS with supplied credentials. There is a bug in the version of
+# djjango-storages we use (1.6.6), in which the security_token parameter is not picked
+# up from environment variables unless access_key and secret_key are false, in
+# which case all three parameters (access_key, secret_key, and security_token) are
+# picked up from environment variables during object initialization.
+#
+# see:
+#    https://github.com/jschneier/django-storages/issues/282
+#    https://github.com/jschneier/django-storages/blob/9f07eab9c2f86c3d911ec9f6b0f45dca36626bd1/storages/backends/s3boto3.py#L242
+#
+# TODO: When we upgrade django to a version past 1.11, we will be able to
+# upgrade django-storages to a version that does not have this bug, and delete
+# the below class
+class S3Boto3StorageSTS(S3Boto3Storage):
+  access_key = False
+  secret_key = False
