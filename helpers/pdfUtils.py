@@ -13,7 +13,6 @@ def get_pdf_for_url(url):
     with tempfile.NamedTemporaryFile(delete=True) as tmp:
       child = subprocess.call(["node", SCRIPT_PATH, "-w", tmp.name, "-u %s" % (url)])
       contents = tmp.read()
-      tmp.close()
       return contents
   except CalledProcessError, e:
     logger.exception("getting pdf failed for url %s: %s" % (url, e.output))
