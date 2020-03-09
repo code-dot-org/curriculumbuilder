@@ -8,7 +8,7 @@ ones which point to anchors on the existing page.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from markdown import Extension
+from markdown.extensions import Extension
 from markdown.inlinepatterns import \
     LinkPattern, ReferencePattern, AutolinkPattern, AutomailPattern, \
     LINK_RE, REFERENCE_RE, SHORT_REF_RE, AUTOLINK_RE, AUTOMAIL_RE
