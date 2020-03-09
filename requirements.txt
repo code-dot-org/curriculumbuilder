@@ -1,6 +1,6 @@
 # uwsgi
 lxml==3.4.4
-Django==1.8.2
+Django==1.9
 Mezzanine==4.3.1
 Pillow==3.0.0
 Pygments==2.0.2
