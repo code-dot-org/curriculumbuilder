@@ -56,7 +56,8 @@ class Command(BaseCommand):
                           list(obj.publish_pdfs(silent=True))
                           pdf_generation_end_time = time.time()
                           total_pdf_generation_time += (pdf_generation_end_time - pdf_generation_start_time)
-                        except:
+                        except Exception as e:
+                          log(e)
                           log("PDF publishing failed %s in %s" % (obj.slug, language_code))
                 success_count += 1
 
