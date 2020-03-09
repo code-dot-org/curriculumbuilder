@@ -41,5 +41,5 @@ class TipTagPattern(Pattern):
     for (key,val) in self.attrs.items():
       el.set(key,val)
     return el
-def makeExtension(configs=[]):
-  return TipLinksExtensions(configs=configs)
+def makeExtension(**kwargs):
+  return TipLinksExtensions(**kwargs)

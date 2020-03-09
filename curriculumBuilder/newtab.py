@@ -8,7 +8,7 @@ ones which point to anchors on the existing page.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from markdown import Extension
+from markdown.extensions import Extension
 from markdown.inlinepatterns import \
     LinkPattern, ReferencePattern, AutolinkPattern, AutomailPattern, \
     LINK_RE, REFERENCE_RE, SHORT_REF_RE, AUTOLINK_RE, AUTOMAIL_RE
@@ -60,8 +60,6 @@ class NewTabExtension(Extension):
             NewTabAutomailPattern(AUTOMAIL_RE, md)
 
 
-def makeExtension(configs=None):
+def makeExtension(**kwargs):
     """Loads the extension."""
-    if configs is None:
-        configs = {}
-    return NewTabExtension(configs=configs)
+    return NewTabExtension(**kwargs)

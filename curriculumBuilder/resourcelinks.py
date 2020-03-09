@@ -48,5 +48,5 @@ class ResourceLinksExtensions(Extension):
     resource_tag = AttrTagPattern(RESOURCE_RE, 'a',{'class':'resource', 'target':'_blank'})
     md.inlinePatterns.add('resource', resource_tag, '_begin')
 
-def makeExtension(configs=[]):
-  return ResourceLinksExtensions(configs=configs)
+def makeExtension(**kwargs):
+  return ResourceLinksExtensions(**kwargs)

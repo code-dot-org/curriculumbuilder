@@ -48,5 +48,5 @@ class VocabLinksExtensions(Extension):
         md.inlinePatterns.add('vocab', vocab_tag, '_begin')
 
 
-def makeExtension(configs=[]):
-    return VocabLinksExtensions(configs=configs)
+def makeExtension(**kwargs):
+    return VocabLinksExtensions(**kwargs)

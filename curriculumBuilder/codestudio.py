@@ -39,5 +39,5 @@ class CodeStudioExtensions(Extension):
         md.inlinePatterns.add('codestudio', code_studio_tag, '_begin')
 
 
-def makeExtension(configs=[]):
-    return CodeStudioExtensions(configs=configs)
+def makeExtension(**kwargs):
+    return CodeStudioExtensions(**kwargs)

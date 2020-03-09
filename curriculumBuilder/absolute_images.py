@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from urlparse import urljoin
 import urllib2
 
-from markdown import Extension
+from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
 
 BASE_URL = "https://code.org/curriculum/docs/"
@@ -45,6 +45,6 @@ class AbsoluteImagesTreeprocessor(Treeprocessor):
         return True
 
 
-def makeExtension(configs=[]):
+def makeExtension(**kwargs):
     """ Return an instance of the AbsoluteImagesExtension """
-    return AbsoluteImagesExtension(configs=configs)
+    return AbsoluteImagesExtension(**kwargs)
