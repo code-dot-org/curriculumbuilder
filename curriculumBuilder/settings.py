@@ -129,6 +129,7 @@ LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 LANGUAGES = (
     ('en-us', _('English')),
     ('es-mx', _('Mexican Spanish')),
+    ('es-es', _('Spanish')),
     ('hi-in', _('Hindi')),
     ('it-it', _('Italian')),
     ('sk-sk', _('Slovak')),
