@@ -18,16 +18,21 @@
         </div>
     {% endif %}
 
-    <div class="instructions-markdown" markdown="1">
-        <h3>Student Instructions</h3>
-        {{ sublevel.markdown|richtext_filters|safe }}
-        {{ sublevel.markdown_instructions|richtext_filters|safe }}
-        {% if sublevel.parsed_long_instructions %}
-            {{ sublevel.parsed_long_instructions|richtext_filters|safe }}
-        {% else %}
-            {{ sublevel.long_instructions|richtext_filters|safe }}
-        {% endif %}
-    </div>
+    <!-- Include contained levels for predictions -->
+    {% if sublevel.contained_levels %}
+        {% include "curricula/partials/code_studio_pull_through/contained_level.html" with level=sublevel %}
+    {% else %}
+        <div class="instructions-markdown" markdown="1">
+            <h3>Student Instructions</h3>
+            {{ sublevel.markdown|richtext_filters|safe }}
+            {{ sublevel.markdown_instructions|richtext_filters|safe }}
+            {% if sublevel.parsed_long_instructions %}
+                {{ sublevel.parsed_long_instructions|richtext_filters|safe }}
+            {% else %}
+                {{ sublevel.long_instructions|richtext_filters|safe }}
+            {% endif %}
+        </div>
+    {% endif %}
 
         <!-- Embed video if present -->
     {% if sublevel.type == "StandaloneVideo" and not pdf%}
@@ -54,19 +59,4 @@
     </div>
     {% endif %}
 
-    <!-- Include contained levels for predictions -->
-    {% if sublevel.contained_levels %}
-        <div class="contained">
-            {% for contained in sublevel.contained_levels %}
-                {{ contained.markdown_instructions|richtext_filters|safe }}
-                {{ contained.long_instructions|richtext_filters|safe }}
-                <div class="question">
-                    {{ contained.questions.0.text|richtext_filters|safe }}
-                </div>
-                {% for answer in contained.answers %}
-                    <div class="answer">{{ answer.text|richtext_filters|safe }}</div>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {% endif %}
 </div>
