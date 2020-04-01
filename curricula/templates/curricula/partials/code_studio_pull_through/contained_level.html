@@ -1,0 +1,22 @@
+{% load mezzanine_tags no_autoplay level_link level_embed %}
+
+<div class="instructions-markdown" markdown="1">
+    <h3>Student Instructions</h3>
+    <div class="contained">
+        {% for contained in level.contained_levels %}
+            {{ contained.markdown|richtext_filters|safe }}
+            {{ contained.markdown_instructions|richtext_filters|safe }}
+            {% if contained.parsed_long_instructions %}
+                {{ contained.parsed_long_instructions|richtext_filters|safe }}
+            {% else %}
+                {{ contained.long_instructions|richtext_filters|safe }}
+            {% endif %}
+            <div class="question">
+                {{ contained.questions.0.text|richtext_filters|safe }}
+            </div>
+            {% for answer in contained.answers %}
+                <div class="answer">{{ answer.text|richtext_filters|safe }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>

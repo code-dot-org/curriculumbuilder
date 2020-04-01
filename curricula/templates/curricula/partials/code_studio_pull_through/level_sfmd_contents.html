@@ -7,13 +7,16 @@
         <span class="level-link-icon fa"></span>
     </a>
 
-    <div class="instructions-markdown">
-
-        {{ level.markdown|richtext_filters|safe }}
-        {{ level.markdown_instructions|richtext_filters|safe }}
-        {{ level.long_instructions|richtext_filters|safe }}
-
-    </div>
+    <!-- Include contained levels for predictions -->
+    {% if level.contained_levels %}
+        {% include "curricula/partials/code_studio_pull_through/contained_level.html" with level=level %}
+    {% else %}
+        <div class="instructions-markdown">
+            {{ level.markdown|richtext_filters|safe }}
+            {{ level.markdown_instructions|richtext_filters|safe }}
+            {{ level.long_instructions|richtext_filters|safe }}
+        </div>
+    {% endif %}
 
     <!-- Embed video if present -->
     {% if level.type == "StandaloneVideo" and not pdf%}
@@ -28,21 +31,5 @@
     <div class="curriculum-reference">
         <iframe frameborder="0" class="map-embed" src="{{ level.reference|level_embed }}" width="100%" height="500"></iframe>
     </div>
-    {% endif %}
-
-    <!-- Include contained levels for predictions -->
-    {% if level.contained_levels %}
-        <div class="contained">
-            {% for contained in level.contained_levels %}
-                {{ contained.markdown_instructions|richtext_filters|safe }}
-                {{ contained.long_instructions|richtext_filters|safe }}
-                <div class="question">
-                    {{ contained.questions.0.text|richtext_filters|safe }}
-                </div>
-                {% for answer in contained.answers %}
-                    <div class="answer">{{ answer.text|richtext_filters|safe }}</div>
-                {% endfor %}
-            {% endfor %}
-        </div>
     {% endif %}
 </div>
