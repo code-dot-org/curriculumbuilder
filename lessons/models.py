@@ -343,6 +343,14 @@ Complete Lesson Page
 
 
 class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
+    CREATIVE_COMMONS_BY_NC_SA_IMAGE = 'img/creativeCommons-by-nc-sa.png'
+    CREATIVE_COMMONS_BY_NC_ND_IMAGE = 'img/creativeCommons-by-nc-nd.png'
+    CREATIVE_COMMONS_IMAGE_OPTIONS = [
+        (CREATIVE_COMMONS_BY_NC_SA_IMAGE, 'Creative Commons BY-NC-SA'),
+        (CREATIVE_COMMONS_BY_NC_ND_IMAGE, 'Creative Commons BY-NC-ND')
+    ]
+
+    creative_commons_image = models.CharField(max_length=255, choices=CREATIVE_COMMONS_IMAGE_OPTIONS, default=CREATIVE_COMMONS_BY_NC_SA_IMAGE)
     overview = RichTextField('Lesson Overview')
     short_title = models.CharField('Short Title (optional)', help_text='Used where space is at a premium',
                                    max_length=64, blank=True, null=True)
@@ -377,6 +385,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     image = models.ImageField('Image', blank=True, null=True)
     stage = JSONField('Code Studio stage', blank=True, null=True)
     _old_slug = models.CharField('old_slug', max_length=2000, blank=True, null=True)
+
 
     class Meta:
         ordering = ["number"]

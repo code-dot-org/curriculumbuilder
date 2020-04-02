@@ -346,6 +346,10 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin, FilterableAdm
                 'fields': ['standards', 'opportunity_standards'],
                 'classes': ['collapse-closed'],
             }),
+            ('Creative Commons', {
+                'fields' : ['creative_commons_image'],
+                'classes': ['collapse-closed'],
+            })
         )
         return fieldsets
 
