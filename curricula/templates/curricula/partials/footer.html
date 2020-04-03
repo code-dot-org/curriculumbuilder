@@ -4,7 +4,11 @@
 <footer>
   <div class="container">
     <div class="row">
-      <a href="https://creativecommons.org/"><img src="{% static lesson.creative_commons_image %}" border="0"></a><br/>
+      {% if lesson %}
+        <a href="https://creativecommons.org/"><img src="{% static lesson.creative_commons_image %}" border="0"></a><br/>
+      {% else %}
+        <a href="https://creativecommons.org/"><img src="{% static "img/creativeCommons-by-nc-sa.png" %}" border="0"></a><br/>
+      {% endif %}
       <span class="license">{{ license|richtext_filters|safe }}</span>
     </div>
   </div>
