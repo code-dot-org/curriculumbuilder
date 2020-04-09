@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     '-p', plugins
                 ])
 
-        # Compile Django translations
+        log("Compiling Django translations")
         management.call_command("compilemessages")
 
     def upload_translations(self):
@@ -75,6 +75,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log("I18n Sync Step 3 of 4: Download and process translations")
-        self.download_translations()
-        self.restore_translations()
-        self.upload_translations()
+        try:
+            self.download_translations()
+            self.restore_translations()
+            self.upload_translations()
+        except Exception as err:
+            log(err)
+            raise
