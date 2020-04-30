@@ -29,10 +29,12 @@ class CurriculaRenderingTestCase(TestCase):
         self.csf_unit = UnitFactory(
             parent=self.csf_curriculum,
             slug="csf-unit",
+            i18n_ready=True,
             lesson_template_override="curricula/csf_lesson.html")
         self.pl_unit = UnitFactory(
             parent=self.pl_curriculum,
             slug="pl-unit",
+            i18n_ready=True,
             lesson_template_override="curricula/pl_lesson.html")
         resource = ResourceFactory()
         self.test_lesson = LessonFactory(parent=self.test_unit)
