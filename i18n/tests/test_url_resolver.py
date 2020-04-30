@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import Permission
+from django.core.cache import cache
 from django.utils import translation
 
 from curricula.factories import UserFactory, CurriculumFactory, UnitFactory
@@ -29,6 +30,12 @@ class I18nUrlResolverTestCase(TestCase):
         response = self.client.get('/csf-1718/')
         self.assertEqual(response.status_code, 200)
         for language_code, _ in settings.LANGUAGES:
+            cache.set("translations/es_MX/LC_MESSAGES/TestModel.json", {
+                "1": {
+                    "description": u"Translated Description",
+                    "title": u"Translated Title"
+                }
+            })
             response = self.client.get('/%s/csf-1718/' % language_code)
             self.assertEqual(response.status_code, 200, "failed for language %s" % language_code)
             self.assertEqual(language_code, translation.get_language())
