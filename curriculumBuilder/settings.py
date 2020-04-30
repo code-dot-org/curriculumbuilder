@@ -132,6 +132,7 @@ LANGUAGES = (
     ('es-es', _('Spanish')),
     ('hi-in', _('Hindi')),
     ('it-it', _('Italian')),
+    ('pl-pl', _('Polish')),
     ('sk-sk', _('Slovak')),
     ('th-th', _('Thai')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
@@ -346,14 +347,13 @@ TEMPLATES = [{u'APP_DIRS': False,
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # Uncomment if using internationalisation or localisation
-    # 'django.middleware.locale.LocaleMiddleware',
+    'i18n.middleware.StrictLocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
