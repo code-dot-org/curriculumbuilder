@@ -10,7 +10,11 @@
             <ul>
 
                 {% for vocab in lesson.vocab.all %}
-                    <li><span class="vocab-word">{{ vocab.word }}</span>: {{ vocab.detailDef }}</li>
+                    {% if 'CS Fundamentals' in lesson.curriculum.title %}
+                      <li><span class="vocab-word">{{ vocab.word }}</span>: {{ vocab.simpleDef }}</li>
+                    {% else %}
+                      <li><span class="vocab-word">{{ vocab.word }}</span>: {{ vocab.detailDef }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
             </div>

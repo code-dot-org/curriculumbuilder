@@ -153,7 +153,11 @@
             <h2>{% trans 'Vocabulary' %}</h2>
             <ul>
                 {% for word in lesson.vocab.all %}
-                    <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                    {% if 'CS Fundamentals' in lesson.curriculum.title %}
+                        <li><strong>{{ word.word }}</strong> - {{ word.simpleDef }}</li>
+                    {% else %}
+                        <li><strong>{{ word.word }}</strong> - {{ word.detailDef }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         {% endif %}
