@@ -14,7 +14,6 @@ class I18nUrlResolverTestCase(TestCase):
         self.csf_unit = UnitFactory(
             parent=self.csf_curriculum,
             slug="csf-unit",
-            i18n_ready=True,
             lesson_template_override="curricula/csf_lesson.html")
         # URLs that start with a language prefix (in this case Polish)
         # don't work by default in Django. Check that they do in our system.
@@ -24,16 +23,11 @@ class I18nUrlResolverTestCase(TestCase):
         self.pl_unit = UnitFactory(
             parent=self.pl_curriculum,
             slug="pl-unit",
-            i18n_ready=True,
             lesson_template_override="curricula/pl_lesson.html")
 
     def test_render_curriculum(self):
         response = self.client.get('/csf-curriculum/')
         self.assertEqual(response.status_code, 200)
-        for language_code, _ in settings.LANGUAGES:
-            response = self.client.get('/%s/csf-curriculum/' % language_code)
-            self.assertEqual(response.status_code, 200, "failed for language %s" % language_code)
-            self.assertEqual(language_code, translation.get_language())
 
     def test_pl_lesson(self):
         response = self.client.get('/pl-curriculum/pl-unit/')
