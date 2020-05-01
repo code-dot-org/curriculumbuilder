@@ -25,6 +25,11 @@ class I18nUrlResolverTestCase(TestCase):
             slug="pl-unit",
             lesson_template_override="curricula/pl_lesson.html")
 
+    def tearDown(self):
+        # Unfortunately, other tests assume that the language activated will be English
+        # so let's clean up after ourselves.
+        translation.activate(settings.LANGUAGE_CODE)
+
     def test_render_curriculum(self):
         response = self.client.get('/csf-curriculum/')
         self.assertEqual(response.status_code, 200)
@@ -32,9 +37,6 @@ class I18nUrlResolverTestCase(TestCase):
             response = self.client.get('/%s/csf-curriculum/' % language_code)
             self.assertEqual(response.status_code, 200, "failed for language %s" % language_code)
             self.assertEqual(language_code, translation.get_language())
-        # Unfortunately, other tests assume that the language activated will be English
-        # so let's clean up after ourselves.
-        translation.activate(settings.LANGUAGE_CODE)
 
     def test_pl_lesson(self):
         response = self.client.get('/pl-curriculum/pl-unit/')
