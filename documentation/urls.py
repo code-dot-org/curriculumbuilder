@@ -12,5 +12,8 @@ urlpatterns = [
         url(r'^(?P<slug>[-\w]+lab)/$', views.ide_view, name='ide_view'),
         url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/$', views.block_view, name='block_view'),
         url(r'^(?P<ide_slug>[-\w]+lab)/(?P<slug>[-\w.]+)/embed/$', views.embed_view, name='embed_view'),
+
+        # generic route for doclinks
+        url(r'^doclink/((?P<ide>\w*?)\/)*(?P<slug>.*?)/$', views.doclink_view, name='doclink_view'),
     )
 ]

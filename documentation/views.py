@@ -1,5 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+import re
+
+from django.db.models import Q
 from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.shortcuts import render, get_object_or_404, redirect
 
 from multiurl import ContinueResolving
 
@@ -88,3 +91,31 @@ def maps_view(request, ):
     maps = Map.objects.filter(parent__slug='concepts')
     page = Page.objects.get(slug='concepts')
     return render(request, 'documentation/pages.html', {'page': page, 'pages': maps, 'type': 'Maps'})
+
+
+def doclink_view(request, ide, slug):
+    block = None
+    block_full = slug
+    block_alphanum = re.sub(r'[\(|\{].*[\)|\}\;]', '', slug)
+
+    if ide:
+        try:
+            block = Block.objects.get(parent_ide__slug=ide, slug=block_full)
+        except Block.DoesNotExist:
+            try:
+                print("Block with IDE not found, trying by title")
+                block = Block.objects.get(parent_ide__slug=ide, title=block_full)
+            except Block.DoesNotExist:
+                print("Block with IDE not found, trying with alphanum only")
+                block = Block.objects.filter(Q(parent_ide__slug=ide, slug=block_alphanum) |
+                                             Q(parent_ide__slug=ide, title=block_alphanum)).first()
+
+    if not block:
+        block = Block.objects.filter(Q(slug=block_full) | Q(title=block_full)).first()
+        if not block:
+            block = Block.objects.filter(Q(slug=block_alphanum) | Q(title=block_alphanum)).first()
+
+    if block:
+        return redirect(block.get_published_url())
+    else:
+        return HttpResponseNotFound()
