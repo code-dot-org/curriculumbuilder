@@ -166,7 +166,12 @@
 {% if code_block.ext_doc %}
     <div id="external_doc">
         <h2>Additional Information</h2>
-        <p>From <a href="{{ code_block.ext_doc }}" taraget="_blank">{{ code_block.ext_doc }}</a></p>
-        <iframe src="{{ code_block.ext_doc }}" width="100%" height="1000px" frameborder="none"></iframe>
+        <!-- dont render iframe for w3schools content, see https://github.com/code-dot-org/curriculumbuilder/pull/283 -->
+        {% if 'w3schools' in code_block.ext_doc %} 
+          <p>For more information, see <a href="{{ code_block.ext_doc }}" target="_blank">{{ code_block.ext_doc }}</a></p>
+        {% else %}
+          <p>From <a href="{{ code_block.ext_doc }}" target="_blank">{{ code_block.ext_doc }}</a></p>
+          <iframe src="{{ code_block.ext_doc }}" width="100%" height="1000px" frameborder="none"></iframe>
+        {% endif %}
     </div>
 {% endif %}
