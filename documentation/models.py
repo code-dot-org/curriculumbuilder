@@ -278,19 +278,27 @@ class Example(Orderable, CloneableMixin):
     app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
     image = models.ImageField(blank=True, null=True)
 
+    app_display_type_options = [
+        ('codeFromCodeField', 'Display app with code from code field above'),
+        ('embedAppWithCode', 'Embed app with code directly from code.org project')
+    ]
+
+    app_display_type = models.CharField(
+		    max_length=255,
+        choices=app_display_type_options,
+        default=app_display_type_options[0],
+        help_text='How the app and code fields for this example are rendered')
+
     def __unicode__(self):
         return self.name
 
     def get_embed_app(self):
         if self.app:
-            re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
-            if re.search(re_url, self.app):
-                embed_code = 'https://%s/embed' % re.search(re_url, self.app).group(0)
-                return embed_code
-            else:
-                return
-        else:
-            return
+            return self.app + '/embed'
+
+    def get_embed_app_and_code(self):
+        if self.app:
+            return self.app + '/embed_app_and_code'
 
 
 """
