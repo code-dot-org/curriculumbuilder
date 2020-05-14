@@ -294,11 +294,9 @@ class Example(Orderable, CloneableMixin):
 
     def _append_suffix_to_app(self, suffix):
          if self.app:
-            re_url = '\w*(localhost-studio.code.org:3000\/p\w*\/\w+\/\w+)'
-            #re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
+            re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
             if re.search(re_url, self.app):
-                #app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
-                app_with_suffix = 'http://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
+                app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
                 return app_with_suffix
 
     def get_embed_app(self):
