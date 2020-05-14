@@ -284,21 +284,28 @@ class Example(Orderable, CloneableMixin):
     ]
 
     app_display_type = models.CharField(
-		    max_length=255,
+        max_length=255,
         choices=app_display_type_options,
-        default=app_display_type_options[0],
+        default=app_display_type_options[0][0],
         help_text='How the app and code fields for this example are rendered')
 
     def __unicode__(self):
         return self.name
 
+    def _append_suffix_to_app(self, suffix):
+         if self.app:
+            re_url = '\w*(localhost-studio.code.org:3000\/p\w*\/\w+\/\w+)'
+            #re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
+            if re.search(re_url, self.app):
+                #app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
+                app_with_suffix = 'http://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
+                return app_with_suffix
+
     def get_embed_app(self):
-        if self.app:
-            return self.app + '/embed'
+        return self._append_suffix_to_app('embed')
 
     def get_embed_app_and_code(self):
-        if self.app:
-            return self.app + '/embed_app_and_code'
+        return self._append_suffix_to_app('embed_app_and_code')
 
 
 """
