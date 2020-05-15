@@ -59,7 +59,7 @@
         {% endif %}
     {% endif %}
     </div>
-    {% if unit and unit.is_csf%}
+    {% if curriculum.is_csf%}
       <div>
         <h2>How should I use this information?</h2>
         <p>
@@ -71,8 +71,8 @@
         <p>
           <span style="font-weight:900;">Cross-Curricular Standards</span>: Computer science helps students with problem-solving, logical thinking, cause and effect, and computational thinking. CS Fundamentals also includes opportunities for teachers to reinforce concepts related to English language arts, mathematics, and science while students are learning computer science. You can help students practice these standards just by following our lesson plans or by making slight adaptations, as outlined in our Cross-curricular Standards Guidance below.
         </p>
-        <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download Cross-Curricular Standards Guidance as a PDF' %}
+        <a href="https://docs.google.com/document/d/e/2PACX-1vRxKtK0HZ4jlqDG0kf5J8l0p_wTGZRQCwBY8HupNVl2EiPC7qs-57Ct0zMyLxuGEuWJX3lF9QbsDUNY/pub">
+          Cross-Curricular Standards Guidance
         </a>
         <h2>Standards Alignment</h2>
       </div>
@@ -82,7 +82,7 @@
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> {% trans 'Collapse All' %}</button>
     {% if unit %}{# If unit is passed, just grab that unit #}
         <br/>
-        {% if not unit.is_csf%}
+        {% if not curriculum.is_csf%}
           <a class="btn" role="button" href="{% url 'curriculum:by_unit_csv' curriculum.slug unit.slug %}">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download as CSV' %}
           </a>
@@ -110,9 +110,11 @@
         </div>
     {% else %}
         <br/>
-        <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download as CSV' %}
-        </a>
+        {% if not curriculum.is_csf%}
+          <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
+              <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download as CSV' %}
+          </a>
+        {% endif %}
         {% for unit in curriculum.units %}
         <div class="together">
             <h2><a href="{{ unit.get_absolute_url }}">Unit {{ unit.number }}: {{ unit.title }}</a></h2>

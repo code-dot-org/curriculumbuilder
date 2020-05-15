@@ -248,6 +248,10 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return Unit.objects.filter(parent=self, login_required=False)
 
     @property
+    def is_csf(self):
+        return Unit.objects.filter(parent=self, login_required=False)[0].is_csf
+
+    @property
     def should_be_translated(self):
         return any(unit.should_be_translated for unit in self.units)
 
