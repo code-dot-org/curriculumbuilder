@@ -336,6 +336,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return self.i18n_ready
 
     @property
+    def is_csf(self):
+        return self.curriculum.slug.startswith('csf')
+
     def has_resource_pdf(self):
         return self.curriculum.slug not in ['csf-18', 'csf-1718', 'hoc']
 
