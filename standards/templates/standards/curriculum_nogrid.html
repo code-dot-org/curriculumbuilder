@@ -59,17 +59,17 @@
         {% endif %}
     {% endif %}
     </div>
-    {% if curriculum.is_csf%}
+    {% if curriculum.has_cross_curricular_info %}
       <div>
         <h2>How should I use this information?</h2>
         <p>
           <span style="font-weight:900;">CSTA Standards Alignment</span>: Code.org’s CS Fundamentals course is aligned with the Computer Science Teachers’ Association (CSTA) standards for K-5 students. You can hit these standards by following our lesson plans. You can also see what CSTA standards your class has worked on in the Standards view of the teacher dashboard. <a href="https://support.code.org/hc/en-us/articles/360041726272-Can-I-see-my-class-s-progress-on-CSTA-Standards-Is-there-an-easy-progress-report-I-can-send-out-for-my-class-">Learn more.</a>
         </p>
-        <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
+        <a class="btn" role="button" style="font-size: 16px; padding-left: 0px;" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download standards mapping as CSV' %}
         </a>
         <p>
-          <span style="font-weight:900;">Cross-Curricular Standards</span>: Computer science helps students with problem-solving, logical thinking, cause and effect, and computational thinking. CS Fundamentals also includes opportunities for teachers to reinforce concepts related to English language arts, mathematics, and science while students are learning computer science. You can help students practice these standards just by following our lesson plans or by making slight adaptations, as outlined in our Cross-curricular Standards Guidance below.
+          <span style="font-weight:900;">Cross-Curricular Standards</span>: Computer science helps students with problem-solving, logical thinking, cause and effect, and computational thinking. CS Fundamentals also includes opportunities for teachers to reinforce concepts related to English language arts, mathematics, and science while students are learning computer science. You can help students practice these standards just by following our lesson plans or by making slight adaptations, as outlined in our Cross-Curricular Standards Guidance below.
         </p>
         <a href="https://docs.google.com/document/d/e/2PACX-1vRxKtK0HZ4jlqDG0kf5J8l0p_wTGZRQCwBY8HupNVl2EiPC7qs-57Ct0zMyLxuGEuWJX3lF9QbsDUNY/pub">
           Cross-Curricular Standards Guidance
@@ -77,12 +77,12 @@
         <h2>Standards Alignment</h2>
       </div>
     {% endif %}
-    <div class="together standards row">
+    <div class="together standards row" style="margin-left: 0px;">
     <button class="btn" id="expand-all"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span> {% trans 'Expand All' %}</button>
     <button class="btn" id="collapse-all"><span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span> {% trans 'Collapse All' %}</button>
     {% if unit %}{# If unit is passed, just grab that unit #}
         <br/>
-        {% if not curriculum.is_csf%}
+        {% if not curriculum.has_cross_curricular_info %}
           <a class="btn" role="button" href="{% url 'curriculum:by_unit_csv' curriculum.slug unit.slug %}">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download as CSV' %}
           </a>
@@ -110,7 +110,7 @@
         </div>
     {% else %}
         <br/>
-        {% if not curriculum.is_csf%}
+        {% if not curriculum.has_cross_curricular_info %}
           <a class="btn" role="button" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download as CSV' %}
           </a>

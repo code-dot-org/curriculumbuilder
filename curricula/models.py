@@ -248,8 +248,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return Unit.objects.filter(parent=self, login_required=False)
 
     @property
-    def is_csf(self):
-        return Unit.objects.filter(parent=self, login_required=False)[0].is_csf
+    def has_cross_curricular_info(self):
+        return Unit.objects.filter(parent=self, login_required=False)[0].has_cross_curricular_info
 
     @property
     def should_be_translated(self):
@@ -340,8 +340,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return self.i18n_ready
 
     @property
-    def is_csf(self):
-        return self.curriculum.slug.startswith('csf')
+    def has_cross_curricular_info(self):
+        return self.curriculum.slug == 'csf-20'
 
     def has_resource_pdf(self):
         return self.curriculum.slug not in ['csf-18', 'csf-1718', 'hoc']
