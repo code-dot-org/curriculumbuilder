@@ -57,18 +57,22 @@
     {% for example in code_block.examples.all %}
         {% editable example.name example.description example.code %}
         {% if example.app %}
-            <div class="row">
-                <div class="col-sm-8">
-                    <h3>{{ example.name }}</h3>
-                    <p>{{ example.description|richtext_filters|safe }}</p>
-<pre>
-{{ example.code }}
-</pre>
-                </div>
+            {% if example.app_display_type == 'codeFromCodeField' %}
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h3>{{ example.name }}</h3>
+                        <p>{{ example.description|richtext_filters|safe }}</p>
+                        <pre>
+                            {{ example.code }}
+                        </pre>
+                    </div>
                     <div class="col-sm-4">
                         <iframe class="{{ code_block.parent_ide.slug }}-exemplar" src="{{ example.get_embed_app }}"></iframe>
                     </div>
-            </div>
+                </div>
+            {% elif example.app_display_type == 'embedAppWithCode' %}
+                <iframe class="embed-app-with-code-exemplar" src={{ example.get_embed_app_and_code }}></iframe>
+            {% endif %}
         {% elif example.image %}
             <div class="row">
                 <div class="col-sm-8">
