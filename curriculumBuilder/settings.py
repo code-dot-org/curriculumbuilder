@@ -483,7 +483,7 @@ PAGEDOWN_MARKDOWN_EXTENSIONS = (
     'curriculumBuilder.doclinks',
     'extra', 'codehilite', 'toc', 'curriculumBuilder.newtab', 'curriculumBuilder.absolute_images',
     # 'curriculumBuilder.resourcelinks', 'curriculumBuilder.highlightblocks', 'smarty',
-    'curriculumBuilder.resourcelinks', 'curriculumBuilder.mdlightbox',
+    'curriculumBuilder.resourcelinks',
     'curriculumBuilder.vocablinks', 'curriculumBuilder.tips', 'curriculumBuilder.tiplinks',
     'curriculumBuilder.iconfonts', 'curriculumBuilder.codestudio', 'curriculumBuilder.divclass')
 RICHTEXT_FILTER_LEVEL = 3
