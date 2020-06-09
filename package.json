@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "@code-dot-org/redactable-markdown": "0.3.0",
-    "generate-pdf-scripts": "^2.0.0"
+    "generate-pdf-scripts": "^2.1.0"
   }
 }
