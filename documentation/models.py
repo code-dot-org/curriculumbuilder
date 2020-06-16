@@ -278,16 +278,23 @@ class Example(Orderable, CloneableMixin):
     app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
     image = models.ImageField(blank=True, null=True)
 
+    CODE_FROM_CODE_FIELD = 'codeFromCodeField'
+    EMBED_APP_WITH_CODE = 'embedAppWithCode'
     app_display_type_options = [
-        ('codeFromCodeField', 'Display app with code from code field above'),
-        ('embedAppWithCode', 'Embed app with code directly from code.org project')
+        (CODE_FROM_CODE_FIELD, 'Display app with code from code field above'),
+        (EMBED_APP_WITH_CODE, 'Embed app with code directly from code.org project')
     ]
 
     app_display_type = models.CharField(
         max_length=255,
         choices=app_display_type_options,
-        default=app_display_type_options[0][0],
+        default=CODE_FROM_CODE_FIELD,
         help_text='How the app and code fields for this example are rendered')
+
+    embed_app_with_code_height = models.IntegerField(
+        'Embed app with code iframe height',
+        default=310,
+        help_text='The height of the iframe, in pixels, to use when displaying an app with the "Embed app with code" display type')
 
     def __unicode__(self):
         return self.name
