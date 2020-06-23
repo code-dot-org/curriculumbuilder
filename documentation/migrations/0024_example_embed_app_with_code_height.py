@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='example',
             name='embed_app_with_code_height',
-            field=models.IntegerField(default=310, verbose_name=b'Embed app with code iframe height'),
+            field=models.IntegerField(default=310, help_text=b'The height of the iframe, in pixels, to use when displaying an app with the "Embed app with code" display type', verbose_name=b'Embed app with code iframe height'),
         ),
     ]
