@@ -300,13 +300,6 @@ class Example(Orderable, CloneableMixin):
     def __unicode__(self):
         return self.name
 
-    def _append_suffix_to_app(self, suffix):
-         if self.app:
-            re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
-            if re.search(re_url, self.app):
-                app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
-                return app_with_suffix
-
     # this legacy code is kept to support data in the database that might expect it.
     # ideally would use something closer to the code in 'get_embed_app_and_code'
     # rather than the complicated regex munging below
@@ -314,8 +307,7 @@ class Example(Orderable, CloneableMixin):
          if self.app:
             re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
             if re.search(re_url, self.app):
-                app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), 'embed')
-                return app_with_suffix
+                return 'https://%s/%s' % (re.search(re_url, self.app).group(0), 'embed')
 
     def get_embed_app_and_code(self):
         if self.app:
