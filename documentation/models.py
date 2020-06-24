@@ -2,6 +2,7 @@ import re
 import logging
 import json
 import itertools
+import posixpath
 
 from django.conf import settings
 from django.db import models
@@ -278,32 +279,39 @@ class Example(Orderable, CloneableMixin):
     app = models.URLField(blank=True, null=True, help_text='Sharing link for example app')
     image = models.ImageField(blank=True, null=True)
 
+    CODE_FROM_CODE_FIELD = 'codeFromCodeField'
+    EMBED_APP_WITH_CODE = 'embedAppWithCode'
     app_display_type_options = [
-        ('codeFromCodeField', 'Display app with code from code field above'),
-        ('embedAppWithCode', 'Embed app with code directly from code.org project')
+        (CODE_FROM_CODE_FIELD, 'Display app with code from code field above'),
+        (EMBED_APP_WITH_CODE, 'Embed app with code directly from code.org project')
     ]
 
     app_display_type = models.CharField(
         max_length=255,
         choices=app_display_type_options,
-        default=app_display_type_options[0][0],
+        default=CODE_FROM_CODE_FIELD,
         help_text='How the app and code fields for this example are rendered')
+
+    embed_app_with_code_height = models.IntegerField(
+        'Embed app with code iframe height',
+        default=310,
+        help_text='The height of the iframe, in pixels, to use when displaying an app with the "Embed app with code" display type')
 
     def __unicode__(self):
         return self.name
 
-    def _append_suffix_to_app(self, suffix):
+    # this legacy code is kept to support data in the database that might expect it.
+    # ideally would use something closer to the code in 'get_embed_app_and_code'
+    # rather than the complicated regex munging below
+    def get_embed_app(self):
          if self.app:
             re_url = '\w*(studio.code.org\/p\w*\/\w+\/\w+)'
             if re.search(re_url, self.app):
-                app_with_suffix = 'https://%s/%s' % (re.search(re_url, self.app).group(0), suffix)
-                return app_with_suffix
-
-    def get_embed_app(self):
-        return self._append_suffix_to_app('embed')
+                return 'https://%s/%s' % (re.search(re_url, self.app).group(0), 'embed')
 
     def get_embed_app_and_code(self):
-        return self._append_suffix_to_app('embed_app_and_code')
+        if self.app:
+            return posixpath.join(self.app, 'embed_app_and_code')
 
 
 """
