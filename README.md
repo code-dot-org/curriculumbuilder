@@ -169,3 +169,11 @@ If you have an account and are a superuser, you can create new CurriculumBuilder
   * All staff members will need "staff status" set to true.
   * Curriculum writers need to be added to the "author" group.
 5. If you need this new user for local development purposes, [update your local database contents](https://github.com/mrjoshida/curriculumbuilder#updating-your-local-database-contents).
+
+### Just want to query the database?
+
+If you just want to create a local copy of the Curriculum Builder database without running the whole server locally, simply install and configure postgresql, then copy the db (step 4 of the [common setup steps](#common-setup-steps)), then run
+```
+psql curriculumbuilder
+```
+to launch a query interface against the database copy.
