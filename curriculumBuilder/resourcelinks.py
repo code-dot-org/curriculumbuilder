@@ -24,14 +24,14 @@ class AttrTagPattern(Pattern):
     try:
       resource = Resource.objects.get(slug=el.text)
       el.set('href', resource.fallback_url())
-      el.text = str(resource)
+      el.text = unicode(resource)
 
     except Resource.DoesNotExist:
       try:
         resource = Resource.objects.filter(name=el.text).first()
         if resource:
           el.set('href', resource.fallback_url())
-          el.text = str(resource)
+          el.text = unicode(resource)
         else:
           el.text = "<span class='text-danger'>resource %s not found</span>" % el.text
 
