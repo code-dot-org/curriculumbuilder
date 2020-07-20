@@ -714,7 +714,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
 
     @property
     def code_studio_link(self):
-        return "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
+        return self.code_studio_url or "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
             self.unit.unit_name, self.number)
 
     @property
