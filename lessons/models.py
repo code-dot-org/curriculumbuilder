@@ -361,6 +361,9 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     pacing_weight = models.DecimalField('Pacing Weight', help_text='Higher numbers take up more space pacing calendar',
                                         default=1, max_digits=4, decimal_places=1, blank=True, null=True)
     unplugged = models.BooleanField(default=False)
+    code_studio_url = models.CharField('Custom Code Studio URL',
+                                help_text='Link to the first puzzle of this lesson on code studio. Leave blank to auto-generate.',
+                                max_length=255, blank=True, null=True)
     resources = SortedManyToManyField(Resource, blank=True, related_name='lessons')
     prep = RichTextField('Preparation', help_text='ToDos for the teacher to prep this lesson', blank=True, null=True)
     assessment = RichTextField('Assessment Opportunities',
