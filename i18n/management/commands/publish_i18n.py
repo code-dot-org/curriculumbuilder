@@ -1,10 +1,12 @@
 # pylint: disable=missing-docstring, broad-except
 import datetime
 import time
+import multiprocessing
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import translation
+from django import db
 
 from i18n.management.utils import log, get_models_to_sync
 
@@ -72,13 +74,19 @@ class Command(BaseCommand):
             success_count = 0
             start_time = time.time()
 
-            for obj in objects.all():
-                self.publish(obj)
-                success_count += 1
+            # By default, the spawned processes will attempt to reuse the existing database
+            # connections, which will cause conflicts. To prevent this, we explicitly close all
+            # database connections immediately before spawning the processes, which will force them
+            # to each open their own connection.
+            db.connections.close_all()
+            results = multiprocessing.Pool(multiprocessing.cpu_count()).map(publish, objects.all())
 
             end_time = time.time()
             elapsed_time = (end_time - start_time)
             self.total_elapsed_time += elapsed_time
+
+            for result in results:
+                self.total_pdf_generation_time += result
 
             log("%s/%s %s objects published in %s" % (
                 success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
