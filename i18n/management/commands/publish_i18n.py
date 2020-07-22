@@ -16,10 +16,10 @@ def can_publish_model(model):
 
 
 def publish(obj):
-    pdf_generation_time = 0
-
     if not obj.should_be_translated:
-        return pdf_generation_time
+        return
+
+    pdf_generation_time = 0
 
     for language_code in Command.language_codes:
         translation.activate(language_code)
@@ -68,28 +68,35 @@ class Command(BaseCommand):
 
         for model_index, model in enumerate(self.models):
             name = model.__name__
-            log("Publishing %s (%s/%s)" % (name, model_index + 1, len(self.models)))
             objects = model.get_i18n_objects()
             total = objects.count()
-            success_count = 0
-            start_time = time.time()
+            log("Publishing %s (%s/%s): %s objects" % (
+                name,
+                model_index + 1,
+                len(self.models),
+                total
+            ))
 
             # By default, the spawned processes will attempt to reuse the existing database
             # connections, which will cause conflicts. To prevent this, we explicitly close all
             # database connections immediately before spawning the processes, which will force them
             # to each open their own connection.
             db.connections.close_all()
-            results = multiprocessing.Pool(multiprocessing.cpu_count()).map(publish, objects.all())
 
+            start_time = time.time()
+            results = multiprocessing.Pool(multiprocessing.cpu_count()).map(publish, objects.all())
             end_time = time.time()
+
+            published_results = [result for result in results if result is not None]
             elapsed_time = (end_time - start_time)
             self.total_elapsed_time += elapsed_time
-
-            for result in results:
-                self.total_pdf_generation_time += result
+            self.total_pdf_generation_time += sum(published_results)
 
             log("%s/%s %s objects published in %s" % (
-                success_count, total, name, datetime.timedelta(seconds=int(elapsed_time))
+                len(published_results),
+                total,
+                name,
+                datetime.timedelta(seconds=int(elapsed_time))
             ))
 
     def report_final_times(self):
