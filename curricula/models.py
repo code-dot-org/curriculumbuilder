@@ -240,6 +240,20 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
         return columns, rows
 
     @property
+    def block_count(self):
+        num_blocks = 0
+        for unit in self.units:
+            num_blocks += unit.block_count
+        return num_blocks
+
+    @property
+    def vocab_count(self):
+        num_vocab = 0
+        for unit in self.units:
+            num_vocab += unit.vocab_count
+        return num_vocab
+
+    @property
     def maps(self):
         return Map.objects.filter(parent=self)
 
