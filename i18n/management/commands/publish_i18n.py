@@ -13,6 +13,31 @@ def can_publish_model(model):
     return hasattr(model, 'publish') or hasattr(model, 'publish_pdfs')
 
 
+def publish(obj):
+    pdf_generation_time = 0
+
+    if not obj.should_be_translated:
+        return pdf_generation_time
+
+    for language_code in Command.language_codes:
+        translation.activate(language_code)
+        if hasattr(obj, 'publish'):
+            list(obj.publish(silent=True))
+        # Temporary hack to turn off PDF generation while still directing users to the
+        # translated pdfs if they exist
+        if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
+            try:
+                pdf_generation_start_time = time.time()
+                list(obj.publish_pdfs(silent=True))
+                pdf_generation_end_time = time.time()
+                pdf_generation_time += pdf_generation_end_time - pdf_generation_start_time
+            except Exception as err:
+                log(err)
+                log("PDF publishing failed %s in %s" % (obj.slug, language_code))
+
+    return pdf_generation_time
+
+
 class Command(BaseCommand):
 
     models = [
@@ -30,27 +55,6 @@ class Command(BaseCommand):
         self.total_pdf_generation_time = 0
 
         super(Command, self).__init__(*args, **kwargs)
-
-    def publish(self, obj):
-        if not obj.should_be_translated:
-            return
-
-        for language_code in self.language_codes:
-            translation.activate(language_code)
-            if hasattr(obj, 'publish'):
-                list(obj.publish(silent=True))
-            # Temporary hack to turn off PDF generation while still directing users to the
-            # translated pdfs if they exist
-            if language_code in settings.LANGUAGE_GENERATE_PDF and hasattr(obj, 'publish_pdfs'):
-                try:
-                    pdf_generation_start_time = time.time()
-                    list(obj.publish_pdfs(silent=True))
-                    pdf_generation_end_time = time.time()
-                    pdf_generation_elapsed = pdf_generation_end_time - pdf_generation_start_time
-                    self.total_pdf_generation_time += pdf_generation_elapsed
-                except Exception as err:
-                    log(err)
-                    log("PDF publishing failed %s in %s" % (obj.slug, language_code))
 
     def publish_models(self):
         """
