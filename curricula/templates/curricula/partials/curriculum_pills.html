@@ -2,8 +2,8 @@
 <div class="resource-nav btn-toolbar" role="toolbar" aria-label="Unit Resources">
     <div class="btn-group btn-group-xs" role="group" aria-label="PDF Buttons">
         <a href="{{ curriculum.get_absolute_url }}standards/" class="btn" role="button">{% trans "Standards" %}</a>
-        <a href="{{ curriculum.get_absolute_url }}vocab/" class="btn" role="button">{% trans "Vocab" %}</a>
-        <a href="{{ curriculum.get_absolute_url }}code/" class="btn" role="button">{% trans "Code Documentation" %}</a>
+        {% if curriculum.vocab_count > 0 %}<a href="{{ curriculum.get_absolute_url }}vocab/" class="btn" role="button">{% trans "Vocab" %}</a>{% endif %}
+        {% if curriculum.block_count > 0 %}<a href="{{ curriculum.get_absolute_url }}code/" class="btn" role="button">{% trans "Code Documentation" %}</a>{% endif %}
         <a href="{{ curriculum.get_absolute_url }}resources/" class="btn" role="button">{% trans "Other Resources" %}</a>
         {% if changelog.count > 0 %}
 
