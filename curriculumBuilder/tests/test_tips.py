@@ -17,12 +17,12 @@ class TipsTestCase(SimpleTestCase):
         )
         expected = (
             '<div class="admonition content">\n'
-            '<p class="admonition-title" id="content_content-0"><i class="fa fa-mortar-board"></i>Content Corner</p>\n'
-            '<div></div>\n'
-            '<div>\n'
-            '<h3 id="teaching-this-course-as-a-class">Teaching this course as a class?</h3>\n'
-            '<p>Our grade-aligned CS Fundamentals courses use unplugged lessons to build community and introduce tricky computer science concepts, including <strong>events</strong>. Check out the lesson <a href="https://curriculum.code.org/csf-19/coursea/11/" target="_blank">The Big Event Jr.</a> from <a href="https://curriculum.code.org/csf-19/coursea/" target="_blank">Course A</a>!</p>\n'
-            '</div>\n'
+              '<p class="admonition-title" id="content_content-0"><i class="fa fa-mortar-board"></i>Content Corner</p>\n'
+              '<div></div>\n'
+              '<div>\n'
+                '<h3 id="teaching-this-course-as-a-class">Teaching this course as a class?</h3>\n'
+                '<p>Our grade-aligned CS Fundamentals courses use unplugged lessons to build community and introduce tricky computer science concepts, including <strong>events</strong>. Check out the lesson <a href="https://curriculum.code.org/csf-19/coursea/11/" target="_blank">The Big Event Jr.</a> from <a href="https://curriculum.code.org/csf-19/coursea/" target="_blank">Course A</a>!</p>\n'
+              '</div>\n'
             '</div>'
         )
         self.assertEqual(expected, richtext_filters(markdown))
@@ -39,18 +39,18 @@ class TipsTestCase(SimpleTestCase):
         )
         expected = (
             '<div class="admonition discussion">\n'
-            '<p class="admonition-title" id="discussion_discussion-0"><i class="fa fa-comments"></i>Discussion Goal</p>\n'
-            '<div></div>\n'
-            '<div>\n'
-            '<p><strong>Goal:</strong> Aim to hear a few different students share reasons that instructions are "bad". The point here is just to get students thinking and there\'s no specific answer you\'re driving towards. Some possible ideas, however, might include:</p>\n'
-            '</div>\n'
-            '<div>\n'
-            '<ul>\n'
-            '<li>Instructions are not clear on what to do</li>\n'
-            '<li>Instructions use confusing words</li>\n'
-            '<li>Instructions don\'t actually accomplish what they\'re supposed to</li>\n'
-            '</ul>\n'
-            '</div>\n'
+              '<p class="admonition-title" id="discussion_discussion-0"><i class="fa fa-comments"></i>Discussion Goal</p>\n'
+              '<div></div>\n'
+              '<div>\n'
+                '<p><strong>Goal:</strong> Aim to hear a few different students share reasons that instructions are "bad". The point here is just to get students thinking and there\'s no specific answer you\'re driving towards. Some possible ideas, however, might include:</p>\n'
+              '</div>\n'
+              '<div>\n'
+                '<ul>\n'
+                  '<li>Instructions are not clear on what to do</li>\n'
+                  '<li>Instructions use confusing words</li>\n'
+                  '<li>Instructions don\'t actually accomplish what they\'re supposed to</li>\n'
+                '</ul>\n'
+              '</div>\n'
             '</div>'
         )
         self.assertEqual(expected, richtext_filters(markdown))
@@ -70,10 +70,49 @@ class TipsTestCase(SimpleTestCase):
         )
         expected = (
             '<div class="admonition guide">\n'
-            '<div></div>\n'
-            '<div>\n'
-            '<p>inner content</p>\n'
-            '</div>\n'
+              '<div></div>\n'
+              '<div>\n'
+                '<p>inner content</p>\n'
+              '</div>\n'
             '</div>'
+        )
+        self.assertEqual(expected, richtext_filters(markdown))
+
+    def test_rendering_two_paragraphs(self):
+        # Rendering a title, a blank line, and 2 paragraphs with a blank line in between.
+        # Each paragraph will be wrapped in its own div.
+        markdown = (
+            "!!!guide <content-0>\n"
+            "\n"
+            "    This is the first paragraph\n"
+            "    \n"
+            "    Second paragraph\n"
+        )
+        expected = (
+            '<div class="admonition guide">\n'
+              '<div></div>\n'
+              '<div>\n'
+                '<p>This is the first paragraph</p>\n'
+              '</div>\n'
+              '<div>\n'
+                '<p>Second paragraph</p>\n'
+              '</div>\n'
+            '</div>'
+        )
+        self.assertEqual(expected, richtext_filters(markdown))
+
+    def test_rendering_no_blank_line(self):
+        # No blank line between a title and a paragraph.
+        # There won't be any empty div in the output.
+        markdown = (
+            "!!!guide <content-0>\n"
+            "    This is the only paragraph\n"
+        )
+        expected = (
+          '<div class="admonition guide">\n'
+            '<div>\n'
+              '<p>This is the only paragraph</p>\n'
+            '</div>\n'
+          '</div>'
         )
         self.assertEqual(expected, richtext_filters(markdown))
