@@ -78,41 +78,75 @@ class TipsTestCase(SimpleTestCase):
         )
         self.assertEqual(expected, richtext_filters(markdown))
 
-    def test_rendering_two_paragraphs(self):
-        # Rendering a title, a blank line, and 2 paragraphs with a blank line in between.
-        # Each paragraph will be wrapped in its own div.
-        markdown = (
+    def test_rendering_div_wrapping(self):
+        # If there a new line between 2 elements, they will be wrapped in separate divs.
+        markdown_with_newline = (
             "!!!guide <content-0>\n"
             "\n"
-            "    This is the first paragraph\n"
+            "    # A header\n"
             "    \n"
-            "    Second paragraph\n"
+            "    A paragraph\n"
         )
-        expected = (
+        expected_with_newline = (
             '<div class="admonition guide">\n'
                 '<div></div>\n'
                 '<div>\n'
-                    '<p>This is the first paragraph</p>\n'
+                    '<h1 id="a-header">A header</h1>\n'
                 '</div>\n'
                 '<div>\n'
-                    '<p>Second paragraph</p>\n'
+                    '<p>A paragraph</p>\n'
                 '</div>\n'
             '</div>'
         )
-        self.assertEqual(expected, richtext_filters(markdown))
+        self.assertEqual(expected_with_newline, richtext_filters(markdown_with_newline))
 
-    def test_rendering_no_blank_line(self):
-        # No blank line between a title and a paragraph.
-        # There won't be any empty div in the output.
-        markdown = (
+        # Otherwise, if there is no newline between 2 elements, they will be wrapped in a same div.
+        markdown_without_newline = (
+            "!!!guide <content-0>\n"
+            "\n"
+            "    # A header\n"
+            "    A paragraph\n"
+        )
+        expected_without_newline = (
+            '<div class="admonition guide">\n'
+                '<div></div>\n'
+                '<div>\n'
+                    '<h1 id="a-header">A header</h1>\n'
+                    '<p>A paragraph</p>\n'
+                '</div>\n'
+            '</div>'
+        )
+        self.assertEqual(expected_without_newline, richtext_filters(markdown_without_newline))
+
+
+    def test_rendering_without_newline(self):
+        # If there is no newline between a title and a paragraph,
+        # there won't be any empty div in the output.
+        markdown_without_newline = (
             "!!!guide <content-0>\n"
             "    This is the only paragraph\n"
         )
-        expected = (
+        expected_without_empty_div = (
           '<div class="admonition guide">\n'
               '<div>\n'
                   '<p>This is the only paragraph</p>\n'
               '</div>\n'
           '</div>'
         )
-        self.assertEqual(expected, richtext_filters(markdown))
+        self.assertEqual(expected_without_empty_div, richtext_filters(markdown_without_newline))
+
+        # Otherwise, there will be an empty div in the output.
+        markdown_with_newline = (
+            "!!!guide <content-0>\n"
+            "\n"
+            "    This is the only paragraph\n"
+        )
+        expected_with_empty_div = (
+          '<div class="admonition guide">\n'
+              '<div></div>\n'
+              '<div>\n'
+                  '<p>This is the only paragraph</p>\n'
+              '</div>\n'
+          '</div>'
+        )
+        self.assertEqual(expected_with_empty_div, richtext_filters(markdown_with_newline))
