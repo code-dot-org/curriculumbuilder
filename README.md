@@ -42,6 +42,12 @@ If you run into problems with pycurl later, there are two potential errors you c
 
     solution: https://gist.github.com/webinista/b4b6a4cf8f158431b2c5134630c2cbfe#gistcomment-3057612
 
+Problem with building `psycopg2`:
+  * Error: `ld: library not found for -lssl`. It means you need to install `openssl` and make it discoverable by installing it to a right directory or adding its installed directory to the `$LIBRARY_PATH` environment variable.
+    ```
+    brew install openssl
+    export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
+    ```
 
 ### Install Ubuntu 16 dependencies
 
@@ -89,12 +95,6 @@ source ~/.virtualenvs/cb/bin/activate
 ```
 pip install -r requirements.txt
 ```
-Troubleshoot problem building `psycopg2`:
-  * Error: `ld: library not found for -lssl`. It means you need to install `openssl` and make it discoverable by installing it to a right directory or adding its installed directory to the `$LIBRARY_PATH` environment variable.
-    ```
-    brew install openssl
-    export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
-    ```
 
 4. copy the db
 
