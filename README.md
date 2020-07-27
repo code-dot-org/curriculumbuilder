@@ -35,13 +35,19 @@ Only follow these steps if you are on Mac OS.
 If you run into problems with pycurl later, there are two potential errors you can get which look very similar:
 
   * `ImportError: pycurl: libcurl link-time ssl backend (openssl) is different from compile-time ssl backend (none/other)`
-    
+
     solution: https://cscheng.info/2018/01/26/installing-pycurl-on-macos-high-sierra.html
 
   * `ImportError: pycurl: libcurl link-time ssl backend (none/other) is different from compile-time ssl backend (openssl)`
-  
+
     solution: https://gist.github.com/webinista/b4b6a4cf8f158431b2c5134630c2cbfe#gistcomment-3057612
 
+Problem with building `psycopg2`:
+  * Error: `ld: library not found for -lssl`. It means you need to install `openssl` and make it discoverable by installing it to a right directory or adding its installed directory to the `$LIBRARY_PATH` environment variable.
+    ```
+    brew install openssl
+    export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
+    ```
 
 ### Install Ubuntu 16 dependencies
 
