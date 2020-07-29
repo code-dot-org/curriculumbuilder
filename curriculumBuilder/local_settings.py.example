@@ -7,9 +7,9 @@ DEBUG = True
 
 SLACK_BACKEND = 'django_slack.backends.DisabledBackend'
 
-# The following lines must be absent for unit tests to pass on linux,
-# but may need to be present for local changes to CSS to be visible in 
-# the browser.
+# Uncomment the following lines to serve static assets locally 
+# during development (e.g. CSS, images).
+# Note: These lines must be absent for unit tests to pass on linux.
 #
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # STATIC_URL = '/static/'
