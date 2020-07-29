@@ -26,6 +26,15 @@
 <div class="together overview-page row">
 
     <div class="col-sm-7 left-col">
+        {% comment %}
+        lessons using the CREATIVE_COMMONS_BY_NC_ND_IMAGE image also need
+        the Common Sense Education logo above the overview
+        {% endcomment %}
+        {% if lesson.creative_commons_image == lesson.CREATIVE_COMMONS_BY_NC_ND_IMAGE %}
+            <a href="https://creativecommons.org/">
+                <img src="{% static "img/common_sense_education.png" %}" style="padding: 10px 0;">
+            </a> 
+        {% endif %}
         <h2>{% trans 'Overview' %}</h2>
         {% editable lesson.overview %}
             {{ lesson.overview|richtext_filters|safe }}
