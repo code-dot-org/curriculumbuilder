@@ -9,8 +9,22 @@ import logging
 
 import requests
 
+from i18n.management.utils import get_non_english_language_codes
+
 PROJECT_ID = 'curriculumbuilder'
 API_KEY = os.environ.get('CROWDIN_API_KEY')
+
+# Crowdin sometimes uses four-letter language codes consistent with the language codes we use
+# internally, but sometimes uses other formats for its language codes. This constant provides a
+# mapping from our codes to Crowdin's for those cases for which they differ.
+CROWDIN_LANGUAGE_CODES = {
+    'hi-in': 'hi',
+    'it-it': 'it',
+    'pl-pl': 'pl',
+    'sk-sk': 'sk',
+    'th-th': 'th',
+    'in-tl': 'in'
+}
 
 
 class Crowdin(object):
@@ -61,12 +75,6 @@ class Crowdin(object):
             self._project_info = self.request('post', "info").json()
         return self._project_info
 
-    def languages(self):
-        """
-        Retrieve list of all languages enabled for this project.
-        """
-        return self.info()["languages"]
-
     def filepaths(self):
         """
         Retrieve list of all files currently uploaded to this project. Files will be presented as a
@@ -101,6 +109,9 @@ class Crowdin(object):
 
         See https://support.crowdin.com/api/export-file/
         """
+        if language in CROWDIN_LANGUAGE_CODES:
+            language = CROWDIN_LANGUAGE_CODES[language]
+
         params = {
             'file': filepath,
             'language': language
@@ -128,16 +139,11 @@ class Crowdin(object):
         changes = dict()
 
         # Download changes!
-        for i, language in enumerate(self.languages()):
-            language_code = language["code"]
-
-            self.logger.debug("{} ({}): {}/{}".format(
-                language['name'], language_code, i, len(self.languages())
+        language_codes = get_non_english_language_codes()
+        for i, language_code in enumerate(get_non_english_language_codes()):
+            self.logger.debug("{}: {}/{}".format(
+                language_code, i + 1, len(language_codes)
             ))
-            if i > 0 and i % (len(self.languages()) / 5) == 0:
-                self.logger.info("~{}% complete ({}/{})".format(
-                    (i * 100 / len(self.languages())), i, len(self.languages())
-                ))
 
             download_dir = os.path.join("/tmp/cbsync", language_code)
             if not os.path.exists(download_dir):
@@ -167,16 +173,18 @@ class Crowdin(object):
                 else:
                     raise Exception(
                         "Cannot handle response code {} for file \"{}\" in language \"{}\"".format(
-                            response.status_code, filepath, language
+                            response.status_code, filepath, language_code
                         )
                     )
 
             self.logger.debug("{} files have changes".format(len(changes[language_code])))
+
+            # Write latest etag and changes dicts to their respective files
             with open(self._changes_json, 'w') as changes_file:
                 json.dump(changes, changes_file, sort_keys=True, indent=4)
             with open(self._etags_json, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 
         self.logger.info("{} changed files downloaded across {} languages".format(
-            sum(len(files) for files in changes.items()), len(self.languages())
+            sum(len(files) for files in changes.values()), len(language_codes)
         ))
