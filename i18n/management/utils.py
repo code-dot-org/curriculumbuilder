@@ -10,6 +10,8 @@ from django_slack import slack_message
 
 from i18n.models import Internationalizable
 
+CHANGES_JSON = "/tmp/crowdin_sync_latest_changes.json"
+
 
 def should_sync_model(model):
     """
@@ -19,12 +21,14 @@ def should_sync_model(model):
         - are not proxy models (unless the model explicitly opts in to translation)
     """
     is_internationalizable = issubclass(model, Internationalizable)
-    should_skip = model._meta.proxy and not getattr(model, 'translate_proxy', False) # pylint: disable=protected-access
+    should_skip = model._meta.proxy and not getattr(model, 'translate_proxy', False)  # pylint: disable=protected-access
     return is_internationalizable and not should_skip
+
 
 def get_models_to_sync():
     """Retrieve all models that should be processed by the i18n sync"""
     return [model for model in django.apps.apps.get_models() if should_sync_model(model)]
+
 
 def get_non_english_language_codes():
     """
@@ -35,6 +39,7 @@ def get_non_english_language_codes():
         language_code for language_code, _ in settings.LANGUAGES
         if not language_code == settings.LANGUAGE_CODE
     ]
+
 
 def get_non_english_locale_names():
     """

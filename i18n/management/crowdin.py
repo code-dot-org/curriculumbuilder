@@ -11,8 +11,8 @@ import requests
 
 from django.utils.translation import to_locale
 
-from i18n.management.utils import get_non_english_language_codes
-from i18n.utils import I18nFileWrapper
+from .utils import get_non_english_language_codes, CHANGES_JSON
+from ..utils import I18nFileWrapper
 
 PROJECT_ID = 'curriculumbuilder'
 API_KEY = os.environ.get('CROWDIN_API_KEY')
@@ -38,9 +38,8 @@ class Crowdin(object):
     See https://github.com/code-dot-org/code-dot-org/blob/staging/lib/cdo/crowdin/project.rb for
     ruby implemntation
     """
-    def __init__(self, etags_json, changes_json):
+    def __init__(self, etags_json):
         self.etags_json = etags_json
-        self.changes_json = changes_json
 
         self._project_info = None
         self._filepaths = None
@@ -55,6 +54,9 @@ class Crowdin(object):
         """
         if params is None:
             params = {}
+
+        if API_KEY is None:
+            raise Exception("no API key found. Please make sure that CROWDIN_API_KEY is set in the local environment")
 
         base_uri = "https://api.crowdin.com/api/project/" + PROJECT_ID
         default_params = {
@@ -130,27 +132,28 @@ class Crowdin(object):
         """
         Download all files with new translation activity since our last sync in all languages. In
         addition to downloading updates to the files themselves, will also update our "etags" file,
-        which we use to identify file changes for future syncs, and our "changes" file, which we
-        will use in the sync out to identify which files got changed this sync.
+        which we use to identify file changes for future syncs, and will return a dictionary
+        containing a list of changed files for each language
         """
-        # Load existing etags from previous sync
-        etags = {}
-        if os.path.exists(self.etags_json):
-            with open(self.etags_json, 'r') as etags_file:
-                etags = json.load(etags_file)
 
         changes = dict()
 
         # Download changes!
         language_codes = get_non_english_language_codes()
         for i, language_code in enumerate(get_non_english_language_codes()):
-            self.logger.debug("{}: {}/{}".format(
-                language_code, i + 1, len(language_codes)
-            ))
+            self.logger.debug("%s: %s/%s", language_code, i + 1, len(language_codes))
 
-            download_dir = I18nFileWrapper.locale_dir_absolute(to_locale(language_code))
-            if not os.path.exists(download_dir):
-                os.makedirs(download_dir)
+            language_dir = I18nFileWrapper.locale_dir_absolute(to_locale(language_code))
+            if not os.path.exists(language_dir):
+                os.makedirs(language_dir)
+
+            # Load existing etags from previous sync, if it exists
+            etags = {}
+            etags_path = os.path.join(language_dir, self.etags_json)
+            if os.path.exists(etags_path):
+                self.logger.debug("loading existing etags from %s", etags_path)
+                with I18nFileWrapper.storage().open(etags_path, 'r') as etags_file:
+                    etags = json.load(etags_file)
 
             changes[language_code] = []
             if language_code not in etags:
@@ -160,14 +163,14 @@ class Crowdin(object):
                 etag = etags[language_code].get(filepath, None)
                 response = self.export_file(filepath, language_code, etag=etag)
                 if response.status_code == 200:
-                    # Add the file to our list of changed files
+                    # Add the file to the list of files changed in this sync
                     changes[language_code].append(filepath)
 
-                    # Update the etag
+                    # Update the etag for this file, for use in the next sync
                     etags[language_code][filepath] = response.headers['etag']
 
-                    # Download the contents of the file
-                    with open(os.path.join(download_dir, filepath), 'w') as _file:
+                    # Persist the contents of the file
+                    with open(os.path.join(language_dir, filepath), 'w') as _file:
                         _file.write(response.content)
                 elif response.status_code == 304:
                     # 304 means there's no change (based on the etag), so we don't need to do
@@ -180,14 +183,17 @@ class Crowdin(object):
                         )
                     )
 
-            self.logger.debug("{} files have changes".format(len(changes[language_code])))
-
-            # Write latest etag and changes dicts to their respective files
-            with open(self.changes_json, 'w') as changes_file:
-                json.dump(changes, changes_file, sort_keys=True, indent=4)
-            with open(self.etags_json, 'w') as etags_file:
+            self.logger.debug("%s files have changes", len(changes[language_code]))
+            with open(etags_path, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 
-        self.logger.info("{} changed files downloaded across {} languages".format(
-            sum(len(files) for files in changes.values()), len(language_codes)
-        ))
+        self.logger.info(
+            "%s changed files downloaded across %s languages",
+            sum(len(files) for files in changes.values()),
+            len(language_codes)
+        )
+
+        # Persist changes to file, so they can be referenced by the "publish" step
+        with open(CHANGES_JSON, 'w') as changes_json:
+            json.dump(changes, changes_json, sort_keys=True, indent=4)
+        return changes
