@@ -5,7 +5,7 @@ Contains tests for the Crowdin class, which provides access to the Crowdin API f
 import os
 import json
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils.translation import to_locale
 from mock import patch
 from requests import Response
@@ -15,6 +15,8 @@ from i18n.management.utils import CHANGES_JSON
 from i18n.utils import I18nFileWrapper
 
 
+@override_settings(I18N_STORAGE='django.core.files.storage.FileSystemStorage')
+@override_settings(I18N_STORAGE_LOCATION='i18n/static')
 class CrowdinTest(TestCase):
     """
     Basic tests for the Crowdin class
