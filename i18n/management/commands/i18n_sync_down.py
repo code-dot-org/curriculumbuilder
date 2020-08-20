@@ -17,7 +17,7 @@ class Command(BaseCommand):
     @staticmethod
     def download_translations():
         """Download translations from crowdin"""
-        Crowdin().download_translations()
+        Crowdin(etags_json="/tmp/cb_etags.json", changes_json="/tmp/cb_changes.json").download_translations()
 
     def restore_translations(self):
         """Restore translations from source"""

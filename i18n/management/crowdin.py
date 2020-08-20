@@ -9,7 +9,10 @@ import logging
 
 import requests
 
+from django.utils.translation import to_locale
+
 from i18n.management.utils import get_non_english_language_codes
+from i18n.utils import I18nFileWrapper
 
 PROJECT_ID = 'curriculumbuilder'
 API_KEY = os.environ.get('CROWDIN_API_KEY')
@@ -35,14 +38,14 @@ class Crowdin(object):
     See https://github.com/code-dot-org/code-dot-org/blob/staging/lib/cdo/crowdin/project.rb for
     ruby implemntation
     """
-    def __init__(self):
+    def __init__(self, etags_json, changes_json):
+        self.etags_json = etags_json
+        self.changes_json = changes_json
+
         self._project_info = None
         self._filepaths = None
-        self._etags_json = "/tmp/cb_etags.json"
-        self._changes_json = "/tmp/cb_changes.json"
 
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
 
     @staticmethod
     def request(method, endpoint, params=None, headers=None):
@@ -132,8 +135,8 @@ class Crowdin(object):
         """
         # Load existing etags from previous sync
         etags = {}
-        if os.path.exists(self._etags_json):
-            with open(self._etags_json, 'r') as etags_file:
+        if os.path.exists(self.etags_json):
+            with open(self.etags_json, 'r') as etags_file:
                 etags = json.load(etags_file)
 
         changes = dict()
@@ -145,7 +148,7 @@ class Crowdin(object):
                 language_code, i + 1, len(language_codes)
             ))
 
-            download_dir = os.path.join("/tmp/cbsync", language_code)
+            download_dir = I18nFileWrapper.locale_dir_absolute(to_locale(language_code))
             if not os.path.exists(download_dir):
                 os.makedirs(download_dir)
 
@@ -180,9 +183,9 @@ class Crowdin(object):
             self.logger.debug("{} files have changes".format(len(changes[language_code])))
 
             # Write latest etag and changes dicts to their respective files
-            with open(self._changes_json, 'w') as changes_file:
+            with open(self.changes_json, 'w') as changes_file:
                 json.dump(changes, changes_file, sort_keys=True, indent=4)
-            with open(self._etags_json, 'w') as etags_file:
+            with open(self.etags_json, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 
         self.logger.info("{} changed files downloaded across {} languages".format(
