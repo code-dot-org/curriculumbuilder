@@ -44,7 +44,7 @@ class Crowdin(object):
         self._project_info = None
         self._filepaths = None
 
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('i18n')
 
     @staticmethod
     def request(method, endpoint, params=None, headers=None):
