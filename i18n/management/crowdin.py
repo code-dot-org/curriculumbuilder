@@ -1,4 +1,3 @@
-# pylint: disable=superfluous-parens
 """
 Provides the Crowdin class, for all kinds of interaction with Crowdin data.
 """
@@ -14,8 +13,10 @@ from django.utils.translation import to_locale
 from .utils import get_non_english_language_codes, CHANGES_JSON
 from ..utils import I18nFileWrapper
 
-PROJECT_ID = 'curriculumbuilder'
 API_KEY = os.environ.get('CROWDIN_API_KEY')
+ETAGS_FILENAME = "crowdin_etags.json"
+PROJECT_ID = 'curriculumbuilder'
+
 
 # Crowdin sometimes uses four-letter language codes consistent with the language codes we use
 # internally, but sometimes uses other formats for its language codes. This constant provides a
@@ -38,9 +39,7 @@ class Crowdin(object):
     See https://github.com/code-dot-org/code-dot-org/blob/staging/lib/cdo/crowdin/project.rb for
     ruby implemntation
     """
-    def __init__(self, etags_json):
-        self.etags_json = etags_json
-
+    def __init__(self):
         self._project_info = None
         self._filepaths = None
 
@@ -56,7 +55,9 @@ class Crowdin(object):
             params = {}
 
         if API_KEY is None:
-            raise Exception("no API key found. Please make sure that CROWDIN_API_KEY is set in the local environment")
+            raise Exception(
+                "no API key found. Please make sure the CROWDIN_API_KEY environment variable is set"
+            )
 
         base_uri = "https://api.crowdin.com/api/project/" + PROJECT_ID
         default_params = {
@@ -149,7 +150,7 @@ class Crowdin(object):
 
             # Load existing etags from previous sync, if it exists
             etags = {}
-            etags_path = os.path.join(language_dir, self.etags_json)
+            etags_path = os.path.join(language_dir, ETAGS_FILENAME)
             if os.path.exists(etags_path):
                 self.logger.debug("loading existing etags from %s", etags_path)
                 with I18nFileWrapper.storage().open(etags_path, 'r') as etags_file:
