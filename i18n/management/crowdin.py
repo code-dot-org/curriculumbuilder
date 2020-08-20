@@ -171,7 +171,10 @@ class Crowdin(object):
                     etags[language_code][filepath] = response.headers['etag']
 
                     # Persist the contents of the file
-                    with open(os.path.join(language_dir, filepath), 'w') as _file:
+                    full_filepath = os.path.join(language_dir, filepath)
+                    if not os.path.exists(os.path.dirname(full_filepath)):
+                        os.makedirs(os.path.dirname(full_filepath))
+                    with open(full_filepath, 'w') as _file:
                         _file.write(response.content)
                 elif response.status_code == 304:
                     # 304 means there's no change (based on the etag), so we don't need to do
