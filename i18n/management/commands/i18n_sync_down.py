@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand
 
 from i18n.management.utils import log, get_non_english_locale_names, get_models_to_sync
 from i18n.utils import I18nFileWrapper
+from i18n.management.crowdin import Crowdin
 
 
 class Command(BaseCommand):
@@ -16,11 +17,7 @@ class Command(BaseCommand):
     @staticmethod
     def download_translations():
         """Download translations from crowdin"""
-        subprocess.call([
-            os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
-            "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
-            "download"
-        ])
+        Crowdin().download_translations()
 
     def restore_translations(self):
         """Restore translations from source"""
