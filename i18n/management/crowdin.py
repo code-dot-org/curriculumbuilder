@@ -151,7 +151,7 @@ class Crowdin(object):
             # Load existing etags from previous sync, if it exists
             etags = {}
             etags_path = os.path.join(language_dir, ETAGS_FILENAME)
-            if os.path.exists(etags_path):
+            if I18nFileWrapper.storage().exists(etags_path):
                 self.logger.debug("loading existing etags from %s", etags_path)
                 with I18nFileWrapper.storage().open(etags_path, 'r') as etags_file:
                     etags = json.load(etags_file)
