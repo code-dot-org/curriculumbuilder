@@ -144,7 +144,7 @@ class Crowdin(object):
         for i, language_code in enumerate(get_non_english_language_codes()):
             self.logger.debug("%s: %s/%s", language_code, i + 1, len(language_codes))
 
-            language_dir = I18nFileWrapper.locale_dir(to_locale(language_code))
+            language_dir = I18nFileWrapper.locale_dir_absolute(to_locale(language_code))
             if not os.path.exists(language_dir):
                 os.makedirs(language_dir)
 

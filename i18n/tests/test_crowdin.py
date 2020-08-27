@@ -78,7 +78,7 @@ class CrowdinTest(TestCase):
         with patch.object(self.crowdin, 'export_file', return_value=export_file_response):
             self.crowdin.download_translations()
 
-        language_dir = I18nFileWrapper.locale_dir(to_locale('es-mx'))
+        language_dir = I18nFileWrapper.locale_dir_absolute(to_locale('es-mx'))
         etags_path = os.path.join(language_dir, ETAGS_FILENAME)
         with I18nFileWrapper.storage().open(etags_path, 'r') as etags_file:
             etags = json.load(etags_file)
@@ -151,6 +151,6 @@ class CrowdinTest(TestCase):
         with patch.object(self.crowdin, 'export_file', mock_export_file):
             self.crowdin.download_translations()
 
-        language_dir = I18nFileWrapper.locale_dir(to_locale('es-mx'))
+        language_dir = I18nFileWrapper.locale_dir_absolute(to_locale('es-mx'))
         with open(os.path.join(language_dir, 'top-level file'), 'r') as _file:
             self.assertEqual(_file.read(), "Content for 'top-level file'")
