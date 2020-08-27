@@ -144,7 +144,7 @@ class Crowdin(object):
         for i, language_code in enumerate(get_non_english_language_codes()):
             self.logger.debug("%s: %s/%s", language_code, i + 1, len(language_codes))
 
-            language_dir = I18nFileWrapper.locale_dir_absolute(to_locale(language_code))
+            language_dir = I18nFileWrapper.locale_dir(to_locale(language_code))
             if not os.path.exists(language_dir):
                 os.makedirs(language_dir)
 
@@ -172,9 +172,20 @@ class Crowdin(object):
 
                     # Persist the contents of the file
                     full_filepath = os.path.join(language_dir, filepath)
-                    if not os.path.exists(os.path.dirname(full_filepath)):
-                        os.makedirs(os.path.dirname(full_filepath))
-                    with open(full_filepath, 'w') as _file:
+
+                    try:
+                        # Try to create the directory structure for the file if it doesn't exist.
+                        # Note that some Storage solutions don't implement local paths or require
+                        # preexisting directory structures, so we peacefully fail if that
+                        # functionality is unimplemented.
+                        # See https://docs.djangoproject.com/en/1.8/ref/files/storage/#django.core.files.storage.Storage.path
+                        local_dir = os.path.dirname(I18nFileWrapper.storage().path(full_filepath))
+                        if not os.path.exists(local_dir):
+                            os.makedirs(local_dir)
+                    except NotImplementedError:
+                        pass
+
+                    with I18nFileWrapper.storage().open(full_filepath, 'w') as _file:
                         _file.write(response.content)
                 elif response.status_code == 304:
                     # 304 means there's no change (based on the etag), so we don't need to do
@@ -188,7 +199,7 @@ class Crowdin(object):
                     )
 
             self.logger.debug("%s files have changes", len(changes[language_code]))
-            with open(etags_path, 'w') as etags_file:
+            with I18nFileWrapper.storage().open(etags_path, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 
         self.logger.info(
