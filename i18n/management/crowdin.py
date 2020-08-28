@@ -144,13 +144,17 @@ class Crowdin(object):
         for i, language_code in enumerate(get_non_english_language_codes()):
             self.logger.debug("%s: %s/%s", language_code, i + 1, len(language_codes))
 
-            language_dir = I18nFileWrapper.locale_dir(to_locale(language_code))
+            locale = to_locale(language_code)
+            language_dir = I18nFileWrapper.locale_dir_absolute(locale)
             if not os.path.exists(language_dir):
                 os.makedirs(language_dir)
 
-            # Load existing etags from previous sync, if it exists
+            # Load existing etags from previous sync, if it exists.
+            # Note that here we're using locale_dir and not locale_dir_absolute; we want to
+            # specifically retrieve the etags from wherever they are persisted, even if that's not
+            # the local filesystem.
             etags = {}
-            etags_path = os.path.join(language_dir, ETAGS_FILENAME)
+            etags_path = os.path.join(I18nFileWrapper.locale_dir(locale), ETAGS_FILENAME)
             if I18nFileWrapper.storage().exists(etags_path):
                 self.logger.debug("loading existing etags from %s", etags_path)
                 with I18nFileWrapper.storage().open(etags_path, 'r') as etags_file:
@@ -170,22 +174,16 @@ class Crowdin(object):
                     # Update the etag for this file, for use in the next sync
                     etags[language_code][filepath] = response.headers['etag']
 
-                    # Persist the contents of the file
+                    # Persist the contents of the file.
+                    # Although we have access to the I18nFileWrapper here and could persist the
+                    # contents directly to S3, we actually need them on the local filesystem so we
+                    # can restore them; other parts of the sync process will handle uploading the
+                    # files to S3.
                     full_filepath = os.path.join(language_dir, filepath)
+                    if not os.path.exists(os.path.dirname(full_filepath)):
+                        os.makedirs(os.path.dirname(full_filepath))
 
-                    try:
-                        # Try to create the directory structure for the file if it doesn't exist.
-                        # Note that some Storage solutions don't implement local paths or require
-                        # preexisting directory structures, so we peacefully fail if that
-                        # functionality is unimplemented.
-                        # See https://docs.djangoproject.com/en/1.8/ref/files/storage/#django.core.files.storage.Storage.path
-                        local_dir = os.path.dirname(I18nFileWrapper.storage().path(full_filepath))
-                        if not os.path.exists(local_dir):
-                            os.makedirs(local_dir)
-                    except NotImplementedError:
-                        pass
-
-                    with I18nFileWrapper.storage().open(full_filepath, 'w') as _file:
+                    with open(full_filepath, 'w') as _file:
                         _file.write(response.content)
                 elif response.status_code == 304:
                     # 304 means there's no change (based on the etag), so we don't need to do
