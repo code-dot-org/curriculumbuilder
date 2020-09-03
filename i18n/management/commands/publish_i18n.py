@@ -73,10 +73,14 @@ class Command(BaseCommand):
         self.html_publishing_time += (end_time - start_time)
 
         if language_code in settings.LANGUAGE_GENERATE_PDF:
-            pdf_start_time = time.time()
-            self.pool.imap_unordered(publish_object_pdfs, objects.all())
-            pdf_end_time = time.time()
-            self.pdf_publishing_time += (pdf_end_time - pdf_start_time)
+            try:
+                pdf_start_time = time.time()
+                self.pool.imap_unordered(publish_object_pdfs, objects.all())
+                pdf_end_time = time.time()
+                self.pdf_publishing_time += (pdf_end_time - pdf_start_time)
+            except Exception as err:
+                log(err)
+                log("PDF publishing failed in %s" % language_code)
 
     def publish_models(self):
         """
