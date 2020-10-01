@@ -136,6 +136,7 @@ LANGUAGES = (
     ('hi-in', _('Hindi')),
     ('it-it', _('Italian')),
     ('pl-pl', _('Polish')),
+    ('pt-br', _('Brazilian Portuguese')),
     ('sk-sk', _('Slovak')),
     ('th-th', _('Thai')),
     (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
