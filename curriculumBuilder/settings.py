@@ -126,8 +126,11 @@ LANGUAGE_CODE = "en-us"
 LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
+# Note that the values of this list have also been manually copied into a
+# helper method in the main code.org repo; any changes made here should be
+# reflected in pegasus/helpers/page_helpers.rb:hacky_localized_lesson_plan_url
 LANGUAGES = (
-    ('en-us', _('English')),
+    (LANGUAGE_CODE, _('English')),
     ('es-mx', _('Mexican Spanish')),
     ('es-es', _('Spanish')),
     ('hi-in', _('Hindi')),
