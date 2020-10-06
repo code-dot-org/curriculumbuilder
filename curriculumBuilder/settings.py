@@ -131,7 +131,7 @@ LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 # reflected in pegasus/helpers/page_helpers.rb:hacky_localized_lesson_plan_url
 LANGUAGES = (
     (LANGUAGE_CODE, _('English')),
-    ('ar-ar', _('Arabic')),
+    ('ar-sa', _('Arabic')),
     ('es-mx', _('Mexican Spanish')),
     ('es-es', _('Spanish')),
     ('fr-fr', _('French')),
