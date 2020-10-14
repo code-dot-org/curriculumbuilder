@@ -148,8 +148,9 @@ except Exception as exc:
     print("Could not retrieve list of languages from DynamoDB:")
     print(exc)
     LANGUAGES = (
-        (LANGUAGE_CODE, _('English')),
-        (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
+        (LANGUAGE_CODE, 'English'),
+        ('es-mx', 'Mexican Spanish'),
+        (LANGUAGE_CODE_DO_TRANSLATION, 'Translate'),
     )
 
 # The subset of supported languages for which we support publishing PDFs
