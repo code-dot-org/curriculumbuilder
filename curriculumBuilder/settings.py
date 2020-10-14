@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 
+import boto3
 import socket
+import json
 
 import os
 
@@ -126,24 +128,31 @@ LANGUAGE_CODE = "en-us"
 LANGUAGE_CODE_DO_TRANSLATION = "in-tl"
 
 # Supported languages
-# Note that the values of this list have also been manually copied into a
-# helper method in the main code.org repo; any changes made here should be
-# reflected in pegasus/helpers/page_helpers.rb:hacky_localized_lesson_plan_url
-LANGUAGES = (
-    (LANGUAGE_CODE, _('English')),
-    ('ar-sa', _('Arabic')),
-    ('es-mx', _('Mexican Spanish')),
-    ('es-es', _('Spanish')),
-    ('fr-fr', _('French')),
-    ('hi-in', _('Hindi')),
-    ('it-it', _('Italian')),
-    ('pl-pl', _('Polish')),
-    ('pt-br', _('Brazilian Portuguese')),
-    ('sk-sk', _('Slovak')),
-    ('th-th', _('Thai')),
-    (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
-)
+# The source of truth for this list is in a DCDO flag in DynamoDB, so that we
+# can reference the list both here in the CurriculumBuilder project and also
+# from the main Code.org project.
+try:
+    # We attempt to retrieve the list at runtime, but will fall back to a
+    # basic list supporting just English and the in-context translation if the
+    # retrieval fails for any reason.
+    response = boto3.client('dynamodb').get_item(
+        TableName="dcdo_production",
+        Key={
+            'data-key': {
+                "S": "curriculumbuilder_languages"
+            }
+        }
+    )
+    LANGUAGES = json.loads(response['Item']['data-value']['S'])
+except Exception as exc:
+    print("Could not retrieve list of languages from DynamoDB:")
+    print(exc)
+    LANGUAGES = (
+        (LANGUAGE_CODE, _('English')),
+        (LANGUAGE_CODE_DO_TRANSLATION, _('Translate')),
+    )
 
+# The subset of supported languages for which we support publishing PDFs
 LANGUAGE_GENERATE_PDF = (
     'es-mx',
     'it-it',
