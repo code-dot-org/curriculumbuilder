@@ -35,10 +35,19 @@ def get_non_english_language_codes():
     Retrieve all language codes (ie "es-mx") for languages we need to process
     in the i18n sync.
     """
-    return [
+    language_codes = [
         language_code for language_code, _ in settings.LANGUAGES
         if not language_code == settings.LANGUAGE_CODE
     ]
+
+    # We dynamically retrieve the languages from DynamoDB at startup, so check
+    # here to make sure we got a full list. We default to a list containing
+    # just three languages, so we naively identify a "full list" by simply
+    # checking for a list longer than than.
+    if len(language_codes) <= 3:
+        log("Could not find full list of languages; using default")
+
+    return language_codes
 
 
 def get_non_english_locale_names():

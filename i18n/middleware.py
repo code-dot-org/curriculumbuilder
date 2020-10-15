@@ -4,6 +4,8 @@ from django.conf import settings
 from django.utils import translation
 from django.middleware.locale import LocaleMiddleware
 
+from management.utils import get_non_english_language_codes
+
 def get_language_from_path_strict(path, allowed_languages):
     for language_code in allowed_languages:
         if path.startswith('/{}/'.format(language_code)):
@@ -19,10 +21,7 @@ class StrictLocaleMiddleware(LocaleMiddleware):
     """
     def __init__(self):
         super(StrictLocaleMiddleware, self).__init__()
-        self.language_codes = [
-            language_code for language_code, _ in settings.LANGUAGES
-            if language_code != settings.LANGUAGE_CODE
-        ]
+        self.language_codes = get_non_english_language_codes()
 
     def process_request(self, request):
         language = get_language_from_path_strict(
