@@ -23,6 +23,7 @@ PROJECT_ID = 'curriculumbuilder'
 # mapping from our codes to Crowdin's for those cases for which they differ.
 CROWDIN_LANGUAGE_CODES = {
     'ar-sa': 'ar',
+    'fr-fr': 'fr',
     'hi-in': 'hi',
     'it-it': 'it',
     'pl-pl': 'pl',
