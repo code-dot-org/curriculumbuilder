@@ -22,6 +22,7 @@ PROJECT_ID = 'curriculumbuilder'
 # internally, but sometimes uses other formats for its language codes. This constant provides a
 # mapping from our codes to Crowdin's for those cases for which they differ.
 CROWDIN_LANGUAGE_CODES = {
+    'ar-sa': 'ar',
     'hi-in': 'hi',
     'it-it': 'it',
     'pl-pl': 'pl',
