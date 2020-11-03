@@ -733,10 +733,12 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
             results[standard.framework.slug][standard.top_category.shortcode].append(standard)
 
     def summarize(self):
+        activities = self.activity_set.iterator()
         summary = {
             'overview': self.overview,
             'duration': self.duration,
             'code_studio_url': self.code_studio_url,
+            'activities': map(lambda a: a.summarize(), activities)
         }
         return summary
 
@@ -806,6 +808,13 @@ class Activity(Orderable, CloneableMixin, Internationalizable, Filterable):
     def is_editable(self, request):
         return self.can_access(request) and request.user.has_perm('lessons.change_activity')
 
+    def summarize(self):
+        summary = {
+            'order': self._order,
+            'name': self.name,
+            'content': self.content
+        }
+        return summary
 
 """
 Prerequisite Skills
