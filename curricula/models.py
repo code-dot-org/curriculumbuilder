@@ -689,6 +689,12 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
         return duplicate
 
+    def to_json(self):
+        summary = {
+            'unit_name': self.unit_name
+        }
+        return json.dumps(summary)
+
 
 """
 Unit Chapter
