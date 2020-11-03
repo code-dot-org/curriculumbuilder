@@ -732,6 +732,14 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
         for standard in self.standards.all():
             results[standard.framework.slug][standard.top_category.shortcode].append(standard)
 
+    def summarize(self):
+        summary = {
+            'overview': self.overview,
+            'duration': self.duration,
+            'code_studio_url': self.code_studio_url,
+        }
+        return summary
+
 
 """
 Activities that compose a lesson

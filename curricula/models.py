@@ -825,7 +825,8 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def summarize(self):
         summary = {
             'number': self.number,
-            'questions': self.questions
+            'questions': self.questions,
+            'lessons': map(lambda l: l.summarize(), self.lessons)
         }
         return summary
 
