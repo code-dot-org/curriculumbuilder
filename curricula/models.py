@@ -689,11 +689,12 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
         return duplicate
 
-    def to_json(self):
+    def summarize(self):
         summary = {
-            'unit_name': self.unit_name
+            'unit_name': self.unit_name,
+            'chapters': map(lambda ch: ch.summarize(), self.chapters)
         }
-        return json.dumps(summary)
+        return summary
 
 
 """
@@ -820,6 +821,13 @@ class Chapter(InternationalizablePage, RichText, CloneableMixin, Ownable):
         duplicate.save()
 
         return duplicate
+
+    def summarize(self):
+        summary = {
+            'number': self.number,
+            'questions': self.questions
+        }
+        return summary
 
 
 """
