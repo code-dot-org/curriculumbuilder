@@ -5,6 +5,9 @@ from curricula.models import Unit, Curriculum
 from lessons.models import Lesson, Resource, Vocab, Annotation, Standard
 from documentation.models import Block
 
+"""
+Curriculum serializers
+"""
 
 class ResourceSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
@@ -34,15 +37,6 @@ class BlockSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         return obj.get_published_url()
 
-class StandardSerializer(serializers.ModelSerializer):
-    framework = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Standard
-        fields = ('shortcode', 'framework')
-
-    def get_framework(self, obj):
-        return obj.framework.slug
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
@@ -83,6 +77,7 @@ class LessonSerializer(serializers.ModelSerializer):
         serializer = BlockSerializer(blocks, many=True)
         return serializer.data
 
+
 class UnitSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
     student_desc = serializers.SerializerMethodField()
@@ -103,29 +98,6 @@ class UnitSerializer(serializers.ModelSerializer):
         serializer = LessonSerializer(lessons, many=True, context=self.context)
         return serializer.data
 
-class UnitLessonsSerializer(serializers.ModelSerializer):
-    lessons = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Unit
-        fields = ('unit_name', 'lessons')
-
-    def get_lessons(self, obj):
-        lessons = obj.lessons
-        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
-        return serializer.data
-
-class LessonStandardsSerializer(serializers.ModelSerializer):
-    standards = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Lesson
-        fields = ('title', 'number', 'standards')
-
-    def get_standards(self, obj):
-        standards = obj.standards.all()
-        serializer = StandardSerializer(standards, many=True)
-        return serializer.data
 
 class CurriculumSerializer(serializers.ModelSerializer):
     units = serializers.SerializerMethodField()
@@ -146,6 +118,53 @@ class CurriculumSerializer(serializers.ModelSerializer):
 
     def get_student_desc(self, obj):
         return obj.description
+
+
+"""
+Standards serializers
+"""
+
+
+class UnitLessonsSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Unit
+        fields = ('unit_name', 'lessons')
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+
+class LessonStandardsSerializer(serializers.ModelSerializer):
+    standards = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lesson
+        fields = ('title', 'number', 'standards')
+
+    def get_standards(self, obj):
+        standards = obj.standards.all()
+        serializer = StandardSerializer(standards, many=True)
+        return serializer.data
+
+
+class StandardSerializer(serializers.ModelSerializer):
+    framework = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Standard
+        fields = ('shortcode', 'framework')
+
+    def get_framework(self, obj):
+        return obj.framework.slug
+
+
+"""
+Annotation serializers
+"""
 
 
 class Range():
