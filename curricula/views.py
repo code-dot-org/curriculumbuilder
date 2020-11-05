@@ -1013,7 +1013,7 @@ def unit_element(request, unit_name, format=None):
 @api_view(['GET', ])
 def unit_export(request, unit_name, format=None):
     try:
-        unit = Unit.objects.get(login_required=False, status=2, unit_name=unit_name)
+        unit = get_object_or_404(Unit, login_required=False, status=2, unit_name=unit_name)
     except MultipleObjectsReturned:
         logger.exception("Warning - found multiple units referencing the unit %s" % unit_name)
         unit = Unit.objects.filter(login_required=False, status=2, unit_name=unit_name).first()
