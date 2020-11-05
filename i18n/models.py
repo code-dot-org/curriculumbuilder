@@ -126,7 +126,7 @@ class InternationalizablePage(Page, Internationalizable):
 
     @property
     def i18n_key(self):
-        return self.slug
+        return 'lesson-{}'.format(self.pk)
 
     @classmethod
     def internationalizable_fields(cls):
