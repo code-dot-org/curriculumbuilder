@@ -1009,6 +1009,19 @@ def unit_element(request, unit_name, format=None):
     serializer = UnitSerializer(unit)
     return Response(serializer.data)
 
+
+@api_view(['GET', ])
+def unit_export(request, unit_name, format=None):
+    try:
+        unit = get_object_or_404(Unit, login_required=False, status=2, unit_name=unit_name)
+    except MultipleObjectsReturned:
+        logger.exception("Warning - found multiple units referencing the unit %s" % unit_name)
+        unit = Unit.objects.filter(login_required=False, status=2, unit_name=unit_name).first()
+
+    serializer = UnitExportSerializer(unit)
+    return Response(serializer.data)
+
+
 @api_view(['GET', ])
 def unit_standards(request, unit_name, format=None):
     try:

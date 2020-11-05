@@ -149,7 +149,9 @@ class UnitExportSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_lessons(self, obj):
-        lessons = obj.lessons
+        # Only include lessons which are direct children of this unit, omitting any
+        # children of chapters in this unit.
+        lessons = Lesson.objects.filter(parent__unit=obj)
         serializer = LessonExportSerializer(lessons, many=True, context=self.context)
         return serializer.data
 

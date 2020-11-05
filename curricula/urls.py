@@ -20,6 +20,9 @@ urlpatterns = patterns('curricula.views',
                        url(r'^get_stage_details/$', views.get_stage_details, name='get_stage_details'),
                        url(r'^resolve_feedback/$', views.resolve_feedback, name='resolve_feedback'),
 
+                       # Export this unit to code studio
+                       url(r'^export/unit/(?P<unit_name>[-\w]+).json$', views.unit_export, name="unit_export"),
+
                        # JSON Metadata
                        url(r'^metadata/(?P<unit_name>[-\w]+).json$', views.unit_element, name="unit_element"),
                        url(r'^metadata/course/(?P<slug>[-\w]+).json$', views.curriculum_element, name="curriculum_element"),
