@@ -1,10 +1,13 @@
 import json
 from rest_framework import serializers
 
-from curricula.models import Unit, Curriculum
-from lessons.models import Lesson, Resource, Vocab, Annotation, Standard
+from curricula.models import Unit, Chapter, Curriculum
+from lessons.models import Lesson, Activity, Resource, Vocab, Annotation, Standard
 from documentation.models import Block
 
+"""
+Curriculum serializers
+"""
 
 class ResourceSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
@@ -34,15 +37,6 @@ class BlockSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         return obj.get_published_url()
 
-class StandardSerializer(serializers.ModelSerializer):
-    framework = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Standard
-        fields = ('shortcode', 'framework')
-
-    def get_framework(self, obj):
-        return obj.framework.slug
 
 class LessonSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
@@ -83,6 +77,7 @@ class LessonSerializer(serializers.ModelSerializer):
         serializer = BlockSerializer(blocks, many=True)
         return serializer.data
 
+
 class UnitSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
     student_desc = serializers.SerializerMethodField()
@@ -103,29 +98,6 @@ class UnitSerializer(serializers.ModelSerializer):
         serializer = LessonSerializer(lessons, many=True, context=self.context)
         return serializer.data
 
-class UnitLessonsSerializer(serializers.ModelSerializer):
-    lessons = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Unit
-        fields = ('unit_name', 'lessons')
-
-    def get_lessons(self, obj):
-        lessons = obj.lessons
-        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
-        return serializer.data
-
-class LessonStandardsSerializer(serializers.ModelSerializer):
-    standards = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Lesson
-        fields = ('title', 'number', 'standards')
-
-    def get_standards(self, obj):
-        standards = obj.standards.all()
-        serializer = StandardSerializer(standards, many=True)
-        return serializer.data
 
 class CurriculumSerializer(serializers.ModelSerializer):
     units = serializers.SerializerMethodField()
@@ -146,6 +118,132 @@ class CurriculumSerializer(serializers.ModelSerializer):
 
     def get_student_desc(self, obj):
         return obj.description
+
+
+"""
+Export serializers
+"""
+
+class UnitExportSerializer(serializers.ModelSerializer):
+    chapters = serializers.SerializerMethodField()
+    lessons = serializers.SerializerMethodField()
+    student_desc = serializers.SerializerMethodField()
+    teacher_desc = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Unit
+        fields = ('title', 'number', 'slug', 'unit_name', 'student_desc', 'teacher_desc', 'chapters', 'lessons')
+
+    def get_teacher_desc(self, obj):
+        return obj.content
+
+    def get_student_desc(self, obj):
+        return obj.description
+
+    # A lesson could either appear directly in lessons, or nested within chapters.
+    # In 2020 courses, CSF and CSD use chapters but CSP does not.
+
+    def get_chapters(self, obj):
+        chapters = obj.chapters
+        serializer = ChapterExportSerializer(chapters, many=True, context=self.context)
+        return serializer.data
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonExportSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+
+class ChapterExportSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Chapter
+        fields = ('number', 'questions', 'lessons')
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonExportSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+
+class LessonExportSerializer(serializers.ModelSerializer):
+    teacher_desc = serializers.SerializerMethodField()
+    student_desc = serializers.SerializerMethodField()
+    activities = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lesson
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities')
+
+    def get_teacher_desc(self, obj):
+        return obj.overview
+
+    def get_student_desc(self, obj):
+        return obj.description
+
+    def get_activities(self, obj):
+        activities = obj.activity_set.iterator()
+        serializer = ActivityExportSerializer(activities, many=True, context=self.context)
+        return serializer.data
+
+
+class ActivityExportSerializer(serializers.ModelSerializer):
+    duration = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Activity
+        fields = ('name', 'duration', 'content')
+
+    def get_duration(self, obj):
+        return obj.time
+
+
+"""
+Standards serializers
+"""
+
+
+class UnitLessonsSerializer(serializers.ModelSerializer):
+    lessons = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Unit
+        fields = ('unit_name', 'lessons')
+
+    def get_lessons(self, obj):
+        lessons = obj.lessons
+        serializer = LessonStandardsSerializer(lessons, many=True, context=self.context)
+        return serializer.data
+
+
+class LessonStandardsSerializer(serializers.ModelSerializer):
+    standards = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lesson
+        fields = ('title', 'number', 'standards')
+
+    def get_standards(self, obj):
+        standards = obj.standards.all()
+        serializer = StandardSerializer(standards, many=True)
+        return serializer.data
+
+
+class StandardSerializer(serializers.ModelSerializer):
+    framework = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Standard
+        fields = ('shortcode', 'framework')
+
+    def get_framework(self, obj):
+        return obj.framework.slug
+
+
+"""
+Annotation serializers
+"""
 
 
 class Range():
