@@ -173,10 +173,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
     student_desc = serializers.SerializerMethodField()
     activities = serializers.SerializerMethodField()
+    stage_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'code_studio_url')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'code_studio_url', 'stage_name')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -188,6 +189,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
         activities = obj.activity_set.iterator()
         serializer = ActivityExportSerializer(activities, many=True, context=self.context)
         return serializer.data
+
+    def get_stage_name(self, obj):
+        if obj.stage:
+            return obj.stage['stageName']
+        return ''
 
 
 class ActivityExportSerializer(serializers.ModelSerializer):
