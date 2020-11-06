@@ -176,7 +176,7 @@ class LessonExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'code_studio_url')
 
     def get_teacher_desc(self, obj):
         return obj.overview
