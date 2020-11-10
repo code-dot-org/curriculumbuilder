@@ -161,7 +161,7 @@ class ChapterExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
-        fields = ('title', 'number', 'questions', 'lessons')
+        fields = ('title', 'number', 'questions', 'description', 'lessons')
 
     def get_lessons(self, obj):
         lessons = obj.lessons
