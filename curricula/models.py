@@ -404,6 +404,9 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
     def get_json_standards_url(self):
         return reverse('curriculum:unit_standards', args=[self.unit_name])
 
+    def get_json_export_url(self):
+        return reverse('curriculum:unit_export', args=[self.unit_name])
+
     def get_resources_pdf_url(self):
         return reverse('curriculum:unit_resources_pdf', args=[self.curriculum.slug, self.slug])
 
@@ -485,7 +488,8 @@ class Unit(InternationalizablePage, RichText, CloneableMixin, Ownable):
             self.get_standards_csv_url(),
             self.get_compiled_url(),
             self.get_json_url(),
-            self.get_json_standards_url()
+            self.get_json_standards_url(),
+            self.get_json_export_url()
         ]
         return urls
 
