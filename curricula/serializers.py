@@ -132,7 +132,7 @@ class UnitExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('title', 'number', 'slug', 'unit_name', 'student_desc', 'teacher_desc', 'chapters', 'lessons')
+        fields = ('title', 'number', 'slug', 'unit_name', 'show_calendar', 'student_desc', 'teacher_desc', 'chapters', 'lessons')
 
     def get_teacher_desc(self, obj):
         return obj.content
