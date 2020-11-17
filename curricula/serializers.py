@@ -132,7 +132,7 @@ class UnitExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('title', 'number', 'slug', 'unit_name', 'student_desc', 'teacher_desc', 'chapters', 'lessons')
+        fields = ('title', 'number', 'slug', 'unit_name', 'show_calendar', 'student_desc', 'teacher_desc', 'chapters', 'lessons')
 
     def get_teacher_desc(self, obj):
         return obj.content
@@ -175,10 +175,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
     activities = serializers.SerializerMethodField()
     objectives = serializers.SerializerMethodField()
     stage_name = serializers.SerializerMethodField()
+    creative_commons_license = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -198,6 +199,13 @@ class LessonExportSerializer(serializers.ModelSerializer):
         if obj.stage:
             return obj.stage['stageName']
         return ''
+
+    def get_creative_commons_license(self, obj):
+        img_to_license = {
+            'img/creativeCommons-by-nc-sa.png': 'Creative Commons BY-NC-SA',
+            'img/creativeCommons-by-nc-nd.png': 'Creative Commons BY-NC-ND'
+        }
+        return img_to_license[obj.creative_commons_image]
 
 
 class ActivityExportSerializer(serializers.ModelSerializer):
