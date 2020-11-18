@@ -173,13 +173,14 @@ class LessonExportSerializer(serializers.ModelSerializer):
     teacher_desc = serializers.SerializerMethodField()
     student_desc = serializers.SerializerMethodField()
     activities = serializers.SerializerMethodField()
+    resources = serializers.SerializerMethodField()
     objectives = serializers.SerializerMethodField()
     stage_name = serializers.SerializerMethodField()
     creative_commons_license = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -190,6 +191,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
     def get_activities(self, obj):
         activities = obj.activity_set.iterator()
         serializer = ActivityExportSerializer(activities, many=True, context=self.context)
+        return serializer.data
+
+    def get_resources(self, obj):
+        resources = obj.resources
+        serializer = ResourceExportSerializer(resources, many=True, context=self.context)
         return serializer.data
 
     def get_objectives(self, obj):
@@ -217,6 +223,13 @@ class ActivityExportSerializer(serializers.ModelSerializer):
 
     def get_duration(self, obj):
         return obj.time
+
+
+class ResourceExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resource
+        fields = ('name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug')
+
 
 
 """
