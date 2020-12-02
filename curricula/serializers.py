@@ -180,7 +180,7 @@ class LessonExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
 
     def get_teacher_desc(self, obj):
         return obj.overview
