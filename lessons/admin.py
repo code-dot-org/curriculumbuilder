@@ -328,7 +328,7 @@ class LessonAdmin(PageAdmin, AjaxSelectAdmin, CompareVersionAdmin, FilterableAdm
         fieldsets = (
             (None, {
                 'fields': ['title', 'short_title', status_fields, 'image',
-                           'overview', 'keywords', ('description', 'gen_description'), 'code_studio_url'],
+                           'overview', 'slug', 'keywords', ('description', 'gen_description'), 'code_studio_url'],
             }),
             ('Assessment', {
                 'fields': ['assessment'],
