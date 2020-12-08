@@ -162,6 +162,7 @@ To update your local database schema use the following command:
 dropdb curriculumbuilder
 heroku pg:pull DATABASE_URL curriculumbuilder -a curriculumbuilder
 ```
+NOTE: avoid using commands that include the `DATABASE_URL` flag, apart from `pg:pull`. This flag allows users to directly manipulate the production database from the command line and should be used with caution.
 
 ### Creating a new user
 
