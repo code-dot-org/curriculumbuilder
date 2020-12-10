@@ -4,6 +4,7 @@ Helper methods for use during the i18n sync process
 import django.apps
 
 from django.conf import settings
+from django.template.base import TemplateDoesNotExist
 from django.utils.translation import to_locale
 
 from django_slack import slack_message
@@ -67,6 +68,11 @@ def log(message):
     for actual use.
     """
     print(message) # pylint: disable=superfluous-parens
-    slack_message('slack/message.slack', {
-        'message': message
-    })
+    try:
+        slack_message('slack/message.slack', {
+            'message': message
+        })
+    except TemplateDoesNotExist:
+        # This is silly, but when trying to test requests we run into issues
+        # because the message template is not loaded in our test environment.
+        pass
