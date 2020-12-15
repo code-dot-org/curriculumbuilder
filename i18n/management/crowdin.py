@@ -21,6 +21,7 @@ PROJECT_ID = 'curriculumbuilder'
 # Crowdin sometimes uses four-letter language codes consistent with the language codes we use
 # internally, but sometimes uses other formats for its language codes. This constant provides a
 # mapping from our codes to Crowdin's for those cases for which they differ.
+# https://support.crowdin.com/api/language-codes/
 CROWDIN_LANGUAGE_CODES = {
     'ar-sa': 'ar',
     'fr-fr': 'fr',
@@ -29,7 +30,8 @@ CROWDIN_LANGUAGE_CODES = {
     'pl-pl': 'pl',
     'sk-sk': 'sk',
     'th-th': 'th',
-    'in-tl': 'in'
+    'in-tl': 'in',
+    'uz-uz': 'uz'
 }
 
 
