@@ -37,7 +37,6 @@ class Command(BaseCommand):
         self.total_elapsed_time = 0
         self.pdf_publishing_time = 0
         self.html_publishing_time = 0
-        self.pool = multiprocessing.Pool(multiprocessing.cpu_count())
 
         with open(CHANGES_JSON) as changes_json:
             self.changes = json.load(changes_json)
@@ -59,28 +58,34 @@ class Command(BaseCommand):
         return len(self.changes.get(language_code, [])) > 0
 
     def publish_objects_in_language(self, objects, language_code):
-        translation.activate(language_code)
-
         # By default, the spawned processes will attempt to reuse the existing database connections,
         # which will cause conflicts. To prevent this, we explicitly close all database connections
         # immediately before spawning the processes, which will force them to each open their own
         # connection.
         db.connections.close_all()
 
+        translation.activate(language_code)
+
+        pool = multiprocessing.Pool(multiprocessing.cpu_count())
         start_time = time.time()
-        self.pool.imap_unordered(publish_object_html, objects.all())
+        pool.map(publish_object_html, objects.all())
         end_time = time.time()
         self.html_publishing_time += (end_time - start_time)
 
         if language_code in settings.LANGUAGE_GENERATE_PDF:
             try:
                 pdf_start_time = time.time()
-                self.pool.imap_unordered(publish_object_pdfs, objects.all())
+                pool.map(publish_object_pdfs, objects.all())
                 pdf_end_time = time.time()
                 self.pdf_publishing_time += (pdf_end_time - pdf_start_time)
             except Exception as err:
                 log(err)
                 log("PDF publishing failed in %s" % language_code)
+
+        # Close the Pool so no more work can be scheduled and its resources are cleaned up.
+        pool.close()
+        pool.join()
+
 
     def publish_models(self):
         """
