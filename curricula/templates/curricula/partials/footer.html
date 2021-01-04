@@ -4,11 +4,19 @@
 <footer>
   <div class="container">
     <div class="row">
-      {% if lesson %}
-        <a href="https://creativecommons.org/"><img src="{% static lesson.creative_commons_image %}" border="0"></a><br/>
-      {% else %}
-        <a href="https://creativecommons.org/"><img src="{% static "img/creativeCommons-by-nc-sa.png" %}" border="0"></a><br/>
-      {% endif %}
+      <a href="https://creativecommons.org/" style="float: left">
+        {% if lesson %}
+          <img src="{% static lesson.creative_commons_image %}" border="0">
+        {% else %}
+          <img src="{% static "img/creativeCommons-by-nc-sa.png" %}" border="0">
+        {% endif %}
+      </a>
+
+      <div style="float: right; position: relative;">
+        {% include "curricula/partials/language_select.html" %}
+      </div>
+    </div>
+    <div class="row">
       <span class="license">{{ license|richtext_filters|safe }}</span>
     </div>
   </div>

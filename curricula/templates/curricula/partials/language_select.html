@@ -1,0 +1,14 @@
+<div class="language-dropdown" style="position: relative; top: 10px;">
+  <select onchange="window.location.assign('/' + this.value + '{{ CURRENT_PATH_WITHOUT_LANGUAGE }}');">
+    {% for code, name in LANGUAGES %}
+      {% if code != LANGUAGE_CODE_DO_TRANSLATION %}
+        <option
+          value="{{ code }}"
+          {% if code == LANGUAGE_CODE %}selected=""{% endif %}
+        >
+          {{ name }}
+        </option>
+      {% endif %}
+    {% endfor %}
+  </select>
+</div>

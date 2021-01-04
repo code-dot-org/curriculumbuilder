@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
 import boto3
@@ -149,7 +150,7 @@ except Exception as exc:
     print(exc)
     LANGUAGES = (
         (LANGUAGE_CODE, 'English'),
-        ('es-mx', 'Mexican Spanish'),
+        ('es-mx', 'Español (LATAM)'),
         (LANGUAGE_CODE_DO_TRANSLATION, 'Translate'),
     )
 
@@ -351,7 +352,8 @@ TEMPLATES = [{u'APP_DIRS': False,
                                           u'django.core.context_processors.tz',
                                           u'mezzanine.conf.context_processors.settings',
                                           u'mezzanine.pages.context_processors.page',
-                                          u'i18n.context_processors.language_code_do_translation'),
+                                          u'i18n.context_processors.language_code_do_translation',
+                                          u'i18n.context_processors.current_path_without_language'),
                   u'loaders': [(u'django.template.loaders.cached.Loader',
                                (u'django.template.loaders.filesystem.Loader',
                                 u'django.template.loaders.app_directories.Loader'))],
