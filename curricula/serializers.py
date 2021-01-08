@@ -174,13 +174,14 @@ class LessonExportSerializer(serializers.ModelSerializer):
     student_desc = serializers.SerializerMethodField()
     activities = serializers.SerializerMethodField()
     resources = serializers.SerializerMethodField()
+    vocab = serializers.SerializerMethodField()
     objectives = serializers.SerializerMethodField()
     stage_name = serializers.SerializerMethodField()
     creative_commons_license = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'vocab', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -196,6 +197,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
     def get_resources(self, obj):
         resources = obj.resources
         serializer = ResourceExportSerializer(resources, many=True, context=self.context)
+        return serializer.data
+
+    def get_vocab(self, obj):
+        vocab = obj.vocab.all()
+        serializer = VocabExportSerializer(vocab, many=True, context=self.context)
         return serializer.data
 
     def get_objectives(self, obj):
@@ -230,6 +236,10 @@ class ResourceExportSerializer(serializers.ModelSerializer):
         model = Resource
         fields = ('name', 'type', 'student', 'gd', 'url', 'dl_url', 'slug')
 
+class VocabExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vocab
+        fields = ('word', 'simpleDef', 'detailDef')
 
 
 """
