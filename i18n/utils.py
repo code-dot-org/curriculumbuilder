@@ -43,7 +43,7 @@ class I18nFileWrapper:
         Return the absolute directory in which we expect translations to be
         stored for the given locale name
         """
-        return os.path.join(cls.static_dir(), "translations", locale_name, "LC_MESSAGES")
+        return os.path.join(cls.i18n_dir(), "translations", locale_name, "LC_MESSAGES")
 
     @classmethod
     def _load_translations(cls, name, lang):

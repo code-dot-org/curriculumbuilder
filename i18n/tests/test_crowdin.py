@@ -16,7 +16,7 @@ from i18n.utils import I18nFileWrapper
 
 
 @override_settings(I18N_STORAGE='django.core.files.storage.FileSystemStorage')
-@override_settings(I18N_STORAGE_LOCATION='i18n/static')
+@override_settings(I18N_STORAGE_LOCATION='i18n')
 class CrowdinTest(TestCase):
     """
     Basic tests for the Crowdin class

@@ -11,8 +11,8 @@ from i18n.utils import I18nFileWrapper
 
 
 class Command(BaseCommand):
-    source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
-    upload_dir = os.path.join(I18nFileWrapper.static_dir(), 'upload')
+    source_dir = os.path.join(I18nFileWrapper.i18n_dir(), 'source')
+    upload_dir = os.path.join(I18nFileWrapper.i18n_dir(), 'upload')
 
     def prepare_sources(self):
         """Gather all sources strings into upload directory"""
@@ -30,9 +30,13 @@ class Command(BaseCommand):
         for model in models_to_redact:
             filename = model.__name__ + ".json"
             source_path = os.path.join(self.source_dir, filename)
+            log("source_path %s" % source_path)
             destination_path = os.path.join(self.upload_dir, filename)
+            log("destination_path %s" % destination_path)
             plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
+            log("plugins_path %s" % plugins_path)
             plugins = ",".join(glob.glob(plugins_path))
+            log(plugins)
             subprocess.call([
                 "redact", source_path,
                 "-o", destination_path,
@@ -41,7 +45,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def upload_sources():
-        """Upload sources files to crowdin"""
+        """Upload source files to crowdin"""
         log("Uploading source files")
         subprocess.call([
             os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),

@@ -10,7 +10,7 @@ from i18n.utils import I18nFileWrapper
 
 
 class Command(BaseCommand):
-    source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
+    source_dir = os.path.join(I18nFileWrapper.i18n_dir(), 'source')
 
     def gather_model_strings(self):
         if not os.path.exists(self.source_dir):

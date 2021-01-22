@@ -12,7 +12,7 @@ from i18n.management.crowdin import Crowdin
 
 
 class Command(BaseCommand):
-    source_dir = os.path.join(I18nFileWrapper.static_dir(), 'source')
+    source_dir = os.path.join(I18nFileWrapper.i18n_dir(), 'source')
 
     @staticmethod
     def download_translations():
