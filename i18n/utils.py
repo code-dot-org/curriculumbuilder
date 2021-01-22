@@ -26,10 +26,6 @@ class I18nFileWrapper:
         return os.path.dirname(__file__)
 
     @classmethod
-    def static_dir(cls):
-        return os.path.join(cls.i18n_dir(), 'static')
-
-    @classmethod
     def locale_dir(cls, locale_name):
         """
         Return the relative directory in which we expect translations to be

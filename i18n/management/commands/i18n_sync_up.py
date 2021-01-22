@@ -30,13 +30,9 @@ class Command(BaseCommand):
         for model in models_to_redact:
             filename = model.__name__ + ".json"
             source_path = os.path.join(self.source_dir, filename)
-            log("source_path %s" % source_path)
             destination_path = os.path.join(self.upload_dir, filename)
-            log("destination_path %s" % destination_path)
             plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
-            log("plugins_path %s" % plugins_path)
             plugins = ",".join(glob.glob(plugins_path))
-            log(plugins)
             subprocess.call([
                 "redact", source_path,
                 "-o", destination_path,
