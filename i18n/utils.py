@@ -23,11 +23,11 @@ class I18nFileWrapper:
 
     @classmethod
     def i18n_dir(cls):
-        return os.path.dirname(__file__)
+        return settings.I18N_DIR
 
     @classmethod
     def static_dir(cls):
-        return os.path.join(cls.i18n_dir(), 'static')
+        return settings.I18N_STATIC_DIR
 
     @classmethod
     def locale_dir(cls, locale_name):
