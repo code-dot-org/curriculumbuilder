@@ -23,11 +23,14 @@ class I18nFileWrapper:
 
     @classmethod
     def i18n_dir(cls):
-        return settings.I18N_DIR
+        static = "/static"
+        if static in cls.storage().location:
+            return cls.storage().location.replace(static, "")
+        return cls.storage().location
 
     @classmethod
     def static_dir(cls):
-        return settings.I18N_STATIC_DIR
+        return os.path.join(cls.i18n_dir(), 'static')
 
     @classmethod
     def locale_dir(cls, locale_name):
@@ -94,5 +97,5 @@ class I18nFileWrapper:
         if cls._storage is None:
             storage = getattr(settings, 'I18N_STORAGE', 'django.core.files.storage.FileSystemStorage')
             storage_cls = import_string(storage)
-            cls._storage = storage_cls(location=getattr(settings, 'I18N_STORAGE_LOCATION', 'i18n/static'))
+            cls._storage = storage_cls(location=getattr(settings, 'I18N_STORAGE_LOCATION', 'i18n'))
         return cls._storage
