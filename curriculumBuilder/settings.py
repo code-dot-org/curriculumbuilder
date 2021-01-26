@@ -553,7 +553,7 @@ AWS_QUERYSTRING_AUTH = False
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_SESSION_TOKEN = os.environ.get('AWS_SESSION_TOKEN')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME') or 'cdo-curriculum-devel'
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME') or 'cdo-curriculum'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_CUSTOM_DOMAIN = 'curriculum.code.org'
 AWS_PRELOAD_METADATA = True  # helps collectstatic do updates
@@ -571,7 +571,7 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'helpers.s3utils.MediaRootS3BotoStorage'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
-I18N_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+I18N_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # STATIC_URL = 'https://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
 # ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
