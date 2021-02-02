@@ -31,7 +31,7 @@ sh bin/sync-i18n.sh
 ./manage.py publish_i18n
 ```
 
-###Testing Upload to S3
+### Testing Upload to S3
 
 If you want to test uploading strings to S3, set the `AWS_STORAGE_BUCKET_NAME` to a test bucket in your `local_settings.py` so that you don't upload to production.
 Additionally delete the `I18N_STORAGE` configuration in your `local_settings.py` so that the sync uses S3 for storage.
