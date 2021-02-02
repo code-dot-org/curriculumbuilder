@@ -23,10 +23,7 @@ class I18nFileWrapper:
 
     @classmethod
     def i18n_dir(cls):
-        static = "/static"
-        if static in cls.storage().location:
-            return cls.storage().location.replace(static, "")
-        return cls.storage().location
+        return os.path.dirname(__file__)
 
     @classmethod
     def static_dir(cls):
