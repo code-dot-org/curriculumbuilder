@@ -9,6 +9,7 @@ import logging
 import requests
 
 from django.utils.translation import to_locale
+from django.core.files.storage import FileSystemStorage
 
 from .utils import get_non_english_language_codes, CHANGES_JSON
 from ..utils import I18nFileWrapper
@@ -201,6 +202,9 @@ class Crowdin(object):
                     )
 
             self.logger.debug("%s files have changes", len(changes[language_code]))
+            storage_etags_path = os.path.join(str(I18nFileWrapper.storage().location), I18nFileWrapper.locale_dir(locale))
+            if isinstance(I18nFileWrapper.storage(), FileSystemStorage) and not os.path.exists(storage_etags_path):
+                os.makedirs(storage_etags_path)
             with I18nFileWrapper.storage().open(etags_path, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 
