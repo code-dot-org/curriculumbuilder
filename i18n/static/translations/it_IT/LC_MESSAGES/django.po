@@ -1,0 +1,334 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: curriculumbuilder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-04 23:05-0800\n"
+"PO-Revision-Date: 2021-02-05 23:33\n"
+"Last-Translator: \n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: curriculumbuilder\n"
+"X-Crowdin-Project-ID: 302149\n"
+"X-Crowdin-Language: it\n"
+"X-Crowdin-File: django.po\n"
+"X-Crowdin-File-ID: 22478\n"
+
+#: curricula/templates/curricula/chapter.html:102
+#: curricula/templates/curricula/unit.html:120
+#: curricula/templates/curricula/unit.html:211
+#: curricula/templates/curricula/unit_glance.html:92
+#: curricula/templates/curricula/unit_glance.html:138
+#: curricula/templates/curricula/unit_lessons.html:81
+#: curricula/templates/curricula/unit_lessons.html:134
+#, python-format
+msgid "Lesson %(lesson_number)s"
+msgstr "Lezione %(lesson_number)s"
+
+#: curricula/templates/curricula/codestudiolesson.html:113
+#: curricula/templates/curricula/hoc_lesson.html:195
+#: curricula/templates/curricula/partials/lesson.html:26
+msgid "Teaching Guide"
+msgstr "Guida didattica"
+
+#: curricula/templates/curricula/codestudiolesson.html:134
+#: standards/templates/standards/curriculum_nogrid.html:98
+#: standards/templates/standards/curriculum_nogrid.html:126
+msgid "Standards Alignment"
+msgstr "Mappatura delle competenze"
+
+#: curricula/templates/curricula/codestudiolesson.html:135
+msgid "View full course alignment"
+msgstr "Visualizza la mappatura completa del corso"
+
+#: curricula/templates/curricula/codestudiolesson.html:142
+#: standards/templates/standards/curriculum_nogrid.html:105
+#: standards/templates/standards/curriculum_nogrid.html:133
+msgid "Cross-curricular Opportunities"
+msgstr "Competenze interdisciplinari"
+
+#: curricula/templates/curricula/codestudiolesson.html:143
+msgid "This list represents opportunities in this lesson to support standards in other content areas."
+msgstr "Questo elenco riporta le competenze di altre materie sulle quali gli alunni hanno l'opportunità di esercitarsi in questa lezione."
+
+#: curricula/templates/curricula/curriculum.html:63
+msgid "Units"
+msgstr "Unità"
+
+#: curricula/templates/curricula/curriculum.html:68
+msgid "more"
+msgstr "altro"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:4
+#: curricula/templates/curricula/partials/unit_pills.html:6
+msgid "Standards"
+msgstr "Competenze"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:5
+msgid "Vocab"
+msgstr "Glossario"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:6
+#: curricula/templates/curricula/partials/unit_pills.html:8
+msgid "Code Documentation"
+msgstr "Indice"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:7
+#: curricula/templates/curricula/partials/unit_pills.html:9
+msgid "Other Resources"
+msgstr "Materiali"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:13
+#: curricula/templates/curricula/partials/lesson_pills.html:16
+#: curricula/templates/curricula/partials/unit_pills.html:20
+msgid "Last updated"
+msgstr "Ultimo aggiornamento"
+
+#: curricula/templates/curricula/partials/footer.html:2
+msgid "If you are interested in licensing Code.org materials for commercial purposes, [contact us](//code.org/contact)."
+msgstr "Se siete interessati ad utilizzare i materiali di Code.org per scopi commerciali, [contattateci](//code.org/contact)."
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:8
+#, python-format
+msgid "Optional Lesson: %(lesson_title)s"
+msgstr "Lezione facoltativa: %(lesson_title)s"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:10
+#, python-format
+msgid "Lesson %(lesson_number)s: %(lesson_title)s"
+msgstr "Lezione %(lesson_number)s: %(lesson_title)s"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:27
+#: curricula/templates/curricula/partials/lesson_front.html:39
+msgid "Overview"
+msgstr "Panoramica"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:33
+#: curricula/templates/curricula/partials/lesson_front.html:45
+msgid "Purpose"
+msgstr "Traguardo di apprendimento"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:39
+#: curricula/templates/curricula/partials/lesson_front.html:62
+msgid "Agenda"
+msgstr "Pianificazione"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:73
+#: curricula/templates/curricula/partials/lesson_front.html:97
+msgid "Objectives"
+msgstr "Obiettivi"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:74
+#: curricula/templates/curricula/partials/lesson_front.html:98
+msgid "Students will be able to:"
+msgstr "Gli alunni saranno in grado di:"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:85
+#: curricula/templates/curricula/partials/lesson_front.html:109
+#: curricula/templates/curricula/partials/resource_list.html:23
+msgid "Preparation"
+msgstr "Preparazione"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:96
+#: curricula/templates/curricula/partials/lesson_front.html:120
+msgid "Links"
+msgstr "Collegamenti"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:98
+msgid "Heads Up!"
+msgstr "Attenzione!"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:98
+msgid "Please make a copy of any documents you plan to share with students."
+msgstr "Fai una copia di tutti i documenti che intendi condividere con gli studenti."
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:103
+#, python-format
+msgid "For the %(group)s"
+msgstr "Per %(group)s"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:112
+#: curricula/templates/curricula/partials/lesson_front.html:138
+msgid "Make a Copy"
+msgstr "Crea una copia"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:116
+msgid "PDF"
+msgstr "PDF"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:117
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:118
+#: curricula/templates/curricula/partials/lesson_front.html:144
+msgid "Google Docs"
+msgstr "Documenti Google"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:130
+msgid "Add a resource"
+msgstr "Aggiungi una risorsa"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:136
+#: curricula/templates/curricula/partials/lesson_front.html:163
+msgid "Vocabulary"
+msgstr "Glossario"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:147
+#: curricula/templates/curricula/partials/lesson_front.html:178
+msgid "Introduced Code"
+msgstr "Codice introdotto"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:160
+#: curricula/templates/curricula/partials/lesson_front.html:191
+msgid "Support"
+msgstr "Supporto"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:162
+msgid "Lesson Forum"
+msgstr "Forum della lezione"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:170
+#: curricula/templates/curricula/partials/lesson_front.html:201
+msgid "Report a Bug"
+msgstr "Segnala un errore"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:184
+#: curricula/templates/curricula/partials/lesson_front.html:215
+msgid "Give us feedback!"
+msgstr "Lascia un commento!"
+
+#: curricula/templates/curricula/partials/lesson_front.html:12
+#: curricula/templates/curricula/partials/resource_list.html:14
+#: curricula/templates/curricula/partials/vocab_list.html:8
+#: standards/templates/standards/curriculum_nogrid.html:94
+msgid "Lesson"
+msgstr "Lezione"
+
+#: curricula/templates/curricula/partials/lesson_front.html:54
+msgid "Assessment Opportunities"
+msgstr "Possibilità di valutazione"
+
+#: curricula/templates/curricula/partials/lesson_front.html:75
+msgid "View on Code Studio"
+msgstr "Visualizza in Code Studio"
+
+#: curricula/templates/curricula/partials/lesson_front.html:80
+msgid "Anchor Standards"
+msgstr "Standard di riferimento"
+
+#: curricula/templates/curricula/partials/lesson_front.html:122
+msgid "**Heads Up!** Please make a copy of any documents you plan to share with students."
+msgstr "**Attenzione!** Fai una copia di tutti i documenti che intendi condividere con gli alunni."
+
+#: curricula/templates/curricula/partials/lesson_front.html:127
+#: curricula/templates/curricula/partials/resource_list.html:30
+msgid "For the Students"
+msgstr "Per gli alunni"
+
+#: curricula/templates/curricula/partials/lesson_front.html:127
+#: curricula/templates/curricula/partials/resource_list.html:30
+msgid "For the Teachers"
+msgstr "Per gli insegnanti"
+
+#: curricula/templates/curricula/partials/lesson_front.html:142
+msgctxt ".pdf download link"
+msgid "PDF"
+msgstr "PDF"
+
+#: curricula/templates/curricula/partials/lesson_front.html:143
+msgctxt ".doc download link"
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:5
+msgid "Unit Overview"
+msgstr "Panoramica dell'unità"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:6
+msgid "All Lessons PDF"
+msgstr "Tutte le lezioni in PDF"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:9
+msgid "All Handouts PDF"
+msgstr "Tutte le dispense in PDF"
+
+#: curricula/templates/curricula/partials/resource_list.html:20
+msgid "Resources"
+msgstr "Materiali"
+
+#: curricula/templates/curricula/partials/unit_pills.html:5
+msgid "Curriculum Overview"
+msgstr "Panoramica del piano di studi"
+
+#: curricula/templates/curricula/partials/unit_pills.html:7
+msgctxt "Vocabulary"
+msgid "Vocab"
+msgstr "Glossario"
+
+#: curricula/templates/curricula/partials/unit_pills.html:10
+msgid "Lessons PDF"
+msgstr "Lezioni in PDF"
+
+#: curricula/templates/curricula/partials/unit_pills.html:13
+msgid "Handouts PDF"
+msgstr "Dispense in PDF"
+
+#: curricula/templates/curricula/unit.html:231
+msgid "Students Links:"
+msgstr "Collegamenti per gli alunni:"
+
+#: curricula/templates/curricula/unit.html:231
+msgid "Teacher Links:"
+msgstr "Collegamenti per l'insegnante:"
+
+#: curriculumBuilder/settings.py:58
+msgid "Main Curriculum Listing"
+msgstr "Elenco dei piani di studio"
+
+#: curriculumBuilder/settings.py:60
+msgid "Concept Maps"
+msgstr "Mappe concettuali"
+
+#: lessons/models.py:225 lessons/models.py:245
+msgid "download"
+msgstr "scarica"
+
+#: standards/templates/standards/curriculum_nogrid.html:69
+msgid "Download standards mapping as CSV"
+msgstr "Scarica la mappatura delle competenze in formato CSV"
+
+#: standards/templates/standards/curriculum_nogrid.html:81
+msgid "Expand All"
+msgstr "Espandi tutto"
+
+#: standards/templates/standards/curriculum_nogrid.html:82
+msgid "Collapse All"
+msgstr "Comprimi tutto"
+
+#: standards/templates/standards/curriculum_nogrid.html:87
+#: standards/templates/standards/curriculum_nogrid.html:115
+msgid "Download as CSV"
+msgstr "Scarica in formato CSV"
+
+#: templates/errors/404.html:6 templates/errors/404.html.py:10
+#: templates/errors/404.html:15
+msgid "Page not found"
+msgstr "Pagina non trovata"
+
+#: templates/errors/404.html:16
+msgid "The page you requested does not exist."
+msgstr "La pagina richiesta non esiste"
+
+#: templates/errors/500.html:6 templates/errors/500.html.py:10
+#: templates/errors/500.html:15
+msgid "Error"
+msgstr "Errore"
+
+#: templates/errors/500.html:16
+msgid "Sorry, an error occurred."
+msgstr "Ops, si è verificato un errore."
+
