@@ -1,0 +1,334 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: curriculumbuilder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-04 23:05-0800\n"
+"PO-Revision-Date: 2021-02-05 23:33\n"
+"Last-Translator: \n"
+"Language-Team: Hindi\n"
+"Language: hi_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: curriculumbuilder\n"
+"X-Crowdin-Project-ID: 302149\n"
+"X-Crowdin-Language: hi\n"
+"X-Crowdin-File: django.po\n"
+"X-Crowdin-File-ID: 22478\n"
+
+#: curricula/templates/curricula/chapter.html:102
+#: curricula/templates/curricula/unit.html:120
+#: curricula/templates/curricula/unit.html:211
+#: curricula/templates/curricula/unit_glance.html:92
+#: curricula/templates/curricula/unit_glance.html:138
+#: curricula/templates/curricula/unit_lessons.html:81
+#: curricula/templates/curricula/unit_lessons.html:134
+#, python-format
+msgid "Lesson %(lesson_number)s"
+msgstr "पाठ %(lesson_number)s"
+
+#: curricula/templates/curricula/codestudiolesson.html:113
+#: curricula/templates/curricula/hoc_lesson.html:195
+#: curricula/templates/curricula/partials/lesson.html:26
+msgid "Teaching Guide"
+msgstr "अध्यापन गाइड"
+
+#: curricula/templates/curricula/codestudiolesson.html:134
+#: standards/templates/standards/curriculum_nogrid.html:98
+#: standards/templates/standards/curriculum_nogrid.html:126
+msgid "Standards Alignment"
+msgstr "मानक संरेखण"
+
+#: curricula/templates/curricula/codestudiolesson.html:135
+msgid "View full course alignment"
+msgstr "पूर्ण पाठ्यक्रम संरेखण देखें"
+
+#: curricula/templates/curricula/codestudiolesson.html:142
+#: standards/templates/standards/curriculum_nogrid.html:105
+#: standards/templates/standards/curriculum_nogrid.html:133
+msgid "Cross-curricular Opportunities"
+msgstr "पार-पाठिक अवसर"
+
+#: curricula/templates/curricula/codestudiolesson.html:143
+msgid "This list represents opportunities in this lesson to support standards in other content areas."
+msgstr "यह सूची अन्य सामग्री क्षेत्रों में मानकों का समर्थन करने के लिए इस पाठ में अवसरों का प्रतिनिधित्व करती है।"
+
+#: curricula/templates/curricula/curriculum.html:63
+msgid "Units"
+msgstr "इकाइयों"
+
+#: curricula/templates/curricula/curriculum.html:68
+msgid "more"
+msgstr "अधिक"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:4
+#: curricula/templates/curricula/partials/unit_pills.html:6
+msgid "Standards"
+msgstr "मानक"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:5
+msgid "Vocab"
+msgstr "शब्दावली"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:6
+#: curricula/templates/curricula/partials/unit_pills.html:8
+msgid "Code Documentation"
+msgstr "कोड का दस्तावेजीकरण"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:7
+#: curricula/templates/curricula/partials/unit_pills.html:9
+msgid "Other Resources"
+msgstr "अन्य संसाधन"
+
+#: curricula/templates/curricula/partials/curriculum_pills.html:13
+#: curricula/templates/curricula/partials/lesson_pills.html:16
+#: curricula/templates/curricula/partials/unit_pills.html:20
+msgid "Last updated"
+msgstr "पिछली बार अद्यतन किया"
+
+#: curricula/templates/curricula/partials/footer.html:2
+msgid "If you are interested in licensing Code.org materials for commercial purposes, [contact us](//code.org/contact)."
+msgstr "यदि आप व्यावसायिक उद्देश्यों के लिए लाइसेंस वाली Code.org सामग्रियों में रुचि रखते हैं, [हमें संपर्क करें](//code.org/contact)।"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:8
+#, python-format
+msgid "Optional Lesson: %(lesson_title)s"
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:10
+#, python-format
+msgid "Lesson %(lesson_number)s: %(lesson_title)s"
+msgstr "पाठ %(lesson_number)s: %(lesson_title)s"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:27
+#: curricula/templates/curricula/partials/lesson_front.html:39
+msgid "Overview"
+msgstr "रूप-रेखा"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:33
+#: curricula/templates/curricula/partials/lesson_front.html:45
+msgid "Purpose"
+msgstr "उद्देश्य"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:39
+#: curricula/templates/curricula/partials/lesson_front.html:62
+msgid "Agenda"
+msgstr "एजेंडा"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:73
+#: curricula/templates/curricula/partials/lesson_front.html:97
+msgid "Objectives"
+msgstr "लक्ष्य"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:74
+#: curricula/templates/curricula/partials/lesson_front.html:98
+msgid "Students will be able to:"
+msgstr "छात्र इस योग्य होंगे:"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:85
+#: curricula/templates/curricula/partials/lesson_front.html:109
+#: curricula/templates/curricula/partials/resource_list.html:23
+msgid "Preparation"
+msgstr "तैयारी"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:96
+#: curricula/templates/curricula/partials/lesson_front.html:120
+msgid "Links"
+msgstr "लिंक"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:98
+msgid "Heads Up!"
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:98
+msgid "Please make a copy of any documents you plan to share with students."
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:103
+#, python-format
+msgid "For the %(group)s"
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:112
+#: curricula/templates/curricula/partials/lesson_front.html:138
+msgid "Make a Copy"
+msgstr "एक प्रति बनाएं"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:116
+msgid "PDF"
+msgstr "PDF"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:117
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:118
+#: curricula/templates/curricula/partials/lesson_front.html:144
+msgid "Google Docs"
+msgstr "Google Docs"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:130
+msgid "Add a resource"
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:136
+#: curricula/templates/curricula/partials/lesson_front.html:163
+msgid "Vocabulary"
+msgstr "शब्दावली"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:147
+#: curricula/templates/curricula/partials/lesson_front.html:178
+msgid "Introduced Code"
+msgstr "पेश किया गया कोड"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:160
+#: curricula/templates/curricula/partials/lesson_front.html:191
+msgid "Support"
+msgstr "सहयोग"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:162
+msgid "Lesson Forum"
+msgstr ""
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:170
+#: curricula/templates/curricula/partials/lesson_front.html:201
+msgid "Report a Bug"
+msgstr "बग की रिपोर्ट करें"
+
+#: curricula/templates/curricula/partials/hoc_lesson_front.html:184
+#: curricula/templates/curricula/partials/lesson_front.html:215
+msgid "Give us feedback!"
+msgstr "हमें प्रतिक्रिया दें!"
+
+#: curricula/templates/curricula/partials/lesson_front.html:12
+#: curricula/templates/curricula/partials/resource_list.html:14
+#: curricula/templates/curricula/partials/vocab_list.html:8
+#: standards/templates/standards/curriculum_nogrid.html:94
+msgid "Lesson"
+msgstr "पाठ"
+
+#: curricula/templates/curricula/partials/lesson_front.html:54
+msgid "Assessment Opportunities"
+msgstr "मूल्यांकन के अवसर"
+
+#: curricula/templates/curricula/partials/lesson_front.html:75
+msgid "View on Code Studio"
+msgstr "कोड स्टूडियो पर देखें"
+
+#: curricula/templates/curricula/partials/lesson_front.html:80
+msgid "Anchor Standards"
+msgstr "एंकर के मानक"
+
+#: curricula/templates/curricula/partials/lesson_front.html:122
+msgid "**Heads Up!** Please make a copy of any documents you plan to share with students."
+msgstr "**हेड्स अप!** कृपया किसी भी उन दस्तावेज की एक प्रति बनाएं, जिन्हें आप छात्रों के साथ साझा करने वाले हैं।"
+
+#: curricula/templates/curricula/partials/lesson_front.html:127
+#: curricula/templates/curricula/partials/resource_list.html:30
+msgid "For the Students"
+msgstr "छात्रों के लिए"
+
+#: curricula/templates/curricula/partials/lesson_front.html:127
+#: curricula/templates/curricula/partials/resource_list.html:30
+msgid "For the Teachers"
+msgstr "अध्यापक के लिए"
+
+#: curricula/templates/curricula/partials/lesson_front.html:142
+msgctxt ".pdf download link"
+msgid "PDF"
+msgstr "PDF"
+
+#: curricula/templates/curricula/partials/lesson_front.html:143
+msgctxt ".doc download link"
+msgid "Microsoft Word"
+msgstr "Microsoft Word"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:5
+msgid "Unit Overview"
+msgstr "इकाई की रूप-रेखा"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:6
+msgid "All Lessons PDF"
+msgstr "सारे पाठ PDF"
+
+#: curricula/templates/curricula/partials/lesson_pills.html:9
+msgid "All Handouts PDF"
+msgstr "सारे हैंगआउट्स PDF"
+
+#: curricula/templates/curricula/partials/resource_list.html:20
+msgid "Resources"
+msgstr "संसाधन"
+
+#: curricula/templates/curricula/partials/unit_pills.html:5
+msgid "Curriculum Overview"
+msgstr "पाठ्यक्रम की रूप-रेखा"
+
+#: curricula/templates/curricula/partials/unit_pills.html:7
+msgctxt "Vocabulary"
+msgid "Vocab"
+msgstr "शब्दावली"
+
+#: curricula/templates/curricula/partials/unit_pills.html:10
+msgid "Lessons PDF"
+msgstr "पाठ PDF"
+
+#: curricula/templates/curricula/partials/unit_pills.html:13
+msgid "Handouts PDF"
+msgstr "हैंगआउट्स PDF"
+
+#: curricula/templates/curricula/unit.html:231
+msgid "Students Links:"
+msgstr "छात्र लिंक:"
+
+#: curricula/templates/curricula/unit.html:231
+msgid "Teacher Links:"
+msgstr "शिक्षक लिंक:"
+
+#: curriculumBuilder/settings.py:58
+msgid "Main Curriculum Listing"
+msgstr "मुख्य पाठ्यक्रम की सूची"
+
+#: curriculumBuilder/settings.py:60
+msgid "Concept Maps"
+msgstr "धारणा मानचित्र"
+
+#: lessons/models.py:225 lessons/models.py:245
+msgid "download"
+msgstr "डाउनलोड"
+
+#: standards/templates/standards/curriculum_nogrid.html:69
+msgid "Download standards mapping as CSV"
+msgstr ""
+
+#: standards/templates/standards/curriculum_nogrid.html:81
+msgid "Expand All"
+msgstr "सभी विस्तृत करें"
+
+#: standards/templates/standards/curriculum_nogrid.html:82
+msgid "Collapse All"
+msgstr "सभी को संक्षिप्त करें"
+
+#: standards/templates/standards/curriculum_nogrid.html:87
+#: standards/templates/standards/curriculum_nogrid.html:115
+msgid "Download as CSV"
+msgstr "CSV के रूप में डाउनलोड करें"
+
+#: templates/errors/404.html:6 templates/errors/404.html.py:10
+#: templates/errors/404.html:15
+msgid "Page not found"
+msgstr "पृष्ठ नहीं मिला"
+
+#: templates/errors/404.html:16
+msgid "The page you requested does not exist."
+msgstr "जिस पृष्ठ का आपने निवेदन किया है, वह मौजूद नहीं है।"
+
+#: templates/errors/500.html:6 templates/errors/500.html.py:10
+#: templates/errors/500.html:15
+msgid "Error"
+msgstr "त्रुटि"
+
+#: templates/errors/500.html:16
+msgid "Sorry, an error occurred."
+msgstr "अफसोस, एक त्रुटि हुई है।"
+
