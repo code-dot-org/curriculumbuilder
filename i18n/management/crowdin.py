@@ -9,6 +9,7 @@ import logging
 import requests
 
 from django.utils.translation import to_locale
+from django.core.files.storage import FileSystemStorage
 
 from .utils import get_non_english_language_codes, CHANGES_JSON
 from ..utils import I18nFileWrapper
@@ -133,7 +134,7 @@ class Crowdin(object):
 
         return self.request('get', 'export-file', params=params, headers=headers)
 
-    def download_translations(self):
+    def download_translations(self, filepaths = None):
         """
         Download all files with new translation activity since our last sync in all languages. In
         addition to downloading updates to the files themselves, will also update our "etags" file,
@@ -168,7 +169,10 @@ class Crowdin(object):
             if language_code not in etags:
                 etags[language_code] = {}
 
-            for filepath in self.filepaths():
+            if filepaths is None:
+                filepaths = self.filepaths()
+
+            for filepath in filepaths:
                 etag = etags[language_code].get(filepath, None)
                 response = self.export_file(filepath, language_code, etag=etag)
                 if response.status_code == 200:
@@ -201,6 +205,9 @@ class Crowdin(object):
                     )
 
             self.logger.debug("%s files have changes", len(changes[language_code]))
+            storage_etags_path = os.path.join(str(I18nFileWrapper.storage().location), I18nFileWrapper.locale_dir(locale))
+            if isinstance(I18nFileWrapper.storage(), FileSystemStorage) and not os.path.exists(storage_etags_path):
+                os.makedirs(storage_etags_path)
             with I18nFileWrapper.storage().open(etags_path, 'w') as etags_file:
                 json.dump(etags, etags_file, sort_keys=True, indent=4)
 

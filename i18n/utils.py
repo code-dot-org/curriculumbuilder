@@ -8,6 +8,7 @@ import sys
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.module_loading import import_string
+from django.core.files.storage import FileSystemStorage
 
 logger = logging.getLogger(__name__)
 
@@ -95,4 +96,6 @@ class I18nFileWrapper:
             storage = getattr(settings, 'I18N_STORAGE', 'django.core.files.storage.FileSystemStorage')
             storage_cls = import_string(storage)
             cls._storage = storage_cls(location=getattr(settings, 'I18N_STORAGE_LOCATION', 'i18n'))
+            if isinstance(cls._storage, FileSystemStorage) and not os.path.exists(cls._storage.location):
+                os.makedirs(cls._storage.location)
         return cls._storage
