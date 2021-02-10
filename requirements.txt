@@ -71,7 +71,7 @@ newrelic==2.96.0.80
 oauthlib==1.0.3
 pdfkit==0.5.0
 plotly==1.9.3
-psycopg2==2.8.4
+psycopg2==2.8.6
 pycurl==7.43.0.3
 pyPdf==1.13
 pytz==2015.7
