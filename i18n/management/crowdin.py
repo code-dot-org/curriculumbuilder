@@ -134,7 +134,7 @@ class Crowdin(object):
 
         return self.request('get', 'export-file', params=params, headers=headers)
 
-    def download_translations(self):
+    def download_translations(self, filepaths = None):
         """
         Download all files with new translation activity since our last sync in all languages. In
         addition to downloading updates to the files themselves, will also update our "etags" file,
@@ -169,7 +169,10 @@ class Crowdin(object):
             if language_code not in etags:
                 etags[language_code] = {}
 
-            for filepath in self.filepaths():
+            if filepaths is None:
+                filepaths = self.filepaths()
+
+            for filepath in filepaths:
                 etag = etags[language_code].get(filepath, None)
                 response = self.export_file(filepath, language_code, etag=etag)
                 if response.status_code == 200:
