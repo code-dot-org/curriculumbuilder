@@ -150,6 +150,28 @@ def by_unit_csv(request, slug, unit_slug):
     return response
 
 
+def by_framework_csv(request, slug):
+    framework = get_object_or_404(Framework, slug=slug)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % (framework.slug)
+
+    writer = csv.writer(response, encoding='utf-8')
+    writer.writerow([
+        'framework',
+        'category',
+        'standard',
+        'description'
+    ])
+    for standard in framework.standards.all():
+        writer.writerow([
+            framework.slug,
+            standard.category.shortcode,
+            standard.shortcode,
+            standard.name
+        ])
+    return response
+
+
 def single_standard(request, slug, shortcode):
     # standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
     standard = get_object_or_404(Standard, framework__slug=slug, shortcode=shortcode)
