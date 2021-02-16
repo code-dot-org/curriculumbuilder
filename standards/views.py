@@ -199,7 +199,7 @@ def categories_by_framework_csv(request, slug):
             category.parent_shortcode(),
             category.shortcode,
             category.type,
-            category.description
+            category.description.strip() if category.description else category.name
         ])
     return response
 
