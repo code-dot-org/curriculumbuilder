@@ -182,6 +182,7 @@ def categories_by_framework_csv(request, slug):
         'framework',
         'parent',
         'category',
+        'type',
         'description'
     ])
 
@@ -197,6 +198,7 @@ def categories_by_framework_csv(request, slug):
             framework.slug.lower(),
             category.parent_shortcode(),
             category.shortcode,
+            category.type,
             category.description
         ])
     return response
