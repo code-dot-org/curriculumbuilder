@@ -187,8 +187,10 @@ def categories_by_framework_csv(request, slug):
 
     # Make categories without parents appear before categories with parents.
     # Because there are only two layers of categories, this ensures that
-    # every parent category appears before any of its children.
-    categories = framework.categories.order_by('-parent_id').all()
+    # every parent category appears before any of its children. The secondary
+    # sort by shortcode is just to make the output file easier to read.
+    categories = framework.categories.all()
+    categories = sorted(categories, key=lambda c: [c.parent_shortcode(), c.shortcode])
 
     for category in categories:
         writer.writerow([
