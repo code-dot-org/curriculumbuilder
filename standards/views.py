@@ -153,7 +153,7 @@ def by_unit_csv(request, slug, unit_slug):
 def standards_by_framework_csv(request, slug):
     framework = get_object_or_404(Framework, slug=slug)
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % (framework.slug)
+    response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % (framework.slug.lower())
 
     writer = csv.writer(response, encoding='utf-8')
     writer.writerow([
@@ -164,7 +164,7 @@ def standards_by_framework_csv(request, slug):
     ])
     for standard in framework.standards.all():
         writer.writerow([
-            framework.slug,
+            framework.slug.lower(),
             standard.category.shortcode,
             standard.shortcode,
             standard.name
@@ -175,7 +175,7 @@ def standards_by_framework_csv(request, slug):
 def categories_by_framework_csv(request, slug):
     framework = get_object_or_404(Framework, slug=slug)
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="%s_categories.csv"' % (framework.slug)
+    response['Content-Disposition'] = 'attachment; filename="%s_categories.csv"' % (framework.slug.lower())
 
     writer = csv.writer(response, encoding='utf-8')
     writer.writerow([
@@ -194,7 +194,7 @@ def categories_by_framework_csv(request, slug):
 
     for category in categories:
         writer.writerow([
-            framework.slug,
+            framework.slug.lower(),
             category.parent_shortcode(),
             category.shortcode,
             category.description
