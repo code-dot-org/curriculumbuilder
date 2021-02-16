@@ -150,7 +150,7 @@ def by_unit_csv(request, slug, unit_slug):
     return response
 
 
-def by_framework_csv(request, slug):
+def standards_by_framework_csv(request, slug):
     framework = get_object_or_404(Framework, slug=slug)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % (framework.slug)
@@ -168,6 +168,35 @@ def by_framework_csv(request, slug):
             standard.category.shortcode,
             standard.shortcode,
             standard.name
+        ])
+    return response
+
+
+def categories_by_framework_csv(request, slug):
+    framework = get_object_or_404(Framework, slug=slug)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_categories.csv"' % (framework.slug)
+
+    writer = csv.writer(response, encoding='utf-8')
+    writer.writerow([
+        'framework',
+        'parent',
+        'category',
+        'description'
+    ])
+
+    # Make categories without parents appear before categories with parents.
+    # Because there are only two layers of categories, this ensures that
+    # every parent category appears before any of its children.
+    categories = framework.categories.order_by('-parent_id').all()
+
+    for category in categories:
+        parent = category.parent.shortcode if category.parent else None
+        writer.writerow([
+            framework.slug,
+            parent,
+            category.shortcode,
+            category.description
         ])
     return response
 
