@@ -191,10 +191,9 @@ def categories_by_framework_csv(request, slug):
     categories = framework.categories.order_by('-parent_id').all()
 
     for category in categories:
-        parent = category.parent.shortcode if category.parent else None
         writer.writerow([
             framework.slug,
-            parent,
+            category.parent_shortcode(),
             category.shortcode,
             category.description
         ])

@@ -92,6 +92,9 @@ class Category(Internationalizable):
 
     objects = CategoryQuerySet.as_manager()
 
+    def parent_shortcode(self):
+        return self.parent.shortcode if self.parent else None
+
     @classmethod
     def get_i18n_objects(cls):
         return (
