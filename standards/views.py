@@ -150,6 +150,60 @@ def by_unit_csv(request, slug, unit_slug):
     return response
 
 
+def standards_by_framework_csv(request, slug):
+    framework = get_object_or_404(Framework, slug=slug)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_standards.csv"' % (framework.slug.lower())
+
+    writer = csv.writer(response, encoding='utf-8')
+    writer.writerow([
+        'framework',
+        'category',
+        'standard',
+        'description'
+    ])
+    for standard in framework.standards.all():
+        writer.writerow([
+            framework.slug.lower(),
+            standard.category.shortcode,
+            standard.shortcode,
+            standard.name
+        ])
+    return response
+
+
+def categories_by_framework_csv(request, slug):
+    framework = get_object_or_404(Framework, slug=slug)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s_categories.csv"' % (framework.slug.lower())
+
+    writer = csv.writer(response, encoding='utf-8')
+    writer.writerow([
+        'framework',
+        'parent',
+        'category',
+        'type',
+        'description'
+    ])
+
+    # Make categories without parents appear before categories with parents.
+    # Because there are only two layers of categories, this ensures that
+    # every parent category appears before any of its children. The secondary
+    # sort by shortcode is just to make the output file easier to read.
+    categories = framework.categories.all()
+    categories = sorted(categories, key=lambda c: [c.parent_shortcode(), c.shortcode])
+
+    for category in categories:
+        writer.writerow([
+            framework.slug.lower(),
+            category.parent_shortcode(),
+            category.shortcode,
+            category.type,
+            category.description.strip() if category.description else category.name
+        ])
+    return response
+
+
 def single_standard(request, slug, shortcode):
     # standard = get_object_or_404(Standard.objects.prefetch_related('lesson_set__unitlesson_set__unit__curriculum'), framework__slug=slug, shortcode=shortcode)
     standard = get_object_or_404(Standard, framework__slug=slug, shortcode=shortcode)
