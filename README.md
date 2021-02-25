@@ -134,6 +134,9 @@ coverage report
 ```
 If you run this often, it may be worth appending the `--keepdb` flag to make it run faster.
 
+### I18n sync
+Follow the [I18n setup instructions](https://github.com/code-dot-org/curriculumbuilder/blob/master/i18n/SETUP.md) to run the sync on your local machine
+
 ### How does the deploy work on CurriculumBuilder
 
 CurriculumBuilder is actually two separate websites:
