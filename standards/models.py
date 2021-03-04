@@ -113,7 +113,7 @@ class Category(Internationalizable):
 
     @property
     def should_be_translated(self):
-        return any(standard.should_be_translated for standard in self.standards.all())
+        return any(standard.should_be_translated for standard in self.child_standards())
 
     @classmethod
     def internationalizable_fields(cls):
