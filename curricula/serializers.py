@@ -205,7 +205,7 @@ class LessonExportSerializer(serializers.ModelSerializer):
         serializer = VocabExportSerializer(vocab, many=True, context=self.context)
         return serializer.data
 
-    def get_block(self, obj):
+    def get_blocks(self, obj):
         blocks = obj.blocks.all()
         serializer = BlockExportSerializer(blocks, many=True, context=self.context)
         return serializer.data
