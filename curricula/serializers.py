@@ -175,14 +175,14 @@ class LessonExportSerializer(serializers.ModelSerializer):
     activities = serializers.SerializerMethodField()
     resources = serializers.SerializerMethodField()
     vocab = serializers.SerializerMethodField()
-    block = serializers.SerializerMethodField()
+    blocks = serializers.SerializerMethodField()
     objectives = serializers.SerializerMethodField()
     stage_name = serializers.SerializerMethodField()
     creative_commons_license = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'vocab', 'block', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'vocab', 'blocks', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -206,8 +206,8 @@ class LessonExportSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_block(self, obj):
-        block = obj.blocks.all()
-        serializer = BlockExportSerializer(block, many=True, context=self.context)
+        blocks = obj.blocks.all()
+        serializer = BlockExportSerializer(blocks, many=True, context=self.context)
         return serializer.data
 
     def get_objectives(self, obj):
