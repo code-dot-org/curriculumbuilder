@@ -2,7 +2,7 @@ import json
 from rest_framework import serializers
 
 from curricula.models import Unit, Chapter, Curriculum
-from lessons.models import Lesson, Activity, Resource, Vocab, Annotation, Standard
+from lessons.models import Lesson, Activity, Resource, Vocab, Annotation, Standard, Block
 from documentation.models import Block
 
 """
@@ -175,13 +175,14 @@ class LessonExportSerializer(serializers.ModelSerializer):
     activities = serializers.SerializerMethodField()
     resources = serializers.SerializerMethodField()
     vocab = serializers.SerializerMethodField()
+    blocks = serializers.SerializerMethodField()
     objectives = serializers.SerializerMethodField()
     stage_name = serializers.SerializerMethodField()
     creative_commons_license = serializers.SerializerMethodField()
 
     class Meta:
         model = Lesson
-        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'vocab', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
+        fields = ('title', 'number', 'student_desc', 'teacher_desc', 'activities', 'resources', 'vocab', 'blocks', 'objectives', 'code_studio_url', 'stage_name', 'prep', 'cs_content', 'creative_commons_license', 'assessment')
 
     def get_teacher_desc(self, obj):
         return obj.overview
@@ -202,6 +203,11 @@ class LessonExportSerializer(serializers.ModelSerializer):
     def get_vocab(self, obj):
         vocab = obj.vocab.all()
         serializer = VocabExportSerializer(vocab, many=True, context=self.context)
+        return serializer.data
+
+    def get_blocks(self, obj):
+        blocks = obj.blocks.all()
+        serializer = BlockExportSerializer(blocks, many=True, context=self.context)
         return serializer.data
 
     def get_objectives(self, obj):
@@ -241,6 +247,15 @@ class VocabExportSerializer(serializers.ModelSerializer):
         model = Vocab
         fields = ('word', 'simpleDef', 'detailDef')
 
+class BlockExportSerializer(serializers.ModelSerializer):
+    parent_slug = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Block
+        fields = ('slug', 'parent_slug')
+
+    def get_parent_slug(self, obj):
+        return obj.parent_ide.slug
 
 """
 Standards serializers
