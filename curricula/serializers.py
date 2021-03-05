@@ -2,7 +2,7 @@ import json
 from rest_framework import serializers
 
 from curricula.models import Unit, Chapter, Curriculum
-from lessons.models import Lesson, Activity, Resource, Vocab, Annotation, Standard
+from lessons.models import Lesson, Activity, Resource, Vocab, Annotation, Standard, Block
 from documentation.models import Block
 
 """
@@ -206,7 +206,7 @@ class LessonExportSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_block(self, obj):
-        block = obj.block.all()
+        block = obj.blocks.all()
         serializer = BlockExportSerializer(block, many=True, context=self.context)
         return serializer.data
 
@@ -248,9 +248,14 @@ class VocabExportSerializer(serializers.ModelSerializer):
         fields = ('word', 'simpleDef', 'detailDef')
 
 class BlockExportSerializer(serializers.ModelSerializer):
+    parent_slug = serializers.SerializerMethodField()
+
     class Meta:
         model = Block
-        fields = ('slug', 'parent_ide')
+        fields = ('slug', 'parent_slug')
+
+    def get_parent_slug(self, obj):
+        return obj.parent_ide.slug
 
 """
 Standards serializers
