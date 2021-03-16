@@ -127,8 +127,8 @@
 <!-- Standards Alignment -->
 
 <div class="standards">
-    <h2>Standards Alignment</h2>
-    <h4><a href="{{ curriculum.get_standards_url }}">View full course alignment</a></h4>
+    <h2>{% trans "Standards Alignment" %}</h2>
+    <h4><a href="{{ curriculum.get_standards_url }}">{% trans "View full course alignment" %}</a></h4>
     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
 </div>
 {% endcomment %}

@@ -4,7 +4,7 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 
-{% block meta_title %}{{ framework.name }} Standards Alignment{% endblock %}
+{% block meta_title %}{{ framework.name }} {% trans "Standards Alignment" %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}

@@ -5,7 +5,7 @@
 {% load keyword_tags %}
 {% load i18n %}
 
-{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+{% block meta_title %}{{ curriculum.title }} {% trans "Standards Alignment" %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
@@ -25,7 +25,7 @@
 
 {% block header_title %}
     <h1>{{ curriculum.title }}</h1>
-    <h2 class="disclaimer">Standards Alignment</h2>
+    <h2 class="disclaimer">{% trans "Standards Alignment" %}</h2>
 {% endblock %}
 
 {% block resources_nav %}
@@ -63,7 +63,7 @@
       <div>
         <h2>How should I use this information?</h2>
         <p>
-          <span style="font-weight:900;">CSTA Standards Alignment</span>: Code.org’s CS Fundamentals course is aligned with the Computer Science Teachers’ Association (CSTA) standards for K-5 students. You can hit these standards by following our lesson plans. You can also see what CSTA standards your class has worked on in the Standards view of the teacher dashboard. <a href="https://support.code.org/hc/en-us/articles/360041726272-Can-I-see-my-class-s-progress-on-CSTA-Standards-Is-there-an-easy-progress-report-I-can-send-out-for-my-class-">Learn more.</a>
+          <span style="font-weight:900;">CSTA {% trans "Standards Alignment" %}</span>: Code.org’s CS Fundamentals course is aligned with the Computer Science Teachers’ Association (CSTA) standards for K-5 students. You can hit these standards by following our lesson plans. You can also see what CSTA standards your class has worked on in the Standards view of the teacher dashboard. <a href="https://support.code.org/hc/en-us/articles/360041726272-Can-I-see-my-class-s-progress-on-CSTA-Standards-Is-there-an-easy-progress-report-I-can-send-out-for-my-class-">Learn more.</a>
         </p>
         <a class="btn" role="button" style="font-size: 16px; padding-left: 0px;" href="{% url 'curriculum:by_curriculum_csv' curriculum.slug %}">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> {% trans 'Download standards mapping as CSV' %}
@@ -74,7 +74,7 @@
         <a href="https://docs.google.com/document/d/e/2PACX-1vRxKtK0HZ4jlqDG0kf5J8l0p_wTGZRQCwBY8HupNVl2EiPC7qs-57Ct0zMyLxuGEuWJX3lF9QbsDUNY/pub">
           Cross-Curricular Standards Guidance
         </a>
-        <h2>Standards Alignment</h2>
+        <h2>{% trans "Standards Alignment" %}</h2>
       </div>
     {% endif %}
     <div class="together standards row" style="margin-left: 0px;">

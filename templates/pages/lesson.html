@@ -124,7 +124,7 @@
     </div>
 
     <div id="standards">
-        <h2>Standards Alignment</h2>
+        <h2>{% trans "Standards Alignment" %}</h2>
         {% with standards=page.lesson.standards.all %}
         {% regroup standards by framework as standards_by_framework %}
         {% for framework in standards_by_framework %}
