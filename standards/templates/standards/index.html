@@ -3,8 +3,9 @@
 {% load staticfiles %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
-{% block meta_title %}Standards Alignment{% endblock %}
+{% block meta_title %}{% trans "Standards Alignment" %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
@@ -27,7 +28,7 @@
 {% endblock %}
 
 {% block header_title %}
-    <h1>Standards Alignment</h1>
+    <h1>{% trans "Standards Alignment" %}</h1>
 {% endblock %}
 
 {% block main %}

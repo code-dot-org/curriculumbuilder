@@ -4,7 +4,7 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 
-{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+{% block meta_title %}{{ curriculum.title }} {% trans "Standards Alignment" %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
@@ -29,7 +29,7 @@
 
 {% block header_title %}
     <h1>{{ curriculum.title }}</h1>
-    <span class="disclaimer">Standards Alignment</span>
+    <span class="disclaimer">{% trans "Standards Alignment" %}</span>
 {% endblock %}
 
 {% block resources_nav %}
@@ -63,14 +63,14 @@
 
                 {% if lesson.standards.count > 0 %}
                 <div class="standards">
-                    <h4>Standards Alignment</h4>
+                    <h4>{% trans "Standards Alignment" %}</h4>
                     {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
                 </div>
                 {% endif %}
 
                 {% if lesson.opportunity_standards.count > 0 %}
                 <div class="standards">
-                    <h4>Cross-curricular Opportunities</h4>
+                    <h4>{% trans 'Cross-curricular Opportunities' %}</h4>
                     {% include "standards/partials/standard_list.html" with standards=lesson.opportunity_standards.all %}
                 </div>
                 {% endif %}

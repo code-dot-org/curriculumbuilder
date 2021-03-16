@@ -1,6 +1,7 @@
 {% load mezzanine_tags %}
 {% load keyword_tags %}
 {% load staticfiles %}
+{% load i18n %}
 
 <div class="container">
 
@@ -37,7 +38,7 @@
 
         {% if lesson.standards.count > 0 %}
             <div class="standards">
-                <h2>Standards Alignment</h2>
+                <h2>{% trans "Standards Alignment" %}</h2>
                 {% include "standards/partials/standard_list.html" with standards=lesson.standards.all %}
             </div>
         {% endif %}
