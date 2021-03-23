@@ -30,6 +30,7 @@ class Command(BaseCommand):
         log("Restoring redacted translations for %s" %
             ', '.join(model.__name__ for model in models_to_restore))
         log("For %s" % ", ".join(get_non_english_locale_names()))
+        missing_files_to_restore = []
         for locale_name in get_non_english_locale_names():
             for model in models_to_restore:
                 filename = model.__name__ + ".json"
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                     filename
                 )
                 if not os.path.exists(translation_path):
-                    log("Could not find %s to restore" % translation_path)
+                    missing_files_to_restore.append(translation_path)
                     continue
                 plugins_path = os.path.join(I18nFileWrapper.i18n_dir(), "config", "plugins", "*.js")
                 plugins = ",".join(glob.glob(plugins_path))
@@ -50,6 +51,8 @@ class Command(BaseCommand):
                     '-o', translation_path,
                     '-p', plugins
                 ])
+        if len(missing_files_to_restore) > 0:
+            log("Could not restore: %s" % missing_files_to_restore)
 
         log("Compiling Django translations")
         management.call_command("compilemessages")
@@ -59,16 +62,19 @@ class Command(BaseCommand):
         source_paths = glob.glob(os.path.join(self.source_dir, '*'))
         log("Uploading restored translations to S3: %s" %
             ", ".join(map(os.path.basename, source_paths)))
+        missing_files_to_upload = []
         for locale_name in get_non_english_locale_names():
             translations_glob = os.path.join(I18nFileWrapper.locale_dir_absolute(locale_name), '*')
             for translation_path in glob.glob(translations_glob):
                 if not os.path.exists(translation_path):
-                    log("Could not find %s to upload" % translation_path)
+                    missing_files_to_upload.append(translation_path)
                     continue
                 filename = os.path.basename(translation_path)
                 with open(translation_path) as translation_file:
                     dest_path = os.path.join(I18nFileWrapper.locale_dir(locale_name), filename)
                     I18nFileWrapper.storage().save(dest_path, translation_file)
+        if len(missing_files_to_upload) > 0:
+            log("Could not upload: %s" % missing_files_to_upload)
 
     def handle(self, *args, **options):
         log("I18n Sync Step 3 of 4: Download and process translations")
