@@ -409,11 +409,14 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
     def __unicode__(self):
         return self.title
 
+    # returns list of translated keywords if language is non-English.
+    # Falls back to the existing keywords list otherwise
     def translated_keywords(self):
         lang = translation.get_language()
         if lang and lang != settings.LANGUAGE_CODE:
             locale = translation.to_locale(lang)
             return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) or keyword for keyword in self.keywords.all()]
+        return self.keywords.all()
 
     def can_access(self, request):
         return request.user.has_perm('lessons.access_all_lessons') or request.user.id == self.user_id
