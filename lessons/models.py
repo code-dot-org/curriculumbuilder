@@ -414,6 +414,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
         if lang and lang != settings.LANGUAGE_CODE:
             locale = translation.to_locale(lang)
             return [I18nFileWrapper.get_translated_field('I18nKeyword', slugify(keyword), 'title', locale) or keyword for keyword in self.keywords.all()]
+        return self.keywords.all()
 
     def can_access(self, request):
         return request.user.has_perm('lessons.access_all_lessons') or request.user.id == self.user_id

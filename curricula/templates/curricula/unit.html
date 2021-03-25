@@ -121,7 +121,7 @@
                               </a>
                             </h3>
                             <h4>
-                            {% for keyword in keywords %}
+                            {% for keyword in lesson.translated_keywords %}
                                 {% if not forloop.first %}| {% endif %}
                                 {{ keyword }}
                             {% endfor %}
@@ -137,14 +137,16 @@
                             {% if lesson.resources.count > 0 %}
                                 <h4>
                                     {% with lesson.resources.all as resources %}
+                                    {% with _('Students Links:')|add:','|add:_('Teacher Links:') as groups %}
                                         {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                                         {% for audience in resources_by_audience %}
-                                            {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                            {{ audience.grouper|yesno:groups }}
                                                 {% for resource in audience.list %}
                                                     {% if not forloop.first %} | {% endif %}
                                                     <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
                                                 {% endfor %}
                                         {% endfor %}
+                                    {% endwith %}
                                     {% endwith %}
                                 </h4>
                             {% endif %}
@@ -170,15 +172,17 @@
                                     <span class="lesson_desc">{{ optional.description|richtext_filters|safe }}</span>
                                     {% if lesson.resources.count > 0 %}
                                         <h4>
-                                            {% with optional.resources.all as resources %}
+                                            {% with lesson.resources.all as resources %}
+                                            {% with _('Students Links:')|add:','|add:_('Teacher Links:') as groups %}
                                                 {% regroup resources|dictsort:"student" by student as resources_by_audience %}
                                                 {% for audience in resources_by_audience %}
-                                                    {{ audience.grouper|yesno:"Student,Teacher" }} Links:
+                                                    {{ audience.grouper|yesno:groups }}
                                                         {% for resource in audience.list %}
                                                             {% if not forloop.first %} | {% endif %}
                                                             <a href="{{ resource.url }}" target="_blank">{{ resource.type }}</a>
                                                         {% endfor %}
                                                 {% endfor %}
+                                            {% endwith %}
                                             {% endwith %}
                                         </h4>
                                     {% endif %}
