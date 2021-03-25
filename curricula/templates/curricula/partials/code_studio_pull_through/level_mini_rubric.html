@@ -3,7 +3,7 @@
 <div class="admonition assessment">
     <p class="admonition-title">
         <i class="fa fa-check-circle" aria-hidden="true"></i>
-        Assessment Opportunities
+        {% trans "Assessment Opportunities" %}
     </p>
     <div class="rubric-key-concept">
         <span class="rubric-header">Key Concepts:</span>
@@ -12,27 +12,27 @@
         </p>
     </div>
     <div>
-        <span class="rubric-header">Assessment Criteria:</span>
+        <span class="rubric-header">{% trans "Assessment Criteria:" %}</span>
         <details class="rubric-performance-level">
-            <summary>Extensive Evidence</summary>
+            <summary>{% trans "Extensive Evidence" %}</summary>
             <p>
                 {{ level.rubric_performance_level_1|richtext_filters|safe }}
             </p>
         </details>
         <details class="rubric-performance-level">
-            <summary>Convincing Evidence</summary>
+            <summary>{% trans "Convincing Evidence" %}</summary>
             <p>
                 {{ level.rubric_performance_level_2|richtext_filters|safe }}
             </p>
         </details>
         <details class="rubric-performance-level">
-            <summary>Limited Evidence</summary>
+            <summary>{% trans "Limited Evidence" %}</summary>
             <p>
                 {{ level.rubric_performance_level_3|richtext_filters|safe }}
             </p>
         </details>
         <details class="rubric-performance-level">
-            <summary>No Evidence</summary>
+            <summary>{% trans "No Evidence" %}</summary>
             <p>
                 {{ level.rubric_performance_level_4|richtext_filters|safe }}
             </p>

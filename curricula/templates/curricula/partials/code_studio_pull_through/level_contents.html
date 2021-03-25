@@ -3,7 +3,7 @@
 
 <div id="level-expando-{{ lesson.number }}-{{ level.position }}" class="level-panel" data-level="{{ level.position }}">
     <a href="{{ level.path|level_link }}" target="_blank" class="level-link">
-        View on Code Studio
+        {% trans "View on Code Studio" %}
         <span class="level-link-icon fa"></span>
     </a>
 
@@ -13,7 +13,7 @@
 
     {% if level.teacher_markdown %}
         <div class="teacher-markdown admonition tip">
-        <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+        <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> {% trans "Teaching Tip" %}</p>
             {{ level.teacher_markdown|richtext_filters|safe }}
         </div>
     {% endif %}
@@ -23,7 +23,7 @@
         {% include "curricula/partials/code_studio_pull_through/contained_level.html" with level=level %}
     {% else %}
         <div class="instructions-markdown" markdown="1">
-            <h3>Student Instructions</h3>
+            <h3>{% trans "Student Instructions" %}</h3>
             {{ level.markdown|richtext_filters|safe }}
             {{ level.markdown_instructions|richtext_filters|safe }}
             {% if level.parsed_long_instructions %}
@@ -38,7 +38,7 @@
     {% if level.type == "StandaloneVideo" and not pdf%}
     <div class="level-video">
         <iframe allowfullscreen="" frameborder="0" height="480" src="{{ level.video_youtube|no_autoplay }}" width="853"></iframe>
-        <p><a href="{{ level.video_download }}">Download Video</a></p>
+        <p><a href="{{ level.video_download }}">{% trans "Download Video" %}</a></p>
     </div>
     {% endif %}
 
@@ -46,8 +46,8 @@
     {% if level.type == "LevelGroup" %}
     <div class="level-group">
         <p>
-            This level is an assessment or survey with multiple questions.
-            To view this level click the "View on Code Studio" link.
+            {% trans "This level is an assessment or survey with multiple questions." %}
+            {% trans "To view this level click the "View on Code Studio" link." %}
         </p>
     </div>
     {% endif %}
