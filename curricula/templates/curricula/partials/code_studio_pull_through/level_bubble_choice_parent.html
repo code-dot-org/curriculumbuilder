@@ -2,7 +2,7 @@
 <div>
     <p>{{level.description}}</p>
     <br/>
-    <strong>{% trans "Choose from the following activities:"" %}</strong>
+    <strong>{% trans "Choose from the following activities:" %}</strong>
     {% for sublevel in level.sublevels %}
         <div class="sublevel-info">
             <img src="{{sublevel.thumbnail_url}}" width="150" class="sublevel-thumbnail"/>
