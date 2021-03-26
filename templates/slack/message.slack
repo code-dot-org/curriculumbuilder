@@ -3,5 +3,7 @@
 {% load django_slack %}
 
 {% block text %}
+{% autoescape off %}
 {{ user.get_username|escapeslack }} {% if message %}{{ message }}{% else %}did a thing{% endif %}
+{% endautoescape %}
 {% endblock %}

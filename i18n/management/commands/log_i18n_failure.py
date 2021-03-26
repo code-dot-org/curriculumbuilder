@@ -9,4 +9,4 @@ class Command(BaseCommand):
     See bin/sync_i18n.sh for context.
     """
     def handle(self, *args, **options):
-        log("ERROR: I18n Sync encountered a problem and did not complete")
+        log("<!subteam^S017CFFHHT9|foundations-team> ERROR: I18n Sync encountered a problem and did not complete")
