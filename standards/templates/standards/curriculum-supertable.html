@@ -3,8 +3,9 @@
 {% load staticfiles %}
 {% load mezzanine_tags %}
 {% load keyword_tags %}
+{% load i18n %}
 
-{% block meta_title %}{{ curriculum.title }} Standards Alignment{% endblock %}
+{% block meta_title %}{{ curriculum.title }} {% trans "Standards Alignment" %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
     {% keywords_for page as keywords %}
@@ -27,7 +28,7 @@
 
 {% block header_title %}
     <h1>{{ curriculum.title }}</h1>
-    <span class="disclaimer">Standards Alignment</span>
+    <span class="disclaimer">{% trans "Standards Alignment" %}</span>
 {% endblock %}
 
 {% block main %}
