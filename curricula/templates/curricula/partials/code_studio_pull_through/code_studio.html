@@ -1,4 +1,4 @@
-{% load mezzanine_tags no_autoplay level_link level_embed %}
+{% load mezzanine_tags no_autoplay level_link level_embed i18n%}
 
 <div id="{{ unit.slug }}-stage-{{ lesson.number }}-levels" class="stage_guide_hidden">
 
@@ -86,7 +86,7 @@
                         {% for level in chunk.levels %}
                             {% include "curricula/partials/code_studio_pull_through/level_numbered_tab.html" with unit=unit lesson=lesson level=level %}
                         {% endfor %}
-                        <li class="level-expando-tip">(click tabs to see student view)</li>
+                        <li class="level-expando-tip">{% trans "(click tabs to see student view)" %}</li>
                     </ul>
 
                     <!-- Body panels -->

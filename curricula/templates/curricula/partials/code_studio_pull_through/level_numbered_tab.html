@@ -1,3 +1,4 @@
+{% load i18n %}
 <li class="level-bubble type-{{ level.type }} {{ unit.slug }}-stage-{{ lesson.number }}-level-{{ level.position }}-tab" data-level="{{ level.position }}" data-named="{{ level.named_level }}">
     <a href="#level-expando-{{ lesson.number }}-{{ level.position }}">
         {% if level.assessment %}
@@ -5,7 +6,7 @@
         {% endif %}
         <span class="level-icon fa"></span>
         {% if level.bonus_level %}
-            Extra
+            {% trans "Extra" %}
         {% else %}
             {{ level.position }}
         {% endif %}

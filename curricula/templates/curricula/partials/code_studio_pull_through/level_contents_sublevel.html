@@ -1,9 +1,9 @@
-{% load mezzanine_tags no_autoplay level_link level_embed %}
+{% load mezzanine_tags no_autoplay level_link level_embed i18n %}
 
 
 <div id="level-expando-{{ lesson.number }}-{{ level.position }}-{{ sublevel.position }}" class="level-panel" data-level="{{ sublevel.letter }}">
     <a href="{{ level.path|sublevel_link }}{{sublevel.position}}" target="_blank" class="level-link">
-        View on Code Studio
+        {% trans "View on Code Studio" %}
         <span class="level-link-icon fa"></span>
     </a>
 
@@ -13,7 +13,7 @@
 
      {% if sublevel.teacher_markdown %}
         <div class="teacher-markdown admonition tip">
-        <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> Teaching Tip</p>
+        <p class="admonition-title"><i class="fa fa-lightbulb-o"></i> {% trans "Teaching Tip" %}</p>
             {{ sublevel.teacher_markdown|richtext_filters|safe }}
         </div>
     {% endif %}
@@ -23,7 +23,7 @@
         {% include "curricula/partials/code_studio_pull_through/contained_level.html" with level=sublevel %}
     {% else %}
         <div class="instructions-markdown" markdown="1">
-            <h3>Student Instructions</h3>
+            <h3>{% trans "Student Instructions" %}</h3>
             {{ sublevel.markdown|richtext_filters|safe }}
             {{ sublevel.markdown_instructions|richtext_filters|safe }}
             {% if sublevel.parsed_long_instructions %}
@@ -38,7 +38,7 @@
     {% if sublevel.type == "StandaloneVideo" and not pdf%}
     <div class="level-video">
         <iframe allowfullscreen="" frameborder="0" height="480" src="{{ sublevel.video_youtube|no_autoplay }}" width="853"></iframe>
-        <p><a href="{{ sublevel.video_download }}">Download Video</a></p>
+        <p><a href="{{ sublevel.video_download }}">{% trans "Download Video" %}</a></p>
     </div>
     {% endif %}
 
@@ -46,8 +46,8 @@
     {% if sublevel.type == "LevelGroup" %}
     <div class="level-group">
         <p>
-            This level is an assessment or survey with multiple questions.
-            To view this level click the "View on Code Studio" link.
+            {% trans "This level is an assessment or survey with multiple questions." %}
+            {% blocktrans %}To view this level click the "View on Code Studio" link.{% endblocktrans %}
         </p>
     </div>
     {% endif %}
