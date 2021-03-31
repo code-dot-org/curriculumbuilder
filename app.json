@@ -1,7 +1,7 @@
 {
   "name": "curriculumbuilder",
-  "scripts": {
-  },
+  "scripts": {},
+  "stack": "heroku-18",
   "env": {
     "AUTO_PUBLISH": {
       "required": true
