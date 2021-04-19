@@ -93,7 +93,7 @@
   ],
   "buildpacks": [
     {
-      "url": "https://github.com/mrjoshida/nginx-buildpack"
+      "url": "https://github.com/heroku/heroku-buildpack-nginx.git"
     },
     {
       "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
