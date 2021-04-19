@@ -42,11 +42,8 @@ http {
 			proxy_pass http://app_server;
 		}
 
-        location ^~ /test {
-			default_type 'text/plain';
-			content_by_lua_block {
-				ngx.say('I am still listening...')
-			}
-        }
+    location ^~ /test {
+      default_type 'text/plain';
+    }
 	}
 }
