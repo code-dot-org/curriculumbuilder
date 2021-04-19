@@ -11,13 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.RenameField(
             model_name='unit',
-            name='stage_name',
-        ),
-        migrations.AddField(
-            model_name='unit',
-            name='unit_name',
-            field=models.CharField(db_column=b'stage_name', max_length=255, blank=True, help_text=b'Name of Code Studio script', null=True, verbose_name=b'Script'),
+            old_name='stage_name',
+            new_name='unit_name',
         ),
     ]
