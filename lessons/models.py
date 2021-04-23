@@ -563,7 +563,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
             return {'error': 'No unit name for unit', 'status': 404}
         else:
             try:
-                url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
+                url = "https://levelbuilder-studio.code.org/s/%s/lessons/%d/summary_for_lesson_plans" % (
                     self.unit.unit_name, self.number)
                 response = urllib2.urlopen(url)
                 data = json.loads(response.read())
@@ -626,7 +626,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
         '''
         # Don't try to get stage data on every save.
         try:
-            url = "https://levelbuilder-studio.code.org/s/%s/stage/%d/summary_for_lesson_plans" % (
+            url = "https://levelbuilder-studio.code.org/s/%s/lessons/%d/summary_for_lesson_plans" % (
             self.unit.unit_name, self.number)
             response = urllib2.urlopen(url)
             data = json.loads(response.read())
@@ -717,7 +717,7 @@ class Lesson(InternationalizablePage, RichText, CloneableMixin, Filterable):
 
     @property
     def code_studio_link(self):
-        return self.code_studio_url or "https://studio.code.org/s/%s/stage/%d/puzzle/1/" % (
+        return self.code_studio_url or "https://studio.code.org/s/%s/lessons/%d/levels/1/" % (
             self.unit.unit_name, self.number)
 
     @property

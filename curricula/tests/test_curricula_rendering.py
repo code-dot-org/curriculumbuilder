@@ -151,11 +151,11 @@ class CurriculaRenderingTestCase(TestCase):
     def test_render_lesson_with_levels(self):
         stage = {
             "levels": [{
-                "path": "/s/dance/stage/1/puzzle/1",
+                "path": "/s/dance/lessons/1/levels/1",
                 "name": "Dance_Party_11",
                 "mini_rubric": True
             },{
-                "path": "/s/dance/stage/1/puzzle/2",
+                "path": "/s/dance/lessons/1/levels/2",
                 "name": "Dance_Party_22",
                 "teacher_markdown": "teacher markdown",
                 "named_level": True
@@ -176,7 +176,7 @@ class CurriculaRenderingTestCase(TestCase):
                 "bonus_level": False,
                 "assessment": "",
                 "progression": "",
-                "path": "/s/dance/stage/1/puzzle/1",
+                "path": "/s/dance/lessons/1/levels/1",
                 "name": "Dance_Party_11",
                 "display_name": "Bubble Choice: All the Choices",
                 "description": "This is a BubbleChoice level. Choose one of the activities below to practice what you have learned!",
