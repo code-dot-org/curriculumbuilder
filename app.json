@@ -109,6 +109,9 @@
     },
     {
       "url": "https://github.com/piotras/heroku-buildpack-gettext"
+    },
+    {
+      "url": "heroku/jvm"
     }
   ]
 }

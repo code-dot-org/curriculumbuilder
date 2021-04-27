@@ -44,7 +44,7 @@ class Command(BaseCommand):
         """Upload sources files to crowdin"""
         log("Uploading source files")
         subprocess.call([
-            os.path.join(I18nFileWrapper.i18n_dir(), 'heroku_crowdin.sh'),
+            "crowdin",
             "--config", os.path.join(I18nFileWrapper.i18n_dir(), "config", "crowdin.yml"),
             "upload sources"
         ])
