@@ -1,0 +1,2 @@
+#!/bin/bash
+/app/.apt/user/lib/jvm/java-11-openjdk-amd64/bin/java -jar "/app/.apt/usr/lib/crowdin/crowdin-cli.jar" "$@"
