@@ -43,10 +43,5 @@ If you want to test uploading strings to S3, set the `AWS_STORAGE_BUCKET_NAME` t
 Additionally delete the `I18N_STORAGE` configuration in your `local_settings.py` so that the sync uses S3 for storage.
 
 ### Troubleshooting
-####.apt//usr/lib/jvm/java-8-openjdk-amd64/bin/java: No such file or directory
 
-If you see the above error while running the `i18n_sync_up`, update the contents of `heroku_crowdin.sh` to 
-```
-crowdin "$@"
-```
-Additionally, make sure you have Crowdin version [2.x](https://downloads.crowdin.com/cli/v2/crowdin-cli.zip) installed on your local machine. Follow [Crowdin's setup instructions](https://github.com/crowdin/crowdin-cli/tree/v2.0.31) to correctly install.
+Make sure you have Crowdin version [2.x](https://downloads.crowdin.com/cli/v2/crowdin-cli.zip) installed on your local machine. Follow [Crowdin's setup instructions](https://github.com/crowdin/crowdin-cli/tree/v2.0.31) to correctly install.
