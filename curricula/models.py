@@ -263,7 +263,8 @@ class Curriculum(InternationalizablePage, RichText, CloneableMixin, Ownable):
 
     @property
     def has_cross_curricular_info(self):
-        return Unit.objects.filter(parent=self, login_required=False)[0].has_cross_curricular_info
+        units = Unit.objects.filter(parent=self, login_required=False)
+        return any(unit.has_cross_curricular_info for unit in units)
 
     @property
     def should_be_translated(self):
