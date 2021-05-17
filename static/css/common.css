@@ -267,11 +267,20 @@ footer {
    background: #a6e3e8;
 }
 
-.pacing-lesson.lesson-planning-session { /* green */
+.pacing-lesson.asynchronous-session { /* green */
    border-color: #b9bf15;
    background: #f5f5dc;
 }
 
+.pacing-lesson.asynchronous { /* green */
+   border-color: #b9bf15;
+   background: #f5f5dc;
+}
+
+.pacing-lesson.lesson-planning-session { /* green */
+   border-color: #b9bf15;
+   background: #f5f5dc;
+}
 .pacing-lesson.lesson-planning { /* green */
    border-color: #b9bf15;
    background: #f5f5dc;
@@ -316,6 +325,14 @@ footer {
 
 .pacing-lesson.lesson-exploration.active { /* teal */
     background: #00adbc !important;
+}
+
+.pacing-lesson.asynchronous-session.active { /* green */
+    background: #b9bf15 !important;
+}
+
+.pacing-lesson.asynchronous.active { /* green */
+    background: #b9bf15 !important;
 }
 
 .pacing-lesson.lesson-planning-session.active { /* green */
@@ -368,6 +385,14 @@ footer {
 
 .pacing-lesson.lesson-exploration .lesson-number { /* teal */
     background: #00adbc;
+}
+
+.pacing-lesson.asynchronous-session .lesson-number { /* green */
+    background: #b9bf15;
+}
+
+.pacing-lesson.asynchronous .lesson-number { /* green */
+    background: #b9bf15;
 }
 
 .pacing-lesson.lesson-planning-session .lesson-number { /* green */
