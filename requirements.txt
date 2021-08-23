@@ -2,7 +2,7 @@
 lxml==3.4.4
 Django==1.8.1
 Mezzanine==4.1.0
-Pillow==3.0.0
+Pillow==8.2.0
 Pygments==2.0.2
 SQLAlchemy==1.0.5
 Werkzeug==0.15.3
