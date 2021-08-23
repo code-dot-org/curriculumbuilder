@@ -38,7 +38,7 @@
 {% endif %}
 
 {% if code_block.parent_object %}
-    <div class="alert alert-info" role="alert">The block is a part of the <a href="{{ code_block.parent_object.get_absolute_url }}">{{ code_block.parent_object.title }}</a> object.</div>
+    <div class="alert alert-info" role="alert">The block is a part of the <a href="/docs{{ code_block.parent_object.get_absolute_url }}">{{ code_block.parent_object.title }}</a> object.</div>
 {% endif %}
 
 {% if code_block.video %}
