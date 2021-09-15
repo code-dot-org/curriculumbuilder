@@ -195,6 +195,13 @@ def chapter_view(request, slug, unit_slug, chapter_num):
                   {'curriculum': curriculum, 'unit': unit, 'chapter': chapter, 'pdf': pdf})
 
 
+@api_view(['GET', ])
+def lesson_export(request, slug, unit_slug, lesson_num):
+    lesson = get_object_or_404(Lesson, unit__slug=unit_slug, unit__curriculum__slug=slug, number=lesson_num)
+    serializer = LessonExportSerializer(lesson)
+    return Response(serializer.data)
+
+
 # @login_required
 def lesson_view(request, slug, unit_slug, lesson_num, optional_num=False):
     pdf = request.GET.get('pdf', False)
