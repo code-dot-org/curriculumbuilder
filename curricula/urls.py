@@ -83,6 +83,9 @@ urlpatterns = patterns('curricula.views',
                        url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/overview/$',
                            views.lesson_overview, name='lesson_overview'),
 
+                       # Export this lesson for import into code studio
+                       url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+).json$', views.lesson_export, name="lesson_export"),
+
                        # Option Lessons (I hates them)
                        url(r'^(?P<slug>[-\w]+)/(?P<unit_slug>[-\w]+)/(?P<lesson_num>\d+)/optional/(?P<optional_num>\d+)/$',
                            views.lesson_view, name='lesson_optional'),
