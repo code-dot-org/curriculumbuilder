@@ -143,5 +143,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log("I18n Sync Step 4 of 4: Publish translated content to S3")
+        num_languages = len(self.get_language_codes_with_changes())
+        if num_languages == 0:
+            log("Publishing will be skipped because no translation updates were found.")
+            return
+
         self.publish_models()
         self.report_final_times()
