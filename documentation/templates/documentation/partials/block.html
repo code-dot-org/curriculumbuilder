@@ -2,24 +2,6 @@
 {% load staticfiles %}
 
 {% if embed == None %}
-{% with code_block.lessons_introduced as lessons %}
-    {% if lessons.count > 0%}
-        <div class="introduced_in hidden-xs">
-            {% regroup lessons by curriculum as lessons_by_curriculum %}
-            <h2>Introduced In...</h2>
-            {% for curriculum in lessons_by_curriculum %}
-                <div class="introduced_lesson">
-                    <h3>{{ curriculum.grouper.title }}</h3>
-                    <ul>
-                        {% for lesson in curriculum.list %}
-                          <li><a href="{{ lesson.code_studio_link }}" target="_blank">{{ lesson.unit.short_name }}: {{ lesson.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
 
 {% endif %}
 
