@@ -55,9 +55,10 @@ Only follow these steps if you are on Ubuntu / Linux.
 
 1. install Ubuntu dependencies
 ```
-sudo apt-get install python-pip postgresql wkhtmltopdf libcurl4-openssl-dev libssl-dev libpq-dev
+sudo apt-get install python-pip postgresql wkhtmltopdf libcurl4-openssl-dev libssl-dev libpq-dev python-dev
 sudo snap install --classic heroku
 ```
+Potentially use [these alternate installation](https://stackoverflow.com/questions/64296359/how-can-i-install-pip-for-python2-7-in-ubuntu-20-04) instructions for python-pip.
 
 2. check versions
 ```
