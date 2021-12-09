@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from documentation.models import Map
+from documentation.models import Block, Example, Map, Parameter
 
 class MapExportSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
@@ -11,3 +11,31 @@ class MapExportSerializer(serializers.ModelSerializer):
 
     def get_children(self, obj):
         return map(lambda x: x.slug, obj.get_children())
+
+class ParameterExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parameter
+        fields = ('name', 'type', 'required', 'description')
+
+class ExampleExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Example
+        fields = ('name', 'description', 'code', 'app', 'image', 'app_display_type', 'embed_app_with_code_height')
+
+class BlockExportSerializer(serializers.ModelSerializer):
+    parameters = serializers.SerializerMethodField()
+    examples = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Block
+        fields = ('title', 'ext_doc', 'return_value', 'tips', 'video', 'image', 'content', 'description', 'parameters', 'examples')
+
+    def get_parameters(self, obj):
+        parameters = obj.parameters.all()
+        serializer = ParameterExportSerializer(parameters, many=True, context=self.context)
+        return serializer.data
+
+    def get_examples(self, obj):
+        examples = obj.examples.all()
+        serializer = ExampleExportSerializer(examples, many=True, context=self.context)
+        return serializer.data

@@ -10,6 +10,9 @@ from mezzanine.pages.models import Page
 from models import IDE, Block, Map
 from serializers import *
 
+from django.core.exceptions import MultipleObjectsReturned
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 def index(request):
     ides = IDE.objects.all()
@@ -92,8 +95,23 @@ def maps_view(request, ):
     page = Page.objects.get(slug='concepts')
     return render(request, 'documentation/pages.html', {'page': page, 'pages': maps, 'type': 'Maps'})
 
-@api_view(['GET', ])
 def map_export(request, slug):
     page = get_object_or_404(Map, slug=slug)
     serializer = MapExportSerializer(page)
+    return Response(serializer.data)
+
+@api_view(['GET', ])
+def block_export(request, block_slug, ide_slug, formate=None):
+    try:
+        ide = IDE.objects.get(slug=ide_slug)
+    except IDE.DoesNotExist:
+        raise ContinueResolving
+
+    try:
+        block = get_object_or_404(Block, login_required=False, status=2, slug=block_slug)
+    except MultipleObjectsReturned:
+        logger.exception("Warning - found multiple blocks referencing the block %s" % block_name)
+        block = Block.objects.filter(login_required=False, status=2, block_name=block_name, ide_slug=ide_slug).first()
+
+    serializer = BlockExportSerializer(block)
     return Response(serializer.data)
