@@ -6,12 +6,12 @@ from documentation import views
 urlpatterns = [
     multiurl(
         url(r'^$', views.index, name='index'),
-        
+
+        # Export block doc for import into code studio
+        url(r'^export/block/(?P<ide_slug>[-\w]+lab)/(?P<block_slug>[-\w.]+).json$', views.block_export, name="block_export"),
+
         # Export this map for import into code studio
         url(r'^export/(?P<slug>.*).json$', views.map_export, name="map_export"),
-        
-        # Export code docs for import into code studio
-        url(r'^export/block/(?P<ide_slug>[-\w]+lab)/(?P<block_slug>[-\w.]+).json$', views.block_export, name="block_export"),
 
         url(r'^(?P<slug>.*)/$', views.map_view, name="map_view"),
 
