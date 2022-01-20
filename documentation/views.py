@@ -2,10 +2,13 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound, HttpResponseServerError
 
 from multiurl import ContinueResolving
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from mezzanine.pages.models import Page
 
 from models import IDE, Block, Map
+from serializers import *
 
 
 def index(request):
@@ -88,3 +91,9 @@ def maps_view(request, ):
     maps = Map.objects.filter(parent__slug='concepts')
     page = Page.objects.get(slug='concepts')
     return render(request, 'documentation/pages.html', {'page': page, 'pages': maps, 'type': 'Maps'})
+
+@api_view(['GET', ])
+def map_export(request, slug):
+    page = get_object_or_404(Map, slug=slug)
+    serializer = MapExportSerializer(page)
+    return Response(serializer.data)
