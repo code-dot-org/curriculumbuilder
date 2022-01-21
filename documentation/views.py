@@ -83,7 +83,6 @@ def page_view(request, parents, slug):
 
 
 def map_view(request, slug):
-    print(slug)
     try:
         page = Map.objects.get(slug=slug)
     except Map.DoesNotExist:
@@ -101,14 +100,12 @@ def maps_view(request, ):
 
 @api_view(['GET', ])
 def map_export(request, slug):
-    print(slug)
     page = get_object_or_404(Map, slug=slug)
     serializer = MapExportSerializer(page)
     return Response(serializer.data)
 
 @api_view(['GET', ])
 def block_export(request, block_slug, ide_slug, format=None):
-    print(ide_slug)
     try:
         ide = IDE.objects.get(slug=ide_slug)
     except IDE.DoesNotExist:
