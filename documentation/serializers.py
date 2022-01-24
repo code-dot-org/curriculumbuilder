@@ -4,13 +4,17 @@ from documentation.models import Block, Example, Map, Parameter
 
 class MapExportSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
+    order = serializers.SerializerMethodField()
 
     class Meta:
         model = Map
-        fields = ('title', 'content', 'slug', 'children')
+        fields = ('title', 'content', 'slug', 'order', 'children')
 
     def get_children(self, obj):
         return map(lambda x: x.slug, obj.get_children())
+        
+    def get_order(self, obj):
+        return obj._order
 
 class ParameterExportSerializer(serializers.ModelSerializer):
     class Meta:
