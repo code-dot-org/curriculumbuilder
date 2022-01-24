@@ -114,7 +114,7 @@ def block_export(request, block_slug, ide_slug, format=None):
     try:
         block = get_object_or_404(Block, login_required=False, status=2, slug=block_slug, parent_ide=ide)
     except MultipleObjectsReturned:
-        logger.exception("Warning - found multiple blocks referencing the block %s" % block_slug)
+        logger.exception("Warning - found multiple blocks referencing the block %s with id %s" % (block_slug, ide_slug))
         block = Block.objects.filter(login_required=False, status=2, block_slug=block_slug, parent_ide=ide).first()
 
     serializer = BlockExportSerializer(block)
