@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound, HttpResponseServerError
 
+import logging
+
 from multiurl import ContinueResolving
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,6 +12,11 @@ from mezzanine.pages.models import Page
 from models import IDE, Block, Map
 from serializers import *
 
+from django.core.exceptions import MultipleObjectsReturned
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     ides = IDE.objects.all()
@@ -76,7 +83,6 @@ def page_view(request, parents, slug):
 
 
 def map_view(request, slug):
-
     try:
         page = Map.objects.get(slug=slug)
     except Map.DoesNotExist:
@@ -96,4 +102,20 @@ def maps_view(request, ):
 def map_export(request, slug):
     page = get_object_or_404(Map, slug=slug)
     serializer = MapExportSerializer(page)
+    return Response(serializer.data)
+
+@api_view(['GET', ])
+def block_export(request, block_slug, ide_slug, format=None):
+    try:
+        ide = IDE.objects.get(slug=ide_slug)
+    except IDE.DoesNotExist:
+        raise ContinueResolving
+
+    try:
+        block = get_object_or_404(Block, login_required=False, status=2, slug=block_slug, parent_ide=ide)
+    except MultipleObjectsReturned:
+        logger.exception("Warning - found multiple blocks referencing the block %s with ide %s" % (block_slug, ide_slug))
+        block = Block.objects.filter(login_required=False, status=2, block_slug=block_slug, parent_ide=ide).first()
+
+    serializer = BlockExportSerializer(block)
     return Response(serializer.data)
