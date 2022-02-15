@@ -25,10 +25,16 @@ class ExampleExportSerializer(serializers.ModelSerializer):
 class BlockExportSerializer(serializers.ModelSerializer):
     parameters = serializers.SerializerMethodField()
     examples = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
 
     class Meta:
         model = Block
-        fields = ('title', 'ext_doc', 'return_value', 'tips', 'video', 'image', 'content', 'description', 'parameters', 'examples')
+        fields = ('title', 'ext_doc', 'return_value', 'tips', 'video', 'image', 'content', 'description', 'category', 'parameters', 'examples')
+
+    def get_category(self, obj):
+        if obj.parent_cat:
+            return obj.parent_cat.name
+        return None
 
     def get_parameters(self, obj):
         parameters = obj.parameters.all()
