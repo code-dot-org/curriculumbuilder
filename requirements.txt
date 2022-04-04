@@ -3,7 +3,7 @@ lxml==3.4.4
 Django==1.8.1
 Mezzanine==4.1.0
 Pillow==3.0.0
-Pygments==2.0.2
+Pygments==2.7.4
 SQLAlchemy==1.0.5
 Werkzeug==0.15.3
 #beautifulsoup4==4.4.0
