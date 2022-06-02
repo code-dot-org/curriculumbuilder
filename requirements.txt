@@ -58,7 +58,7 @@ future==0.15.2
 -e git+https://github.com/mrjoshida/django_cloneable.git@master#egg=django_cloneable
 grappelli-safe==0.4.2
 gunicorn==19.6.0
-html5lib==0.999999
+html5lib==0.99999999
 # html5lib==0.999999999
 ipython
 jsonfield==1.0.3
