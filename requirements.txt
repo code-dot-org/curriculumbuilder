@@ -1,5 +1,5 @@
 # uwsgi
-lxml==3.4.4
+lxml==4.9.1
 Django==1.8.1
 Mezzanine==4.1.0
 Pillow==3.0.0
