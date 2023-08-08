@@ -1,6 +1,12 @@
+
+
 Code.org CurriculumBuilder
 =
 An internal tool designed for Code.org curricula
+
+## The Curriculum Builder service on heroku was shut down in Oct 2022 and deleted in Aug 2023.
+
+The info below is now obsolete, but the repo remains archived and viewable in readonly mode.
 
 ## How to use CurriculumBuilder
 - Go to the #curriculumbuilder-dev channel for support
